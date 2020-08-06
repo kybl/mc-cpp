@@ -70,8 +70,8 @@
 
 /*** file scope variables ************************************************************************/
 
-static gboolean debug_flag = FALSE;
-static gboolean debug_error = FALSE;
+static bool debug_flag = false;
+static bool debug_error = false;
 static char *menu = nullptr;
 
 /*** file scope functions ************************************************************************/
@@ -115,9 +115,9 @@ check_patterns (char *p)
 
     p += sizeof (def_name) - 1;
     if (*p == '1')
-        easy_patterns = TRUE;
+        easy_patterns = true;
     else if (*p == '0')
-        easy_patterns = FALSE;
+        easy_patterns = false;
     else
         return p0;
 
@@ -161,7 +161,7 @@ extract_arg (char *p, char *arg, int size)
 /* Tests whether the selected file in the panel is of any of the types
    specified in argument. */
 
-static gboolean
+static bool
 test_type (WPanel * panel, char *arg)
 {
     int result = 0;             /* False by default */
@@ -202,7 +202,7 @@ test_type (WPanel * panel, char *arg)
             result |= panel->marked != 0 ? 1 : 0;
             break;
         default:
-            debug_error = TRUE;
+            debug_error = true;
             break;
         }
     }
@@ -215,7 +215,7 @@ test_type (WPanel * panel, char *arg)
    p. Returns the point after condition. */
 
 static char *
-test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
+test_condition (const WEdit * edit_widget, char *p, bool * condition)
 {
     char arg[256];
     const mc_search_type_t search_type = easy_patterns ? MC_SEARCH_T_GLOB : MC_SEARCH_T_REGEX;
@@ -292,7 +292,7 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
                 break;
             }
         default:
-            debug_error = TRUE;
+            debug_error = true;
             break;
         }                       /* switch */
     }                           /* while */
@@ -303,7 +303,7 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
 /** General purpose condition debug output handler */
 
 static void
-debug_out (char *start, char *end, gboolean condition)
+debug_out (char *start, char *end, bool condition)
 {
     static char *msg = nullptr;
 
@@ -320,7 +320,7 @@ debug_out (char *start, char *end, gboolean condition)
             message (D_NORMAL, _("Debug"), "%s", msg);
 
         }
-        debug_flag = FALSE;
+        debug_flag = false;
         MC_PTR_FREE (msg);
     }
     else
@@ -335,7 +335,7 @@ debug_out (char *start, char *end, gboolean condition)
         if (debug_error)
         {
             type = _("ERROR:");
-            debug_error = FALSE;
+            debug_error = false;
         }
         else if (condition)
             type = _("True:");
@@ -356,7 +356,7 @@ debug_out (char *start, char *end, gboolean condition)
    the point just before the end of line. */
 
 static char *
-test_line (const WEdit * edit_widget, char *p, gboolean * result)
+test_line (const WEdit * edit_widget, char *p, bool * result)
 {
     char operator_;
 
@@ -364,7 +364,7 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
     while (*p != '\0' && *p != '\n')
     {
         char *debug_start, *debug_end;
-        gboolean condition = TRUE;
+        bool condition = true;
 
         /* support quote space .mnu */
         while ((*p == ' ' && *(p - 1) != '\\') || *p == '\t')
@@ -374,7 +374,7 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
         operator_ = *p++;
         if (*p == '?')
         {
-            debug_flag = TRUE;
+            debug_flag = true;
             p++;
         }
         /* support quote space .mnu */
@@ -403,7 +403,7 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
             *result = *result || condition;
             break;
         default:
-            debug_error = TRUE;
+            debug_error = true;
             break;
         }                       /* switch */
         /* Add one debug statement */
@@ -411,7 +411,7 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
 
     }                           /* while (*p != '\n') */
     /* Report debug message */
-    debug_out (nullptr, nullptr, TRUE);
+    debug_out (nullptr, nullptr, true);
 
     if (*p == '\0' || *p == '\n')
         str_prev_char (&p);
@@ -422,17 +422,17 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
 /** FIXME: recode this routine on version 3.0, it could be cleaner */
 
 static void
-execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean show_prompt)
+execute_menu_command (const WEdit * edit_widget, const char *commands, bool show_prompt)
 {
     FILE *cmd_file;
     int cmd_file_fd;
-    gboolean expand_prefix_found = FALSE;
+    bool expand_prefix_found = false;
     char *parameter = nullptr;
-    gboolean do_quote = FALSE;
+    bool do_quote = false;
     char lc_prompt[80];
     int col;
     vfs_path_t *file_name_vpath;
-    gboolean run_view = FALSE;
+    bool run_view = false;
 
     /* Skip menu entry title line */
     commands = strchr (commands, '\n');
@@ -489,7 +489,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
                 {
                     char *tmp;
 
-                    tmp = name_quote (parameter, FALSE);
+                    tmp = name_quote (parameter, false);
                     fputs (tmp, cmd_file);
                     g_free (tmp);
                 }
@@ -503,7 +503,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
         }
         else if (expand_prefix_found)
         {
-            expand_prefix_found = FALSE;
+            expand_prefix_found = false;
             if (g_ascii_isdigit ((gchar) * commands))
             {
                 do_quote = (atoi (commands) != 0);
@@ -529,12 +529,12 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
             if (i != 0)
             {
                 commands += i;
-                run_view = TRUE;
+                run_view = true;
             }
             else
             {
-                do_quote = TRUE;        /* Default: Quote expanded macro */
-                expand_prefix_found = TRUE;
+                do_quote = true;        /* Default: Quote expanded macro */
+                expand_prefix_found = true;
             }
         }
         else
@@ -577,21 +577,21 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
  **     Q. Should we apply this routine to system and home menu (and .ext files)?
  */
 
-static gboolean
+static bool
 menu_file_own (char *path)
 {
     struct stat st;
 
     if (stat (path, &st) == 0 && (st.st_uid == 0 || (st.st_uid == geteuid ()) != 0)
         && ((st.st_mode & (S_IWGRP | S_IWOTH)) == 0))
-        return TRUE;
+        return true;
 
     if (verbose)
         message (D_NORMAL, _("Warning -- ignoring file"),
                  _("File %s is not owned by root or you or is world writable.\n"
                    "Using it may compromise your security"), path);
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -637,22 +637,22 @@ check_format_view (const char *p)
             {
                 if (strncmp (q, DEFAULT_CHARSET, 5) == 0)
                 {
-                    mcview_global_flags.hex = FALSE;
+                    mcview_global_flags.hex = false;
                     q += 4;
                 }
                 else if (strncmp (q, "hex", 3) == 0)
                 {
-                    mcview_global_flags.hex = TRUE;
+                    mcview_global_flags.hex = true;
                     q += 2;
                 }
                 else if (strncmp (q, "nroff", 5) == 0)
                 {
-                    mcview_global_flags.nroff = TRUE;
+                    mcview_global_flags.nroff = true;
                     q += 4;
                 }
                 else if (strncmp (q, "unform", 6) == 0)
                 {
-                    mcview_global_flags.nroff = FALSE;
+                    mcview_global_flags.nroff = false;
                     q += 5;
                 }
             }
@@ -724,10 +724,10 @@ check_format_var (const char *p, char **v)
 /* --------------------------------------------------------------------------------------------- */
 
 char *
-expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
+expand_format (const WEdit * edit_widget, char c, bool do_quote)
 {
     WPanel *panel = nullptr;
-    char *(*quote_func) (const char *, gboolean);
+    char *(*quote_func) (const char *, bool);
     const char *fname = nullptr;
     char *result;
     char c_lc;
@@ -783,10 +783,10 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
     {
     case 'f':
     case 'p':
-        result = quote_func (fname, FALSE);
+        result = quote_func (fname, false);
         goto ret;
     case 'x':
-        result = quote_func (extension (fname), FALSE);
+        result = quote_func (extension (fname), false);
         goto ret;
     case 'd':
         {
@@ -798,7 +798,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
             else
                 cwd = vfs_get_current_dir ();
 
-            qstr = quote_func (cwd, FALSE);
+            qstr = quote_func (cwd, false);
 
             result = qstr;
             goto ret;
@@ -844,14 +844,14 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
             char *file;
 
             file = mc_config_get_full_path (EDIT_HOME_BLOCK_FILE);
-            result = quote_func (file, FALSE);
+            result = quote_func (file, false);
             g_free (file);
             goto ret;
         }
 #endif
         if (c_lc == 'b')
         {
-            result = strip_ext (quote_func (fname, FALSE));
+            result = strip_ext (quote_func (fname, false));
             goto ret;
         }
         break;
@@ -859,7 +859,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
 #ifdef USE_INTERNAL_EDIT
         if (edit_widget != nullptr)
         {
-            result = strip_ext (quote_func (fname, FALSE));
+            result = strip_ext (quote_func (fname, false));
             goto ret;
         }
 #endif
@@ -867,14 +867,14 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
     case 'm':                  /* menu file name */
         if (menu != nullptr)
         {
-            result = quote_func (menu, FALSE);
+            result = quote_func (menu, false);
             goto ret;
         }
         break;
     case 's':
         if (panel == nullptr || panel->marked == 0)
         {
-            result = quote_func (fname, FALSE);
+            result = quote_func (fname, false);
             goto ret;
         }
 
@@ -899,7 +899,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
                 {
                     char *tmp;
 
-                    tmp = quote_func (panel->dir.list[i].fname, FALSE);
+                    tmp = quote_func (panel->dir.list[i].fname, false);
                     g_string_append (block, tmp);
                     g_string_append_c (block, ' ');
                     g_free (tmp);
@@ -907,7 +907,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
                     if (c_lc == 'u')
                         do_file_mark (panel, i, 0);
                 }
-            result = g_string_free (block, FALSE);
+            result = g_string_free (block, false);
             goto ret;
         }                       /* sub case block */
     default:
@@ -926,23 +926,23 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
  * otherwise we are called from the mcedit menu.
  */
 
-gboolean
+bool
 user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_entry)
 {
     char *p;
     char *data, **entries;
     int max_cols, menu_lines, menu_limit;
-    int col, i;
-    gboolean accept_entry = TRUE;
+    int col;
+    bool accept_entry = true;
     int selected;
-    gboolean old_patterns;
-    gboolean res = FALSE;
-    gboolean interactive = TRUE;
+    bool old_patterns;
+    bool res = false;
+    bool interactive = true;
 
     if (!vfs_current_is_local ())
     {
         message (D_ERROR, MSG_ERROR, "%s", _("Cannot execute commands on non-local filesystems"));
-        return FALSE;
+        return false;
     }
     if (menu_file != nullptr)
         menu = g_strdup (menu_file);
@@ -955,7 +955,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
             message (D_ERROR, MSG_ERROR, _("Cannot open file %s\n%s"), menu,
                      unix_error_string (errno));
             MC_PTR_FREE (menu);
-            return FALSE;
+            return false;
         }
 
         g_free (menu);
@@ -994,7 +994,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
     {
         message (D_ERROR, MSG_ERROR, _("Cannot open file %s\n%s"), menu, unix_error_string (errno));
         MC_PTR_FREE (menu);
-        return FALSE;
+        return false;
     }
 
     max_cols = 0;
@@ -1026,9 +1026,9 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
             case '#':
                 /* show prompt if first line of external script is #interactive */
                 if (selected_entry >= 0 && strncmp (p, "#silent", 7) == 0)
-                    interactive = FALSE;
+                    interactive = false;
                 /* A commented menu entry */
-                accept_entry = TRUE;
+                accept_entry = true;
                 break;
 
             case '+':
@@ -1057,7 +1057,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
                 else
                 {
                     /* A condition for making the entry default */
-                    i = 1;
+                    bool i = true;
                     p = test_line (edit_widget, p, &i);
                     if (selected == 0 && i != 0)
                         selected = menu_lines;
@@ -1071,7 +1071,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
                     if (accept_entry)
                         entries[menu_lines] = p;
                     else
-                        accept_entry = TRUE;
+                        accept_entry = true;
                 }
                 break;
             }
@@ -1081,7 +1081,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
             if (entries[menu_lines] != nullptr)
             {
                 menu_lines++;
-                accept_entry = TRUE;
+                accept_entry = true;
             }
             max_cols = MAX (max_cols, col);
             col = 0;
@@ -1097,7 +1097,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
     if (menu_lines == 0)
     {
         message (D_ERROR, MSG_ERROR, _("No suitable entries found in %s"), menu);
-        res = FALSE;
+        res = false;
     }
     else
     {
@@ -1113,11 +1113,11 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
             listbox = create_listbox_window (menu_lines, max_cols + 2, _("User menu"),
                                              "[Edit Menu File]");
             /* insert all the items found */
-            for (i = 0; i < menu_lines; i++)
+            for (int i = 0; i < menu_lines; i++)
             {
                 p = entries[i];
                 LISTBOX_APPEND_TEXT (listbox, (unsigned char) p[0],
-                                     extract_line (p, p + MAX_ENTRY_LEN), p, FALSE);
+                                     extract_line (p, p + MAX_ENTRY_LEN), p, false);
             }
             /* Select the default entry */
             listbox_select_entry (listbox->list, selected);
@@ -1127,7 +1127,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
         if (selected >= 0)
         {
             execute_menu_command (edit_widget, entries[selected], interactive);
-            res = TRUE;
+            res = true;
         }
 
         do_refresh ();

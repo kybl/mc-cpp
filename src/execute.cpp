@@ -84,7 +84,7 @@ edition_post_exec (void)
     tty_reset_prog_mode ();
     tty_flush_input ();
 
-    tty_keypad (TRUE);
+    tty_keypad (true);
     tty_raw_mode ();
     channels_up ();
     enable_mouse ();
@@ -111,7 +111,7 @@ edition_pre_exec (void)
     disable_bracketed_paste ();
 
     tty_reset_shell_mode ();
-    tty_keypad (FALSE);
+    tty_keypad (false);
     tty_reset_screen ();
 
     numeric_keypad_mode ();
@@ -175,7 +175,7 @@ do_suspend_cmd (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 execute_prepare_with_vfs_arg (const vfs_path_t * filename_vpath, vfs_path_t ** localcopy_vpath,
                               time_t * mtime)
 {
@@ -184,23 +184,23 @@ execute_prepare_with_vfs_arg (const vfs_path_t * filename_vpath, vfs_path_t ** l
     /* Simplest case, this file is local */
     if ((filename_vpath == nullptr && vfs_file_is_local (vfs_get_raw_current_dir ()))
         || vfs_file_is_local (filename_vpath))
-        return TRUE;
+        return true;
 
     /* FIXME: Creation of new files on VFS is not supported */
     if (filename_vpath == nullptr)
-        return FALSE;
+        return false;
 
     *localcopy_vpath = mc_getlocalcopy (filename_vpath);
     if (*localcopy_vpath == nullptr)
     {
         message (D_ERROR, MSG_ERROR, _("Cannot fetch a local copy of %s"),
                  vfs_path_as_str (filename_vpath));
-        return FALSE;
+        return false;
     }
 
     mc_stat (*localcopy_vpath, &st);
     *mtime = st.st_mtime;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -240,7 +240,7 @@ execute_get_opts_from_cfg (const char *command, const char *default_str)
     {
         mc_config_t *cfg;
 
-        cfg = mc_config_init (global_profile_name, TRUE);
+        cfg = mc_config_init (global_profile_name, true);
         if (cfg == nullptr)
             return g_strdup (default_str);
 
@@ -374,7 +374,7 @@ do_executev (const char *shell, int flags, char *const argv[])
     }
 
     do_refresh ();
-    use_dash (TRUE);
+    use_dash (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -390,7 +390,7 @@ do_execute (const char *shell, const char *command, int flags)
 
     do_executev (shell, flags, (char *const *) args_array->pdata);
 
-    g_ptr_array_free (args_array, TRUE);
+    g_ptr_array_free (args_array, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -400,7 +400,7 @@ do_execute (const char *shell, const char *command, int flags)
 void
 pre_exec (void)
 {
-    use_dash (FALSE);
+    use_dash (false);
     edition_pre_exec ();
 }
 
@@ -410,7 +410,7 @@ void
 post_exec (void)
 {
     edition_post_exec ();
-    use_dash (TRUE);
+    use_dash (true);
     repaint_screen ();
 }
 
@@ -448,7 +448,7 @@ shell_execute (const char *command, int flags)
 void
 toggle_subshell (void)
 {
-    static gboolean message_flag = TRUE;
+    static bool message_flag = true;
 
 #ifdef ENABLE_SUBSHELL
     vfs_path_t *new_dir_vpath = nullptr;
@@ -462,7 +462,7 @@ toggle_subshell (void)
         if (message_flag)
             message (D_ERROR, MSG_ERROR,
                      _("Not an xterm or Linux console;\nthe subshell cannot be toggled."));
-        message_flag = FALSE;
+        message_flag = false;
         return;
     }
 
@@ -480,7 +480,7 @@ toggle_subshell (void)
     tty_reset_shell_mode ();
 #endif /* !HAVE_SLANG */
     tty_noecho ();
-    tty_keypad (FALSE);
+    tty_keypad (false);
     tty_reset_screen ();
     tty_exit_ca_mode ();
     tty_raw_mode ();
@@ -515,7 +515,7 @@ toggle_subshell (void)
     tty_enter_ca_mode ();
 
     tty_reset_prog_mode ();
-    tty_keypad (TRUE);
+    tty_keypad (true);
 
     /* Prevent screen flash when user did 'exit' or 'logout' within
        subshell */
@@ -577,7 +577,7 @@ toggle_subshell (void)
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-gboolean
+bool
 execute_suspend (const gchar * event_group_name, const gchar * event_name,
                  gpointer init_data, gpointer data)
 {
@@ -593,7 +593,7 @@ execute_suspend (const gchar * event_group_name, const gchar * event_name,
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
     do_refresh ();
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

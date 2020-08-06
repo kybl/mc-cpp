@@ -96,7 +96,7 @@ widget_default_resize (Widget * w, const WRect * r)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-widget_do_focus (Widget * w, gboolean enable)
+widget_do_focus (Widget * w, bool enable)
 {
     if (w != nullptr && widget_get_state (WIDGET (w->owner), WST_FOCUSED))
         widget_set_state (w, WST_FOCUSED, enable);
@@ -119,16 +119,16 @@ widget_focus (Widget * w)
 
     if (WIDGET (g->current->data) != w)
     {
-        widget_do_focus (WIDGET (g->current->data), FALSE);
+        widget_do_focus (WIDGET (g->current->data), false);
         /* Test if focus lost was allowed and focus has really been loose */
         if (g->current == nullptr || !widget_get_state (WIDGET (g->current->data), WST_FOCUSED))
         {
-            widget_do_focus (w, TRUE);
+            widget_do_focus (w, true);
             g->current = widget_find (WIDGET (g), w);
         }
     }
     else if (!widget_get_state (w, WST_FOCUSED))
-        widget_do_focus (w, TRUE);
+        widget_do_focus (w, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -137,7 +137,7 @@ widget_focus (Widget * w)
  * Put widget on top or bottom of Z-order.
  */
 static void
-widget_reorder (GList * l, gboolean set_top)
+widget_reorder (GList * l, bool set_top)
 {
     WGroup *g = WIDGET (l->data)->owner;
 
@@ -150,21 +150,21 @@ widget_reorder (GList * l, gboolean set_top)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 hotkey_cmp (const char *s1, const char *s2)
 {
-    gboolean n1, n2;
+    bool n1, n2;
 
     n1 = s1 != nullptr;
     n2 = s2 != nullptr;
 
     if (n1 != n2)
-        return FALSE;
+        return false;
 
     if (n1 && n2 && strcmp (s1, s2) != 0)
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -250,7 +250,7 @@ hotkey_width (const hotkey_t hotkey)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 hotkey_equal (const hotkey_t hotkey1, const hotkey_t hotkey2)
 {
     /* *INDENT-OFF* */
@@ -263,23 +263,23 @@ hotkey_equal (const hotkey_t hotkey1, const hotkey_t hotkey2)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-hotkey_draw (Widget * w, const hotkey_t hotkey, gboolean focused)
+hotkey_draw (Widget * w, const hotkey_t hotkey, bool focused)
 {
     if (hotkey.start[0] != '\0')
     {
-        widget_selectcolor (w, focused, FALSE);
+        widget_selectcolor (w, focused, false);
         tty_print_string (hotkey.start);
     }
 
     if (hotkey.hotkey != nullptr)
     {
-        widget_selectcolor (w, focused, TRUE);
+        widget_selectcolor (w, focused, true);
         tty_print_string (hotkey.hotkey);
     }
 
     if (hotkey.end != nullptr)
     {
-        widget_selectcolor (w, focused, FALSE);
+        widget_selectcolor (w, focused, false);
         tty_print_string (hotkey.end);
     }
 }
@@ -302,7 +302,7 @@ hotkey_get_text (const hotkey_t hotkey)
     if (hotkey.end != nullptr)
         g_string_append (text, hotkey.end);
 
-    return g_string_free (text, FALSE);
+    return g_string_free (text, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -321,13 +321,13 @@ widget_init (Widget * w, int y, int x, int lines, int cols,
 
     w->keymap = nullptr;
     w->ext_keymap = nullptr;
-    w->ext_mode = FALSE;
+    w->ext_mode = false;
 
     w->mouse_callback = mouse_callback != nullptr ? mouse_callback : widget_default_mouse_callback;
     w->owner = nullptr;
     w->mouse_handler = mouse_handle_event;
-    w->mouse.forced_capture = FALSE;
-    w->mouse.capture = FALSE;
+    w->mouse.forced_capture = false;
+    w->mouse.capture = false;
     w->mouse.last_msg = MSG_MOUSE_NONE;
     w->mouse.last_buttons_down = 0;
 
@@ -388,10 +388,10 @@ widget_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
  *
  * @param w       widget
  * @param options widget option flags to modify. Several flags per call can be modified.
- * @param enable  TRUE if specified options should be added, FALSE if options should be removed
+ * @param enable  true if specified options should be added, false if options should be removed
  */
 void
-widget_set_options (Widget * w, widget_options_t options, gboolean enable)
+widget_set_options (Widget * w, widget_options_t options, bool enable)
 {
     if (enable)
         w->options |= options;
@@ -454,7 +454,7 @@ widget_set_size (Widget * w, int y, int x, int lines, int cols)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-widget_selectcolor (Widget * w, gboolean focused, gboolean hotkey)
+widget_selectcolor (Widget * w, bool focused, bool hotkey)
 {
     int color;
     const int *colors;
@@ -487,26 +487,26 @@ widget_erase (Widget * w)
   *
   * @param w the widget
   *
-  * @return TRUE if the widget is active, FALSE otherwise
+  * @return true if the widget is active, false otherwise
   */
 
-gboolean
+bool
 widget_is_active (const void *w)
 {
     const WGroup *owner;
 
     /* Is group top? */
     if (w == top_dlg->data)
-        return TRUE;
+        return true;
 
     owner = CONST_WIDGET (w)->owner;
 
     /* Is widget in any group? */
     if (owner == nullptr)
-        return FALSE;
+        return false;
 
     if (w != owner->current->data)
-        return FALSE;
+        return false;
 
     return widget_is_active (owner);
 }
@@ -541,7 +541,7 @@ void
 widget_replace (Widget * old_w, Widget * new_w)
 {
     WGroup *g = old_w->owner;
-    gboolean should_focus = FALSE;
+    bool should_focus = false;
     GList *holder;
 
     if (g->widgets == nullptr)
@@ -558,10 +558,10 @@ widget_replace (Widget * old_w, Widget * new_w)
 
     /* if old widget is focused, we should focus the new one... */
     if (widget_get_state (old_w, WST_FOCUSED))
-        should_focus = TRUE;
+        should_focus = true;
     /* ...but if new widget isn't selectable, we cannot focus it */
     if (!widget_get_options (new_w, WOP_SELECTABLE))
-        should_focus = FALSE;
+        should_focus = false;
 
     /* if new widget isn't selectable, select other widget before replace */
     if (!should_focus)
@@ -617,7 +617,7 @@ widget_select (Widget * w)
             GList *l;
 
             l = widget_find (WIDGET (g), w);
-            widget_reorder (l, TRUE);
+            widget_reorder (l, true);
         }
 
         widget_focus (w);
@@ -632,7 +632,7 @@ widget_select (Widget * w)
 void
 widget_set_bottom (Widget * w)
 {
-    widget_reorder (widget_find (WIDGET (w->owner), w), FALSE);
+    widget_reorder (widget_find (WIDGET (w->owner), w), false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -641,10 +641,10 @@ widget_set_bottom (Widget * w)
   * @param a 1st widget
   * @param b 2nd widget
   *
-  * @return TRUE if widgets are overlapped, FALSE otherwise.
+  * @return true if widgets are overlapped, false otherwise.
   */
 
-gboolean
+bool
 widget_overlapped (const Widget * a, const Widget * b)
 {
     return !((b->x >= a->x + a->cols)
@@ -665,7 +665,7 @@ widget_lookup_key (Widget * w, int key)
 {
     if (w->ext_mode)
     {
-        w->ext_mode = FALSE;
+        w->ext_mode = false;
         return keybind_lookup_keymap_command (w->ext_keymap, key);
     }
 
@@ -729,15 +729,15 @@ widget_default_find_by_id (const Widget * w, unsigned long id)
  *
  * @param w      widget
  * @param state  widget state flag to modify
- * @param enable specifies whether to turn the flag on (TRUE) or off (FALSE).
+ * @param enable specifies whether to turn the flag on (true) or off (false).
  *               Only one flag per call can be modified.
  * @return       MSG_HANDLED if set was handled successfully, MSG_NOT_HANDLED otherwise.
  */
 
 cb_ret_t
-widget_default_set_state (Widget * w, widget_state_t state, gboolean enable)
+widget_default_set_state (Widget * w, widget_state_t state, bool enable)
 {
-    gboolean ret = MSG_HANDLED;
+    bool ret = MSG_HANDLED;
 
     if (enable)
         w->state |= state;
@@ -814,7 +814,7 @@ mouse_get_local (const Gpm_Event * global, const Widget * w)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mouse_global_in_widget (const Gpm_Event * event, const Widget * w)
 {
     return (event->x > w->x) && (event->y > w->y) && (event->x <= w->x + w->cols)

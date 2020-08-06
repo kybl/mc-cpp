@@ -48,7 +48,7 @@ guess_message_value (void)
 /* --------------------------------------------------------------------------------------------- */
 
 /* @ThenReturnValue */
-static gboolean rand__return_value = 0;
+static bool rand__return_value = 0;
 
 /* @Mock */
 int
@@ -87,10 +87,10 @@ START_TEST (test_not_force)
     char *actual_hint3;
 
     // when
-    first_hint_for_ignore = get_random_hint (FALSE);
-    actual_hint1 = get_random_hint (FALSE);
-    actual_hint2 = get_random_hint (FALSE);
-    actual_hint3 = get_random_hint (FALSE);
+    first_hint_for_ignore = get_random_hint (false);
+    actual_hint1 = get_random_hint (false);
+    actual_hint2 = get_random_hint (false);
+    actual_hint3 = get_random_hint (false);
 
     // then
     mctest_assert_ptr_ne (first_hint_for_ignore, NULL);
@@ -151,7 +151,7 @@ START_PARAMETRIZED_TEST (get_random, get_random_ds)
     rand__return_value = data->input_random_value;
 
     /* when */
-    actual_value = get_random_hint (TRUE);
+    actual_value = get_random_hint (true);
 
     /* then */
     mctest_assert_str_eq (actual_value, data->expected_value);

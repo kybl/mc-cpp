@@ -53,7 +53,7 @@
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 parse_define (const char *buf, char **long_name, char **short_name, long *line)
 {
     /* *INDENT-OFF* */
@@ -152,7 +152,7 @@ parse_define (const char *buf, char **long_name, char **short_name, long *line)
             *long_name = longdef;
             *short_name = shortdef;
             *line = atol (linedef);
-            return TRUE;
+            return true;
         default:
             break;
         }
@@ -162,7 +162,7 @@ parse_define (const char *buf, char **long_name, char **short_name, long *line)
     *long_name = nullptr;
     *short_name = nullptr;
     *line = 0;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

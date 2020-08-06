@@ -97,7 +97,7 @@ listbox_drawscroll (WListbox * l)
     /* Are we at the top? */
     widget_gotoyx (w, 0, w->cols);
     if (l->top == 0)
-        tty_print_one_vline (TRUE);
+        tty_print_one_vline (true);
     else
         tty_print_char ('^');
 
@@ -106,7 +106,7 @@ listbox_drawscroll (WListbox * l)
     /* Are we at the bottom? */
     widget_gotoyx (w, max_line, w->cols);
     if (l->top + w->lines == length || w->lines >= length)
-        tty_print_one_vline (TRUE);
+        tty_print_one_vline (true);
     else
         tty_print_char ('v');
 
@@ -118,7 +118,7 @@ listbox_drawscroll (WListbox * l)
     {
         widget_gotoyx (w, i, w->cols);
         if (i != line)
-            tty_print_one_vline (TRUE);
+            tty_print_one_vline (true);
         else
             tty_print_char ('*');
     }
@@ -127,11 +127,11 @@ listbox_drawscroll (WListbox * l)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-listbox_draw (WListbox * l, gboolean focused)
+listbox_draw (WListbox * l, bool focused)
 {
     Widget *w = WIDGET (l);
     const int *colors;
-    gboolean disabled;
+    bool disabled;
     int normalc, selc;
     int length = 0;
     GList *le = nullptr;
@@ -224,7 +224,7 @@ listbox_y_pos (WListbox * l, int y)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-listbox_fwd (WListbox * l, gboolean wrap)
+listbox_fwd (WListbox * l, bool wrap)
 {
     if (!listbox_is_empty (l))
     {
@@ -246,7 +246,7 @@ listbox_fwd_n (WListbox * l, int n)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-listbox_back (WListbox * l, gboolean wrap)
+listbox_back (WListbox * l, bool wrap)
 {
     if (!listbox_is_empty (l))
     {
@@ -279,10 +279,10 @@ listbox_execute_cmd (WListbox * l, long command)
     switch (command)
     {
     case CK_Up:
-        listbox_back (l, TRUE);
+        listbox_back (l, true);
         break;
     case CK_Down:
-        listbox_fwd (l, TRUE);
+        listbox_fwd (l, true);
         break;
     case CK_Top:
         listbox_select_first (l);
@@ -299,7 +299,7 @@ listbox_execute_cmd (WListbox * l, long command)
     case CK_Delete:
         if (l->deletable)
         {
-            gboolean is_last, is_more;
+            bool is_last, is_more;
             int length;
 
             length = g_queue_get_length (l->list);
@@ -397,7 +397,7 @@ listbox_append_item (WListbox * l, WLEntry * e, listbox_append_t pos)
 static void
 listbox_on_change (WListbox * l)
 {
-    listbox_draw (l, TRUE);
+    listbox_draw (l, true);
     send_message (WIDGET (l)->owner, l, MSG_NOTIFY, 0, nullptr);
 }
 
@@ -513,15 +513,15 @@ listbox_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         break;
 
     case MSG_MOUSE_SCROLL_UP:
-        listbox_back (l, FALSE);
+        listbox_back (l, false);
         break;
 
     case MSG_MOUSE_SCROLL_DOWN:
-        listbox_fwd (l, FALSE);
+        listbox_fwd (l, false);
         break;
 
     case MSG_MOUSE_DRAG:
-        event->result.repeat = TRUE;    /* It'd be functional even without this. */
+        event->result.repeat = true;    /* It'd be functional even without this. */
         listbox_select_entry (l, listbox_y_pos (l, event->y));
         break;
 
@@ -545,7 +545,7 @@ listbox_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WListbox *
-listbox_new (int y, int x, int height, int width, gboolean deletable, lcback_fn callback)
+listbox_new (int y, int x, int height, int width, bool deletable, lcback_fn callback)
 {
     WListbox *l;
     Widget *w;
@@ -563,7 +563,7 @@ listbox_new (int y, int x, int height, int width, gboolean deletable, lcback_fn 
     l->top = l->pos = 0;
     l->deletable = deletable;
     l->callback = callback;
-    l->allow_duplicates = TRUE;
+    l->allow_duplicates = true;
     l->scrollbar = !mc_global.tty.slow_terminal;
 
     return l;
@@ -650,7 +650,7 @@ listbox_select_entry (WListbox * l, int dest)
 {
     GList *le;
     int pos;
-    gboolean top_seen = FALSE;
+    bool top_seen = false;
 
     if (listbox_is_empty (l) || dest < 0)
         return;
@@ -659,7 +659,7 @@ listbox_select_entry (WListbox * l, int dest)
     for (pos = 0, le = g_queue_peek_head_link (l->list); le != nullptr; pos++, le = g_list_next (le))
     {
         if (pos == l->top)
-            top_seen = TRUE;
+            top_seen = true;
 
         if (pos == dest)
         {
@@ -696,7 +696,7 @@ void
 listbox_get_current (WListbox * l, char **string, void **extra)
 {
     WLEntry *e = nullptr;
-    gboolean ok;
+    bool ok;
 
     if (l != nullptr)
         e = listbox_get_nth_item (l, l->pos);
@@ -760,7 +760,7 @@ listbox_remove_current (WListbox * l)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 listbox_is_empty (const WListbox * l)
 {
     return (l == nullptr || l->list == nullptr || g_queue_is_empty (l->list));
@@ -804,7 +804,7 @@ listbox_remove_list (WListbox * l)
 
 char *
 listbox_add_item (WListbox * l, listbox_append_t pos, int hotkey, const char *text, void *data,
-                  gboolean free_data)
+                  bool free_data)
 {
     WLEntry *entry;
 

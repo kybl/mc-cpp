@@ -86,7 +86,7 @@ typedef struct
     long bps_time;
 
     /* Whether the panel total has been computed */
-    gboolean progress_totals_computed;
+    bool progress_totals_computed;
     filegui_dialog_type_t dialog_type;
 
     /* Counters for progress indicators */
@@ -98,7 +98,7 @@ typedef struct
      * to preserve file attributs when moving files across filesystem boundaries
      * (we want to keep the value of the checkbox between copy operations).
      */
-    gboolean op_preserve;
+    bool op_preserve;
 
     /* Result from the recursive query */
     FileCopyMode recursive_result;
@@ -107,26 +107,26 @@ typedef struct
     off_t do_reget;
 
     /* Controls appending to files */
-    gboolean do_append;
+    bool do_append;
 
     /* Whether to stat or lstat */
-    gboolean follow_links;
+    bool follow_links;
 
     /* Pointer to the stat function we will use */
     mc_stat_fn stat_func;
 
     /* Whether to recompute symlinks */
-    gboolean stable_symlinks;
+    bool stable_symlinks;
 
     /* Preserve the original files' owner, group, permissions, and
      * timestamps (owner, group only as root).
      */
-    gboolean preserve;
+    bool preserve;
 
     /* If running as root, preserve the original uid/gid (we don't want to
      * try chown for non root) preserve_uidgid = preserve && uid == 0
      */
-    gboolean preserve_uidgid;
+    bool preserve_uidgid;
 
     /* The bits to preserve in created files' modes on file copy */
     mode_t umask_kill;
@@ -138,26 +138,26 @@ typedef struct
     struct mc_search_struct *search_handle;
 
     /* Whether to dive into subdirectories for recursive operations */
-    gboolean dive_into_subdirs;
+    bool dive_into_subdirs;
 
     /* When moving directories cross filesystem boundaries delete the
      * successfully copied files when all files below the directory and its
      * subdirectories were processed.
      *
-     * If erase_at_end is FALSE files will be deleted immediately after their
+     * If erase_at_end is false files will be deleted immediately after their
      * successful copy (Note: this behavior is not tested and at the moment
      * it can't be changed at runtime).
      */
-    gboolean erase_at_end;
+    bool erase_at_end;
 
     /* PID of the child for background operations */
     pid_t pid;
 
     /* toggle if all errors should be ignored */
-    gboolean skip_all;
+    bool skip_all;
 
     /* Whether the file operation is in pause */
-    gboolean suspended;
+    bool suspended;
 
     /* User interface data goes here */
     void *ui;
@@ -174,7 +174,7 @@ typedef struct
     struct timeval transfer_start;
     double eta_secs;
 
-    gboolean ask_overwrite;
+    bool ask_overwrite;
 } file_op_total_context_t;
 
 /*** global variables defined in .c file *********************************************************/

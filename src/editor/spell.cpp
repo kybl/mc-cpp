@@ -150,17 +150,17 @@ spell_decode_lang (const char *code)
 /**
  * Checks if aspell library and symbols are available.
  *
- * @return FALSE or error
+ * @return false or error
  */
 
-static gboolean
+static bool
 spell_available (void)
 {
     gchar *spell_module_fname;
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (spell_module != nullptr)
-        return TRUE;
+        return true;
 
     spell_module_fname = g_module_build_path (nullptr, "libaspell");
     spell_module = g_module_open (spell_module_fname, G_MODULE_BIND_LAZY);
@@ -168,7 +168,7 @@ spell_available (void)
     g_free (spell_module_fname);
 
     if (spell_module == nullptr)
-        return FALSE;
+        return false;
 
     if (!g_module_symbol (spell_module, "new_aspell_config", reinterpret_cast<gpointer *> (&mc_new_aspell_config)))
         goto error_ret;
@@ -261,7 +261,7 @@ spell_available (void)
                           reinterpret_cast<gpointer *> (&mc_aspell_speller_save_all_word_lists)))
         goto error_ret;
 
-    ret = TRUE;
+    ret = true;
 
   error_ret:
     if (!ret)
@@ -402,7 +402,7 @@ aspell_array_clean (GArray * array)
             tmp = g_array_index (array, char *, i);
             g_free (tmp);
         }
-        g_array_free (array, TRUE);
+        g_array_free (array, true);
     }
 }
 
@@ -427,10 +427,10 @@ aspell_get_lang (void)
  * Set the language.
  *
  * @param lang Language name
- * @return FALSE or error
+ * @return false or error
  */
 
-gboolean
+bool
 aspell_set_lang (const char *lang)
 {
     if (lang != nullptr)
@@ -461,12 +461,12 @@ aspell_set_lang (const char *lang)
         if (mc_aspell_error (error) != 0)
         {
             mc_delete_aspell_can_have_error (error);
-            return FALSE;
+            return false;
         }
 
         global_speller->speller = mc_to_aspell_speller (error);
     }
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -475,10 +475,10 @@ aspell_set_lang (const char *lang)
  *
  * @param word Word for spell check
  * @param word_size Word size (in bytes)
- * @return FALSE if word is not in the dictionary
+ * @return false if word is not in the dictionary
  */
 
-gboolean
+bool
 aspell_check (const char *word, const int word_size)
 {
     int res = 0;
@@ -539,9 +539,9 @@ aspell_suggest (GArray * suggest, const char *word, const int word_size)
  *
  * @param word Word for spell check
  * @param word_size  Word size (in bytes)
- * @return FALSE or error
+ * @return false or error
  */
-gboolean
+bool
 aspell_add_to_dict (const char *word, int word_size)
 {
     mc_aspell_speller_add_to_personal (global_speller->speller, word, word_size);
@@ -549,7 +549,7 @@ aspell_add_to_dict (const char *word, int word_size)
     if (mc_aspell_speller_error (global_speller->speller) != 0)
     {
         edit_error_dialog (_("Error"), mc_aspell_speller_error_message (global_speller->speller));
-        return FALSE;
+        return false;
     }
 
     mc_aspell_speller_save_all_word_lists (global_speller->speller);
@@ -557,10 +557,10 @@ aspell_add_to_dict (const char *word, int word_size)
     if (mc_aspell_speller_error (global_speller->speller) != 0)
     {
         edit_error_dialog (_("Error"), mc_aspell_speller_error_message (global_speller->speller));
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

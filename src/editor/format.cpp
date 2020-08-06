@@ -93,7 +93,7 @@ line_start (const edit_buffer_t * buf, long line)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 bad_line_start (const edit_buffer_t * buf, off_t p)
 {
     int c;
@@ -122,7 +122,7 @@ bad_line_start (const edit_buffer_t * buf, off_t p)
  */
 
 static off_t
-begin_paragraph (WEdit * edit, gboolean force, long *lines)
+begin_paragraph (WEdit * edit, bool force, long *lines)
 {
     long i;
 
@@ -147,7 +147,7 @@ begin_paragraph (WEdit * edit, gboolean force, long *lines)
  */
 
 static off_t
-end_paragraph (WEdit * edit, gboolean force)
+end_paragraph (WEdit * edit, bool force)
 {
     long i;
 
@@ -169,7 +169,7 @@ end_paragraph (WEdit * edit, gboolean force)
 /* --------------------------------------------------------------------------------------------- */
 
 static GString *
-get_paragraph (const edit_buffer_t * buf, off_t p, off_t q, gboolean indent)
+get_paragraph (const edit_buffer_t * buf, off_t p, off_t q, bool indent)
 {
     GString *t;
 
@@ -216,7 +216,7 @@ next_tab_pos (off_t x)
 /* --------------------------------------------------------------------------------------------- */
 
 static inline off_t
-line_pixel_length (unsigned char *t, off_t b, off_t l, gboolean utf8)
+line_pixel_length (unsigned char *t, off_t b, off_t l, bool utf8)
 {
     off_t xn, x;                /* position conters */
     off_t char_length;          /* character length in bytes */
@@ -274,7 +274,7 @@ static off_t
 next_word_start (unsigned char *t, off_t q, off_t size)
 {
     off_t i;
-    gboolean saw_ws = FALSE;
+    bool saw_ws = false;
 
     for (i = q; i < size; i++)
     {
@@ -284,7 +284,7 @@ next_word_start (unsigned char *t, off_t q, off_t size)
             return -1;
         case '\t':
         case ' ':
-            saw_ws = TRUE;
+            saw_ws = true;
             break;
         default:
             if (saw_ws)
@@ -324,7 +324,7 @@ word_start (unsigned char *t, off_t q, off_t size)
 /** replaces ' ' with '\n' to properly format a paragraph */
 
 static inline void
-format_this (unsigned char *t, off_t size, long indent, gboolean utf8)
+format_this (unsigned char *t, off_t size, long indent, bool utf8)
 {
     off_t q = 0, ww;
 
@@ -333,7 +333,7 @@ format_this (unsigned char *t, off_t size, long indent, gboolean utf8)
     if (ww < FONT_MEAN_WIDTH * 2)
         ww = FONT_MEAN_WIDTH * 2;
 
-    while (TRUE)
+    while (true)
     {
         off_t p;
 
@@ -362,7 +362,7 @@ static inline void
 replace_at (WEdit * edit, off_t q, int c)
 {
     edit_cursor_move (edit, q - edit->buffer.curs1);
-    edit_delete (edit, TRUE);
+    edit_delete (edit, true);
     edit_insert_ahead (edit, c);
 }
 
@@ -436,7 +436,7 @@ put_paragraph (WEdit * edit, unsigned char *t, off_t p, long indent, off_t size)
                 edit_cursor_move (edit, p - edit->buffer.curs1);
                 while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != nullptr)
                 {
-                    edit_delete (edit, TRUE);
+                    edit_delete (edit, true);
                     if (cursor > edit->buffer.curs1)
                         cursor--;
                 }
@@ -474,7 +474,7 @@ test_indent (const WEdit * edit, off_t p, off_t q)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-format_paragraph (WEdit * edit, gboolean force)
+format_paragraph (WEdit * edit, bool force)
 {
     off_t p, q;
     long lines;
@@ -482,7 +482,7 @@ format_paragraph (WEdit * edit, gboolean force)
     GString *t;
     long indent;
     unsigned char *t2;
-    gboolean utf8 = FALSE;
+    bool utf8 = false;
 
     if (option_word_wrap_line_length < 2)
         return;
@@ -504,7 +504,7 @@ format_paragraph (WEdit * edit, gboolean force)
         if (option_stop_format_chars != nullptr
             && strchr (option_stop_format_chars, t->str[0]) != nullptr)
         {
-            g_string_free (t, TRUE);
+            g_string_free (t, true);
             return;
         }
 
@@ -517,14 +517,14 @@ format_paragraph (WEdit * edit, gboolean force)
             if (t->str[i] == '\n' && strchr (stop_format_chars, t->str[i + 1]) != nullptr)
             {
                 g_free (stop_format_chars);
-                g_string_free (t, TRUE);
+                g_string_free (t, true);
                 return;
             }
 
         g_free (stop_format_chars);
     }
 
-    t2 = (unsigned char *) g_string_free (t, FALSE);
+    t2 = (unsigned char *) g_string_free (t, false);
 #ifdef HAVE_CHARSET
     utf8 = edit->utf8;
 #endif

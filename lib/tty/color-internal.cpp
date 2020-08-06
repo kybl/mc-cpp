@@ -38,7 +38,7 @@
 
 /*** global variables ****************************************************************************/
 
-gboolean mc_tty_color_disable;
+bool mc_tty_color_disable;
 
 /*** file scope macro definitions ****************************************************************/
 

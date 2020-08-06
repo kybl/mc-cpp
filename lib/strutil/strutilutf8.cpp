@@ -46,14 +46,14 @@ struct utf8_tool
     size_t remain;
     const char *checked;
     int ident;
-    gboolean compose;
+    bool compose;
 };
 
 struct term_form
 {
     char text[BUF_MEDIUM * 6];
     size_t width;
-    gboolean compose;
+    bool compose;
 };
 
 /*** file scope variables ************************************************************************/
@@ -64,7 +64,7 @@ static const char replch[] = "\xEF\xBF\xBD";
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_unichar_iscombiningmark (gunichar uni)
 {
     GUnicodeType type;
@@ -84,7 +84,7 @@ str_utf8_insert_replace_char (GString * buffer)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_is_valid_string (const char *text)
 {
     return g_utf8_validate (text, -1, nullptr);
@@ -171,7 +171,7 @@ str_utf8_fix_string (char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_isspace (const char *text)
 {
     gunichar uni;
@@ -182,7 +182,7 @@ str_utf8_isspace (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_ispunct (const char *text)
 {
     gunichar uni;
@@ -193,7 +193,7 @@ str_utf8_ispunct (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_isalnum (const char *text)
 {
     gunichar uni;
@@ -204,7 +204,7 @@ str_utf8_isalnum (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_isdigit (const char *text)
 {
     gunichar uni;
@@ -215,7 +215,7 @@ str_utf8_isdigit (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_isprint (const char *ch)
 {
     gunichar uni;
@@ -226,7 +226,7 @@ str_utf8_isprint (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_iscombiningmark (const char *ch)
 {
     gunichar uni;
@@ -273,7 +273,7 @@ str_utf8_cprev_noncomb_char (const char **text, const char *begin)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_toupper (const char *text, char **out, size_t * remain)
 {
     gunichar uni;
@@ -281,22 +281,22 @@ str_utf8_toupper (const char *text, char **out, size_t * remain)
 
     uni = g_utf8_get_char_validated (text, -1);
     if (uni == (gunichar) (-1) || uni == (gunichar) (-2))
-        return FALSE;
+        return false;
 
     uni = g_unichar_toupper (uni);
     left = g_unichar_to_utf8 (uni, nullptr);
     if (left >= *remain)
-        return FALSE;
+        return false;
 
     left = g_unichar_to_utf8 (uni, *out);
     (*out) += left;
     (*remain) -= left;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_utf8_tolower (const char *text, char **out, size_t * remain)
 {
     gunichar uni;
@@ -304,17 +304,17 @@ str_utf8_tolower (const char *text, char **out, size_t * remain)
 
     uni = g_utf8_get_char_validated (text, -1);
     if (uni == (gunichar) (-1) || uni == (gunichar) (-2))
-        return FALSE;
+        return false;
 
     uni = g_unichar_tolower (uni);
     left = g_unichar_to_utf8 (uni, nullptr);
     if (left >= *remain)
-        return FALSE;
+        return false;
 
     left = g_unichar_to_utf8 (uni, *out);
     (*out) += left;
     (*remain) -= left;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -446,7 +446,7 @@ str_utf8_make_make_term_form (const char *text, size_t length)
 
     result.text[0] = '\0';
     result.width = 0;
-    result.compose = FALSE;
+    result.compose = false;
     actual = result.text;
 
     /* check if text start with combining character,
@@ -460,7 +460,7 @@ str_utf8_make_make_term_form (const char *text, size_t length)
             actual[0] = ' ';
             actual++;
             result.width++;
-            result.compose = TRUE;
+            result.compose = true;
         }
     }
 
@@ -474,7 +474,7 @@ str_utf8_make_make_term_form (const char *text, size_t length)
                 left = g_unichar_to_utf8 (uni, actual);
                 actual += left;
                 if (str_unichar_iscombiningmark (uni))
-                    result.compose = TRUE;
+                    result.compose = true;
                 else
                 {
                     result.width++;
@@ -533,10 +533,10 @@ str_utf8_term_form (const char *text)
 /* --------------------------------------------------------------------------------------------- */
 /* utility function, that copies all characters from checked to actual */
 
-static gboolean
+static bool
 utf8_tool_copy_chars_to_end (struct utf8_tool *tool)
 {
-    tool->compose = FALSE;
+    tool->compose = false;
 
     while (tool->checked[0] != '\0')
     {
@@ -547,24 +547,24 @@ utf8_tool_copy_chars_to_end (struct utf8_tool *tool)
         tool->compose = tool->compose || str_unichar_iscombiningmark (uni);
         left = g_unichar_to_utf8 (uni, nullptr);
         if (tool->remain <= left)
-            return FALSE;
+            return false;
         left = g_unichar_to_utf8 (uni, tool->actual);
         tool->actual += left;
         tool->remain -= left;
         tool->checked = g_utf8_next_char (tool->checked);
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 /* utility function, that copies characters from checked to actual until ident is
  * smaller than to_ident */
 
-static gboolean
+static bool
 utf8_tool_copy_chars_to (struct utf8_tool *tool, int to_ident)
 {
-    tool->compose = FALSE;
+    tool->compose = false;
 
     while (tool->checked[0] != '\0')
     {
@@ -574,19 +574,19 @@ utf8_tool_copy_chars_to (struct utf8_tool *tool, int to_ident)
 
         uni = g_utf8_get_char (tool->checked);
         if (str_unichar_iscombiningmark (uni))
-            tool->compose = TRUE;
+            tool->compose = true;
         else
         {
             w = 1;
             if (g_unichar_iswide (uni))
                 w++;
             if (tool->ident + w > to_ident)
-                return TRUE;
+                return true;
         }
 
         left = g_unichar_to_utf8 (uni, nullptr);
         if (tool->remain <= left)
-            return FALSE;
+            return false;
         left = g_unichar_to_utf8 (uni, tool->actual);
         tool->actual += left;
         tool->remain -= left;
@@ -594,7 +594,7 @@ utf8_tool_copy_chars_to (struct utf8_tool *tool, int to_ident)
         tool->ident += w;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -633,7 +633,7 @@ utf8_tool_insert_char (struct utf8_tool *tool, char ch)
 /* utility function, thah skips characters from checked until ident is greater or
  * equal to to_ident */
 
-static gboolean
+static bool
 utf8_tool_skip_chars_to (struct utf8_tool *tool, int to_ident)
 {
     gunichar uni;
@@ -657,7 +657,7 @@ utf8_tool_skip_chars_to (struct utf8_tool *tool, int to_ident)
         uni = g_utf8_get_char (tool->checked);
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -685,7 +685,7 @@ str_utf8_fit_to_term (const char *text, int width, align_crt_t just_mode)
     tool.checked = pre_form->text;
     tool.actual = result;
     tool.remain = sizeof (result);
-    tool.compose = FALSE;
+    tool.compose = false;
 
     if (pre_form->width <= (gsize) width)
     {
@@ -765,7 +765,7 @@ str_utf8_term_trim (const char *text, int width)
     tool.checked = pre_form->text;
     tool.actual = result;
     tool.remain = sizeof (result);
-    tool.compose = FALSE;
+    tool.compose = false;
 
     if ((gsize) width >= pre_form->width)
         utf8_tool_copy_chars_to_end (&tool);
@@ -836,7 +836,7 @@ str_utf8_term_substring (const char *text, int start, int width)
     tool.checked = pre_form->text;
     tool.actual = result;
     tool.remain = sizeof (result);
-    tool.compose = FALSE;
+    tool.compose = false;
 
     tool.ident = -start;
     utf8_tool_skip_chars_to (&tool, 0);
@@ -867,7 +867,7 @@ str_utf8_trunc (const char *text, int width)
     tool.checked = pre_form->text;
     tool.actual = result;
     tool.remain = sizeof (result);
-    tool.compose = FALSE;
+    tool.compose = false;
 
     if (pre_form->width <= (gsize) width)
         utf8_tool_copy_chars_to_end (&tool);
@@ -903,7 +903,7 @@ str_utf8_offset_to_pos (const char *text, size_t length)
         buffer = g_string_new (text);
         str_utf8_fix_string (buffer->str);
         result = g_utf8_offset_to_pointer (buffer->str, length) - buffer->str;
-        g_string_free (buffer, TRUE);
+        g_string_free (buffer, true);
         return result;
     }
 }
@@ -956,7 +956,7 @@ str_utf8_column_to_pos (const char *text, size_t pos)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_utf8_create_search_needle (const char *needle, gboolean case_sen)
+str_utf8_create_search_needle (const char *needle, bool case_sen)
 {
     char *fold, *result;
 
@@ -975,7 +975,7 @@ str_utf8_create_search_needle (const char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_utf8_release_search_needle (char *needle, gboolean case_sen)
+str_utf8_release_search_needle (char *needle, bool case_sen)
 {
     (void) case_sen;
     g_free (needle);
@@ -984,7 +984,7 @@ str_utf8_release_search_needle (char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_utf8_search_first (const char *text, const char *search, gboolean case_sen)
+str_utf8_search_first (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *deco_text;
@@ -1028,7 +1028,7 @@ str_utf8_search_first (const char *text, const char *search, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_utf8_search_last (const char *text, const char *search, gboolean case_sen)
+str_utf8_search_last (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *deco_text;
@@ -1116,7 +1116,7 @@ str_utf8_normalize (const char *text)
     if (start == text)
     {
         result = g_utf8_normalize (text, -1, G_NORMALIZE_ALL);
-        g_string_free (fixed, TRUE);
+        g_string_free (fixed, true);
     }
     else
     {
@@ -1126,7 +1126,7 @@ str_utf8_normalize (const char *text)
             g_string_append (fixed, tmp);
             g_free (tmp);
         }
-        result = g_string_free (fixed, FALSE);
+        result = g_string_free (fixed, false);
     }
 
     return result;
@@ -1165,7 +1165,7 @@ str_utf8_casefold_normalize (const char *text)
         fold = g_utf8_casefold (text, -1);
         result = g_utf8_normalize (fold, -1, G_NORMALIZE_ALL);
         g_free (fold);
-        g_string_free (fixed, TRUE);
+        g_string_free (fixed, true);
     }
     else
     {
@@ -1177,7 +1177,7 @@ str_utf8_casefold_normalize (const char *text)
             g_free (tmp);
             g_free (fold);
         }
-        result = g_string_free (fixed, FALSE);
+        result = g_string_free (fixed, false);
     }
 
     return result;
@@ -1342,7 +1342,7 @@ str_utf8_caseprefix (const char *text, const char *prefix)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_utf8_create_key_gen (const char *text, gboolean case_sen,
+str_utf8_create_key_gen (const char *text, bool case_sen,
                          gchar * (*keygen) (const gchar * text, gssize size))
 {
     char *result;
@@ -1351,7 +1351,7 @@ str_utf8_create_key_gen (const char *text, gboolean case_sen,
         result = str_utf8_normalize (text);
     else
     {
-        gboolean dot;
+        bool dot;
         GString *fixed;
         const char *start, *end;
         char *fold, *key;
@@ -1386,7 +1386,7 @@ str_utf8_create_key_gen (const char *text, gboolean case_sen,
             fold = g_utf8_casefold (start, -1);
             result = keygen (fold, -1);
             g_free (fold);
-            g_string_free (fixed, TRUE);
+            g_string_free (fixed, true);
         }
         else if (dot && (start == text + 1))
         {
@@ -1395,7 +1395,7 @@ str_utf8_create_key_gen (const char *text, gboolean case_sen,
             g_string_append (fixed, key);
             g_free (key);
             g_free (fold);
-            result = g_string_free (fixed, FALSE);
+            result = g_string_free (fixed, false);
         }
         else
         {
@@ -1407,7 +1407,7 @@ str_utf8_create_key_gen (const char *text, gboolean case_sen,
                 g_free (key);
                 g_free (fold);
             }
-            result = g_string_free (fixed, FALSE);
+            result = g_string_free (fixed, false);
         }
     }
     return result;
@@ -1416,7 +1416,7 @@ str_utf8_create_key_gen (const char *text, gboolean case_sen,
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_utf8_create_key (const char *text, gboolean case_sen)
+str_utf8_create_key (const char *text, bool case_sen)
 {
     return str_utf8_create_key_gen (text, case_sen, g_utf8_collate_key);
 }
@@ -1425,7 +1425,7 @@ str_utf8_create_key (const char *text, gboolean case_sen)
 
 #ifdef MC__USE_STR_UTF8_CREATE_KEY_FOR_FILENAME
 static char *
-str_utf8_create_key_for_filename (const char *text, gboolean case_sen)
+str_utf8_create_key_for_filename (const char *text, bool case_sen)
 {
     return str_utf8_create_key_gen (text, case_sen, g_utf8_collate_key_for_filename);
 }
@@ -1434,7 +1434,7 @@ str_utf8_create_key_for_filename (const char *text, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-str_utf8_key_collate (const char *t1, const char *t2, gboolean case_sen)
+str_utf8_key_collate (const char *t1, const char *t2, bool case_sen)
 {
     (void) case_sen;
     return strcmp (t1, t2);
@@ -1443,7 +1443,7 @@ str_utf8_key_collate (const char *t1, const char *t2, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_utf8_release_key (char *key, gboolean case_sen)
+str_utf8_release_key (char *key, bool case_sen)
 {
     (void) case_sen;
     g_free (key);

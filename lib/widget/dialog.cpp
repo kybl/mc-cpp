@@ -64,10 +64,10 @@ hook_t *idle_hook = nullptr;
 
 /* If set then dialogs just clean the screen when refreshing, else */
 /* they do a complete refresh, refreshing all the parts of the program */
-gboolean fast_refresh = FALSE;
+bool fast_refresh = false;
 
 /* left click outside of dialog closes it */
-gboolean mouse_close_dialog = FALSE;
+bool mouse_close_dialog = false;
 
 const global_keymap_t *dialog_map = nullptr;
 
@@ -101,7 +101,7 @@ dlg_read_history (WDialog * h)
         return;
 
     profile = mc_config_get_full_path (MC_HISTORY_FILE);
-    event_data.cfg = mc_config_init (profile, TRUE);
+    event_data.cfg = mc_config_init (profile, true);
     event_data.receiver = nullptr;
 
     /* create all histories in dialog */
@@ -313,7 +313,7 @@ frontend_dlg_run (WDialog * h)
 
         /* Clear interrupt flag */
         tty_got_interrupt ();
-        d_key = tty_get_event (&event, GROUP (h)->mouse_status == MOU_REPEAT, TRUE);
+        d_key = tty_get_event (&event, GROUP (h)->mouse_status == MOU_REPEAT, true);
 
         dlg_process_event (h, d_key, &event);
 
@@ -334,7 +334,7 @@ dlg_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
     {
     case MSG_IDLE:
         /* we don't want endless loop */
-        widget_idle (w, FALSE);
+        widget_idle (w, false);
         return MSG_HANDLED;
 
     default:
@@ -359,7 +359,7 @@ dlg_default_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 
     default:
         /* return MOU_UNHANDLED */
-        event->result.abort = TRUE;
+        event->result.abort = true;
         break;
     }
 }
@@ -367,8 +367,8 @@ dlg_default_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WDialog *
-dlg_create (gboolean modal, int y1, int x1, int lines, int cols, widget_pos_flags_t pos_flags,
-            gboolean compact, const int *colors, widget_cb_fn callback,
+dlg_create (bool modal, int y1, int x1, int lines, int cols, widget_pos_flags_t pos_flags,
+            bool compact, const int *colors, widget_cb_fn callback,
             widget_mouse_cb_fn mouse_callback, const char *help_ctx, const char *title)
 {
     WDialog *new_d;
@@ -404,7 +404,7 @@ dlg_create (gboolean modal, int y1, int x1, int lines, int cols, widget_pos_flag
     {
         w->state |= WST_MODAL;
 
-        new_d->bg = WIDGET (frame_new (0, 0, w->lines, w->cols, title, FALSE, new_d->compact));
+        new_d->bg = WIDGET (frame_new (0, 0, w->lines, w->cols, title, false, new_d->compact));
         group_add_widget (g, new_d->bg);
         frame_set_title (FRAME (new_d->bg), title);
     }
@@ -474,7 +474,7 @@ do_refresh (void)
 void
 dlg_stop (WDialog * h)
 {
-    widget_set_state (WIDGET (h), WST_CLOSED, TRUE);
+    widget_set_state (WIDGET (h), WST_CLOSED, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -487,7 +487,7 @@ dlg_init (WDialog * h)
     Widget *wh = WIDGET (h);
 
     if (top_dlg != nullptr && widget_get_state (WIDGET (top_dlg->data), WST_MODAL))
-        widget_set_state (wh, WST_MODAL, TRUE);
+        widget_set_state (wh, WST_MODAL, true);
 
     /* add dialog to the stack */
     top_dlg = g_list_prepend (top_dlg, h);
@@ -508,9 +508,9 @@ dlg_init (WDialog * h)
            && !widget_get_state (WIDGET (g->current->data), WST_DISABLED))
         group_set_current_widget_next (g);
 
-    widget_set_state (wh, WST_ACTIVE, TRUE);
+    widget_set_state (wh, WST_ACTIVE, true);
     /* draw dialog and focus found widget */
-    widget_set_state (wh, WST_FOCUSED, TRUE);
+    widget_set_state (wh, WST_FOCUSED, true);
 
     h->ret_value = 0;
 }
@@ -614,7 +614,7 @@ dlg_save_history (WDialog * h)
     {
         ev_history_load_save_t event_data;
 
-        event_data.cfg = mc_config_init (profile, FALSE);
+        event_data.cfg = mc_config_init (profile, false);
         event_data.receiver = nullptr;
 
         /* get all histories in dialog */

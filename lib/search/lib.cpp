@@ -91,7 +91,7 @@ mc_search__recode_str (const char *str, gsize str_len,
 
 gchar *
 mc_search__get_one_symbol (const char *charset, const char *str, gsize str_len,
-                           gboolean * just_letters)
+                           bool * just_letters)
 {
     gchar *converted_str;
     const gchar *next_char;

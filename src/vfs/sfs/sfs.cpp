@@ -134,7 +134,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
     int w;
     char pad[10240];
     char *s_iter, *t = pad;
-    gboolean was_percent = FALSE;
+    bool was_percent = false;
     vfs_path_t *pname;          /* name of parent archive */
     char *pqname;               /* name of parent archive, quoted */
     const vfs_path_element_t *path_element;
@@ -156,7 +156,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
 
     /*    if ((sfs_info[w].flags & F_2) || (!inpath) || (!*inpath)); else return -1; */
     if ((sfs_info[w].flags & F_NOLOCALCOPY) != 0)
-        pqname = name_quote (vfs_path_as_str (pname), FALSE);
+        pqname = name_quote (vfs_path_as_str (pname), false);
     else
     {
         vfs_path_t *s;
@@ -168,7 +168,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
             return (-1);
         }
 
-        pqname = name_quote (vfs_path_get_last_path_str (s), FALSE);
+        pqname = name_quote (vfs_path_get_last_path_str (s), false);
         vfs_path_free (s);
     }
 
@@ -180,7 +180,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
         {
             const char *ptr = nullptr;
 
-            was_percent = FALSE;
+            was_percent = false;
 
             switch (*s_iter)
             {
@@ -206,7 +206,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
             }
         }
         else if (*s_iter == '%')
-            was_percent = TRUE;
+            was_percent = true;
         else
         {
             COPY_CHAR;
@@ -394,13 +394,13 @@ sfs_fill_names (struct vfs_class *me, fill_names_f func)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 sfs_nothingisopen (vfsid id)
 {
     /* FIXME: Investigate whether have to guard this like in
        the other VFSs (see fd_usage in extfs) -- Norbert */
     (void) id;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -414,7 +414,7 @@ sfs_getlocalcopy (const vfs_path_t * vpath)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-sfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboolean has_changed)
+sfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, bool has_changed)
 {
     (void) vpath;
     (void) local;

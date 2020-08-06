@@ -181,16 +181,16 @@ examine_cd (const char *_path)
 
     g_free (path_tilde);
 
-    return g_string_free (q, FALSE);
+    return g_string_free (q, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /* CDPATH handling */
-static gboolean
+static bool
 handle_cdpath (const char *path)
 {
-    gboolean result = FALSE;
+    bool result = false;
 
     /* CDPATH handling */
     if (!IS_PATH_SEP (*path))
@@ -292,7 +292,7 @@ enter (WInput * lc_cmdline)
             {
                 char *s;
 
-                s = expand_format (nullptr, cmd[++i], TRUE);
+                s = expand_format (nullptr, cmd[++i], true);
                 g_string_append (command, s);
                 g_free (s);
             }
@@ -300,7 +300,7 @@ enter (WInput * lc_cmdline)
 
         input_clean (lc_cmdline);
         shell_execute (command->str, 0);
-        g_string_free (command, TRUE);
+        g_string_free (command, true);
 
 #ifdef ENABLE_SUBSHELL
         if ((quit & SUBSHELL_EXIT) != 0)
@@ -426,7 +426,7 @@ do_cd_command (char *orig_cmd)
     {
         char *path;
         vfs_path_t *q_vpath;
-        gboolean ok;
+        bool ok;
 
         path = examine_cd (&cmd[operand_pos]);
 
@@ -468,7 +468,7 @@ command_new (int y, int x, int cols)
                      INPUT_COMPLETE_SHELL_ESC);
     w = WIDGET (cmd);
     /* Don't set WOP_SELECTABLE up, otherwise panels will be unselected */
-    widget_set_options (w, WOP_SELECTABLE, FALSE);
+    widget_set_options (w, WOP_SELECTABLE, false);
     /* Add our hooks */
     w->callback = command_callback;
 
@@ -500,11 +500,11 @@ command_set_default_colors (void)
  */
 
 void
-command_insert (WInput * in, const char *text, gboolean insert_extra_space)
+command_insert (WInput * in, const char *text, bool insert_extra_space)
 {
     char *quoted_text;
 
-    quoted_text = name_quote (text, TRUE);
+    quoted_text = name_quote (text, true);
     input_insert (in, quoted_text, insert_extra_space);
     g_free (quoted_text);
 }

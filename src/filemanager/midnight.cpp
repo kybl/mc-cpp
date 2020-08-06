@@ -475,7 +475,7 @@ toggle_panels_split (void)
 
 #ifdef ENABLE_VFS
 /* event helper */
-static gboolean
+static bool
 check_panel_timestamp (const WPanel * panel, panel_view_mode_t mode, struct vfs_class *vclass,
                        vfsid id)
 {
@@ -486,18 +486,18 @@ check_panel_timestamp (const WPanel * panel, panel_view_mode_t mode, struct vfs_
         path_element = vfs_path_get_by_index (panel->cwd_vpath, -1);
 
         if (path_element->clazz != vclass)
-            return FALSE;
+            return false;
 
         if (vfs_getid (panel->cwd_vpath) != id)
-            return FALSE;
+            return false;
     }
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-static gboolean
+static bool
 check_current_panel_timestamp (const gchar * event_group_name, const gchar * event_name,
                                gpointer init_data, gpointer data)
 {
@@ -516,7 +516,7 @@ check_current_panel_timestamp (const gchar * event_group_name, const gchar * eve
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-static gboolean
+static bool
 check_other_panel_timestamp (const gchar * event_group_name, const gchar * event_name,
                              gpointer init_data, gpointer data)
 {
@@ -535,7 +535,7 @@ check_other_panel_timestamp (const gchar * event_group_name, const gchar * event
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-static gboolean
+static bool
 print_vfs_message (const gchar * event_group_name, const gchar * event_name,
                    gpointer init_data, gpointer data)
 {
@@ -573,7 +573,7 @@ print_vfs_message (const gchar * event_group_name, const gchar * event_name,
 
   ret:
     MC_PTR_FREE (event_data->msg);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -726,10 +726,10 @@ midnight_put_panel_path (WPanel * panel)
 
     cwd_vpath_str = vfs_path_as_str (cwd_vpath);
 
-    command_insert (cmdline, cwd_vpath_str, FALSE);
+    command_insert (cmdline, cwd_vpath_str, false);
 
     if (!IS_PATH_SEP (cwd_vpath_str[strlen (cwd_vpath_str) - 1]))
-        command_insert (cmdline, PATH_SEP_STR, FALSE);
+        command_insert (cmdline, PATH_SEP_STR, false);
 
     vfs_path_free (cwd_vpath);
 }
@@ -754,7 +754,7 @@ put_link (WPanel * panel)
         if (i > 0)
         {
             buffer[i] = '\0';
-            command_insert (cmdline, buffer, TRUE);
+            command_insert (cmdline, buffer, true);
         }
     }
 }
@@ -799,7 +799,7 @@ put_current_selected (void)
     else
         tmp = selection (current_panel)->fname;
 
-    command_insert (cmdline, tmp, TRUE);
+    command_insert (cmdline, tmp, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -817,12 +817,12 @@ put_tagged (WPanel * panel)
         for (i = 0; i < panel->dir.len; i++)
         {
             if (panel->dir.list[i].f.marked)
-                command_insert (cmdline, panel->dir.list[i].fname, TRUE);
+                command_insert (cmdline, panel->dir.list[i].fname, true);
         }
     }
     else
     {
-        command_insert (cmdline, panel->dir.list[panel->selected].fname, TRUE);
+        command_insert (cmdline, panel->dir.list[panel->selected].fname, true);
     }
     input_enable_update (cmdline);
 }
@@ -851,7 +851,7 @@ setup_mc (void)
 {
 #ifdef HAVE_SLANG
 #ifdef HAVE_CHARSET
-    tty_display_8bit (TRUE);
+    tty_display_8bit (true);
 #else
     tty_display_8bit (mc_global.full_eight_bits);
 #endif /* HAVE_CHARSET */
@@ -859,7 +859,7 @@ setup_mc (void)
 #else /* HAVE_SLANG */
 
 #ifdef HAVE_CHARSET
-    tty_display_8bit (TRUE);
+    tty_display_8bit (true);
 #else
     tty_display_8bit (mc_global.eight_bit_clean);
 #endif /* HAVE_CHARSET */
@@ -871,7 +871,7 @@ setup_mc (void)
 #endif /* !ENABLE_SUBSHELL */
 
     if ((tty_baudrate () < 9600) || mc_global.tty.slow_terminal)
-        verbose = FALSE;
+        verbose = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -922,7 +922,7 @@ create_file_manager (void)
     midnight_dlg->get_shortcut = midnight_get_shortcut;
     midnight_dlg->get_title = midnight_get_title;
     /* allow rebind tab */
-    widget_want_tab (w, TRUE);
+    widget_want_tab (w, true);
 
     the_menubar = menubar_new (nullptr, menubar_visible);
     group_add_widget (g, the_menubar);
@@ -933,7 +933,7 @@ create_file_manager (void)
     group_add_widget (g, get_panel_widget (1));
 
     the_hint = label_new (0, 0, 0);
-    the_hint->transparent = TRUE;
+    the_hint->transparent = true;
     the_hint->auto_adjust_cols = 0;
     WIDGET (the_hint)->cols = COLS;
     group_add_widget (g, the_hint);
@@ -942,7 +942,7 @@ create_file_manager (void)
     group_add_widget (g, cmdline);
 
     the_prompt = label_new (0, 0, mc_prompt);
-    the_prompt->transparent = TRUE;
+    the_prompt->transparent = true;
     group_add_widget (g, the_prompt);
 
     the_bar = buttonbar_new (mc_global.keybar_visible);
@@ -972,10 +972,10 @@ prepend_cwd_on_local (const char *filename)
 /** Invoke the internal view/edit routine with:
  * the default processing and forcing the internal viewer/editor
  */
-static gboolean
+static bool
 mc_maybe_editor_or_viewer (void)
 {
-    gboolean ret;
+    bool ret;
 
     switch (mc_global.mc_run_mode)
     {
@@ -991,7 +991,7 @@ mc_maybe_editor_or_viewer (void)
             if (mc_run_param0 != nullptr && *(char *) mc_run_param0 != '\0')
                 vpath = prepend_cwd_on_local ((char *) mc_run_param0);
 
-            ret = view_file (vpath, FALSE, TRUE);
+            ret = view_file (vpath, false, true);
             vfs_path_free (vpath);
             break;
         }
@@ -1001,7 +1001,7 @@ mc_maybe_editor_or_viewer (void)
         break;
 #endif /* USE_DIFF_VIEW */
     default:
-        ret = FALSE;
+        ret = false;
     }
 
     return ret;
@@ -1051,7 +1051,7 @@ show_editor_viewer_history (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 quit_cmd_internal (int quiet)
 {
     int q = quit;
@@ -1067,7 +1067,7 @@ quit_cmd_internal (int quiet)
                               "You have %zu opened screens. Quit anyway?", n), n);
 
         if (query_dialog (_("The Midnight Commander"), msg, D_NORMAL, 2, _("&Yes"), _("&No")) != 0)
-            return FALSE;
+            return false;
         q = 1;
     }
     else if (quiet || !confirm_exit)
@@ -1094,7 +1094,7 @@ quit_cmd_internal (int quiet)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 quit_cmd (void)
 {
     return quit_cmd_internal (0);
@@ -1384,7 +1384,7 @@ midnight_execute_cmd (Widget * sender, long command)
         sort_cmd ();
         break;
     case CK_ExtendedKeyMap:
-        WIDGET (midnight_dlg)->ext_mode = TRUE;
+        WIDGET (midnight_dlg)->ext_mode = true;
         break;
     case CK_Suspend:
         mc_event_raise (MCEVENT_GROUP_CORE, "suspend", nullptr);
@@ -1448,11 +1448,11 @@ midnight_execute_cmd (Widget * sender, long command)
 /**
  * Whether the command-line should not respond to key events.
  *
- * This is TRUE if a QuickView or TreeView have the focus, as they're going
+ * This is true if a QuickView or TreeView have the focus, as they're going
  * to consume some keys and there's no sense in passing to the command-line
  * just the leftovers.
  */
-static gboolean
+static bool
 is_cmdline_mute (void)
 {
     /* When one of panels is other than view_listing,
@@ -1469,9 +1469,9 @@ is_cmdline_mute (void)
 /**
  * Handles the Enter key on the command-line.
  *
- * Returns TRUE if non-whitespace was indeed processed.
+ * Returns true if non-whitespace was indeed processed.
  */
-static gboolean
+static bool
 handle_cmdline_enter (void)
 {
     size_t i;
@@ -1482,13 +1482,13 @@ handle_cmdline_enter (void)
     if (cmdline->buffer[i] != '\0')
     {
         send_message (cmdline, nullptr, MSG_KEY, '\n', nullptr);
-        return TRUE;
+        return true;
     }
 
-    input_insert (cmdline, "", FALSE);
+    input_insert (cmdline, "", false);
     cmdline->point = 0;
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1506,7 +1506,7 @@ midnight_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
         return MSG_HANDLED;
 
     case MSG_DRAW:
-        load_hint (TRUE);
+        load_hint (true);
         group_default_callback (w, nullptr, MSG_DRAW, 0, nullptr);
         /* We handle the special case of the output lines */
         if (mc_global.tty.console_flag != '\0' && output_lines != 0)
@@ -1526,7 +1526,7 @@ midnight_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
 
     case MSG_IDLE:
         /* We only need the first idle event to show user menu after start */
-        widget_idle (w, FALSE);
+        widget_idle (w, false);
 
         if (boot_current_is_left)
             widget_select (get_panel_widget (0));
@@ -1667,11 +1667,11 @@ midnight_set_buttonbar (WButtonBar * b)
 
 /* --------------------------------------------------------------------------------------------- */
 /**
- * Return a random hint.  If force is TRUE, ignore the timeout.
+ * Return a random hint.  If force is true, ignore the timeout.
  */
 
 char *
-get_random_hint (gboolean force)
+get_random_hint (bool force)
 {
     static const guint64 update_period = 60 * G_USEC_PER_SEC;
     static guint64 tv = 0;
@@ -1721,9 +1721,9 @@ get_random_hint (gboolean force)
 
         buffer = g_string_sized_new (len - start);
         if (str_convert (conv, &data[start], buffer) != ESTR_FAILURE)
-            result = g_string_free (buffer, FALSE);
+            result = g_string_free (buffer, false);
         else
-            g_string_free (buffer, TRUE);
+            g_string_free (buffer, true);
         str_close_conv (conv);
     }
     else
@@ -1741,7 +1741,7 @@ get_random_hint (gboolean force)
  */
 
 void
-load_hint (gboolean force)
+load_hint (bool force)
 {
     char *hint;
 
@@ -1798,26 +1798,26 @@ save_cwds_stat (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 quiet_quit_cmd (void)
 {
-    print_last_revert = TRUE;
+    print_last_revert = true;
     return quit_cmd_internal (1);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /** Run the main dialog that occupies the whole screen */
-gboolean
+bool
 do_nc (void)
 {
-    gboolean ret;
+    bool ret;
 
 #ifdef USE_INTERNAL_EDIT
     edit_stack_init ();
 #endif
 
-    midnight_dlg = dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, dialog_colors,
+    midnight_dlg = dlg_create (false, 0, 0, 1, 1, WPOS_FULLSCREEN, false, dialog_colors,
                                midnight_callback, nullptr, "[main]", nullptr);
 
     /* Check if we were invoked as an editor or file viewer */
@@ -1829,17 +1829,17 @@ do_nc (void)
     else
     {
         /* We only need the first idle event to show user menu after start */
-        widget_idle (WIDGET (midnight_dlg), TRUE);
+        widget_idle (WIDGET (midnight_dlg), true);
 
         setup_mc ();
-        mc_filehighlight = mc_fhl_new (TRUE);
+        mc_filehighlight = mc_fhl_new (true);
 
         create_file_manager ();
         (void) dlg_run (midnight_dlg);
 
         mc_fhl_free (&mc_filehighlight);
 
-        ret = TRUE;
+        ret = true;
 
         /* dlg_destroy destroys even current_panel->cwd_vpath, so we have to save a copy :) */
         if (mc_args__last_wd_file != nullptr && vfs_current_is_local ())
@@ -1852,7 +1852,7 @@ do_nc (void)
     }
 
     /* Program end */
-    mc_global.midnight_shutdown = TRUE;
+    mc_global.midnight_shutdown = true;
     dialog_switch_shutdown ();
     done_mc ();
     dlg_destroy (midnight_dlg);

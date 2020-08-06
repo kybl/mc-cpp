@@ -166,9 +166,9 @@ sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
  * proper enum's values.
  *
  * @param super connection data
- * @return TRUE if some of authentication methods is available, FALSE otherwise
+ * @return true if some of authentication methods is available, false otherwise
  */
-static gboolean
+static bool
 sftpfs_recognize_auth_types (struct vfs_s_super *super)
 {
     char *userauthlist;
@@ -180,7 +180,7 @@ sftpfs_recognize_auth_types (struct vfs_s_super *super)
                                           strlen (super->path_element->user));
 
     if (userauthlist == nullptr)
-        return FALSE;
+        return false;
 
     if ((strstr (userauthlist, "password") != nullptr
          || strstr (userauthlist, "keyboard-interactive") != nullptr)
@@ -194,7 +194,7 @@ sftpfs_recognize_auth_types (struct vfs_s_super *super)
     if ((sftpfs_super->config_auth_type & SFTPS_AUTH_AGENT) != 0)
         sftpfs_super->auth_type |= SFTPS_AUTH_AGENT;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -203,42 +203,42 @@ sftpfs_recognize_auth_types (struct vfs_s_super *super)
  *
  * @param super   connection data
  * @param mcerror pointer to the error handler
- * @return TRUE if connection was successfully opened, FALSE otherwise
+ * @return true if connection was successfully opened, false otherwise
  */
 
-static gboolean
+static bool
 sftpfs_open_connection_ssh_agent (struct vfs_s_super *super, GError ** mcerror)
 {
     sftpfs_super_t *sftpfs_super = SFTP_SUPER (super);
     struct libssh2_agent_publickey *identity, *prev_identity = nullptr;
     int rc;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     sftpfs_super->agent = nullptr;
 
     if ((sftpfs_super->auth_type & SFTPS_AUTH_AGENT) == 0)
-        return FALSE;
+        return false;
 
     /* Connect to the ssh-agent */
     sftpfs_super->agent = libssh2_agent_init (sftpfs_super->session);
     if (sftpfs_super->agent == nullptr)
-        return FALSE;
+        return false;
 
     if (libssh2_agent_connect (sftpfs_super->agent) != 0)
-        return FALSE;
+        return false;
 
     if (libssh2_agent_list_identities (sftpfs_super->agent) != 0)
-        return FALSE;
+        return false;
 
-    while (TRUE)
+    while (true)
     {
         rc = libssh2_agent_get_identity (sftpfs_super->agent, &identity, prev_identity);
         if (rc == 1)
             break;
 
         if (rc < 0)
-            return FALSE;
+            return false;
 
         if (libssh2_agent_userauth (sftpfs_super->agent, super->path_element->user, identity) == 0)
             break;
@@ -255,28 +255,28 @@ sftpfs_open_connection_ssh_agent (struct vfs_s_super *super, GError ** mcerror)
  *
  * @param super   connection data
  * @param mcerror pointer to the error handler
- * @return TRUE if connection was successfully opened, FALSE otherwise
+ * @return true if connection was successfully opened, false otherwise
  */
 
-static gboolean
+static bool
 sftpfs_open_connection_ssh_key (struct vfs_s_super *super, GError ** mcerror)
 {
     sftpfs_super_t *sftpfs_super = SFTP_SUPER (super);
     char *p, *passwd;
-    gboolean ret_value = FALSE;
+    bool ret_value = false;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if ((sftpfs_super->auth_type & SFTPS_AUTH_PUBKEY) == 0)
-        return FALSE;
+        return false;
 
     if (sftpfs_super->privkey == nullptr)
-        return FALSE;
+        return false;
 
     if (libssh2_userauth_publickey_fromfile (sftpfs_super->session, super->path_element->user,
                                              sftpfs_super->pubkey, sftpfs_super->privkey,
                                              super->path_element->password) == 0)
-        return TRUE;
+        return true;
 
     p = g_strdup_printf (_("sftp: Enter passphrase for %s "), super->path_element->user);
     passwd = vfs_get_password (p);
@@ -347,21 +347,21 @@ LIBSSH2_USERAUTH_KBDINT_RESPONSE_FUNC (sftpfs_keyboard_interactive_helper)
  *
  * @param super   connection data
  * @param mcerror pointer to the error handler
- * @return TRUE if connection was successfully opened, FALSE otherwise
+ * @return true if connection was successfully opened, false otherwise
  */
 
-static gboolean
+static bool
 sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerror)
 {
     sftpfs_super_t *sftpfs_super = SFTP_SUPER (super);
     char *p, *passwd;
-    gboolean ret_value = FALSE;
+    bool ret_value = false;
     int rc;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if ((sftpfs_super->auth_type & SFTPS_AUTH_PASSWORD) == 0)
-        return FALSE;
+        return false;
 
     if (super->path_element->password != nullptr)
     {
@@ -369,7 +369,7 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
                                                 super->path_element->password)) ==
                LIBSSH2_ERROR_EAGAIN);
         if (rc == 0)
-            return TRUE;
+            return true;
 
         kbi_super = super;
         kbi_passwd = super->path_element->password;
@@ -385,7 +385,7 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
         kbi_passwd = nullptr;
 
         if (rc == 0)
-            return TRUE;
+            return true;
     }
 
     p = g_strdup_printf (_("sftp: Enter password for %s "), super->path_element->user);
@@ -418,7 +418,7 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
 
         if (rc == 0)
         {
-            ret_value = TRUE;
+            ret_value = true;
             g_free (super->path_element->password);
             super->path_element->password = passwd;
         }

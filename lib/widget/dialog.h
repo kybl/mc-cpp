@@ -60,7 +60,7 @@ struct WDialog
     WGroup group;               /* base class */
 
     /* Set by the user */
-    gboolean compact;           /* Suppress spaces around the frame */
+    bool compact;           /* Suppress spaces around the frame */
     const char *help_ctx;       /* Name of the help entry */
     const int *colors;          /* Color set. Unused in viewer and editor */
 
@@ -88,16 +88,16 @@ extern GList *top_dlg;
 /* A hook list for idle events */
 extern hook_t *idle_hook;
 
-extern gboolean fast_refresh;
-extern gboolean mouse_close_dialog;
+extern bool fast_refresh;
+extern bool mouse_close_dialog;
 
 extern const global_keymap_t *dialog_map;
 
 /*** declarations of public functions ************************************************************/
 
 /* Creates a dialog head  */
-WDialog *dlg_create (gboolean modal, int y1, int x1, int lines, int cols,
-                     widget_pos_flags_t pos_flags, gboolean compact,
+WDialog *dlg_create (bool modal, int y1, int x1, int lines, int cols,
+                     widget_pos_flags_t pos_flags, bool compact,
                      const int *colors, widget_cb_fn callback, widget_mouse_cb_fn mouse_callback,
                      const char *help_ctx, const char *title);
 

@@ -108,7 +108,7 @@ static struct
 };
 
 static int current_file;
-static gboolean ignore_all;
+static bool ignore_all;
 
 static WListbox *l_user, *l_group;
 
@@ -119,13 +119,13 @@ static WListbox *l_user, *l_group;
 static void
 chown_init (void)
 {
-    static gboolean i18n = FALSE;
+    static bool i18n = false;
     int i;
 
     if (i18n)
         return;
 
-    i18n = TRUE;
+    i18n = true;
 
 #ifdef ENABLE_NLS
     for (i = 0; i < BUTTONS; i++)
@@ -202,7 +202,7 @@ chown_dlg_create (void)
     cols = GW * 3 + 2 + 6;
 
     ch_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, nullptr, nullptr,
+        dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors, nullptr, nullptr,
                     "[Chown]", _("Chown command"));
     g = GROUP (ch_dlg);
 
@@ -210,25 +210,25 @@ chown_dlg_create (void)
     ch_dlg->bg->callback = chown_bg_callback;
 
     group_add_widget (g, groupbox_new (2, 3, GH, GW, _("User name")));
-    l_user = listbox_new (3, 4, GH - 2, GW - 2, FALSE, nullptr);
+    l_user = listbox_new (3, 4, GH - 2, GW - 2, false, nullptr);
     group_add_widget (g, l_user);
     /* add field for unknown names (numbers) */
-    listbox_add_item (l_user, LISTBOX_APPEND_AT_END, 0, _("<Unknown user>"), nullptr, FALSE);
+    listbox_add_item (l_user, LISTBOX_APPEND_AT_END, 0, _("<Unknown user>"), nullptr, false);
     /* get and put user names in the listbox */
     setpwent ();
     while ((l_pass = getpwent ()) != nullptr)
-        listbox_add_item (l_user, LISTBOX_APPEND_SORTED, 0, l_pass->pw_name, nullptr, FALSE);
+        listbox_add_item (l_user, LISTBOX_APPEND_SORTED, 0, l_pass->pw_name, nullptr, false);
     endpwent ();
 
     group_add_widget (g, groupbox_new (2, 4 + GW, GH, GW, _("Group name")));
-    l_group = listbox_new (3, 5 + GW, GH - 2, GW - 2, FALSE, nullptr);
+    l_group = listbox_new (3, 5 + GW, GH - 2, GW - 2, false, nullptr);
     group_add_widget (g, l_group);
     /* add field for unknown names (numbers) */
-    listbox_add_item (l_group, LISTBOX_APPEND_AT_END, 0, _("<Unknown group>"), nullptr, FALSE);
+    listbox_add_item (l_group, LISTBOX_APPEND_AT_END, 0, _("<Unknown group>"), nullptr, false);
     /* get and put group names in the listbox */
     setgrent ();
     while ((l_grp = getgrent ()) != nullptr)
-        listbox_add_item (l_group, LISTBOX_APPEND_SORTED, 0, l_grp->gr_name, nullptr, FALSE);
+        listbox_add_item (l_group, LISTBOX_APPEND_SORTED, 0, l_grp->gr_name, nullptr, false);
     endgrent ();
 
     group_add_widget (g, groupbox_new (2, 5 + GW * 2, GH, GW, _("File")));
@@ -275,7 +275,7 @@ chown_dlg_create (void)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-chown_done (gboolean need_update)
+chown_done (bool need_update)
 {
     if (need_update)
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
@@ -295,7 +295,7 @@ next_file (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 try_chown (const vfs_path_t * p, uid_t u, gid_t g)
 {
     while (mc_chown (p, u, g) == -1 && !ignore_all)
@@ -316,12 +316,12 @@ try_chown (const vfs_path_t * p, uid_t u, gid_t g)
         {
         case 0:
             /* try next file */
-            return TRUE;
+            return true;
 
         case 1:
-            ignore_all = TRUE;
+            ignore_all = true;
             /* try next file */
-            return TRUE;
+            return true;
 
         case 2:
             /* retry this file */
@@ -330,19 +330,19 @@ try_chown (const vfs_path_t * p, uid_t u, gid_t g)
         case 3:
         default:
             /* stop remain files processing */
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 do_chown (const vfs_path_t * p, uid_t u, gid_t g)
 {
-    gboolean ret;
+    bool ret;
 
     ret = try_chown (p, u, g);
 
@@ -356,7 +356,7 @@ do_chown (const vfs_path_t * p, uid_t u, gid_t g)
 static void
 apply_chowns (vfs_path_t * vpath, uid_t u, gid_t g)
 {
-    gboolean ok;
+    bool ok;
 
     if (!do_chown (vpath, u, g))
         return;
@@ -377,7 +377,7 @@ apply_chowns (vfs_path_t * vpath, uid_t u, gid_t g)
             do_file_mark (current_panel, current_file, 0);
 
             /* try next file */
-            ok = TRUE;
+            ok = true;
         }
         else
             ok = do_chown (vpath, u, g);
@@ -394,13 +394,13 @@ apply_chowns (vfs_path_t * vpath, uid_t u, gid_t g)
 void
 chown_cmd (void)
 {
-    gboolean need_update;
-    gboolean end_chown;
+    bool need_update;
+    bool end_chown;
 
     chown_init ();
 
     current_file = 0;
-    ignore_all = FALSE;
+    ignore_all = false;
 
     do
     {                           /* do while any files remaining */
@@ -415,8 +415,8 @@ chown_cmd (void)
 
         do_refresh ();
 
-        need_update = FALSE;
-        end_chown = FALSE;
+        need_update = false;
+        end_chown = false;
 
         if (current_panel->marked != 0)
             fname = next_file ();       /* next marked file */
@@ -449,7 +449,7 @@ chown_cmd (void)
         switch (result)
         {
         case B_CANCEL:
-            end_chown = TRUE;
+            end_chown = true;
             break;
 
         case B_ENTER:
@@ -475,22 +475,22 @@ chown_cmd (void)
                         if (mc_chown (vpath, new_user, new_group) == -1)
                             message (D_ERROR, MSG_ERROR, _("Cannot chown \"%s\"\n%s"),
                                      fname, unix_error_string (errno));
-                        end_chown = TRUE;
+                        end_chown = true;
                     }
                     else if (!try_chown (vpath, new_user, new_group))
                     {
                         /* stop multiple files processing */
                         result = B_CANCEL;
-                        end_chown = TRUE;
+                        end_chown = true;
                     }
                 }
                 else
                 {
                     apply_chowns (vpath, new_user, new_group);
-                    end_chown = TRUE;
+                    end_chown = true;
                 }
 
-                need_update = TRUE;
+                need_update = true;
                 break;
             }
 
@@ -505,8 +505,8 @@ chown_cmd (void)
                 {
                     new_user = user->pw_uid;
                     apply_chowns (vpath, new_user, new_group);
-                    need_update = TRUE;
-                    end_chown = TRUE;
+                    need_update = true;
+                    end_chown = true;
                 }
                 break;
             }
@@ -522,8 +522,8 @@ chown_cmd (void)
                 {
                     new_group = grp->gr_gid;
                     apply_chowns (vpath, new_user, new_group);
-                    need_update = TRUE;
-                    end_chown = TRUE;
+                    need_update = true;
+                    end_chown = true;
                 }
                 break;
             }
@@ -535,7 +535,7 @@ chown_cmd (void)
         if (current_panel->marked != 0 && result != B_CANCEL)
         {
             do_file_mark (current_panel, current_file, 0);
-            need_update = TRUE;
+            need_update = true;
         }
 
         vfs_path_free (vpath);

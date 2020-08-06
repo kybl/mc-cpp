@@ -121,7 +121,7 @@ GString *subshell_prompt = nullptr;
 
 /* Subshell: if set, then the prompt was not saved on CONSOLE_SAVE */
 /* We need to paint it after CONSOLE_RESTORE, see: load_prompt */
-gboolean update_subshell_prompt = FALSE;
+bool update_subshell_prompt = false;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -407,7 +407,7 @@ init_subshell_child (const char *pty_name)
 static void
 init_raw_mode (void)
 {
-    static gboolean initialized = FALSE;
+    static bool initialized = false;
 
     /* MC calls tty_reset_shell_mode() in pre_exec() to set the real tty to its */
     /* original settings.  However, here we need to make this tty very raw,     */
@@ -426,7 +426,7 @@ init_raw_mode (void)
         raw_mode.c_oflag &= ~OPOST;     /* Don't postprocess output           */
         raw_mode.c_cc[VTIME] = 0;       /* IE: wait forever, and return as    */
         raw_mode.c_cc[VMIN] = 1;        /* soon as a character is available   */
-        initialized = TRUE;
+        initialized = true;
     }
 }
 
@@ -461,7 +461,7 @@ synchronize (void)
         tcflush (subshell_pty_slave, TCIFLUSH);
     }
 
-    subshell_stopped = FALSE;
+    subshell_stopped = false;
     kill (subshell_pid, SIGCONT);
 
     sigprocmask (SIG_SETMASK, &old_mask, nullptr);
@@ -471,8 +471,8 @@ synchronize (void)
 /* --------------------------------------------------------------------------------------------- */
 /** Feed the subshell our keyboard input until it says it's finished */
 
-static gboolean
-feed_subshell (int how, gboolean fail_on_error)
+static bool
+feed_subshell (int how, bool fail_on_error)
 {
     fd_set read_set;            /* For 'select' */
     int bytes;                  /* For the return value from 'read' */
@@ -486,12 +486,12 @@ feed_subshell (int how, gboolean fail_on_error)
     wtime.tv_usec = 0;
     wptr = fail_on_error ? &wtime : nullptr;
 
-    while (TRUE)
+    while (true)
     {
         int maxfdp;
 
         if (!subshell_alive)
-            return FALSE;
+            return false;
 
         /* Prepare the file-descriptor set and call 'select' */
 
@@ -533,7 +533,7 @@ feed_subshell (int how, gboolean fail_on_error)
 
             /* The subshell has died */
             if (bytes == -1 && errno == EIO && !subshell_alive)
-                return FALSE;
+                return false;
 
             if (bytes <= 0)
             {
@@ -567,11 +567,11 @@ feed_subshell (int how, gboolean fail_on_error)
 
             synchronize ();
 
-            subshell_ready = TRUE;
+            subshell_ready = true;
             if (subshell_state == RUNNING_COMMAND)
             {
                 subshell_state = INACTIVE;
-                return TRUE;
+                return true;
             }
         }
 
@@ -593,16 +593,16 @@ feed_subshell (int how, gboolean fail_on_error)
                     write_all (mc_global.tty.subshell_pty, pty_buffer, i);
                     if (subshell_ready)
                         subshell_state = INACTIVE;
-                    return TRUE;
+                    return true;
                 }
 
             write_all (mc_global.tty.subshell_pty, pty_buffer, bytes);
 
             if (pty_buffer[bytes - 1] == '\n' || pty_buffer[bytes - 1] == '\r')
-                subshell_ready = FALSE;
+                subshell_ready = false;
         }
         else
-            return FALSE;
+            return false;
     }
 }
 
@@ -959,7 +959,7 @@ subshell_name_quote (const char *s)
  *
  *  Possibly modifies the global variables:
  *      subshell_type, subshell_alive, subshell_stopped, subshell_pid
- *      mc_global.tty.use_subshell - Is set to FALSE if we can't run the subshell
+ *      mc_global.tty.use_subshell - Is set to false if we can't run the subshell
  *      quit - Can be set to SUBSHELL_EXIT by the SIGCHLD handler
  */
 
@@ -989,7 +989,7 @@ init_subshell (void)
         {
             fprintf (stderr, "Cannot open master and slave sides of pty: %s\n",
                      unix_error_string (errno));
-            mc_global.tty.use_subshell = FALSE;
+            mc_global.tty.use_subshell = false;
             return;
         }
 #else
@@ -997,7 +997,7 @@ init_subshell (void)
         if (mc_global.tty.subshell_pty == -1)
         {
             fprintf (stderr, "Cannot open master side of pty: %s\r\n", unix_error_string (errno));
-            mc_global.tty.use_subshell = FALSE;
+            mc_global.tty.use_subshell = false;
             return;
         }
         subshell_pty_slave = pty_open_slave (pty_name);
@@ -1005,7 +1005,7 @@ init_subshell (void)
         {
             fprintf (stderr, "Cannot open slave side of pty %s: %s\r\n",
                      pty_name, unix_error_string (errno));
-            mc_global.tty.use_subshell = FALSE;
+            mc_global.tty.use_subshell = false;
             return;
         }
 #endif /* HAVE_OPENPTY */
@@ -1019,7 +1019,7 @@ init_subshell (void)
             if (mkfifo (tcsh_fifo, 0600) == -1)
             {
                 fprintf (stderr, "mkfifo(%s) failed: %s\r\n", tcsh_fifo, unix_error_string (errno));
-                mc_global.tty.use_subshell = FALSE;
+                mc_global.tty.use_subshell = false;
                 return;
             }
 
@@ -1030,22 +1030,22 @@ init_subshell (void)
             {
                 fprintf (stderr, _("Cannot open named pipe %s\n"), tcsh_fifo);
                 perror (__FILE__ ": open");
-                mc_global.tty.use_subshell = FALSE;
+                mc_global.tty.use_subshell = false;
                 return;
             }
         }
         else if (pipe (subshell_pipe))  /* subshell_type is BASH, ASH_BUSYBOX, DASH or ZSH */
         {
             perror (__FILE__ ": couldn't create pipe");
-            mc_global.tty.use_subshell = FALSE;
+            mc_global.tty.use_subshell = false;
             return;
         }
     }
 
     /* Fork the subshell */
 
-    subshell_alive = TRUE;
-    subshell_stopped = FALSE;
+    subshell_alive = true;
+    subshell_stopped = false;
     subshell_pid = fork ();
 
     if (subshell_pid == -1)
@@ -1070,13 +1070,13 @@ init_subshell (void)
 
     subshell_state = RUNNING_COMMAND;
     tty_enable_interrupt_key ();
-    if (!feed_subshell (QUIETLY, TRUE))
+    if (!feed_subshell (QUIETLY, true))
     {
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
     }
     tty_disable_interrupt_key ();
     if (!subshell_alive)
-        mc_global.tty.use_subshell = FALSE;     /* Subshell died instantly, so don't use it */
+        mc_global.tty.use_subshell = false;     /* Subshell died instantly, so don't use it */
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1089,7 +1089,7 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
 
     /* Make the subshell change to MC's working directory */
     if (new_dir_vpath != nullptr)
-        do_subshell_chdir (subshell_get_cwd (), TRUE);
+        do_subshell_chdir (subshell_get_cwd (), true);
 
     if (command == nullptr)        /* The user has done "C-o" from MC */
     {
@@ -1110,10 +1110,10 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
         write_all (mc_global.tty.subshell_pty, command, strlen (command));
         write_all (mc_global.tty.subshell_pty, "\n", 1);
         subshell_state = RUNNING_COMMAND;
-        subshell_ready = FALSE;
+        subshell_ready = false;
     }
 
-    feed_subshell (how, FALSE);
+    feed_subshell (how, false);
 
     if (new_dir_vpath != nullptr && subshell_alive)
     {
@@ -1134,14 +1134,14 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 read_subshell_prompt (void)
 {
     int rc = 0;
     ssize_t bytes = 0;
     struct timeval timeleft = { 0, 0 };
     GString *p;
-    gboolean prompt_was_reset = FALSE;
+    bool prompt_was_reset = false;
 
     fd_set tmp;
     FD_ZERO (&tmp);
@@ -1180,7 +1180,7 @@ read_subshell_prompt (void)
             if (pty_buffer[i] == '\n' || pty_buffer[i] == '\r')
             {
                 g_string_set_size (p, 0);
-                prompt_was_reset = TRUE;
+                prompt_was_reset = true;
             }
             else if (pty_buffer[i] != '\0')
                 g_string_append_c (p, pty_buffer[i]);
@@ -1189,7 +1189,7 @@ read_subshell_prompt (void)
     if (p->len != 0 || prompt_was_reset)
         g_string_assign (subshell_prompt, p->str);
 
-    g_string_free (p, TRUE);
+    g_string_free (p, true);
 
     return (rc != 0 || bytes != 0);
 }
@@ -1203,16 +1203,16 @@ do_update_prompt (void)
     {
         printf ("\r\n%s", subshell_prompt->str);
         fflush (stdout);
-        update_subshell_prompt = FALSE;
+        update_subshell_prompt = false;
     }
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 exit_subshell (void)
 {
-    gboolean subshell_quit = TRUE;
+    bool subshell_quit = true;
 
     if (subshell_state != INACTIVE && subshell_alive)
         subshell_quit =
@@ -1229,7 +1229,7 @@ exit_subshell (void)
                          tcsh_fifo, unix_error_string (errno));
         }
 
-        g_string_free (subshell_prompt, TRUE);
+        g_string_free (subshell_prompt, true);
         subshell_prompt = nullptr;
         pty_buffer[0] = '\0';
     }
@@ -1241,7 +1241,7 @@ exit_subshell (void)
 
 /** If it actually changed the directory it returns true */
 void
-do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
+do_subshell_chdir (const vfs_path_t * vpath, bool update_prompt)
 {
     char *pcwd;
 
@@ -1274,7 +1274,7 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
 
             temp = subshell_name_quote (translate);
             write_all (mc_global.tty.subshell_pty, temp->str, temp->len);
-            g_string_free (temp, TRUE);
+            g_string_free (temp, true);
         }
         else
         {
@@ -1288,11 +1288,11 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
     write_all (mc_global.tty.subshell_pty, "\n", 1);
 
     subshell_state = RUNNING_COMMAND;
-    feed_subshell (QUIETLY, FALSE);
+    feed_subshell (QUIETLY, false);
 
     if (subshell_alive)
     {
-        gboolean bPathNotEq;
+        bool bPathNotEq;
 
         bPathNotEq = strcmp (subshell_cwd, pcwd) != 0;
 
@@ -1330,10 +1330,10 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
          * type a space and press return. */
         write_all (mc_global.tty.subshell_pty, " \n", 2);
         subshell_state = RUNNING_COMMAND;
-        feed_subshell (QUIETLY, FALSE);
+        feed_subshell (QUIETLY, false);
     }
 
-    update_subshell_prompt = FALSE;
+    update_subshell_prompt = false;
 
     g_free (pcwd);
     /* Make sure that MC never stores the CWD in a silly format */
@@ -1350,7 +1350,7 @@ subshell_get_console_attributes (void)
     if (tcgetattr (STDOUT_FILENO, &shell_mode))
     {
         fprintf (stderr, "Cannot get terminal settings: %s\r\n", unix_error_string (errno));
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
     }
 }
 
@@ -1378,7 +1378,7 @@ sigchld_handler (int sig)
             if (WSTOPSIG (status) == SIGSTOP)
             {
                 /* The subshell has received a SIGSTOP signal */
-                subshell_stopped = TRUE;
+                subshell_stopped = true;
             }
             else
             {
@@ -1389,7 +1389,7 @@ sigchld_handler (int sig)
         else
         {
             /* The subshell has either exited normally or been killed */
-            subshell_alive = FALSE;
+            subshell_alive = false;
             delete_select_channel (mc_global.tty.subshell_pty);
             if (WIFEXITED (status) && WEXITSTATUS (status) != FORK_FAILURE)
             {

@@ -183,12 +183,12 @@ bg_message (int dummy, int *flags, char *title, const char *text)
  */
 static char *
 fg_input_dialog_help (const char *header, const char *text, const char *help,
-                      const char *history_name, const char *def_text, gboolean strip_password,
+                      const char *history_name, const char *def_text, bool strip_password,
                       input_complete_t completion_flags)
 {
     char *p_text;
     char histname[64] = "inp|";
-    gboolean is_passwd = FALSE;
+    bool is_passwd = false;
     char *my_str;
     int ret;
 
@@ -203,7 +203,7 @@ fg_input_dialog_help (const char *header, const char *text, const char *help,
        and hide characters with "*".  Don't save passwords in history! */
     if (def_text == INPUT_PASSWORD)
     {
-        is_passwd = TRUE;
+        is_passwd = true;
         histname[3] = '\0';
         def_text = "";
     }
@@ -308,7 +308,7 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
 
     /* prepare dialog */
     query_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, pos_flags, FALSE, query_colors, query_default_callback,
+        dlg_create (true, 0, 0, lines, cols, pos_flags, false, query_colors, query_default_callback,
                     nullptr, "[QueryBox]", header);
     g = GROUP (query_dlg);
 
@@ -439,11 +439,11 @@ message (int flags, const char *title, const char *text, ...)
 /* --------------------------------------------------------------------------------------------- */
 /** Show error message box */
 
-gboolean
+bool
 mc_error_message (GError ** mcerror, int *code)
 {
     if (mcerror == nullptr || *mcerror == nullptr)
-        return FALSE;
+        return false;
 
     if ((*mcerror)->code == 0)
         message (D_ERROR, MSG_ERROR, "%s", (*mcerror)->message);
@@ -456,7 +456,7 @@ mc_error_message (GError ** mcerror, int *code)
     g_error_free (*mcerror);
     *mcerror = nullptr;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -469,7 +469,7 @@ mc_error_message (GError ** mcerror, int *code)
 
 char *
 input_dialog_help (const char *header, const char *text, const char *help,
-                   const char *history_name, const char *def_text, gboolean strip_password,
+                   const char *history_name, const char *def_text, bool strip_password,
                    input_complete_t completion_flags)
 {
 #ifdef ENABLE_BACKGROUND
@@ -479,7 +479,7 @@ input_dialog_help (const char *header, const char *text, const char *help,
         {
             void *p;
             char *(*f) (const char *, const char *, const char *, const char *, const char *,
-                        gboolean, input_complete_t);
+                        bool, input_complete_t);
         } func;
         func.f = fg_input_dialog_help;
         return wtools_parent_call_string (func.p, 7,
@@ -487,7 +487,7 @@ input_dialog_help (const char *header, const char *text, const char *help,
                                           text, strlen (help), help,
                                           strlen (history_name), history_name,
                                           strlen (def_text), def_text,
-                                          sizeof (gboolean), strip_password,
+                                          sizeof (bool), strip_password,
                                           sizeof (input_complete_t), completion_flags);
     }
     else
@@ -503,7 +503,7 @@ char *
 input_dialog (const char *header, const char *text, const char *history_name, const char *def_text,
               input_complete_t completion_flags)
 {
-    return input_dialog_help (header, text, "[Input Line Keys]", history_name, def_text, FALSE,
+    return input_dialog_help (header, text, "[Input Line Keys]", history_name, def_text, false,
                               completion_flags);
 }
 
@@ -590,11 +590,11 @@ status_msg_init (status_msg_t * sm, const char *title, double delay, status_msg_
 
     start = mc_timer_elapsed (mc_global.timer);
 
-    sm->dlg = dlg_create (TRUE, 0, 0, 7, MIN (MAX (40, COLS / 2), COLS), WPOS_CENTER, FALSE,
+    sm->dlg = dlg_create (true, 0, 0, 7, MIN (MAX (40, COLS / 2), COLS), WPOS_CENTER, false,
                           dialog_colors, nullptr, nullptr, nullptr, title);
     sm->start = start;
     sm->delay = (guint64) (delay * G_USEC_PER_SEC);
-    sm->block = FALSE;
+    sm->block = false;
 
     sm->init = init_cb;
     sm->update = update_cb;
@@ -667,7 +667,7 @@ status_msg_common_update (status_msg_t * sm)
     }
 
     event.x = -1;               /* Don't show the GPM cursor */
-    c = tty_get_event (&event, FALSE, sm->block);
+    c = tty_get_event (&event, false, sm->block);
     if (c == EV_NONE)
         return B_ENTER;
 

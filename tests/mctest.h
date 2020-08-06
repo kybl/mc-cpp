@@ -56,14 +56,14 @@
 #define mctest_assert_true(actual_pointer) { \
     ck_assert_msg( \
         (int) actual_pointer != 0, \
-        "%s variable should be TRUE", #actual_pointer \
+        "%s variable should be true", #actual_pointer \
     ); \
 }
 
 #define mctest_assert_false(actual_pointer) { \
     ck_assert_msg( \
         (int) actual_pointer == 0, \
-        "%s variable should be TRUE", #actual_pointer \
+        "%s variable should be true", #actual_pointer \
     ); \
 }
 

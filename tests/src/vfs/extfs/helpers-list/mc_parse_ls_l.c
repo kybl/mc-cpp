@@ -60,16 +60,16 @@ typedef enum
 /*** file scope variables ************************************************************************/
 
 /* Command-line options. */
-static gboolean opt_drop_mtime = FALSE;
-static gboolean opt_drop_ids = FALSE;
-static gboolean opt_symbolic_ids = FALSE;
+static bool opt_drop_mtime = false;
+static bool opt_drop_ids = false;
+static bool opt_symbolic_ids = false;
 static output_format_t opt_output_format = FORMAT_LS;
 
 /* Misc. */
 static int error_count = 0;
 
 /* forward declarations */
-static gboolean
+static bool
 parse_format_name_argument (const gchar * option_name, const gchar * value, gpointer data,
                             GError ** error);
 
@@ -93,7 +93,7 @@ static GOptionEntry entries[] = {
  */
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 parse_format_name_argument (const gchar * option_name, const gchar * value, gpointer data,
                             GError ** error)
 {
@@ -107,15 +107,15 @@ parse_format_name_argument (const gchar * option_name, const gchar * value, gpoi
     else
     {
         g_set_error (error, MC_ERROR, G_OPTION_ERROR_FAILED, "unknown output format '%s'", value);
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 parse_command_line (int *argc, char **argv[])
 {
     GError *error = NULL;
@@ -130,10 +130,10 @@ parse_command_line (int *argc, char **argv[])
         g_print ("option parsing failed: %s\n", error->message);
         g_error_free (error);
 
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -267,7 +267,7 @@ yaml_dump_string (const char *name, const char *val)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-yaml_dump_record (gboolean success, const char *input_line, const struct stat *st,
+yaml_dump_record (bool success, const char *input_line, const struct stat *st,
                   const char *filename, const char *linkname)
 {
     printf ("-\n");             /* Start new item in the list. */
@@ -310,7 +310,7 @@ ls_dump_stbuf (const struct stat *st)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-ls_dump_record (gboolean success, const char *input_line, const struct stat *st,
+ls_dump_record (bool success, const char *input_line, const struct stat *st,
                 const char *filename, const char *linkname)
 {
     if (success)
@@ -339,7 +339,7 @@ process_ls_line (const char *line)
 {
     struct stat st;
     char *filename, *linkname;
-    gboolean success;
+    bool success;
 
     memset (&st, 0, sizeof st);
     filename = NULL;

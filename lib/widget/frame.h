@@ -25,16 +25,16 @@ typedef struct
     Widget widget;
 
     char *title;
-    gboolean single;
-    gboolean compact;
+    bool single;
+    bool compact;
 } WFrame;
 
 /*** global variables defined in .c file *********************************************************/
 
 /*** declarations of public functions ************************************************************/
 
-WFrame *frame_new (int y, int x, int lines, int cols, const char *title, gboolean single,
-                   gboolean compact);
+WFrame *frame_new (int y, int x, int lines, int cols, const char *title, bool single,
+                   bool compact);
 cb_ret_t frame_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data);
 void frame_set_title (WFrame * f, const char *title);
 

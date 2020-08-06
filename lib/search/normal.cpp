@@ -89,7 +89,7 @@ mc_search__cond_struct_new_init_normal (const char *charset, mc_search_t * lc_mc
     GString *tmp;
 
     tmp = mc_search__normal_translate_to_regex (mc_search_cond->str);
-    g_string_free (mc_search_cond->str, TRUE);
+    g_string_free (mc_search_cond->str, true);
 
     mc_search_cond->str = tmp;
     mc_search__cond_struct_new_init_regex (charset, lc_mc_search, mc_search_cond);
@@ -97,7 +97,7 @@ mc_search__cond_struct_new_init_normal (const char *charset, mc_search_t * lc_mc
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_search__run_normal (mc_search_t * lc_mc_search, const void *user_data,
                        gsize start_search, gsize end_search, gsize * found_len)
 {

@@ -76,7 +76,7 @@ sftpfs_cb_done (struct vfs_class *me)
     (void) me;
 
     sftpfs_deinit_config_variables_patterns ();
-    g_string_free (sftpfs_filename_buffer, TRUE);
+    g_string_free (sftpfs_filename_buffer, true);
     libssh2_exit ();
 }
 
@@ -99,7 +99,7 @@ sftpfs_cb_open (const vfs_path_t * vpath, int flags, mode_t mode)
     const char *path_super;
     struct vfs_s_inode *path_inode;
     GError *mcerror = nullptr;
-    gboolean is_changed = FALSE;
+    bool is_changed = false;
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
@@ -134,7 +134,7 @@ sftpfs_cb_open (const vfs_path_t * vpath, int flags, mode_t mode)
         vfs_s_insert_entry (path_element->clazz, dir, ent);
         g_free (dirname);
         g_free (name);
-        is_changed = TRUE;
+        is_changed = true;
     }
 
     if (S_ISDIR (path_inode->st.st_mode))

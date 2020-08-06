@@ -84,11 +84,11 @@ str_8bit_insert_replace_char (GString * buffer)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_is_valid_string (const char *text)
 {
     (void) text;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -143,7 +143,7 @@ str_8bit_cprev_noncomb_char (const char **text, const char *begin)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_isspace (const char *text)
 {
     return char_isspace (text[0]) != 0;
@@ -151,7 +151,7 @@ str_8bit_isspace (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_ispunct (const char *text)
 {
     return char_ispunct (text[0]) != 0;
@@ -159,7 +159,7 @@ str_8bit_ispunct (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_isalnum (const char *text)
 {
     return char_isalnum (text[0]) != 0;
@@ -167,7 +167,7 @@ str_8bit_isalnum (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_isdigit (const char *text)
 {
     return char_isdigit (text[0]) != 0;
@@ -175,7 +175,7 @@ str_8bit_isdigit (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_isprint (const char *text)
 {
     return char_isprint (text[0]) != 0;
@@ -183,39 +183,39 @@ str_8bit_isprint (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_iscombiningmark (const char *text)
 {
     (void) text;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static int
+static bool
 str_8bit_toupper (const char *text, char **out, size_t * remain)
 {
     if (*remain <= 1)
-        return FALSE;
+        return false;
 
     (*out)[0] = char_toupper (text[0]);
     (*out)++;
     (*remain)--;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_8bit_tolower (const char *text, char **out, size_t * remain)
 {
     if (*remain <= 1)
-        return FALSE;
+        return false;
 
     (*out)[0] = char_tolower (text[0]);
     (*out)++;
     (*remain)--;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -254,11 +254,11 @@ str_8bit_conv_gerror_message (GError * mcerror, const char *def_msg)
         buf = g_string_new ("");
 
         if (str_convert (conv, mcerror->message, buf) != ESTR_FAILURE)
-            ret = g_string_free (buf, FALSE);
+            ret = g_string_free (buf, false);
         else
         {
             ret = g_strdup (def_msg != nullptr ? def_msg : "");
-            g_string_free (buf, TRUE);
+            g_string_free (buf, true);
         }
 
         str_close_conv (conv);
@@ -553,7 +553,7 @@ str_8bit_column_to_pos (const char *text, size_t pos)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_8bit_create_search_needle (const char *needle, gboolean case_sen)
+str_8bit_create_search_needle (const char *needle, bool case_sen)
 {
     (void) case_sen;
     return (char *) needle;
@@ -562,7 +562,7 @@ str_8bit_create_search_needle (const char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_8bit_release_search_needle (char *needle, gboolean case_sen)
+str_8bit_release_search_needle (char *needle, bool case_sen)
 {
     (void) case_sen;
     (void) needle;
@@ -589,7 +589,7 @@ str_8bit_strdown (const char *str)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_8bit_search_first (const char *text, const char *search, gboolean case_sen)
+str_8bit_search_first (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *fold_search;
@@ -619,7 +619,7 @@ str_8bit_search_first (const char *text, const char *search, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_8bit_search_last (const char *text, const char *search, gboolean case_sen)
+str_8bit_search_last (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *fold_search;
@@ -775,7 +775,7 @@ str_8bit_fix_string (char *text)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_8bit_create_key (const char *text, gboolean case_sen)
+str_8bit_create_key (const char *text, bool case_sen)
 {
     return case_sen ? (char *) text : str_8bit_strdown (text);
 }
@@ -783,7 +783,7 @@ str_8bit_create_key (const char *text, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-str_8bit_key_collate (const char *t1, const char *t2, gboolean case_sen)
+str_8bit_key_collate (const char *t1, const char *t2, bool case_sen)
 {
     return case_sen ? strcmp (t1, t2) : strcoll (t1, t2);
 }
@@ -791,7 +791,7 @@ str_8bit_key_collate (const char *t1, const char *t2, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_8bit_release_key (char *key, gboolean case_sen)
+str_8bit_release_key (char *key, bool case_sen)
 {
     if (!case_sen)
         g_free (key);

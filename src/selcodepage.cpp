@@ -68,12 +68,12 @@ get_hotkey (int n)
 
 /* Return value:
  *   -2 (SELECT_CHARSET_CANCEL)       : Cancel
- *   -1 (SELECT_CHARSET_OTHER_8BIT)   : "Other 8 bit"    if seldisplay == TRUE
- *   -1 (SELECT_CHARSET_NO_TRANSLATE) : "No translation" if seldisplay == FALSE
+ *   -1 (SELECT_CHARSET_OTHER_8BIT)   : "Other 8 bit"    if seldisplay == true
+ *   -1 (SELECT_CHARSET_NO_TRANSLATE) : "No translation" if seldisplay == false
  *   >= 0                             : charset number
  */
 int
-select_charset (int center_y, int center_x, int current_charset, gboolean seldisplay)
+select_charset (int center_y, int center_x, int current_charset, bool seldisplay)
 {
     size_t i;
     int listbox_result;
@@ -86,20 +86,20 @@ select_charset (int center_y, int center_x, int current_charset, gboolean seldis
                                                        "[Codepages Translation]");
 
     if (!seldisplay)
-        LISTBOX_APPEND_TEXT (listbox, '-', _("-  < No translation >"), nullptr, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, '-', _("-  < No translation >"), nullptr, false);
 
     /* insert all the items found */
     for (i = 0; i < codepages->len; i++)
     {
         const char *name = ((codepage_desc *) g_ptr_array_index (codepages, i))->name;
         g_snprintf (buffer, sizeof (buffer), "%c  %s", get_hotkey (i), name);
-        LISTBOX_APPEND_TEXT (listbox, get_hotkey (i), buffer, nullptr, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, get_hotkey (i), buffer, nullptr, false);
     }
     if (seldisplay)
     {
         unsigned char hotkey = get_hotkey (codepages->len);
         g_snprintf (buffer, sizeof (buffer), "%c  %s", hotkey, _("Other 8 bit"));
-        LISTBOX_APPEND_TEXT (listbox, hotkey, buffer, nullptr, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, hotkey, buffer, nullptr, false);
     }
 
     /* Select the default entry */
@@ -136,11 +136,11 @@ select_charset (int center_y, int center_x, int current_charset, gboolean seldis
 
 /* --------------------------------------------------------------------------------------------- */
 /** Set codepage */
-gboolean
+bool
 do_set_codepage (int codepage)
 {
     char *errmsg;
-    gboolean ret;
+    bool ret;
 
     mc_global.source_codepage = codepage;
     errmsg = init_translation_table (codepage == SELECT_CHARSET_NO_TRANSLATE ?
@@ -160,14 +160,14 @@ do_set_codepage (int codepage)
 /* --------------------------------------------------------------------------------------------- */
 /** Show menu selecting codepage */
 
-gboolean
+bool
 do_select_codepage (void)
 {
     int r;
 
-    r = select_charset (-1, -1, default_source_codepage, FALSE);
+    r = select_charset (-1, -1, default_source_codepage, false);
     if (r == SELECT_CHARSET_CANCEL)
-        return FALSE;
+        return false;
 
     default_source_codepage = r;
     return do_set_codepage (default_source_codepage);

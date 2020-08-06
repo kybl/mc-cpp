@@ -17,9 +17,9 @@
 typedef struct
 {
     Widget widget;
-    gboolean auto_adjust_cols;  /* compute widget.cols from strlen(text)? */
+    bool auto_adjust_cols;  /* compute widget.cols from strlen(text)? */
     char *text;
-    gboolean transparent;       /* Paint in the default color fg/bg */
+    bool transparent;       /* Paint in the default color fg/bg */
 } WLabel;
 
 /*** global variables defined in .c file *********************************************************/

@@ -82,7 +82,7 @@ static const char hex_char[] = "0123456789ABCDEF";
 
 static mark_t
 mcview_hex_calculate_boldflag (WView * view, off_t from, struct hexedit_change_node *curr,
-                               gboolean force_changed)
+                               bool force_changed)
 {
     return (from == view->hex_cursor) ? MARK_CURSOR
         : ((curr != nullptr && from == curr->offset) || force_changed) ? MARK_CHANGED
@@ -117,9 +117,9 @@ mcview_display_hex (WView * view)
     struct hexedit_change_node *curr = view->change_list;
 #ifdef HAVE_CHARSET
     int cont_bytes = 0;         /* number of continuation bytes remanining from current UTF-8 */
-    gboolean cjk_right = FALSE; /* whether the second byte of a CJK is to be processed */
+    bool cjk_right = false; /* whether the second byte of a CJK is to be processed */
 #endif /* HAVE_CHARSET */
-    gboolean utf8_changed = FALSE;      /* whether any of the bytes in the UTF-8 were changed */
+    bool utf8_changed = false;      /* whether any of the bytes in the UTF-8 were changed */
 
     char hex_buff[10];          /* A temporary buffer for sprintf and mvwaddstr */
 
@@ -185,7 +185,7 @@ mcview_display_hex (WView * view)
                     if (cjk_right)
                     {
                         /* ... except when it'd wipe out the right half of a CJK, then print nothing */
-                        cjk_right = FALSE;
+                        cjk_right = false;
                         ch = -1;
                     }
                 }
@@ -229,7 +229,7 @@ mcview_display_hex (WView * view)
                         next_ch = g_utf8_next_char (utf8buf);
                         cont_bytes = next_ch - utf8buf - 1;
                         if (g_unichar_iswide (ch))
-                            cjk_right = TRUE;
+                            cjk_right = true;
                     }
 
                     utf8_changed = (first_changed >= 0 && first_changed <= cont_bytes);
@@ -258,7 +258,7 @@ mcview_display_hex (WView * view)
             }
 
             /* Determine the state of the current byte */
-            boldflag_byte = mcview_hex_calculate_boldflag (view, from, curr, FALSE);
+            boldflag_byte = mcview_hex_calculate_boldflag (view, from, curr, false);
             boldflag_char = mcview_hex_calculate_boldflag (view, from, curr, utf8_changed);
 
             /* Determine the value of the current byte */
@@ -303,7 +303,7 @@ mcview_display_hex (WView * view)
                 {
                     if (view->data_area.width >= 80 && col < width)
                     {
-                        tty_print_one_vline (TRUE);
+                        tty_print_one_vline (true);
                         col += 1;
                     }
                     if (col < width)
@@ -376,13 +376,13 @@ mcview_display_hex (WView * view)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_hexedit_save_changes (WView * view)
 {
     int answer = 0;
 
     if (view->change_list == nullptr)
-        return TRUE;
+        return true;
 
     while (answer == 0)
     {
@@ -421,7 +421,7 @@ mcview_hexedit_save_changes (WView * view)
                            "Data may have been written or not"), unix_error_string (errno));
 
             view->dirty++;
-            return TRUE;
+            return true;
         }
 
       save_error:
@@ -432,7 +432,7 @@ mcview_hexedit_save_changes (WView * view)
         g_free (text);
     }
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -441,7 +441,7 @@ void
 mcview_toggle_hexedit_mode (WView * view)
 {
     view->hexedit_mode = !view->hexedit_mode;
-    view->dpy_bbar_dirty = TRUE;
+    view->dpy_bbar_dirty = true;
     view->dirty++;
 }
 

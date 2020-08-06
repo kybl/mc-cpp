@@ -223,7 +223,7 @@ mcview_wcwidth (const WView * view, int c)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_ismark (const WView * view, int c)
 {
 #ifdef HAVE_CHARSET
@@ -233,13 +233,13 @@ mcview_ismark (const WView * view, int c)
     (void) view;
     (void) c;
 #endif /* HAVE_CHARSET */
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /* actually is_non_spacing_mark_or_enclosing_mark */
-static gboolean
+static bool
 mcview_is_non_spacing_mark (const WView * view, int c)
 {
 #ifdef HAVE_CHARSET
@@ -255,13 +255,13 @@ mcview_is_non_spacing_mark (const WView * view, int c)
     (void) view;
     (void) c;
 #endif /* HAVE_CHARSET */
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 #if 0
-static gboolean
+static bool
 mcview_is_spacing_mark (const WView * view, int c)
 {
 #ifdef HAVE_CHARSET
@@ -271,13 +271,13 @@ mcview_is_spacing_mark (const WView * view, int c)
     (void) view;
     (void) c;
 #endif /* HAVE_CHARSET */
-    return FALSE;
+    return false;
 }
 #endif /* 0 */
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_isprint (const WView * view, int c)
 {
 #ifdef HAVE_CHARSET
@@ -338,20 +338,20 @@ mcview_char_display (const WView * view, int c, char *s)
  * Just for convenience, a common interface in front of mcview_get_utf and mcview_get_byte, so that
  * the caller doesn't have to care about utf8 vs 8-bit modes.
  *
- * Normally: stores c, updates state, returns TRUE.
- * At EOF: state is unchanged, c is undefined, returns FALSE.
+ * Normally: stores c, updates state, returns true.
+ * At EOF: state is unchanged, c is undefined, returns false.
  *
  * Just as with mcview_get_utf(), invalid UTF-8 is reported using negative integers.
  *
  * Also, temporary hack: handle force_max here.
  * TODO: move it to lower layers (datasource.c)?
  */
-static gboolean
+static bool
 mcview_get_next_char (WView * view, mcview_state_machine_t * state, int *c)
 {
     /* Pretend EOF if we reached force_max */
     if (view->force_max >= 0 && state->offset >= view->force_max)
-        return FALSE;
+        return false;
 
 #ifdef HAVE_CHARSET
     if (view->utf8)
@@ -359,19 +359,19 @@ mcview_get_next_char (WView * view, mcview_state_machine_t * state, int *c)
         int char_length = 0;
 
         if (!mcview_get_utf (view, state->offset, c, &char_length))
-            return FALSE;
+            return false;
         /* Pretend EOF if we crossed force_max */
         if (view->force_max >= 0 && state->offset + char_length > view->force_max)
-            return FALSE;
+            return false;
 
         state->offset += char_length;
-        return TRUE;
+        return true;
     }
 #endif /* HAVE_CHARSET */
     if (!mcview_get_byte (view, state->offset, c))
-        return FALSE;
+        return false;
     state->offset++;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -388,12 +388,12 @@ mcview_get_next_char (WView * view, mcview_state_machine_t * state, int *c)
  * So, the right place for this layer is after the bytes are interpreted in UTF-8, but before
  * joining a base character with its combining accents.
  *
- * Normally: stores c and color, updates state, returns TRUE.
- * At EOF: state is unchanged, c and color are undefined, returns FALSE.
+ * Normally: stores c and color, updates state, returns true.
+ * At EOF: state is unchanged, c and color are undefined, returns false.
  *
  * color can be null if the caller doesn't care.
  */
-static gboolean
+static bool
 mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, int *c, int *color)
 {
     mcview_state_machine_t state_after_nroff;
@@ -406,22 +406,22 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
         return mcview_get_next_char (view, state, c);
 
     if (!mcview_get_next_char (view, state, c))
-        return FALSE;
+        return false;
     /* Don't allow nroff formatting around CR, LF, TAB or other special chars */
     if (!mcview_isprint (view, *c))
-        return TRUE;
+        return true;
 
     state_after_nroff = *state;
 
     if (!mcview_get_next_char (view, &state_after_nroff, &c2))
-        return TRUE;
+        return true;
     if (c2 != '\b')
-        return TRUE;
+        return true;
 
     if (!mcview_get_next_char (view, &state_after_nroff, &c3))
-        return TRUE;
+        return true;
     if (!mcview_isprint (view, c3))
-        return TRUE;
+        return true;
 
     if (*c == '_' && c3 == '_')
     {
@@ -433,7 +433,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
     else if (*c == c3)
     {
         *state = state_after_nroff;
-        state->nroff_underscore_is_underlined = FALSE;
+        state->nroff_underscore_is_underlined = false;
         if (color != nullptr)
             *color = VIEW_BOLD_COLOR;
     }
@@ -441,12 +441,12 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
     {
         *c = c3;
         *state = state_after_nroff;
-        state->nroff_underscore_is_underlined = TRUE;
+        state->nroff_underscore_is_underlined = true;
         if (color != nullptr)
             *color = VIEW_UNDERLINED_COLOR;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -570,14 +570,14 @@ mcview_next_combining_char_sequence (WView * view, mcview_state_machine_t * stat
  * @param view ...
  * @param state the parser-formatter state machine's state, updated
  * @param row print to this row
- * @param paragraph_ended store TRUE if paragraph ended by newline or EOF, FALSE if wraps to next
+ * @param paragraph_ended store true if paragraph ended by newline or EOF, false if wraps to next
  *   line
  * @param linewidth store the width of the line here
  * @return the number of rows, that is, 0 if we were already at EOF, otherwise 1
  */
 static int
 mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
-                     gboolean * paragraph_ended, off_t * linewidth)
+                     bool * paragraph_ended, off_t * linewidth)
 {
     const screen_dimen left = view->data_area.left;
     const screen_dimen top = view->data_area.top;
@@ -590,7 +590,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
     int i, j;
 
     if (paragraph_ended != nullptr)
-        *paragraph_ended = TRUE;
+        *paragraph_ended = true;
 
     if (!view->mode_flags.wrap && (row < 0 || row >= (int) height) && linewidth == nullptr)
     {
@@ -606,7 +606,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         return retval;
     }
 
-    while (TRUE)
+    while (true)
     {
         int charwidth = 0;
         mcview_state_machine_t state_saved;
@@ -653,10 +653,10 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         if (cs[0] == '\t')
         {
             charwidth = option_tab_spacing - state->unwrapped_column % option_tab_spacing;
-            state->print_lonely_combining = TRUE;
+            state->print_lonely_combining = true;
         }
         else
-            state->print_lonely_combining = FALSE;
+            state->print_lonely_combining = false;
 
         /* In wrap mode only: We're done with this row if the character sequence wouldn't fit.
          * Except if at the first column, because then it wouldn't fit in the next row either.
@@ -666,7 +666,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         {
             *state = state_saved;
             if (paragraph_ended != nullptr)
-                *paragraph_ended = FALSE;
+                *paragraph_ended = false;
             if (linewidth != nullptr)
                 *linewidth = col;
             return 1;
@@ -776,9 +776,9 @@ mcview_display_paragraph (WView * view, mcview_state_machine_t * state, int row)
     const screen_dimen height = view->data_area.height;
     int lines = 0;
 
-    while (TRUE)
+    while (true)
     {
-        gboolean paragraph_ended;
+        bool paragraph_ended;
 
         lines += mcview_display_line (view, state, row, &paragraph_ended, nullptr);
         if (paragraph_ended)
@@ -814,7 +814,7 @@ mcview_wrap_fixup (WView * view)
 
     if (!view->dpy_wrap_dirty)
         return;
-    view->dpy_wrap_dirty = FALSE;
+    view->dpy_wrap_dirty = false;
 
     view->dpy_paragraph_skip_lines = 0;
     mcview_state_machine_init (&view->dpy_state_top, view->dpy_start);
@@ -822,7 +822,7 @@ mcview_wrap_fixup (WView * view)
     while (lines-- != 0)
     {
         mcview_state_machine_t state_prev;
-        gboolean paragraph_ended;
+        bool paragraph_ended;
 
         state_prev = view->dpy_state_top;
         if (mcview_display_line (view, &view->dpy_state_top, -1, &paragraph_ended, nullptr) == 0)
@@ -859,13 +859,13 @@ mcview_display_text (WView * view)
     const screen_dimen height = view->data_area.height;
     int row;
     mcview_state_machine_t state;
-    gboolean again;
+    bool again;
 
     do
     {
         int n;
 
-        again = FALSE;
+        again = false;
 
         mcview_display_clean (view);
         mcview_display_ruler (view);
@@ -891,7 +891,7 @@ mcview_display_text (WView * view)
                 if ((view->mode_flags.wrap ? view->dpy_state_top.offset : view->dpy_start) > 0)
                 {
                     mcview_ascii_move_up (view, height - row);
-                    again = TRUE;
+                    again = true;
                 }
                 break;
             }
@@ -930,7 +930,7 @@ mcview_ascii_move_down (WView * view, off_t lines)
 {
     while (lines-- != 0)
     {
-        gboolean paragraph_ended;
+        bool paragraph_ended;
 
         /* See if there's still data below the bottom line, by imaginarily displaying one
          * more line. This takes care of reading more data into growbuf, if required.
@@ -944,7 +944,7 @@ mcview_ascii_move_down (WView * view, off_t lines)
         {
             view->dpy_start = mcview_eol (view, view->dpy_start);
             view->dpy_paragraph_skip_lines = 0;
-            view->dpy_wrap_dirty = TRUE;
+            view->dpy_wrap_dirty = true;
         }
         else
         {
@@ -982,7 +982,7 @@ mcview_ascii_move_up (WView * view, off_t lines)
         while (lines-- != 0)
             view->dpy_start = mcview_bol (view, view->dpy_start - 1, 0);
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
     else
     {
@@ -1055,7 +1055,7 @@ mcview_state_machine_init (mcview_state_machine_t * state, off_t offset)
 {
     memset (state, 0, sizeof (*state));
     state->offset = offset;
-    state->print_lonely_combining = TRUE;
+    state->print_lonely_combining = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

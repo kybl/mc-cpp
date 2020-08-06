@@ -124,7 +124,7 @@ gauge_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 /* --------------------------------------------------------------------------------------------- */
 
 WGauge *
-gauge_new (int y, int x, int cols, gboolean shown, int max, int current)
+gauge_new (int y, int x, int cols, bool shown, int max, int current)
 {
     WGauge *g;
     Widget *w;
@@ -138,7 +138,7 @@ gauge_new (int y, int x, int cols, gboolean shown, int max, int current)
         max = 1;                /* I do not like division by zero :) */
     g->max = max;
     g->current = current;
-    g->from_left_to_right = TRUE;
+    g->from_left_to_right = true;
 
     return g;
 }
@@ -161,7 +161,7 @@ gauge_set_value (WGauge * g, int max, int current)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-gauge_show (WGauge * g, gboolean shown)
+gauge_show (WGauge * g, bool shown)
 {
     if (g->shown != shown)
     {

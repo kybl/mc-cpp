@@ -54,7 +54,7 @@
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-has_colors (gboolean disable, gboolean force)
+has_colors (bool disable, bool force)
 {
     mc_tty_color_disable = disable;
 
@@ -122,13 +122,13 @@ mc_tty_color_pair_init_special (tty_color_pair_t * mc_color_pair,
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_color_init_lib (gboolean disable, gboolean force)
+tty_color_init_lib (bool disable, bool force)
 {
     /* FIXME: if S-Lang is used, has_colors() must be called regardless
        of whether we are interested in its result */
     if (has_colors (disable, force) && !disable)
     {
-        use_colors = TRUE;
+        use_colors = true;
     }
 }
 
@@ -209,7 +209,7 @@ tty_set_normal_attrs (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_use_256colors (void)
 {
     return (SLtt_Use_Ansi_Colors && SLtt_tgetnum ((char *) "Co") == 256);
@@ -217,7 +217,7 @@ tty_use_256colors (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_use_truecolors (GError ** error)
 {
     char *colorterm;
@@ -229,7 +229,7 @@ tty_use_truecolors (GError ** error)
     if (SLang_Version < 20301 || (sizeof (long) != 8 && SLang_Version < 30000))
     {
         g_set_error (error, MC_ERROR, -1, _("True color not supported in this slang version."));
-        return FALSE;
+        return false;
     }
 
     /* Sanity check that at least 256 colors are supported. */
@@ -237,7 +237,7 @@ tty_use_truecolors (GError ** error)
     {
         g_set_error (error, MC_ERROR, -1,
                      _("Your terminal doesn't even seem to support 256 colors."));
-        return FALSE;
+        return false;
     }
 
     /* Duplicate slang's check so that we can pop up an error message
@@ -248,10 +248,10 @@ tty_use_truecolors (GError ** error)
     {
         g_set_error (error, MC_ERROR, -1,
                      _("Set COLORTERM=truecolor if your terminal really supports true colors."));
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

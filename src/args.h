@@ -18,10 +18,10 @@ typedef struct
 
 /*** global variables defined in .c file *********************************************************/
 
-extern gboolean mc_args__force_xterm;
-extern gboolean mc_args__nomouse;
-extern gboolean mc_args__force_colors;
-extern gboolean mc_args__nokeymap;
+extern bool mc_args__force_xterm;
+extern bool mc_args__nomouse;
+extern bool mc_args__force_colors;
+extern bool mc_args__nokeymap;
 extern char *mc_args__last_wd_file;
 extern char *mc_args__netfs_logfile;
 extern char *mc_args__keymap_file;
@@ -47,9 +47,9 @@ extern char *mc_run_param1;
 /*** declarations of public functions ************************************************************/
 
 void mc_setup_run_mode (char **argv);
-gboolean mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError ** mcerror);
-gboolean mc_args_show_info (void);
-gboolean mc_setup_by_args (int argc, char **argv, GError ** mcerror);
+bool mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError ** mcerror);
+bool mc_args_show_info (void);
+bool mc_setup_by_args (int argc, char **argv, GError ** mcerror);
 
 void mcedit_arg_free (mcedit_arg_t * arg);
 

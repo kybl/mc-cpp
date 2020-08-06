@@ -265,7 +265,7 @@ user_in_netgroup_list (char *user, char *ngname)
     else
     {
         DEBUG (5, ("looking for user %s of domain %s in netgroup %s\n", user, mydomain, ngname));
-        DEBUG (5, ("innetgr is %s\n", innetgr (ngname, nullptr, user, mydomain) ? "TRUE" : "FALSE"));
+        DEBUG (5, ("innetgr is %s\n", innetgr (ngname, nullptr, user, mydomain) ? "true" : "false"));
 
         if (innetgr (ngname, nullptr, user, mydomain))
             return (True);

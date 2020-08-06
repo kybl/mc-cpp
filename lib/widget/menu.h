@@ -30,8 +30,8 @@ typedef struct WMenuBar
 {
     Widget widget;
 
-    gboolean is_visible;        /* If the menubar is visible */
-    gboolean is_dropped;        /* If the menubar has dropped */
+    bool is_visible;        /* If the menubar is visible */
+    bool is_dropped;        /* If the menubar has dropped */
     GList *menu;                /* The actual menus */
     guint selected;             /* Selected menu on the top bar */
     unsigned long previous_widget;      /* Selected widget ID before activating menu */
@@ -50,19 +50,19 @@ menu_t *create_menu (const char *name, GList * entries, const char *help_node);
 void menu_set_name (menu_t * menu, const char *name);
 void destroy_menu (menu_t * menu);
 
-WMenuBar *menubar_new (GList * menu, gboolean visible);
+WMenuBar *menubar_new (GList * menu, bool visible);
 void menubar_set_menu (WMenuBar * menubar, GList * menu);
 void menubar_add_menu (WMenuBar * menubar, menu_t * menu);
 void menubar_arrange (WMenuBar * menubar);
 
 WMenuBar *find_menubar (const WDialog * h);
 
-void menubar_activate (WMenuBar * menubar, gboolean dropped, int which);
+void menubar_activate (WMenuBar * menubar, bool dropped, int which);
 
 /*** inline functions ****************************************************************************/
 
 static inline void
-menubar_set_visible (WMenuBar * menubar, gboolean visible)
+menubar_set_visible (WMenuBar * menubar, bool visible)
 {
     menubar->is_visible = visible;
 }

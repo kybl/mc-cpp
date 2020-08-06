@@ -321,7 +321,7 @@ cpio_find_head (struct vfs_class *me, struct vfs_s_super *super)
     if (top > 0)
         CPIO_POS (super) += top;
 
-    while (TRUE)
+    while (true)
     {
         if (ptr + MAGIC_LENGTH >= top)
         {
@@ -774,7 +774,7 @@ cpio_open_archive (struct vfs_s_super *super, const vfs_path_t * vpath,
     if (cpio_open_cpio_file (vpath_element->clazz, super, vpath) == -1)
         return -1;
 
-    while (TRUE)
+    while (true)
     {
         ssize_t status;
 

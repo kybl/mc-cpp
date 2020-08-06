@@ -46,7 +46,7 @@ mcview_dimen_doz (screen_dimen a, screen_dimen b)
 /* --------------------------------------------------------------------------------------------- */
 
 /* {{{ Simple Primitive Functions for WView }}} */
-static inline gboolean
+static inline bool
 mcview_is_in_panel (WView * view)
 {
     return (view->dpy_frame_size != 0);
@@ -54,7 +54,7 @@ mcview_is_in_panel (WView * view)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 mcview_may_still_grow (WView * view)
 {
     return (view->growbuf_in_use && !view->growbuf_finished);
@@ -62,10 +62,10 @@ mcview_may_still_grow (WView * view)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/* returns TRUE if the idx lies in the half-open interval
- * [offset; offset + size), FALSE otherwise.
+/* returns true if the idx lies in the half-open interval
+ * [offset; offset + size), false otherwise.
  */
-static inline gboolean
+static inline bool
 mcview_already_loaded (off_t offset, off_t idx, size_t size)
 {
     return (offset <= idx && idx - offset < (off_t) size);
@@ -73,7 +73,7 @@ mcview_already_loaded (off_t offset, off_t idx, size_t size)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 mcview_get_byte_file (WView * view, off_t byte_index, int *retval)
 {
     g_assert (view->datasource == DS_FILE);
@@ -83,16 +83,16 @@ mcview_get_byte_file (WView * view, off_t byte_index, int *retval)
     {
         if (retval)
             *retval = view->ds_file_data[byte_index - view->ds_file_offset];
-        return TRUE;
+        return true;
     }
     if (retval)
         *retval = -1;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 mcview_get_byte (WView * view, off_t offset, int *retval)
 {
     switch (view->datasource)
@@ -107,13 +107,13 @@ mcview_get_byte (WView * view, off_t offset, int *retval)
     case DS_NONE:
         return mcview_get_byte_none (view, offset, retval);
     default:
-        return FALSE;
+        return false;
     }
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 mcview_get_byte_indexed (WView * view, off_t base, off_t ofs, int *retval)
 {
     if (base <= OFFSETTYPE_MAX - ofs)
@@ -122,7 +122,7 @@ mcview_get_byte_indexed (WView * view, off_t base, off_t ofs, int *retval)
     }
     if (retval)
         *retval = -1;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -140,7 +140,7 @@ mcview_count_backspaces (WView * view, off_t offset)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 mcview_is_nroff_sequence (WView * view, off_t offset)
 {
     int c0, c1, c2;
@@ -148,13 +148,13 @@ mcview_is_nroff_sequence (WView * view, off_t offset)
     /* The following commands are ordered to speed up the calculation. */
 
     if (!mcview_get_byte_indexed (view, offset, 1, &c1) || c1 != '\b')
-        return FALSE;
+        return false;
 
     if (!mcview_get_byte_indexed (view, offset, 0, &c0) || !g_ascii_isprint (c0))
-        return FALSE;
+        return false;
 
     if (!mcview_get_byte_indexed (view, offset, 2, &c2) || !g_ascii_isprint (c2))
-        return FALSE;
+        return false;
 
     return (c0 == c2 || c0 == '_' || (c0 == '+' && c2 == 'o'));
 }

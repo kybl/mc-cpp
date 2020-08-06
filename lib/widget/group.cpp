@@ -57,7 +57,7 @@ typedef struct
 typedef struct
 {
     widget_state_t state;
-    gboolean enable;
+    bool enable;
 } widget_state_info_t;
 
 /*** file scope variables ************************************************************************/
@@ -77,7 +77,7 @@ group_widget_init (void *data, void *user_data)
 /* --------------------------------------------------------------------------------------------- */
 
 static GList *
-group_get_next_or_prev_of (GList * list, gboolean next)
+group_get_next_or_prev_of (GList * list, bool next)
 {
     GList *l = nullptr;
 
@@ -108,7 +108,7 @@ group_get_next_or_prev_of (GList * list, gboolean next)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-group_select_next_or_prev (WGroup * g, gboolean next)
+group_select_next_or_prev (WGroup * g, bool next)
 {
     if (g->widgets != nullptr && g->current != nullptr)
     {
@@ -143,13 +143,13 @@ group_widget_set_state (gpointer data, gpointer user_data)
  *
  * @param g WGroup object
  * @param msg message sent to widgets
- * @param reverse if TRUE, send message in reverse order, FALSE -- in direct one.
+ * @param reverse if true, send message in reverse order, false -- in direct one.
  * @param options if WOP_DEFAULT, the message is sent to all widgets. Else message is sent to widgets
  *                that have specified options.
  */
 
 static void
-group_send_broadcast_msg_custom (WGroup * g, widget_msg_t msg, gboolean reverse,
+group_send_broadcast_msg_custom (WGroup * g, widget_msg_t msg, bool reverse,
                                  widget_options_t options)
 {
     GList *p, *first;
@@ -412,7 +412,7 @@ group_draw (WGroup * g)
 
         if (g->winch_pending)
         {
-            g->winch_pending = FALSE;
+            g->winch_pending = false;
             send_message (wg, nullptr, MSG_RESIZE, 0, nullptr);
         }
 
@@ -593,14 +593,14 @@ group_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
  *
  * @param w      group
  * @param state  widget state flag to modify
- * @param enable specifies whether to turn the flag on (TRUE) or off (FALSE).
+ * @param enable specifies whether to turn the flag on (true) or off (false).
  *               Only one flag per call can be modified.
  * @return       MSG_HANDLED if set was handled successfully, MSG_NOT_HANDLED otherwise.
  */
 cb_ret_t
-group_default_set_state (Widget * w, widget_state_t state, gboolean enable)
+group_default_set_state (Widget * w, widget_state_t state, bool enable)
 {
-    gboolean ret = MSG_HANDLED;
+    bool ret = MSG_HANDLED;
     WGroup *g = GROUP (w);
     widget_state_info_t st = {
         .state = state,
@@ -788,7 +788,7 @@ group_remove_widget (void *w)
 void
 group_set_current_widget_next (WGroup * g)
 {
-    g->current = group_get_next_or_prev_of (g->current, TRUE);
+    g->current = group_get_next_or_prev_of (g->current, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -801,7 +801,7 @@ group_set_current_widget_next (WGroup * g)
 void
 group_set_current_widget_prev (WGroup * g)
 {
-    g->current = group_get_next_or_prev_of (g->current, FALSE);
+    g->current = group_get_next_or_prev_of (g->current, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -816,7 +816,7 @@ group_set_current_widget_prev (WGroup * g)
 GList *
 group_get_widget_next_of (GList * w)
 {
-    return group_get_next_or_prev_of (w, TRUE);
+    return group_get_next_or_prev_of (w, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -831,7 +831,7 @@ group_get_widget_next_of (GList * w)
 GList *
 group_get_widget_prev_of (GList * w)
 {
-    return group_get_next_or_prev_of (w, FALSE);
+    return group_get_next_or_prev_of (w, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -844,7 +844,7 @@ group_get_widget_prev_of (GList * w)
 void
 group_select_next_widget (WGroup * g)
 {
-    group_select_next_or_prev (g, TRUE);
+    group_select_next_or_prev (g, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -857,7 +857,7 @@ group_select_next_widget (WGroup * g)
 void
 group_select_prev_widget (WGroup * g)
 {
-    group_select_next_or_prev (g, FALSE);
+    group_select_next_or_prev (g, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -889,7 +889,7 @@ group_select_widget_by_id (const WGroup * g, unsigned long id)
 void
 group_send_broadcast_msg (WGroup * g, widget_msg_t msg)
 {
-    group_send_broadcast_msg_custom (g, msg, FALSE, WOP_DEFAULT);
+    group_send_broadcast_msg_custom (g, msg, false, WOP_DEFAULT);
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -57,11 +57,11 @@ str_ascii_insert_replace_char (GString * buffer)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_is_valid_string (const char *text)
 {
     (void) text;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -116,7 +116,7 @@ str_ascii_cprev_noncomb_char (const char **text, const char *begin)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_isspace (const char *text)
 {
     return g_ascii_isspace ((gchar) text[0]);
@@ -124,7 +124,7 @@ str_ascii_isspace (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_ispunct (const char *text)
 {
     return g_ascii_ispunct ((gchar) text[0]);
@@ -132,7 +132,7 @@ str_ascii_ispunct (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_isalnum (const char *text)
 {
     return g_ascii_isalnum ((gchar) text[0]);
@@ -140,7 +140,7 @@ str_ascii_isalnum (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_isdigit (const char *text)
 {
     return g_ascii_isdigit ((gchar) text[0]);
@@ -148,7 +148,7 @@ str_ascii_isdigit (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_isprint (const char *text)
 {
     return g_ascii_isprint ((gchar) text[0]);
@@ -156,39 +156,39 @@ str_ascii_isprint (const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_iscombiningmark (const char *text)
 {
     (void) text;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static int
+static bool
 str_ascii_toupper (const char *text, char **out, size_t * remain)
 {
     if (*remain <= 1)
-        return FALSE;
+        return false;
 
     (*out)[0] = (char) g_ascii_toupper ((gchar) text[0]);
     (*out)++;
     (*remain)--;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 str_ascii_tolower (const char *text, char **out, size_t * remain)
 {
     if (*remain <= 1)
-        return FALSE;
+        return false;
 
     (*out)[0] = (char) g_ascii_tolower ((gchar) text[0]);
     (*out)++;
     (*remain)--;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -551,7 +551,7 @@ str_ascii_column_to_pos (const char *text, size_t pos)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_ascii_create_search_needle (const char *needle, gboolean case_sen)
+str_ascii_create_search_needle (const char *needle, bool case_sen)
 {
     (void) case_sen;
     return (char *) needle;
@@ -560,7 +560,7 @@ str_ascii_create_search_needle (const char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_ascii_release_search_needle (char *needle, gboolean case_sen)
+str_ascii_release_search_needle (char *needle, bool case_sen)
 {
     (void) case_sen;
     (void) needle;
@@ -570,7 +570,7 @@ str_ascii_release_search_needle (char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_ascii_search_first (const char *text, const char *search, gboolean case_sen)
+str_ascii_search_first (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *fold_search;
@@ -600,7 +600,7 @@ str_ascii_search_first (const char *text, const char *search, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static const char *
-str_ascii_search_last (const char *text, const char *search, gboolean case_sen)
+str_ascii_search_last (const char *text, const char *search, bool case_sen)
 {
     char *fold_text;
     char *fold_search;
@@ -671,7 +671,7 @@ str_ascii_fix_string (char *text)
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-str_ascii_create_key (const char *text, gboolean case_sen)
+str_ascii_create_key (const char *text, bool case_sen)
 {
     (void) case_sen;
     return (char *) text;
@@ -680,7 +680,7 @@ str_ascii_create_key (const char *text, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-str_ascii_key_collate (const char *t1, const char *t2, gboolean case_sen)
+str_ascii_key_collate (const char *t1, const char *t2, bool case_sen)
 {
     return case_sen ? strcmp (t1, t2) : g_ascii_strcasecmp (t1, t2);
 }
@@ -688,7 +688,7 @@ str_ascii_key_collate (const char *t1, const char *t2, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-str_ascii_release_key (char *key, gboolean case_sen)
+str_ascii_release_key (char *key, bool case_sen)
 {
     (void) key;
     (void) case_sen;

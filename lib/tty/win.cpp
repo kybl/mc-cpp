@@ -57,7 +57,7 @@ char *rmcup = nullptr;
 
 /*** file scope variables ************************************************************************/
 
-static gboolean rxvt_extensions = FALSE;
+static bool rxvt_extensions = false;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -115,7 +115,7 @@ show_rxvt_contents (int starty, unsigned char y1, unsigned char y2)
     bytes = (y2 - y1) * (COLS + 1) + 1; /* *should* be the number of bytes read */
     j = 0;
     k = static_cast<unsigned char *> (g_malloc (bytes));
-    while (TRUE)
+    while (true)
     {
         int c;
 
@@ -144,16 +144,16 @@ show_rxvt_contents (int starty, unsigned char y1, unsigned char y2)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 look_for_rxvt_extensions (void)
 {
-    static gboolean been_called = FALSE;
+    static bool been_called = false;
 
     if (!been_called)
     {
         const char *e = getenv ("RXVT_EXT");
         rxvt_extensions = ((e != nullptr) && (strcmp (e, "1.0") == 0));
-        been_called = TRUE;
+        been_called = true;
     }
 
     if (rxvt_extensions)

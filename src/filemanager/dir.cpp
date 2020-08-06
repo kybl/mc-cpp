@@ -66,10 +66,10 @@
 static int reverse = 1;
 
 /* Are the files sorted case sensitively? */
-static gboolean case_sensitive = OS_SORT_CASE_SENSITIVE_DEFAULT;
+static bool case_sensitive = OS_SORT_CASE_SENSITIVE_DEFAULT;
 
 /* Are the exec_bit files top in list */
-static gboolean exec_first = TRUE;
+static bool exec_first = true;
 
 static dir_list dir_copy = { nullptr, 0, 0, nullptr };
 
@@ -141,21 +141,21 @@ clean_sort_keys (dir_list * list, int start, int count)
 /* --------------------------------------------------------------------------------------------- */
 /**
  * If you change handle_dirent then check also handle_path.
- * @return FALSE = don't add, TRUE = add to the list
+ * @return false = don't add, true = add to the list
  */
 
-static gboolean
-handle_dirent (struct dirent *dp, const char *fltr, struct stat *buf1, gboolean * link_to_dir,
-               gboolean * stale_link)
+static bool
+handle_dirent (struct dirent *dp, const char *fltr, struct stat *buf1, bool * link_to_dir,
+               bool * stale_link)
 {
     vfs_path_t *vpath;
 
     if (DIR_IS_DOT (dp->d_name) || DIR_IS_DOTDOT (dp->d_name))
-        return FALSE;
+        return false;
     if (!panels_options.show_dot_files && (dp->d_name[0] == '.'))
-        return FALSE;
+        return false;
     if (!panels_options.show_backups && dp->d_name[strlen (dp->d_name) - 1] == '~')
-        return FALSE;
+        return false;
 
     vpath = vfs_path_from_str (dp->d_name);
     if (mc_lstat (vpath, buf1) == -1)
@@ -183,10 +183,10 @@ handle_dirent (struct dirent *dp, const char *fltr, struct stat *buf1, gboolean 
 /* --------------------------------------------------------------------------------------------- */
 /** get info about ".." */
 
-static gboolean
+static bool
 dir_get_dotdot_stat (const vfs_path_t * vpath, struct stat *st)
 {
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if ((vpath != nullptr) && (st != nullptr))
     {
@@ -231,26 +231,26 @@ alloc_dir_copy (int size)
  * @param list directory list
  * @param delta value by increase (if positive) or decrease (if negative) list size
  *
- * @return FALSE on failure, TRUE on success
+ * @return false on failure, true on success
  */
 
-gboolean
+bool
 dir_list_grow (dir_list * list, int delta)
 {
     int size;
-    gboolean clear_flag = FALSE;
+    bool clear_flag = false;
 
     if (list == nullptr)
-        return FALSE;
+        return false;
 
     if (delta == 0)
-        return TRUE;
+        return true;
 
     size = list->size + delta;
     if (size <= 0)
     {
         size = DIR_LIST_MIN_SIZE;
-        clear_flag = TRUE;
+        clear_flag = true;
     }
 
     if (size != list->size)
@@ -259,7 +259,7 @@ dir_list_grow (dir_list * list, int delta)
 
         fe = g_try_renew (file_entry_t, list->list, size);
         if (fe == nullptr)
-            return FALSE;
+            return false;
 
         list->list = fe;
         list->size = size;
@@ -267,7 +267,7 @@ dir_list_grow (dir_list * list, int delta)
 
     list->len = clear_flag ? 0 : MIN (list->len, size);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -280,18 +280,18 @@ dir_list_grow (dir_list * list, int delta)
  * @param link_to_dir is file link to directory
  * @param stale_link is file stale elink
  *
- * @return FALSE on failure, TRUE on success
+ * @return false on failure, true on success
  */
 
-gboolean
+bool
 dir_list_append (dir_list * list, const char *fname, const struct stat * st,
-                 gboolean link_to_dir, gboolean stale_link)
+                 bool link_to_dir, bool stale_link)
 {
     file_entry_t *fentry;
 
     /* Need to grow the *list? */
     if (list->len == list->size && !dir_list_grow (list, DIR_LIST_RESIZE_STEP))
-        return FALSE;
+        return false;
 
     fentry = &list->list[list->len];
     fentry->fnamelen = strlen (fname);
@@ -306,7 +306,7 @@ dir_list_append (dir_list * list, const char *fname, const struct stat * st,
 
     list->len++;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -547,7 +547,7 @@ dir_list_free_list (dir_list * list)
 /* --------------------------------------------------------------------------------------------- */
 /** Used to set up a directory list when there is no access to a directory */
 
-gboolean
+bool
 dir_list_init (dir_list * list)
 {
     file_entry_t *fentry;
@@ -556,7 +556,7 @@ dir_list_init (dir_list * list)
     if (list->size == 0 && !dir_list_grow (list, DIR_LIST_RESIZE_STEP))
     {
         list->len = 0;
-        return FALSE;
+        return false;
     }
 
     fentry = &list->list[0];
@@ -569,7 +569,7 @@ dir_list_init (dir_list * list)
     fentry->f.marked = 0;
     fentry->st.st_mode = 040755;
     list->len = 1;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -579,29 +579,29 @@ dir_list_init (dir_list * list)
    and panels_options.show_backups.
    Moreover handle_path can't be used with a filemask.
    If you change handle_path then check also handle_dirent. */
-/* Return values: FALSE = don't add, TRUE = add to the list */
+/* Return values: false = don't add, true = add to the list */
 
-gboolean
-handle_path (const char *path, struct stat * buf1, gboolean * link_to_dir, gboolean * stale_link)
+bool
+handle_path (const char *path, struct stat * buf1, bool * link_to_dir, bool * stale_link)
 {
     vfs_path_t *vpath;
 
     if (DIR_IS_DOT (path) || DIR_IS_DOTDOT (path))
-        return FALSE;
+        return false;
 
     vpath = vfs_path_from_str (path);
     if (mc_lstat (vpath, buf1) == -1)
     {
         vfs_path_free (vpath);
-        return FALSE;
+        return false;
     }
 
     if (S_ISDIR (buf1->st_mode))
         tree_store_mark_checked (path);
 
     /* A link to a file or a directory? */
-    *link_to_dir = FALSE;
-    *stale_link = FALSE;
+    *link_to_dir = false;
+    *stale_link = false;
     if (S_ISLNK (buf1->st_mode))
     {
         struct stat buf2;
@@ -609,17 +609,17 @@ handle_path (const char *path, struct stat * buf1, gboolean * link_to_dir, gbool
         if (mc_stat (vpath, &buf2) == 0)
             *link_to_dir = S_ISDIR (buf2.st_mode) != 0;
         else
-            *stale_link = TRUE;
+            *stale_link = true;
     }
 
     vfs_path_free (vpath);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
                const dir_sort_options_t * sort_op, const char *fltr)
 {
@@ -628,11 +628,11 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     struct stat st;
     file_entry_t *fentry;
     const char *vpath_str;
-    gboolean ret = TRUE;
+    bool ret = true;
 
     /* ".." (if any) must be the first entry in the list */
     if (!dir_list_init (list))
-        return FALSE;
+        return false;
 
     fentry = &list->list[0];
     if (dir_get_dotdot_stat (vpath, &st))
@@ -642,7 +642,7 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
         list->callback (DIR_OPEN, (void *) vpath);
     dirp = mc_opendir (vpath);
     if (dirp == nullptr)
-        return FALSE;
+        return false;
 
     tree_store_start_check (vpath);
 
@@ -653,7 +653,7 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
 
     while (ret && (dp = mc_readdir (dirp)) != nullptr)
     {
-        gboolean link_to_dir, stale_link;
+        bool link_to_dir, stale_link;
 
         if (list->callback != nullptr)
             list->callback (DIR_READ, dp);
@@ -662,7 +662,7 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
             continue;
 
         if (!dir_list_append (list, dp->d_name, &st, link_to_dir, stale_link))
-            ret = FALSE;
+            ret = false;
     }
 
     if (ret)
@@ -678,7 +678,7 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 if_link_is_exe (const vfs_path_t * full_name_vpath, const file_entry_t * file)
 {
     struct stat b;
@@ -686,13 +686,13 @@ if_link_is_exe (const vfs_path_t * full_name_vpath, const file_entry_t * file)
     if (S_ISLNK (file->st.st_mode) && mc_stat (full_name_vpath, &b) == 0)
         return is_exe (b.st_mode);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 /** If fltr is null, then it is a match */
 
-gboolean
+bool
 dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
                  const dir_sort_options_t * sort_op, const char *fltr)
 {
@@ -703,7 +703,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     int marked_cnt;
     GHashTable *marked_files;
     const char *tmp_path;
-    gboolean ret = TRUE;
+    bool ret = true;
 
     if (list->callback != nullptr)
         list->callback (DIR_OPEN, (void *) vpath);
@@ -712,7 +712,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     {
         dir_list_clean (list);
         dir_list_init (list);
-        return FALSE;
+        return false;
     }
 
     tree_store_start_check (vpath);
@@ -758,7 +758,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
         if (!dir_list_init (list))
         {
             dir_list_free_list (&dir_copy);
-            return FALSE;
+            return false;
         }
 
         if (dir_get_dotdot_stat (vpath, &st))
@@ -772,7 +772,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
 
     while (ret && (dp = mc_readdir (dirp)) != nullptr)
     {
-        gboolean link_to_dir, stale_link;
+        bool link_to_dir, stale_link;
 
         if (list->callback != nullptr)
             list->callback (DIR_READ, dp);
@@ -781,7 +781,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
             continue;
 
         if (!dir_list_append (list, dp->d_name, &st, link_to_dir, stale_link))
-            ret = FALSE;
+            ret = false;
         else
         {
             file_entry_t *fentry;

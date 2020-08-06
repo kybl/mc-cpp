@@ -44,7 +44,7 @@ config_object__init (void)
     ini_filename = g_build_filename (WORKDIR, "config_string.ini", (char *) NULL);
     unlink (ini_filename);
 
-    mc_config = mc_config_init (ini_filename, FALSE);
+    mc_config = mc_config_init (ini_filename, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -61,7 +61,7 @@ config_object__reopen (void)
     }
 
     mc_config_deinit (mc_config);
-    mc_config = mc_config_init (ini_filename, FALSE);
+    mc_config = mc_config_init (ini_filename, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -217,7 +217,7 @@ START_TEST (emulate__learn_save)
     {
         char *esc_str;
 
-        esc_str = strutils_escape ("T;E\\X;T-FOR-\\T;E;S\\TI;N'G", -1, ";", TRUE);
+        esc_str = strutils_escape ("T;E\\X;T-FOR-\\T;E;S\\TI;N'G", -1, ";", true);
         mc_config_set_string_raw (mc_config, "test-group1", "test-param1", esc_str);
         g_free (esc_str);
     }

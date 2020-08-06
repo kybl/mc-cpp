@@ -49,7 +49,7 @@
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 check_for_default (const vfs_path_t * default_file_vpath, const vfs_path_t * file_vpath)
 {
     if (!exist_file (vfs_path_as_str (file_vpath)))
@@ -58,7 +58,7 @@ check_for_default (const vfs_path_t * default_file_vpath, const vfs_path_t * fil
         file_op_total_context_t *tctx;
 
         if (!exist_file (vfs_path_as_str (default_file_vpath)))
-            return FALSE;
+            return false;
 
         ctx = file_op_context_new (OP_COPY);
         tctx = file_op_total_context_new ();
@@ -69,7 +69,7 @@ check_for_default (const vfs_path_t * default_file_vpath, const vfs_path_t * fil
         file_op_context_destroy (ctx);
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

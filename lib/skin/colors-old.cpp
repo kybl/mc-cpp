@@ -117,26 +117,26 @@ old_color_comparator (const void *p1, const void *p2)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_skin_colors_old_transform (const char *old_color, const char **group, const char **key)
 {
     const mc_skin_colors_old_t oc = { old_color, nullptr, nullptr };
     mc_skin_colors_old_t *res;
 
     if (old_color == nullptr)
-        return FALSE;
+        return false;
 
     res = (mc_skin_colors_old_t *) bsearch (&oc, old_colors, num_old_colors,
                                             sizeof (old_colors[0]), old_color_comparator);
 
     if (res == nullptr)
-        return FALSE;
+        return false;
 
     if (group != nullptr)
         *group = res->group;
     if (key != nullptr)
         *key = res->key;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

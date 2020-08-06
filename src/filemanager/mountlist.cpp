@@ -679,7 +679,7 @@ read_file_system_list (void)
                    significant when the Fs_type is "none" which will not be
                    the case when parsing "/proc/self/mountinfo", and only
                    applies for static /etc/mtab files.  */
-                me->me_dummy = ME_DUMMY (me->me_devname, me->me_type, FALSE);
+                me->me_dummy = ME_DUMMY (me->me_devname, me->me_type, false);
                 me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 
                 mount_list = g_slist_prepend (mount_list, me);
@@ -711,7 +711,7 @@ read_file_system_list (void)
 
             while ((mnt = getmntent (fp)) != nullptr)
             {
-                gboolean bind;
+                bool bind;
 
                 bind = hasmntopt (mnt, "bind") != nullptr;
 

@@ -97,7 +97,7 @@ static int help_lines;          /* Lines in help viewer */
 static int history_ptr;         /* For the history queue */
 static const char *main_node;   /* The main node */
 static const char *last_shown = nullptr;   /* Last byte shown in a screen */
-static gboolean end_of_node = FALSE;    /* Flag: the last character of the node shown? */
+static bool end_of_node = false;    /* Flag: the last character of the node shown? */
 static const char *currentpoint;
 static const char *selected_item;
 
@@ -111,7 +111,7 @@ static struct
 } history[HISTORY_SIZE];
 
 static GSList *link_area = nullptr;
-static gboolean inside_link_area = FALSE;
+static bool inside_link_area = false;
 
 static cb_ret_t help_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data);
 
@@ -370,7 +370,7 @@ start_link_area (int x, int y, const char *link_name)
     la->link_name = link_name;
     link_area = g_slist_prepend (link_area, la);
 
-    inside_link_area = TRUE;
+    inside_link_area = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -384,7 +384,7 @@ end_link_area (int x, int y)
         /* Save the end coordinates of the link area */
         la->x2 = x;
         la->y2 = y;
-        inside_link_area = FALSE;
+        inside_link_area = false;
     }
 }
 
@@ -394,13 +394,13 @@ static void
 clear_link_areas (void)
 {
     g_clear_slist (&link_area, g_free);
-    inside_link_area = FALSE;
+    inside_link_area = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-help_print_word (WDialog * h, GString * word, int *col, int *line, gboolean add_space)
+help_print_word (WDialog * h, GString * word, int *col, int *line, bool add_space)
 {
     if (*line >= help_lines)
         g_string_set_size (word, 0);
@@ -448,9 +448,9 @@ help_show (WDialog * h, const char *paint_start)
 {
     const char *p, *n;
     int col, line, c;
-    gboolean painting = TRUE;
-    gboolean acs;               /* Flag: Alternate character set active? */
-    gboolean repeat_paint;
+    bool painting = true;
+    bool acs;               /* Flag: Alternate character set active? */
+    bool repeat_paint;
     int active_col, active_line;        /* Active link position */
     char buff[MB_LEN_MAX + 1];
     GString *word;
@@ -461,8 +461,8 @@ help_show (WDialog * h, const char *paint_start)
     do
     {
         line = col = active_col = active_line = 0;
-        repeat_paint = FALSE;
-        acs = FALSE;
+        repeat_paint = false;
+        acs = false;
 
         clear_link_areas ();
         if ((int) (selected_item - paint_start) < 0)
@@ -496,19 +496,19 @@ help_show (WDialog * h, const char *paint_start)
                 start_link_area (col, line, p);
                 break;
             case CHAR_LINK_POINTER:
-                painting = FALSE;
+                painting = false;
                 break;
             case CHAR_LINK_END:
-                painting = TRUE;
-                help_print_word (h, word, &col, &line, FALSE);
+                painting = true;
+                help_print_word (h, word, &col, &line, false);
                 end_link_area (col - 1, line);
                 tty_setcolor (HELP_NORMAL_COLOR);
                 break;
             case CHAR_ALTERNATE:
-                acs = TRUE;
+                acs = true;
                 break;
             case CHAR_NORMAL:
-                acs = FALSE;
+                acs = false;
                 break;
             case CHAR_VERSION:
                 widget_gotoyx (h, line + 2, col + 2);
@@ -522,12 +522,12 @@ help_show (WDialog * h, const char *paint_start)
                 tty_setcolor (HELP_ITALIC_COLOR);
                 break;
             case CHAR_FONT_NORMAL:
-                help_print_word (h, word, &col, &line, FALSE);
+                help_print_word (h, word, &col, &line, false);
                 tty_setcolor (HELP_NORMAL_COLOR);
                 break;
             case '\n':
                 if (painting)
-                    help_print_word (h, word, &col, &line, FALSE);
+                    help_print_word (h, word, &col, &line, false);
                 line++;
                 col = 0;
                 break;
@@ -575,7 +575,7 @@ help_show (WDialog * h, const char *paint_start)
 
         /* print last word */
         if (n[0] == CHAR_NODE_END)
-            help_print_word (h, word, &col, &line, FALSE);
+            help_print_word (h, word, &col, &line, false);
 
         last_shown = p;
         end_of_node = line < help_lines;
@@ -587,13 +587,13 @@ help_show (WDialog * h, const char *paint_start)
             else
             {
                 selected_item = ((Link_Area *) link_area->data)->link_name;
-                repeat_paint = TRUE;
+                repeat_paint = true;
             }
         }
     }
     while (repeat_paint);
 
-    g_string_free (word, TRUE);
+    g_string_free (word, true);
 
     /* Position the cursor over a nice link */
     if (active_col)
@@ -661,7 +661,7 @@ help_back (WDialog * h)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-help_next_link (gboolean move_down)
+help_next_link (bool move_down)
 {
     const char *new_item;
 
@@ -686,7 +686,7 @@ help_next_link (gboolean move_down)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-help_prev_link (gboolean move_up)
+help_prev_link (bool move_up)
 {
     const char *new_item;
 
@@ -795,10 +795,10 @@ help_execute_cmd (long command)
         help_back (whelp);
         break;
     case CK_Up:
-        help_prev_link (TRUE);
+        help_prev_link (true);
         break;
     case CK_Down:
-        help_next_link (TRUE);
+        help_next_link (true);
         break;
     case CK_PageDown:
         move_forward (help_lines - 1);
@@ -822,10 +822,10 @@ help_execute_cmd (long command)
         help_select_link ();
         break;
     case CK_LinkNext:
-        help_next_link (FALSE);
+        help_next_link (false);
         break;
     case CK_LinkPrev:
-        help_prev_link (FALSE);
+        help_prev_link (false);
         break;
     case CK_NodeNext:
         help_next_node ();
@@ -948,17 +948,17 @@ translate_file (char *filedata)
     conv = str_crt_conv_from ("UTF-8");
 
     if (conv == INVALID_CONV)
-        g_string_free (translated_data, TRUE);
+        g_string_free (translated_data, true);
     else
     {
         g_free (fdata);
 
         if (str_convert (conv, filedata, translated_data) != ESTR_FAILURE)
-            fdata = g_string_free (translated_data, FALSE);
+            fdata = g_string_free (translated_data, false);
         else
         {
             fdata = nullptr;
-            g_string_free (translated_data, TRUE);
+            g_string_free (translated_data, true);
         }
         str_close_conv (conv);
     }
@@ -1068,7 +1068,7 @@ mousedispatch_new (int y, int x, int yl, int xl)
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-gboolean
+bool
 help_interactive_display (const gchar * event_group_name, const gchar * event_name,
                           gpointer init_data, gpointer data)
 {
@@ -1104,14 +1104,14 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
     g_free (hlpfile);
 
     if (filedata == nullptr)
-        return TRUE;
+        return true;
 
     translate_file (filedata);
 
     g_free (filedata);
 
     if (fdata == nullptr)
-        return TRUE;
+        return true;
 
     if ((event_data->node == nullptr) || (*event_data->node == '\0'))
         event_data->node = "[main]";
@@ -1127,19 +1127,19 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
         if (main_node == nullptr)
         {
             interactive_display_finish ();
-            return TRUE;
+            return true;
         }
     }
 
     help_lines = MIN (LINES - 4, MAX (2 * LINES / 3, 18));
 
     whelp =
-        dlg_create (TRUE, 0, 0, help_lines + 4, HELP_WINDOW_WIDTH + 4, WPOS_CENTER | WPOS_TRYUP,
-                    FALSE, help_colors, help_callback, nullptr, "[Help]", _("Help"));
+        dlg_create (true, 0, 0, help_lines + 4, HELP_WINDOW_WIDTH + 4, WPOS_CENTER | WPOS_TRYUP,
+                    false, help_colors, help_callback, nullptr, "[Help]", _("Help"));
     wh = WIDGET (whelp);
     g = GROUP (whelp);
     wh->keymap = help_map;
-    widget_want_tab (wh, TRUE);
+    widget_want_tab (wh, true);
     /* draw background */
     whelp->bg->callback = help_bg_callback;
 
@@ -1153,7 +1153,7 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
         history[history_ptr].link = selected_item;
     }
 
-    help_bar = buttonbar_new (TRUE);
+    help_bar = buttonbar_new (true);
     WIDGET (help_bar)->y -= wh->y;
     WIDGET (help_bar)->x -= wh->x;
 
@@ -1176,7 +1176,7 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
     dlg_run (whelp);
     interactive_display_finish ();
     dlg_destroy (whelp);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

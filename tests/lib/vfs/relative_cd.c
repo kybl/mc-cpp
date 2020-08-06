@@ -178,7 +178,7 @@ START_TEST (test_vpath_to_str_filter)
     vfs_path_free (vpath);
 
     last_vpath = vfs_path_new ();
-    last_vpath->relative = TRUE;
+    last_vpath->relative = true;
 
     vfs_path_add_element (last_vpath, path_element);
 
@@ -209,7 +209,7 @@ main (void)
 
     /* writable directory where check creates temporary files */
     cwd = g_get_current_dir ();
-    g_setenv ("TEMP", cwd, TRUE);
+    g_setenv ("TEMP", cwd, true);
     g_free (cwd);
 
     tcase_add_checked_fixture (tc_core, setup, teardown);

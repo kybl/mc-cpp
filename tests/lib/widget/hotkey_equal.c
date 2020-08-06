@@ -55,74 +55,74 @@ static const struct test_hotkey_equal_ds
 {
     const hotkey_t hotkey1;
     const hotkey_t hotkey2;
-    gboolean expected_result;
+    bool expected_result;
 } test_hotkey_equal_ds[] =
 {
     /* 0 */
     {
         { .start = C ("abc"), .hotkey = NULL, .end = NULL },
         { .start = C ("abc"), .hotkey = NULL, .end = NULL },
-        TRUE
+        true
     },
     /* 1 */
     {
         { .start = C (""), .hotkey = C (""), .end = C ("") },
         { .start = C (""), .hotkey = C (""), .end = C ("") },
-        TRUE
+        true
     },
     /* 2 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
-        TRUE
+        true
     },
     /* 3 */
     {
         { .start = C ("abc"), .hotkey = NULL, .end = C ("efg") },
         { .start = C ("abc"), .hotkey = NULL, .end = C ("efg") },
-        TRUE
+        true
     },
     /* 4 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = NULL },
         { .start = C ("abc"), .hotkey = C ("d"), .end = NULL },
-        TRUE
+        true
     },
     /* 5 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("_bc"), .hotkey = C ("d"), .end = C ("efg") },
-        FALSE
+        false
     },
     /* 6 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("abc"), .hotkey = C ("_"), .end = C ("efg") },
-        FALSE
+        false
     },
     /* 7 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("_fg") },
-        FALSE
+        false
     },
     /* 8 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("adc"), .hotkey = NULL,    .end = C ("efg") },
-        FALSE
+        false
     },
     /* 9 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("abc"), .hotkey = C ("d"), .end = NULL      },
-        FALSE
+        false
     },
     /* 10 */
     {
         { .start = C ("abc"), .hotkey = C ("d"), .end = C ("efg") },
         { .start = C ("abc"), .hotkey = NULL,    .end = NULL      },
-        FALSE
+        false
     }
 };
 /* *INDENT-ON* */
@@ -134,7 +134,7 @@ START_PARAMETRIZED_TEST (test_hotkey_equal,
 /* *INDENT-ON* */
 {
     /* given */
-    gboolean result;
+    bool result;
 
     /* when */
     result = hotkey_equal (data->hotkey1, data->hotkey2);

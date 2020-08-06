@@ -64,10 +64,10 @@
 void
 mcview_growbuf_init (WView * view)
 {
-    view->growbuf_in_use = TRUE;
+    view->growbuf_in_use = true;
     view->growbuf_blockptr = g_ptr_array_new ();
     view->growbuf_lastindex = VIEW_PAGE_SIZE;
-    view->growbuf_finished = FALSE;
+    view->growbuf_finished = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -75,7 +75,7 @@ mcview_growbuf_init (WView * view)
 void
 mcview_growbuf_done (WView * view)
 {
-    view->growbuf_finished = TRUE;
+    view->growbuf_finished = true;
 
     if (view->datasource == DS_STDIO_PIPE)
     {
@@ -98,10 +98,10 @@ mcview_growbuf_free (WView * view)
 
     g_ptr_array_foreach (view->growbuf_blockptr, (GFunc) g_free, nullptr);
 
-    (void) g_ptr_array_free (view->growbuf_blockptr, TRUE);
+    (void) g_ptr_array_free (view->growbuf_blockptr, true);
 
     view->growbuf_blockptr = nullptr;
-    view->growbuf_in_use = FALSE;
+    view->growbuf_in_use = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -126,7 +126,7 @@ mcview_growbuf_filesize (WView * view)
 void
 mcview_growbuf_read_until (WView * view, off_t ofs)
 {
-    gboolean short_read = FALSE;
+    bool short_read = false;
 
     g_assert (view->growbuf_in_use);
 
@@ -183,7 +183,7 @@ mcview_growbuf_read_until (WView * view, off_t ofs)
                  * endless recursion: mcview_growbuf_read_until() -> mcview_show_error() ->
                  * MSG_DRAW -> mcview_display() -> mcview_get_byte() -> mcview_growbuf_read_until()
                  */
-                view->pipe_first_err_msg = FALSE;
+                view->pipe_first_err_msg = false;
 
                 mcview_show_error (view, sp->err.buf);
             }
@@ -240,7 +240,7 @@ mcview_growbuf_read_until (WView * view, off_t ofs)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_get_byte_growing_buffer (WView * view, off_t byte_index, int *retval)
 {
     char *p;
@@ -251,16 +251,16 @@ mcview_get_byte_growing_buffer (WView * view, off_t byte_index, int *retval)
         *retval = -1;
 
     if (byte_index < 0)
-        return FALSE;
+        return false;
 
     p = mcview_get_ptr_growing_buffer (view, byte_index);
     if (p == nullptr)
-        return FALSE;
+        return false;
 
     if (retval != nullptr)
         *retval = (unsigned char) (*p);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

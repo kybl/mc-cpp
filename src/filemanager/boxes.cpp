@@ -135,7 +135,7 @@ configure_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, voi
         /* message from "Single press" checkbutton */
         if (sender != nullptr && sender->id == configure_old_esc_mode_id)
         {
-            const gboolean not_single = !CHECK (sender)->state;
+            const bool not_single = !CHECK (sender)->state;
             Widget *ww;
 
             /* input line */
@@ -161,7 +161,7 @@ skin_apply (const gchar * skin_override)
     mc_skin_deinit ();
     mc_skin_init (skin_override, &mcerror);
     mc_fhl_free (&mc_filehighlight);
-    mc_filehighlight = mc_fhl_new (TRUE);
+    mc_filehighlight = mc_fhl_new (true);
     dlg_set_default_colors ();
     input_set_default_colors ();
     if (mc_global.mc_run_mode == MC_RUN_FULL)
@@ -224,7 +224,7 @@ sel_skin_button (WButton * button, int action)
     (void) action;
 
     skin_dlg =
-        dlg_create (TRUE, 0, 0, 13, 24, WPOS_KEEP_DEFAULT, TRUE, dialog_colors, skin_dlg_callback,
+        dlg_create (true, 0, 0, 13, 24, WPOS_KEEP_DEFAULT, true, dialog_colors, skin_dlg_callback,
                     nullptr, "[Appearance]", _("Skins"));
     /* use Appearance dialog for positioning */
     skin_dlg->data = WIDGET (button)->owner;
@@ -232,10 +232,10 @@ sel_skin_button (WButton * button, int action)
     /* set dialog location before all */
     send_message (skin_dlg, nullptr, MSG_RESIZE, 0, nullptr);
 
-    skin_list = listbox_new (1, 1, 11, 22, FALSE, nullptr);
+    skin_list = listbox_new (1, 1, 11, 22, false, nullptr);
     skin_name = "default";
     listbox_add_item (skin_list, LISTBOX_APPEND_AT_END, 0, skin_name_to_label (skin_name),
-                      (void *) skin_name, FALSE);
+                      (void *) skin_name, false);
 
     if (strcmp (skin_name, current_skin_name) == 0)
         listbox_select_entry (skin_list, 0);
@@ -246,7 +246,7 @@ sel_skin_button (WButton * button, int action)
         if (strcmp (skin_name, "default") != 0)
         {
             listbox_add_item (skin_list, LISTBOX_APPEND_AT_END, 0, skin_name_to_label (skin_name),
-                              (void *) skin_name, FALSE);
+                              (void *) skin_name, false);
             if (strcmp (skin_name, current_skin_name) == 0)
                 listbox_select_entry (skin_list, pos);
             pos++;
@@ -286,8 +286,8 @@ appearance_box_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
             Widget *shadow;
 
             shadow = widget_find_by_id (w, shadows_id);
-            CHECK (shadow)->state = FALSE;
-            widget_disable (shadow, TRUE);
+            CHECK (shadow)->state = false;
+            widget_disable (shadow, true);
         }
         return MSG_HANDLED;
 
@@ -325,9 +325,9 @@ panel_listing_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
 
             if (!ch->state)
                 input_assign_text (in3, status_format[RADIO (sender)->sel]);
-            input_update (in1, FALSE);
-            input_update (in2, FALSE);
-            input_update (in3, FALSE);
+            input_update (in1, false);
+            input_update (in2, false);
+            input_update (in3, false);
             widget_disable (WIDGET (in1), RADIO (sender)->sel != panel_list_user_idx);
             widget_disable (WIDGET (in2), RADIO (sender)->sel != panel_list_brief_idx);
             return MSG_HANDLED;
@@ -341,7 +341,7 @@ panel_listing_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
 
             if (CHECK (sender)->state)
             {
-                widget_disable (WIDGET (in), FALSE);
+                widget_disable (WIDGET (in), false);
                 input_assign_text (in, status_format[3]);
             }
             else
@@ -349,10 +349,10 @@ panel_listing_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
                 WRadio *r;
 
                 r = RADIO (widget_find_by_id (w, panel_list_formats_id));
-                widget_disable (WIDGET (in), TRUE);
+                widget_disable (WIDGET (in), true);
                 input_assign_text (in, status_format[r->sel]);
             }
-            /* input_update (in, FALSE); */
+            /* input_update (in, false); */
             return MSG_HANDLED;
         }
 
@@ -373,7 +373,7 @@ sel_charset_button (WButton * button, int action)
 
     (void) action;
 
-    new_dcp = select_charset (-1, -1, new_display_codepage, TRUE);
+    new_dcp = select_charset (-1, -1, new_display_codepage, true);
 
     if (new_dcp != SELECT_CHARSET_CANCEL)
     {
@@ -439,7 +439,7 @@ confvfs_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void 
         /* message from "Always use ftp proxy" checkbutton */
         if (sender != nullptr && sender->id == ftpfs_always_use_proxy_id)
         {
-            const gboolean not_use = !CHECK (sender)->state;
+            const bool not_use = !CHECK (sender)->state;
             Widget *wi;
 
             /* input */
@@ -475,7 +475,7 @@ jobs_fill_listbox (WListbox * list)
         char *s;
 
         s = g_strconcat (state_str[tl->state], " ", tl->info, (char *) nullptr);
-        listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, s, (void *) tl, FALSE);
+        listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, s, (void *) tl, false);
         g_free (s);
     }
 }
@@ -562,7 +562,7 @@ configure_box (void)
                     QUICK_CHECKBOX (N_("S&ingle press"), &old_esc_mode, &configure_old_esc_mode_id),
                     QUICK_LABELED_INPUT (N_("Timeout:"), input_label_left,
                                          (const char *) time_out, MC_HISTORY_ESC_TIMEOUT,
-                                         &time_out_new, &configure_time_out_id, FALSE, FALSE,
+                                         &time_out_new, &configure_time_out_id, false, false,
                                          INPUT_COMPLETE_NONE),
                 QUICK_STOP_GROUPBOX,
                 QUICK_START_GROUPBOX (N_("Pause after run")),
@@ -584,8 +584,8 @@ configure_box (void)
                     QUICK_CHECKBOX (N_("Sa&fe delete"), &safe_delete, nullptr),
                     QUICK_CHECKBOX (N_("Safe overwrite"), &safe_overwrite, nullptr),       /* w/o hotkey */
                     QUICK_CHECKBOX (N_("A&uto save setup"), &auto_save_setup, nullptr),
-                    QUICK_SEPARATOR (FALSE),
-                    QUICK_SEPARATOR (FALSE),
+                    QUICK_SEPARATOR (false),
+                    QUICK_SEPARATOR (false),
                 QUICK_STOP_GROUPBOX,
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
@@ -609,7 +609,7 @@ configure_box (void)
             quick_widgets[10].state = quick_widgets[11].state = WST_DISABLED;
 
 #ifndef HAVE_POSIX_FALLOCATE
-        mc_global.vfs.preallocate_space = FALSE;
+        mc_global.vfs.preallocate_space = false;
         quick_widgets[7].state = WST_DISABLED;
 #endif
 
@@ -625,7 +625,7 @@ configure_box (void)
 void
 appearance_box (void)
 {
-    gboolean shadows = mc_global.tty.shadows;
+    bool shadows = mc_global.tty.shadows;
 
     current_skin_name = g_strdup (mc_skin__default.name);
     skin_names = mc_skin_list ();
@@ -639,7 +639,7 @@ appearance_box (void)
                 QUICK_BUTTON (str_fit_to_term (skin_name_to_label (current_skin_name), 20, J_LEFT_FIT),
                               B_USER, sel_skin_button, nullptr),
             QUICK_STOP_COLUMNS,
-            QUICK_SEPARATOR (TRUE),
+            QUICK_SEPARATOR (true),
             QUICK_CHECKBOX (N_("&Shadows"), &mc_global.tty.shadows, &shadows_id),
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END
@@ -664,7 +664,7 @@ appearance_box (void)
 
     g_free (current_skin_name);
     g_ptr_array_foreach (skin_names, (GFunc) g_free, nullptr);
-    g_ptr_array_free (skin_names, TRUE);
+    g_ptr_array_free (skin_names, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -672,10 +672,10 @@ appearance_box (void)
 void
 panel_options_box (void)
 {
-    gboolean simple_swap;
+    bool simple_swap;
 
     simple_swap = mc_config_get_bool (mc_global.main_config, CONFIG_PANELS_SECTION,
-                                      "simple_swap", FALSE);
+                                      "simple_swap", false);
     {
         const char *qsearch_options[] = {
             N_("Case &insensitive"),
@@ -699,9 +699,9 @@ panel_options_box (void)
                     QUICK_CHECKBOX (N_("Simple s&wap"), &simple_swap, nullptr),
                     QUICK_CHECKBOX (N_("A&uto save panels setup"), &panels_options.auto_save_setup,
                                     nullptr),
-                    QUICK_SEPARATOR (FALSE),
-                    QUICK_SEPARATOR (FALSE),
-                    QUICK_SEPARATOR (FALSE),
+                    QUICK_SEPARATOR (false),
+                    QUICK_SEPARATOR (false),
+                    QUICK_SEPARATOR (false),
                 QUICK_STOP_GROUPBOX,
             QUICK_NEXT_COLUMN,
                 QUICK_START_GROUPBOX (N_("Navigation")),
@@ -744,7 +744,7 @@ panel_options_box (void)
                  _("Using the fast reload option may not reflect the exact\n"
                    "directory contents. In this case you'll need to do a\n"
                    "manual reload of the directory. See the man page for\n" "the details."));
-        panels_options.fast_reload_msg_shown = TRUE;
+        panels_options.fast_reload_msg_shown = true;
     }
 
     update_panels (UP_RELOAD, UP_KEEPSEL);
@@ -754,7 +754,7 @@ panel_options_box (void)
 
 /* return list type */
 int
-panel_listing_box (WPanel * panel, int num, char **userp, char **minip, gboolean * use_msformat,
+panel_listing_box (WPanel * panel, int num, char **userp, char **minip, bool * use_msformat,
                    int *brief_cols)
 {
     int result = -1;
@@ -767,7 +767,7 @@ panel_listing_box (WPanel * panel, int num, char **userp, char **minip, gboolean
     }
 
     {
-        gboolean mini_user_status;
+        bool mini_user_status;
         char panel_brief_cols_in[BUF_TINY];
         char *panel_brief_cols_out = nullptr;
         char *panel_user_format = nullptr;
@@ -786,17 +786,17 @@ panel_listing_box (WPanel * panel, int num, char **userp, char **minip, gboolean
             QUICK_START_COLUMNS,
                 QUICK_RADIO (LIST_FORMATS, list_formats, &result, &panel_list_formats_id),
             QUICK_NEXT_COLUMN,
-                QUICK_SEPARATOR (FALSE),
+                QUICK_SEPARATOR (false),
                 QUICK_LABELED_INPUT (_ ("columns"), input_label_right, panel_brief_cols_in,
                                      "panel-brief-cols-input", &panel_brief_cols_out,
-                                     &panel_brief_cols_id, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                     &panel_brief_cols_id, false, false, INPUT_COMPLETE_NONE),
             QUICK_STOP_COLUMNS,
             QUICK_INPUT (panel->user_format, "user-fmt-input", &panel_user_format,
-                         &panel_user_format_id, FALSE, FALSE, INPUT_COMPLETE_NONE),
-            QUICK_SEPARATOR (TRUE),
+                         &panel_user_format_id, false, false, INPUT_COMPLETE_NONE),
+            QUICK_SEPARATOR (true),
             QUICK_CHECKBOX (N_("User &mini status"), &mini_user_status, &mini_user_status_id),
             QUICK_INPUT (panel->user_status_format[panel->list_format], "mini_input",
-                         &mini_user_format, &mini_user_format_id, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                         &mini_user_format, &mini_user_format_id, false, false, INPUT_COMPLETE_NONE),
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END
             /* *INDENT-ON* */
@@ -946,7 +946,7 @@ confirm_box (void)
 void
 display_bits_box (void)
 {
-    gboolean new_meta;
+    bool new_meta;
     int current_mode;
 
     const char *display_bits_str[] = {
@@ -959,7 +959,7 @@ display_bits_box (void)
     quick_widget_t quick_widgets[] = {
         /* *INDENT-OFF* */
         QUICK_RADIO (4, display_bits_str, &current_mode, nullptr),
-        QUICK_SEPARATOR (TRUE),
+        QUICK_SEPARATOR (true),
         QUICK_CHECKBOX (N_("F&ull 8 bits input"), &new_meta, nullptr),
         QUICK_BUTTONS_OK_CANCEL,
         QUICK_END
@@ -1008,7 +1008,7 @@ display_bits_box (void)
         : ((codepage_desc *) g_ptr_array_index (codepages, new_display_codepage))->name;
 
     {
-        gboolean new_meta;
+        bool new_meta;
 
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
@@ -1017,7 +1017,7 @@ display_bits_box (void)
             QUICK_NEXT_COLUMN,
                 QUICK_BUTTON (cpname, B_USER, sel_charset_button, nullptr),
             QUICK_STOP_COLUMNS,
-            QUICK_SEPARATOR (TRUE),
+            QUICK_SEPARATOR (true),
                 QUICK_CHECKBOX (N_("F&ull 8 bits input"), &new_meta, nullptr),
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END
@@ -1075,15 +1075,15 @@ tree_box (const char *current_dir)
     (void) current_dir;
 
     /* Create the components */
-    dlg = dlg_create (TRUE, 0, 0, LINES - 9, COLS - 20, WPOS_CENTER, FALSE, dialog_colors,
+    dlg = dlg_create (true, 0, 0, LINES - 9, COLS - 20, WPOS_CENTER, false, dialog_colors,
                       tree_callback, nullptr, "[Directory Tree]", _("Directory tree"));
     g = GROUP (dlg);
     wd = WIDGET (dlg);
 
-    mytree = tree_new (2, 2, wd->lines - 6, wd->cols - 5, FALSE);
+    mytree = tree_new (2, 2, wd->lines - 6, wd->cols - 5, false);
     group_add_widget_autopos (g, mytree, WPOS_KEEP_ALL, nullptr);
     group_add_widget_autopos (g, hline_new (wd->lines - 4, 1, -1), WPOS_KEEP_BOTTOM, nullptr);
-    bar = buttonbar_new (TRUE);
+    bar = buttonbar_new (true);
     group_add_widget (g, bar);
     /* restore ButtonBar coordinates after add_widget() */
     WIDGET (bar)->x = 0;
@@ -1127,20 +1127,20 @@ configure_vfs_box (void)
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Timeout for freeing VFSs (sec):"), input_label_left,
-                                 buffer2, "input-timo-vfs", &ret_timeout, nullptr, FALSE, FALSE,
+                                 buffer2, "input-timo-vfs", &ret_timeout, nullptr, false, false,
                                  INPUT_COMPLETE_NONE),
 #ifdef ENABLE_VFS_FTP
-            QUICK_SEPARATOR (TRUE),
+            QUICK_SEPARATOR (true),
             QUICK_LABELED_INPUT (N_("FTP anonymous password:"), input_label_left,
                                  ftpfs_anonymous_passwd, "input-passwd", &ret_passwd, nullptr,
-                                 FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                 false, false, INPUT_COMPLETE_NONE),
             QUICK_LABELED_INPUT (N_("FTP directory cache timeout (sec):"), input_label_left,
                                  buffer3, "input-timeout", &ret_directory_timeout, nullptr,
-                                 FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                 false, false, INPUT_COMPLETE_NONE),
             QUICK_CHECKBOX (N_("&Always use ftp proxy:"), &ftpfs_always_use_proxy,
                             &ftpfs_always_use_proxy_id),
             QUICK_INPUT (ftpfs_proxy_host, "input-ftp-proxy", &ret_ftp_proxy,
-                         &ftpfs_proxy_host_id, FALSE, FALSE, INPUT_COMPLETE_HOSTNAMES),
+                         &ftpfs_proxy_host_id, false, false, INPUT_COMPLETE_HOSTNAMES),
             QUICK_CHECKBOX (N_("&Use ~/.netrc"), &ftpfs_use_netrc, nullptr),
             QUICK_CHECKBOX (N_("Use &passive mode"), &ftpfs_use_passive_connections, nullptr),
             QUICK_CHECKBOX (N_("Use passive mode over pro&xy"),
@@ -1202,7 +1202,7 @@ cd_box (void)
     char *my_str;
 
     quick_widget_t quick_widgets[] = {
-        QUICK_LABELED_INPUT (N_("cd"), input_label_left, "", "input", &my_str, nullptr, FALSE, TRUE,
+        QUICK_LABELED_INPUT (N_("cd"), input_label_left, "", "input", &my_str, nullptr, false, true,
                              INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD),
         QUICK_END
     };
@@ -1226,11 +1226,11 @@ symlink_box (const vfs_path_t * existing_vpath, const vfs_path_t * new_vpath,
         /* *INDENT-OFF* */
         QUICK_LABELED_INPUT (N_("Existing filename (filename symlink will point to):"),
                              input_label_above, vfs_path_as_str (existing_vpath), "input-2",
-                             ret_existing, nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
-        QUICK_SEPARATOR (FALSE),
+                             ret_existing, nullptr, false, false, INPUT_COMPLETE_FILENAMES),
+        QUICK_SEPARATOR (false),
         QUICK_LABELED_INPUT (N_("Symbolic link filename:"), input_label_above,
                              vfs_path_as_str (new_vpath), "input-1",
-                             ret_new, nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
+                             ret_new, nullptr, false, false, INPUT_COMPLETE_FILENAMES),
         QUICK_BUTTONS_OK_CANCEL,
         QUICK_END
         /* *INDENT-ON* */
@@ -1297,11 +1297,11 @@ jobs_box (void)
     x += (int) n_but - 1;
     cols = MAX (cols, x + 6);
 
-    jobs_dlg = dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, nullptr, nullptr,
+    jobs_dlg = dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors, nullptr, nullptr,
                            "[Background jobs]", _("Background jobs"));
     g = GROUP (jobs_dlg);
 
-    bg_list = listbox_new (2, 2, lines - 6, cols - 6, FALSE, nullptr);
+    bg_list = listbox_new (2, 2, lines - 6, cols - 6, false, nullptr);
     jobs_fill_listbox (bg_list);
     group_add_widget (g, bg_list);
 
@@ -1342,19 +1342,19 @@ vfs_smb_get_authinfo (const char *host, const char *share, const char *domain, c
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABEL (label, nullptr),
-            QUICK_SEPARATOR (TRUE),
+            QUICK_SEPARATOR (true),
             QUICK_START_COLUMNS,
                 QUICK_LABEL (N_("Domain:"), nullptr),
-                QUICK_SEPARATOR (FALSE),
+                QUICK_SEPARATOR (false),
                 QUICK_LABEL (N_("Username:"), nullptr),
-                QUICK_SEPARATOR (FALSE),
+                QUICK_SEPARATOR (false),
                 QUICK_LABEL (N_("Password:"), nullptr),
             QUICK_NEXT_COLUMN,
-                QUICK_INPUT (domain, "auth_domain", &ret_domain, nullptr, FALSE, FALSE, INPUT_COMPLETE_HOSTNAMES),
-                QUICK_SEPARATOR (FALSE),
-                QUICK_INPUT (user, "auth_name", &ret_user, nullptr, FALSE, FALSE, INPUT_COMPLETE_USERNAMES),
-                QUICK_SEPARATOR (FALSE),
-                QUICK_INPUT ("", "auth_password", &ret_password, nullptr, TRUE, FALSE, INPUT_COMPLETE_NONE),
+                QUICK_INPUT (domain, "auth_domain", &ret_domain, nullptr, false, false, INPUT_COMPLETE_HOSTNAMES),
+                QUICK_SEPARATOR (false),
+                QUICK_INPUT (user, "auth_name", &ret_user, nullptr, false, false, INPUT_COMPLETE_USERNAMES),
+                QUICK_SEPARATOR (false),
+                QUICK_INPUT ("", "auth_password", &ret_password, nullptr, true, false, INPUT_COMPLETE_NONE),
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END

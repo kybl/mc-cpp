@@ -131,7 +131,7 @@ mc_skin_color_look_up_alias (mc_skin_t * mc_skin, gchar * str)
     orig = g_strdup (str);
     str2 = g_strdup (str);
 
-    while (TRUE)
+    while (true)
     {
         gchar **values;
         gsize items_count;
@@ -211,7 +211,7 @@ mc_skin_color_get_from_ini_file (mc_skin_t * mc_skin, const gchar * group, const
 
     mc_skin_color->pair_index =
         tty_try_alloc_color_pair2 (mc_skin_color->fgcolor, mc_skin_color->bgcolor,
-                                   mc_skin_color->attrs, FALSE);
+                                   mc_skin_color->attrs, false);
 
     return mc_skin_color;
 }
@@ -230,7 +230,7 @@ mc_skin_color_set_default_for_terminal (mc_skin_t * mc_skin)
         mc_skin_color->attrs = nullptr;
         mc_skin_color->pair_index =
             tty_try_alloc_color_pair2 (mc_skin_color->fgcolor, mc_skin_color->bgcolor,
-                                       mc_skin_color->attrs, FALSE);
+                                       mc_skin_color->attrs, false);
         mc_skin_color_add_to_hash (mc_skin, "skin", "terminal_default_color", mc_skin_color);
     }
 }
@@ -321,7 +321,7 @@ mc_skin_color_cache_init (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_skin_color_check_inisection (const gchar * group)
 {
     return !((strcasecmp ("skin", group) == 0) || (strcasecmp ("aliases", group) == 0)
@@ -353,7 +353,7 @@ mc_skin_color_check_bw_mode (mc_skin_t * mc_skin)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_skin_color_parse_ini_file (mc_skin_t * mc_skin)
 {
     gsize items_count;
@@ -366,14 +366,14 @@ mc_skin_color_parse_ini_file (mc_skin_t * mc_skin)
     if (*orig_groups == nullptr)
     {
         g_strfreev (orig_groups);
-        return FALSE;
+        return false;
     }
 
     /* as first, need to set up default colors */
     mc_skin_color_set_default_for_terminal (mc_skin);
     mc_skin_color = mc_skin_color_get_from_ini_file (mc_skin, "core", "_default_");
     if (mc_skin_color == nullptr)
-        return FALSE;
+        return false;
 
     tty_color_set_defaults (mc_skin_color->fgcolor, mc_skin_color->bgcolor, mc_skin_color->attrs);
     mc_skin_color_add_to_hash (mc_skin, "core", "_default_", mc_skin_color);
@@ -398,7 +398,7 @@ mc_skin_color_parse_ini_file (mc_skin_t * mc_skin)
     g_strfreev (orig_groups);
 
     mc_skin_color_cache_init ();
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

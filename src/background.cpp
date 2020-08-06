@@ -546,7 +546,7 @@ do_background (file_op_context_t * ctx, char *info)
         parent_fd = comm[1];
         from_parent_fd = back_comm[0];
 
-        mc_global.we_are_background = TRUE;
+        mc_global.we_are_background = true;
         top_dlg = nullptr;
 
         /* Make stdin/stdout/stderr point somewhere */
@@ -608,7 +608,7 @@ parent_call_string (void *routine, int argc, ...)
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-gboolean
+bool
 background_parent_call (const gchar * event_group_name, const gchar * event_name,
                         gpointer init_data, gpointer data)
 {
@@ -621,13 +621,13 @@ background_parent_call (const gchar * event_group_name, const gchar * event_name
     event_data->ret.i =
         parent_va_call (event_data->routine, event_data->ctx, event_data->argc, event_data->ap);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /* event callback */
-gboolean
+bool
 background_parent_call_string (const gchar * event_group_name, const gchar * event_name,
                                gpointer init_data, gpointer data)
 {
@@ -640,7 +640,7 @@ background_parent_call_string (const gchar * event_group_name, const gchar * eve
     event_data->ret.s =
         parent_va_call_string (event_data->routine, event_data->argc, event_data->ap);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

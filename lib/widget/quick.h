@@ -145,7 +145,7 @@
     .id = nullptr,                                                                 \
     .u = {                                                                      \
         .separator = {                                                          \
-            .space = TRUE,                                                      \
+            .space = true,                                                      \
             .line = line_                                                       \
         }                                                                       \
     }                                                                           \
@@ -211,7 +211,7 @@
 }
 
 #define QUICK_BUTTONS_OK_CANCEL                                                 \
-    QUICK_START_BUTTONS (TRUE, TRUE),                                           \
+    QUICK_START_BUTTONS (true, true),                                           \
         QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),                          \
         QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr)
 
@@ -279,7 +279,7 @@ struct quick_widget_t
         struct
         {
             const char *text;
-            gboolean *state;    /* in/out */
+            bool *state;    /* in/out */
         } checkbox;
 
         struct
@@ -296,8 +296,8 @@ struct quick_widget_t
             quick_widget_t *label;
             const char *text;
             input_complete_t completion_flags;
-            gboolean is_passwd; /* TRUE -- is password */
-            gboolean strip_passwd;
+            bool is_passwd; /* true -- is password */
+            bool strip_passwd;
             const char *histname;
             char **result;
         } input;
@@ -322,8 +322,8 @@ struct quick_widget_t
 
         struct
         {
-            gboolean space;
-            gboolean line;
+            bool space;
+            bool line;
         } separator;
     } u;
 };

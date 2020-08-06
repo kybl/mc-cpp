@@ -52,7 +52,7 @@
 
 /*** global variables ****************************************************************************/
 
-gboolean quote = FALSE;
+bool quote = false;
 
 const global_keymap_t *input_map = nullptr;
 
@@ -101,7 +101,7 @@ static void
 draw_history_button (WInput * in)
 {
     char c;
-    gboolean disabled;
+    bool disabled;
 
     if (g_list_next (in->history.current) == nullptr)
         c = '^';
@@ -125,25 +125,25 @@ draw_history_button (WInput * in)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-input_mark_cmd (WInput * in, gboolean mark)
+input_mark_cmd (WInput * in, bool mark)
 {
     in->mark = mark ? in->point : -1;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 input_eval_marks (WInput * in, long *start_mark, long *end_mark)
 {
     if (in->mark >= 0)
     {
         *start_mark = MIN (in->mark, in->point);
         *end_mark = MAX (in->mark, in->point);
-        return TRUE;
+        return true;
     }
 
     *start_mark = *end_mark = -1;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -154,13 +154,13 @@ delete_region (WInput * in, int x_first, int x_last)
     int first = MIN (x_first, x_last);
     int last = MAX (x_first, x_last);
 
-    input_mark_cmd (in, FALSE);
+    input_mark_cmd (in, false);
     in->point = first;
     last = str_offset_to_pos (in->buffer, last);
     first = str_offset_to_pos (in->buffer, first);
     str_move (in->buffer + first, in->buffer + last);
     in->charpoint = 0;
-    in->need_push = TRUE;
+    in->need_push = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -189,7 +189,7 @@ do_show_hist (WInput * in)
 
     /* Has history cleaned up or not? */
     if (len != get_history_length (in->history.list))
-        in->history.changed = TRUE;
+        in->history.changed = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -235,7 +235,7 @@ static void
 push_history (WInput * in, const char *text)
 {
     char *t;
-    gboolean empty;
+    bool empty;
 
     if (text == nullptr)
         return;
@@ -264,12 +264,12 @@ push_history (WInput * in, const char *text)
     {
         in->history.list = list_append_unique (in->history.list, t);
         in->history.current = in->history.list;
-        in->history.changed = TRUE;
+        in->history.changed = true;
     }
     else
         g_free (t);
 
-    in->need_push = FALSE;
+    in->need_push = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -319,7 +319,7 @@ insert_char (WInput * in, int c_code)
         return MSG_HANDLED;
     }
 
-    in->need_push = TRUE;
+    in->need_push = true;
     if (strlen (in->buffer) + 1 + in->charpoint >= in->current_max_size)
     {
         /* Expand the buffer */
@@ -464,7 +464,7 @@ backward_delete (WInput * in)
     start = in->point - str_cprev_noncomb_char (&act, in->buffer);
     move_buffer_backward (in, start, in->point);
     in->charpoint = 0;
-    in->need_push = TRUE;
+    in->need_push = true;
     in->point = start;
 }
 
@@ -481,7 +481,7 @@ delete_char (WInput * in)
 
     move_buffer_backward (in, in->point, end);
     in->charpoint = 0;
-    in->need_push = TRUE;
+    in->need_push = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -526,7 +526,7 @@ kill_word (WInput * in)
     in->point = old_point;
 
     delete_region (in, old_point, new_point);
-    in->need_push = TRUE;
+    in->need_push = true;
     in->charpoint = 0;
 }
 
@@ -543,7 +543,7 @@ back_kill_word (WInput * in)
     in->point = old_point;
 
     delete_region (in, old_point, new_point);
-    in->need_push = TRUE;
+    in->need_push = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -581,7 +581,7 @@ kill_line (WInput * in)
 static void
 clear_line (WInput * in)
 {
-    in->need_push = TRUE;
+    in->need_push = true;
     in->buffer[0] = '\0';
     in->point = 0;
     in->mark = -1;
@@ -630,8 +630,8 @@ hist_prev (WInput * in)
     {
         input_assign_text (in, (char *) prev->data);
         in->history.current = prev;
-        in->history.changed = TRUE;
-        in->need_push = FALSE;
+        in->history.changed = true;
+        in->need_push = false;
     }
 }
 
@@ -662,8 +662,8 @@ hist_next (WInput * in)
     {
         input_assign_text (in, (char *) next->data);
         in->history.current = next;
-        in->history.changed = TRUE;
-        in->need_push = FALSE;
+        in->history.changed = true;
+        in->need_push = false;
     }
 }
 
@@ -674,7 +674,7 @@ port_region_marked_for_delete (WInput * in)
 {
     in->buffer[0] = '\0';
     in->point = 0;
-    in->first = FALSE;
+    in->first = false;
     in->charpoint = 0;
 }
 
@@ -696,8 +696,8 @@ input_execute_cmd (WInput * in, long command)
         /* a highlight command like shift-arrow */
         if (in->mark < 0)
         {
-            input_mark_cmd (in, FALSE); /* clear */
-            input_mark_cmd (in, TRUE);  /* marking on */
+            input_mark_cmd (in, false); /* clear */
+            input_mark_cmd (in, true);  /* marking on */
         }
         break;
     case CK_WordRight:
@@ -705,7 +705,7 @@ input_execute_cmd (WInput * in, long command)
     case CK_Right:
     case CK_Left:
         if (in->mark >= 0)
-            input_mark_cmd (in, FALSE);
+            input_mark_cmd (in, false);
         break;
     default:
         break;
@@ -767,7 +767,7 @@ input_execute_cmd (WInput * in, long command)
         back_kill_word (in);
         break;
     case CK_Mark:
-        input_mark_cmd (in, TRUE);
+        input_mark_cmd (in, true);
         break;
     case CK_Remove:
         delete_region (in, in->point, MAX (in->mark, 0));
@@ -833,7 +833,7 @@ input_execute_cmd (WInput * in, long command)
 /* --------------------------------------------------------------------------------------------- */
 
 /* "history_load" event handler */
-static gboolean
+static bool
 input_load_history (const gchar * event_group_name, const gchar * event_name,
                     gpointer init_data, gpointer data)
 {
@@ -856,13 +856,13 @@ input_load_history (const gchar * event_group_name, const gchar * event_name,
         input_assign_text (in, def_text);
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 /* "history_save" event handler */
-static gboolean
+static bool
 input_save_history (const gchar * event_group_name, const gchar * event_name,
                     gpointer init_data, gpointer data)
 {
@@ -878,10 +878,10 @@ input_save_history (const gchar * event_group_name, const gchar * event_name,
         push_history (in, in->buffer);
         if (in->history.changed)
             mc_config_history_save (ev->cfg, in->history.name, in->history.list);
-        in->history.changed = FALSE;
+        in->history.changed = false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -941,13 +941,13 @@ input_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
     {
     case MSG_MOUSE_DOWN:
         widget_select (w);
-        in->first = FALSE;
+        in->first = false;
 
         if (event->x >= w->cols - HISTORY_BUTTON_WIDTH && should_show_history_button (in))
             do_show_hist (in);
         else
         {
-            input_mark_cmd (in, FALSE);
+            input_mark_cmd (in, false);
             input_set_point (in, input_screen_to_point (in, event->x));
             /* save point for the possible following MSG_MOUSE_DRAG action */
             prev_point = in->point;
@@ -965,7 +965,7 @@ input_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
     default:
         /* don't create highlight region of 0 length */
         if (in->mark == in->point)
-            input_mark_cmd (in, FALSE);
+            input_mark_cmd (in, false);
         break;
     }
 }
@@ -998,12 +998,12 @@ input_new (int y, int x, const int *colors, int width, const char *def_text,
     w->keymap = input_map;
 
     in->color = colors;
-    in->first = TRUE;
+    in->first = true;
     in->mark = -1;
     in->term_first_shown = 0;
     in->disable_update = 0;
-    in->is_password = FALSE;
-    in->strip_password = FALSE;
+    in->is_password = false;
+    in->strip_password = false;
 
     /* in->buffer will be corrected in "history_load" event handler */
     in->current_max_size = width + 1;
@@ -1023,7 +1023,7 @@ input_new (int y, int x, const int *colors, int width, const char *def_text,
     /* prepare to history setup */
     in->history.list = nullptr;
     in->history.current = nullptr;
-    in->history.changed = FALSE;
+    in->history.changed = false;
     in->history.name = nullptr;
     if ((histname != nullptr) && (*histname != '\0'))
         in->history.name = g_strdup (histname);
@@ -1057,9 +1057,9 @@ input_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
     case MSG_KEY:
         if (parm == XCTRL ('q'))
         {
-            quote = TRUE;
+            quote = true;
             v = input_handle_char (in, ascii_alpha_to_cntrl (tty_getch ()));
-            quote = FALSE;
+            quote = false;
             return v;
         }
 
@@ -1071,9 +1071,9 @@ input_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
         /* When pasting multiline text, insert literal Enter */
         if ((parm & ~KEY_M_MASK) == '\n')
         {
-            quote = TRUE;
+            quote = true;
             v = input_handle_char (in, '\n');
-            quote = FALSE;
+            quote = false;
             return v;
         }
 
@@ -1083,7 +1083,7 @@ input_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
         return input_execute_cmd (in, parm);
 
     case MSG_DRAW:
-        input_update (in, FALSE);
+        input_update (in, false);
         return MSG_HANDLED;
 
     case MSG_ENABLE:
@@ -1132,8 +1132,8 @@ input_handle_char (WInput * in, int key)
     {
         input_complete_free (in);
         v = insert_char (in, key);
-        input_update (in, TRUE);
-        quote = FALSE;
+        input_update (in, true);
+        quote = false;
         return v;
     }
 
@@ -1154,10 +1154,10 @@ input_handle_char (WInput * in, int key)
         input_execute_cmd (in, command);
         v = MSG_HANDLED;
         if (in->first)
-            input_update (in, TRUE);    /* needed to clear in->first */
+            input_update (in, true);    /* needed to clear in->first */
     }
 
-    input_update (in, TRUE);
+    input_update (in, true);
     return v;
 }
 
@@ -1174,7 +1174,7 @@ input_assign_text (WInput * in, const char *text)
 
     input_complete_free (in);
     in->mark = -1;
-    in->need_push = TRUE;
+    in->need_push = true;
     in->charpoint = 0;
 
     text_len = strlen (text);
@@ -1184,12 +1184,12 @@ input_assign_text (WInput * in, const char *text)
         in->buffer = static_cast<char *> (g_realloc (in->buffer, buffer_len));
     memmove (in->buffer, text, text_len + 1);
     in->point = str_length (in->buffer);
-    input_update (in, TRUE);
+    input_update (in, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 input_is_empty (const WInput * in)
 {
     return (in == nullptr || in->buffer == nullptr || in->buffer[0] == '\0');
@@ -1199,7 +1199,7 @@ input_is_empty (const WInput * in)
 
 /* Inserts text in input line */
 void
-input_insert (WInput * in, const char *text, gboolean insert_extra_space)
+input_insert (WInput * in, const char *text, bool insert_extra_space)
 {
     input_disable_update (in);
     while (*text != '\0')
@@ -1207,7 +1207,7 @@ input_insert (WInput * in, const char *text, gboolean insert_extra_space)
     if (insert_extra_space)
         input_handle_char (in, ' ');
     input_enable_update (in);
-    input_update (in, TRUE);
+    input_update (in, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1223,13 +1223,13 @@ input_set_point (WInput * in, int pos)
         input_complete_free (in);
     in->point = pos;
     in->charpoint = 0;
-    input_update (in, TRUE);
+    input_update (in, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 void
-input_update (WInput * in, gboolean clear_first)
+input_update (WInput * in, bool clear_first)
 {
     Widget *w = WIDGET (in);
     int has_history = 0;
@@ -1327,7 +1327,7 @@ input_update (WInput * in, gboolean clear_first)
     }
 
     if (clear_first)
-        in->first = FALSE;
+        in->first = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1336,7 +1336,7 @@ void
 input_enable_update (WInput * in)
 {
     in->disable_update--;
-    input_update (in, FALSE);
+    input_update (in, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1358,13 +1358,13 @@ void
 input_clean (WInput * in)
 {
     push_history (in, in->buffer);
-    in->need_push = TRUE;
+    in->need_push = true;
     in->buffer[0] = '\0';
     in->point = 0;
     in->charpoint = 0;
     in->mark = -1;
     input_complete_free (in);
-    input_update (in, FALSE);
+    input_update (in, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */

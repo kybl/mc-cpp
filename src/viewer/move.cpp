@@ -84,14 +84,14 @@ mcview_scroll_to_cursor (WView * view)
             topleft = mcview_offset_rounddown (cursor, bytes);
         view->dpy_start = topleft;
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-mcview_movement_fixups (WView * view, gboolean reset_search)
+mcview_movement_fixups (WView * view, bool reset_search)
 {
     mcview_scroll_to_cursor (view);
     if (reset_search)
@@ -120,7 +120,7 @@ mcview_move_up (WView * view, off_t lines)
             {
                 view->dpy_start = mcview_offset_doz (view->dpy_start, bytes);
                 view->dpy_paragraph_skip_lines = 0;
-                view->dpy_wrap_dirty = TRUE;
+                view->dpy_wrap_dirty = true;
             }
         }
         else
@@ -132,7 +132,7 @@ mcview_move_up (WView * view, off_t lines)
     {
         mcview_ascii_move_up (view, lines);
     }
-    mcview_movement_fixups (view, TRUE);
+    mcview_movement_fixups (view, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -157,7 +157,7 @@ mcview_move_down (WView * view, off_t lines)
             {
                 view->dpy_start += view->bytes_per_line;
                 view->dpy_paragraph_skip_lines = 0;
-                view->dpy_wrap_dirty = TRUE;
+                view->dpy_wrap_dirty = true;
             }
         }
     }
@@ -165,7 +165,7 @@ mcview_move_down (WView * view, off_t lines)
     {
         mcview_ascii_move_down (view, lines);
     }
-    mcview_movement_fixups (view, TRUE);
+    mcview_movement_fixups (view, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -190,7 +190,7 @@ mcview_move_left (WView * view, off_t columns)
     }
     else if (!view->mode_flags.wrap)
         view->dpy_text_column = mcview_offset_doz (view->dpy_text_column, columns);
-    mcview_movement_fixups (view, FALSE);
+    mcview_movement_fixups (view, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -220,7 +220,7 @@ mcview_move_right (WView * view, off_t columns)
     {
         view->dpy_text_column += columns;
     }
-    mcview_movement_fixups (view, FALSE);
+    mcview_movement_fixups (view, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -233,7 +233,7 @@ mcview_moveto_top (WView * view)
     mcview_state_machine_init (&view->dpy_state_top, 0);
     view->hex_cursor = 0;
     view->dpy_text_column = 0;
-    mcview_movement_fixups (view, TRUE);
+    mcview_movement_fixups (view, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -253,7 +253,7 @@ mcview_moveto_bottom (WView * view)
     if (view->mode_flags.hex)
     {
         view->hex_cursor = mcview_offset_doz (filesize, 1);
-        mcview_movement_fixups (view, TRUE);
+        mcview_movement_fixups (view, true);
     }
     else
     {
@@ -261,7 +261,7 @@ mcview_moveto_bottom (WView * view)
 
         view->dpy_start = filesize;
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
         mcview_move_up (view, datalines);
     }
 }
@@ -280,7 +280,7 @@ mcview_moveto_bol (WView * view)
     {
         mcview_ascii_moveto_bol (view);
     }
-    mcview_movement_fixups (view, TRUE);
+    mcview_movement_fixups (view, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -295,7 +295,7 @@ mcview_moveto_eol (WView * view)
         off_t filesize;
 
         bol = mcview_offset_rounddown (view->hex_cursor, view->bytes_per_line);
-        if (mcview_get_byte_indexed (view, bol, view->bytes_per_line - 1, nullptr) == TRUE)
+        if (mcview_get_byte_indexed (view, bol, view->bytes_per_line - 1, nullptr) == true)
         {
             view->hex_cursor = bol + view->bytes_per_line - 1;
         }
@@ -309,7 +309,7 @@ mcview_moveto_eol (WView * view)
     {
         mcview_ascii_moveto_eol (view);
     }
-    mcview_movement_fixups (view, FALSE);
+    mcview_movement_fixups (view, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -322,15 +322,15 @@ mcview_moveto_offset (WView * view, off_t offset)
         view->hex_cursor = offset;
         view->dpy_start = offset - offset % view->bytes_per_line;
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
     else
     {
         view->dpy_start = offset;
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
-    mcview_movement_fixups (view, TRUE);
+    mcview_movement_fixups (view, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -396,17 +396,17 @@ mcview_moveto_match (WView * view)
     if (view->mode_flags.hex)
     {
         view->hex_cursor = view->search_start;
-        view->hexedit_lownibble = FALSE;
+        view->hexedit_lownibble = false;
         view->dpy_start = view->search_start - view->search_start % view->bytes_per_line;
         view->dpy_end = view->search_end - view->search_end % view->bytes_per_line;
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
     else
     {
         view->dpy_start = mcview_bol (view, view->search_start, 0);
         view->dpy_paragraph_skip_lines = 0;
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
     }
 
     mcview_scroll_to_cursor (view);

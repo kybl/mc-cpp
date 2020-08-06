@@ -111,28 +111,28 @@ sftpfs_internal_waitsocket (sftpfs_super_t * super, GError ** mcerror)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 sftpfs_op_init (sftpfs_super_t ** super, const vfs_path_element_t ** path_element,
                 const vfs_path_t * vpath, GError ** mcerror)
 {
     struct vfs_s_super *lc_super = nullptr;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (vfs_s_get_path (vpath, &lc_super, 0) == nullptr)
-        return FALSE;
+        return false;
 
     if (lc_super == nullptr)
-        return FALSE;
+        return false;
 
     *super = SFTP_SUPER (lc_super);
 
     if ((*super)->sftp_session == nullptr)
-        return FALSE;
+        return false;
 
     *path_element = vfs_path_get_by_index (vpath, -1);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -177,13 +177,13 @@ sftpfs_stat_init (sftpfs_super_t ** super, const vfs_path_element_t ** path_elem
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 sftpfs_waitsocket (sftpfs_super_t * super, int sftp_res, GError ** mcerror)
 {
     if (sftp_res != LIBSSH2_ERROR_EAGAIN)
     {
         sftpfs_ssherror_to_gliberror (super, sftp_res, mcerror);
-        return FALSE;
+        return false;
     }
 
     sftpfs_internal_waitsocket (super, mcerror);
@@ -193,7 +193,7 @@ sftpfs_waitsocket (sftpfs_super_t * super, int sftp_res, GError ** mcerror)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 sftpfs_is_sftp_error (LIBSSH2_SFTP * sftp_session, int sftp_res, int sftp_error)
 {
     return (sftp_res == LIBSSH2_ERROR_SFTP_PROTOCOL &&

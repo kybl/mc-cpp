@@ -111,7 +111,7 @@ typedef struct
     int error_code;             /*  */
     off_t pos;                  /* file position */
     off_t current;              /* used to determine current position in itereate */
-    gboolean finished;
+    bool finished;
     ext2_ino_t inode;
     int bytes_read;
     off_t size;
@@ -486,7 +486,7 @@ undelfs_open (const vfs_path_t * vpath, int flags, mode_t mode)
             return 0;
         }
         p->inode = inode;
-        p->finished = FALSE;
+        p->finished = false;
         p->f_index = i;
         p->error_code = 0;
         p->pos = 0;
@@ -532,7 +532,7 @@ undelfs_dump_read (ext2_filsys param_fs, blk_t * blocknr, int blockcnt, void *pr
 
     if (p->pos + (off_t) p->count < p->current)
     {
-        p->finished = TRUE;
+        p->finished = true;
         return BLOCK_ABORT;
     }
     if (p->pos > p->current + param_fs->blocksize)
@@ -592,7 +592,7 @@ undelfs_read (void *vfs_info, char *buffer, size_t count)
 
     p->dest_buffer = buffer;
     p->current = 0;
-    p->finished = FALSE;
+    p->finished = false;
     p->count = count;
 
     if (p->pos + (off_t) p->count > p->size)
@@ -754,7 +754,7 @@ static vfsid
 undelfs_getid (const vfs_path_t * vpath)
 {
     char *fname = nullptr, *fsname;
-    gboolean ok;
+    bool ok;
 
     undelfs_get_path (vpath, &fsname, &fname);
     ok = fsname != nullptr;
@@ -767,7 +767,7 @@ undelfs_getid (const vfs_path_t * vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 undelfs_nothingisopen (vfsid id)
 {
     (void) id;

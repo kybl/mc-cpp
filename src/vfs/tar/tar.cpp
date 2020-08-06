@@ -627,7 +627,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
     union block *header;
     static char *next_long_name = nullptr, *next_long_link = nullptr;
 
-    while (TRUE)
+    while (true)
     {
         header = tar_get_next_block (archive, tard);
         if (header == nullptr)
@@ -849,7 +849,7 @@ tar_open_archive (struct vfs_s_super *archive, const vfs_path_t * vpath,
     if (tard == -1)
         return -1;
 
-    while (TRUE)
+    while (true)
     {
         size_t h_size = 0;
         ReadStatus prev_status = status;

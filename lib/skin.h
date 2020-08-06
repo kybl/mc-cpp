@@ -120,8 +120,8 @@ typedef struct mc_skin_struct
     gchar *description;
     mc_config_t *config;
     GHashTable *colors;
-    gboolean have_256_colors;
-    gboolean have_true_colors;
+    bool have_256_colors;
+    bool have_true_colors;
 } mc_skin_t;
 
 /*** global variables defined in .c file *********************************************************/
@@ -131,7 +131,7 @@ extern mc_skin_t mc_skin__default;
 
 /*** declarations of public functions ************************************************************/
 
-gboolean mc_skin_init (const gchar * skin_override, GError ** error);
+bool mc_skin_init (const gchar * skin_override, GError ** error);
 void mc_skin_deinit (void);
 
 int mc_skin_color_get (const gchar *, const gchar *);

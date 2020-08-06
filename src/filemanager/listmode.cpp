@@ -121,7 +121,7 @@ select_new_item (void)
     for (i = 0; possible_items[i]; i++)
     {
         listbox_add_item (mylistbox->list, LISTBOX_APPEND_AT_END, 0, possible_items[i], nullptr,
-                          FALSE);
+                          false);
     }
 
     i = run_listbox (mylistbox);
@@ -156,7 +156,7 @@ badd_cback (int action)
     char *s = select_new_item ();
     if (s)
     {
-        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, FALSE);
+        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, false);
         g_free (s);
     }
     return 0;
@@ -198,7 +198,7 @@ init_listmode (char *oldlistformat)
     do_refresh ();
 
     listmode_dlg =
-        dlg_create (TRUE, 0, 0, 22, 74, WPOS_CENTER, FALSE, dialog_colors, nullptr, nullptr,
+        dlg_create (true, 0, 0, 22, 74, WPOS_CENTER, false, dialog_colors, nullptr, nullptr,
                     listmode_section, "Listing format edit");
 
     add_widget (listmode_dlg, groupbox_new (UY, UX, 4, 63, "General options"));
@@ -227,7 +227,7 @@ init_listmode (char *oldlistformat)
     radio_justify->sel = 1;
 
     /* get new listbox */
-    l_listmode = listbox_new (UY + 5, UX + 1, 9, 16, FALSE, nullptr);
+    l_listmode = listbox_new (UY + 5, UX + 1, 9, 16, false, nullptr);
 
     if (strncmp (oldlistformat, "full ", 5) == 0)
     {
@@ -251,7 +251,7 @@ init_listmode (char *oldlistformat)
 
     while (s)
     {
-        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, FALSE);
+        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, false);
         s = strtok (nullptr, ",");
     }
 

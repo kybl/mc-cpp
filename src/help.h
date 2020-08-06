@@ -50,7 +50,7 @@
 
 /*** declarations of public functions ************************************************************/
 
-gboolean help_interactive_display (const gchar * event_group_name, const gchar * event_name,
+bool help_interactive_display (const gchar * event_group_name, const gchar * event_name,
                                    gpointer init_data, gpointer data);
 
 /*** inline functions ****************************************************************************/

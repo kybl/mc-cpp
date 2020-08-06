@@ -74,7 +74,7 @@ extern "C" {
 struct WInfo
 {
     Widget widget;
-    gboolean ready;
+    bool ready;
 };
 
 /*** file scope variables ************************************************************************/
@@ -95,15 +95,15 @@ info_box (WInfo * info)
     tty_set_normal_attrs ();
     tty_setcolor (NORMAL_COLOR);
     widget_erase (w);
-    tty_draw_box (w->y, w->x, w->lines, w->cols, FALSE);
+    tty_draw_box (w->y, w->x, w->lines, w->cols, false);
 
     widget_gotoyx (w, 0, (w->cols - len - 2) / 2);
     tty_printf (" %s ", title);
 
     widget_gotoyx (w, 2, 0);
-    tty_print_alt_char (ACS_LTEE, FALSE);
+    tty_print_alt_char (ACS_LTEE, false);
     widget_gotoyx (w, 2, w->cols - 1);
-    tty_print_alt_char (ACS_RTEE, FALSE);
+    tty_print_alt_char (ACS_RTEE, false);
     tty_draw_hline (w->y + 2, w->x + 1, ACS_HLINE, w->cols - 2);
 }
 
@@ -311,7 +311,7 @@ info_show_info (WInfo * info)
     case 0:
         ;
     }                           /* switch */
-    g_string_free (buff, TRUE);
+    g_string_free (buff, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -328,7 +328,7 @@ info_hook (void *data)
     if (widget_overlapped (WIDGET (info), other_widget))
         return;
 
-    info->ready = TRUE;
+    info->ready = true;
     info_show_info (info);
 }
 
@@ -344,7 +344,7 @@ info_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *da
     case MSG_INIT:
         init_my_statfs ();
         add_hook (&select_file_hook, info_hook, info);
-        info->ready = FALSE;
+        info->ready = false;
         return MSG_HANDLED;
 
     case MSG_DRAW:

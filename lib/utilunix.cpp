@@ -164,7 +164,7 @@ my_fork (void)
     if (pid == 0)
         return FORK_CHILD;
 
-    while (TRUE)
+    while (true)
     {
         int status = 0;
 
@@ -414,7 +414,7 @@ my_systeml (int flags, const char *shell, ...)
     g_ptr_array_add (args_array, nullptr);
     status = my_systemv_flags (flags, shell, (char *const *) args_array->pdata);
 
-    g_ptr_array_free (args_array, TRUE);
+    g_ptr_array_free (args_array, true);
 
     return status;
 }
@@ -493,7 +493,7 @@ my_systemv_flags (int flags, const char *command, char *const argv[])
     status = my_systemv (execute_name, (char *const *) args_array->pdata);
 
     g_free (execute_name);
-    g_ptr_array_free (args_array, TRUE);
+    g_ptr_array_free (args_array, true);
 
     return status;
 }
@@ -533,11 +533,11 @@ mc_popen (const char *command, GError ** error)
 
     p->out.buf[0] = '\0';
     p->out.len = MC_PIPE_BUFSIZE;
-    p->out.null_term = FALSE;
+    p->out.null_term = false;
 
     p->err.buf[0] = '\0';
     p->err.len = MC_PIPE_BUFSIZE;
-    p->err.null_term = FALSE;
+    p->err.null_term = false;
 
     return p;
 
@@ -569,7 +569,7 @@ mc_popen (const char *command, GError ** error)
 void
 mc_pread (mc_pipe_t * p, GError ** error)
 {
-    gboolean read_out, read_err;
+    bool read_out, read_err;
     fd_set fds;
     int maxfd = 0;
     int res;
@@ -1075,11 +1075,11 @@ mc_realpath (const char *path, char *resolved_path)
 {
 #ifdef HAVE_CHARSET
     const char *p = path;
-    gboolean absolute_path = FALSE;
+    bool absolute_path = false;
 
     if (IS_PATH_SEP (*p))
     {
-        absolute_path = TRUE;
+        absolute_path = true;
         p++;
     }
 
@@ -1252,7 +1252,7 @@ mc_realpath (const char *path, char *resolved_path)
 int
 get_user_permissions (struct stat *st)
 {
-    static gboolean initialized = FALSE;
+    static bool initialized = false;
     static gid_t *groups;
     static int ngroups;
     static uid_t uid;
@@ -1281,7 +1281,7 @@ get_user_permissions (struct stat *st)
          * so we always include it at the end of the list. */
         groups[ngroups++] = getegid ();
 
-        initialized = TRUE;
+        initialized = true;
     }
 
     if (st->st_uid == uid || uid == 0)
@@ -1303,7 +1303,7 @@ get_user_permissions (struct stat *st)
 char *
 mc_build_filenamev (const char *first_element, va_list args)
 {
-    gboolean absolute;
+    bool absolute;
     const char *element = first_element;
     GString *path;
     char *ret;
@@ -1345,7 +1345,7 @@ mc_build_filenamev (const char *first_element, va_list args)
     if (absolute)
         g_string_prepend_c (path, PATH_SEP);
 
-    ret = g_string_free (path, FALSE);
+    ret = g_string_free (path, false);
     canonicalize_pathname (ret);
 
     return ret;

@@ -54,7 +54,7 @@
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 events_init (GError ** mcerror)
 {
     /* *INDENT-OFF* */
@@ -78,7 +78,7 @@ events_init (GError ** mcerror)
     /* *INDENT-ON* */
 
     if (!mc_event_init (mcerror))
-        return FALSE;
+        return false;
 
     return mc_event_mass_add (standard_events, mcerror);
 }

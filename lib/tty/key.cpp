@@ -91,12 +91,12 @@
 
 int mou_auto_repeat = 100;
 int double_click_speed = 250;
-gboolean old_esc_mode = TRUE;
+bool old_esc_mode = true;
 /* timeout for old_esc_mode in usec */
 int old_esc_mode_timeout = 1000000;     /* settable via env */
-gboolean use_8th_bit_as_meta = FALSE;
+bool use_8th_bit_as_meta = false;
 
-gboolean bracketed_pasting_in_progress = FALSE;
+bool bracketed_pasting_in_progress = false;
 
 /* This table is a mapping between names and the constants we use
  * We use this to allow users to define alternate definitions for
@@ -623,12 +623,12 @@ check_selects (fd_set * select_set)
 /* If set timeout is set, then we wait 0.1 seconds, else, we block */
 
 static void
-try_channels (gboolean set_timeout)
+try_channels (bool set_timeout)
 {
     struct timeval time_out;
     static fd_set select_set;
 
-    while (TRUE)
+    while (true)
     {
         struct timeval *timeptr = nullptr;
         int maxfdp, v;
@@ -718,10 +718,10 @@ getch_with_delay (void)
 
     /* This routine could be used on systems without mouse support,
        so we need to do the select check :-( */
-    while (TRUE)
+    while (true)
     {
         if (pending_keys == nullptr)
-            try_channels (FALSE);
+            try_channels (false);
 
         /* Try to get a character */
         c = get_key_code (0);
@@ -729,7 +729,7 @@ getch_with_delay (void)
             break;
 
         /* Failed -> wait 0.1 secs and try again */
-        try_channels (TRUE);
+        try_channels (true);
     }
 
     /* Success -> return the character */
@@ -739,7 +739,7 @@ getch_with_delay (void)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-xmouse_get_event (Gpm_Event * ev, gboolean extended)
+xmouse_get_event (Gpm_Event * ev, bool extended)
 {
     static struct timeval tv1 = { 0, 0 };       /* Force first click as single */
     static struct timeval tv2;
@@ -996,10 +996,10 @@ get_modifier (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 push_char (int c)
 {
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (seq_append == nullptr)
         seq_append = seq_buffer;
@@ -1008,7 +1008,7 @@ push_char (int c)
     {
         *(seq_append++) = c;
         *seq_append = '\0';
-        ret = TRUE;
+        ret = true;
     }
 
     return ret;
@@ -1155,12 +1155,12 @@ getch_with_timeout (unsigned int delay_us)
 
     time_out.tv_sec = delay_us / 1000000u;
     time_out.tv_usec = delay_us % 1000000u;
-    tty_nodelay (TRUE);
+    tty_nodelay (true);
     FD_ZERO (&Read_FD_Set);
     FD_SET (input_fd, &Read_FD_Set);
     select (input_fd + 1, &Read_FD_Set, nullptr, nullptr, &time_out);
     c = tty_lowlevel_getch ();
-    tty_nodelay (FALSE);
+    tty_nodelay (false);
     return c;
 }
 
@@ -1284,7 +1284,7 @@ lookup_keyname (const char *name, int *idx)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 lookup_keycode (const long code, int *idx)
 {
     if (code != 0)
@@ -1301,12 +1301,12 @@ lookup_keycode (const long code, int *idx)
         if (res != nullptr)
         {
             *idx = (int) (res - key_conv_tab_sorted);
-            return TRUE;
+            return true;
         }
     }
 
     *idx = -1;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1353,7 +1353,7 @@ init_key (void)
          * is not used now (doesn't even depend on use_8th_bit_as_meta
          * as in mc-3.1.2)...GREAT!...no additional code is required!]
          */
-        use_8th_bit_as_meta = FALSE;
+        use_8th_bit_as_meta = false;
     }
 #endif /* __QNX__ */
 
@@ -1532,7 +1532,7 @@ lookup_key (const char *name, char **label)
         else
             g_string_append_c (s, (gchar) g_ascii_tolower ((gchar) key));
 
-        *label = g_string_free (s, FALSE);
+        *label = g_string_free (s, false);
     }
 
     if (use_shift != -1)
@@ -1627,17 +1627,17 @@ lookup_key_by_code (const int keycode)
 
 /* --------------------------------------------------------------------------------------------- */
 /**
- * Return TRUE on success, FALSE on error.
+ * Return true on success, false on error.
  * An error happens if SEQ is a beginning of an existing longer sequence.
  */
 
-gboolean
+bool
 define_sequence (int code, const char *seq, int action)
 {
     key_def *base;
 
     if (strlen (seq) > SEQ_BUFFER_LEN - 1)
-        return FALSE;
+        return false;
 
     for (base = keys; (base != nullptr) && (*seq != '\0');)
         if (*seq == base->ch)
@@ -1652,7 +1652,7 @@ define_sequence (int code, const char *seq, int action)
                     base->code = code;
                     base->action = action;
                 }
-                return TRUE;
+                return true;
             }
 
             base = base->child;
@@ -1665,18 +1665,18 @@ define_sequence (int code, const char *seq, int action)
             else
             {
                 base->next = create_sequence (seq, code, action);
-                return TRUE;
+                return true;
             }
         }
 
     if (*seq == '\0')
     {
         /* Attempt to redefine a sequence with a shorter sequence.  */
-        return FALSE;
+        return false;
     }
 
     keys = create_sequence (seq, code, action);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1684,7 +1684,7 @@ define_sequence (int code, const char *seq, int action)
  * Check if we are idle, i.e. there are no pending keyboard or mouse
  * events.  Return 1 is idle, 0 is there are pending events.
  */
-gboolean
+bool
 is_idle (void)
 {
     int nfd;
@@ -1715,7 +1715,7 @@ is_idle (void)
             /* gpm_fd == -2 means under some X terminal */
             if (gpm_fd == -1)
             {
-                mouse_enabled = FALSE;
+                mouse_enabled = false;
                 use_mouse_p = MOUSE_NONE;
             }
         }
@@ -1743,7 +1743,7 @@ get_key_code (int no_delay)
   pend_send:
     if (pending_keys != nullptr)
     {
-        gboolean bad_seq;
+        bool bad_seq;
 
         c = *pending_keys++;
         while (c == ESC_CHAR)
@@ -1777,7 +1777,7 @@ get_key_code (int no_delay)
 
   nodelay_try_again:
     if (no_delay != 0)
-        tty_nodelay (TRUE);
+        tty_nodelay (true);
 
     c = tty_lowlevel_getch ();
 #if (defined(USE_NCURSES) || defined(USE_NCURSESW)) && defined(KEY_RESIZE)
@@ -1787,7 +1787,7 @@ get_key_code (int no_delay)
 
     if (no_delay != 0)
     {
-        tty_nodelay (FALSE);
+        tty_nodelay (false);
         if (c == -1)
         {
             struct timeval current, time_out;
@@ -1929,7 +1929,7 @@ get_key_code (int no_delay)
 /* Returns EV_NONE  if non-blocking or interrupt set and nothing was done */
 
 int
-tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
+tty_get_event (struct Gpm_Event *event, bool redo_event, bool block)
 {
     int c;
     int flag = 0;               /* Return value from select */
@@ -1990,7 +1990,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
                 /* gpm_fd == -2 means under some X terminal */
                 if (gpm_fd == -1)
                 {
-                    mouse_enabled = FALSE;
+                    mouse_enabled = false;
                     use_mouse_p = MOUSE_NONE;
                 }
                 break;
@@ -2094,7 +2094,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
                 /* gpm_fd == -2 means under some X terminal */
                 if (gpm_fd == -1)
                 {
-                    mouse_enabled = FALSE;
+                    mouse_enabled = false;
                     use_mouse_p = MOUSE_NONE;
                 }
                 break;
@@ -2121,7 +2121,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
                           || c == MCKEY_EXTENDED_MOUSE))
     {
         /* Mouse event. See tickets 2956 and 3954 for extended mode detection. */
-        gboolean extended = c == MCKEY_EXTENDED_MOUSE;
+        bool extended = c == MCKEY_EXTENDED_MOUSE;
 
 #ifdef KEY_MOUSE
         extended = extended || (c == KEY_MOUSE && xmouse_seq == nullptr
@@ -2133,12 +2133,12 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
     }
     else if (c == MCKEY_BRACKETED_PASTING_START)
     {
-        bracketed_pasting_in_progress = TRUE;
+        bracketed_pasting_in_progress = true;
         c = EV_NONE;
     }
     else if (c == MCKEY_BRACKETED_PASTING_END)
     {
-        bracketed_pasting_in_progress = FALSE;
+        bracketed_pasting_in_progress = false;
         c = EV_NONE;
     }
 
@@ -2155,7 +2155,7 @@ tty_getch (void)
     int key;
 
     ev.x = -1;
-    while ((key = tty_get_event (&ev, FALSE, TRUE)) == EV_NONE)
+    while ((key = tty_get_event (&ev, false, true)) == EV_NONE)
         ;
     return key;
 }
@@ -2175,7 +2175,7 @@ learn_key (void)
     char buffer[256];
     char *p = buffer;
 
-    tty_keypad (FALSE);         /* disable intepreting keys by ncurses */
+    tty_keypad (false);         /* disable intepreting keys by ncurses */
     c = tty_lowlevel_getch ();
     while (c == -1)
         c = tty_lowlevel_getch ();      /* Sanity check, should be unnecessary */
@@ -2189,8 +2189,8 @@ learn_key (void)
         endtime.tv_sec++;
     }
 
-    tty_nodelay (TRUE);
-    while (TRUE)
+    tty_nodelay (true);
+    while (true)
     {
         while ((c = tty_lowlevel_getch ()) == -1)
         {
@@ -2212,8 +2212,8 @@ learn_key (void)
             break;
         learn_store_key (buffer, &p, c);
     }
-    tty_keypad (TRUE);
-    tty_nodelay (FALSE);
+    tty_keypad (true);
+    tty_nodelay (false);
     *p = '\0';
     return g_strdup (buffer);
 #undef LEARN_TIMEOUT
@@ -2262,7 +2262,7 @@ disable_bracketed_paste (void)
 {
     printf (ESC_STR "[?2004l");
     fflush (stdout);
-    bracketed_pasting_in_progress = FALSE;
+    bracketed_pasting_in_progress = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

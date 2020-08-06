@@ -388,7 +388,7 @@ str_detect_termencoding (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_isutf8 (const char *codeset_name)
 {
     return (str_test_encoding_class (codeset_name, str_utf8_encodings) != 0);
@@ -720,7 +720,7 @@ str_column_to_pos (const char *text, size_t pos)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_isspace (const char *ch)
 {
     return used_class.char_isspace (ch);
@@ -728,7 +728,7 @@ str_isspace (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_ispunct (const char *ch)
 {
     return used_class.char_ispunct (ch);
@@ -736,7 +736,7 @@ str_ispunct (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_isalnum (const char *ch)
 {
     return used_class.char_isalnum (ch);
@@ -744,7 +744,7 @@ str_isalnum (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_isdigit (const char *ch)
 {
     return used_class.char_isdigit (ch);
@@ -752,7 +752,7 @@ str_isdigit (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_toupper (const char *ch, char **out, size_t * remain)
 {
     return used_class.char_toupper (ch, out, remain);
@@ -760,7 +760,7 @@ str_toupper (const char *ch, char **out, size_t * remain)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_tolower (const char *ch, char **out, size_t * remain)
 {
     return used_class.char_tolower (ch, out, remain);
@@ -768,7 +768,7 @@ str_tolower (const char *ch, char **out, size_t * remain)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_isprint (const char *ch)
 {
     return used_class.char_isprint (ch);
@@ -776,7 +776,7 @@ str_isprint (const char *ch)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_iscombiningmark (const char *ch)
 {
     return used_class.char_iscombiningmark (ch);
@@ -793,7 +793,7 @@ str_trunc (const char *text, int width)
 /* --------------------------------------------------------------------------------------------- */
 
 char *
-str_create_search_needle (const char *needle, gboolean case_sen)
+str_create_search_needle (const char *needle, bool case_sen)
 {
     return used_class.create_search_needle (needle, case_sen);
 }
@@ -801,7 +801,7 @@ str_create_search_needle (const char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-str_release_search_needle (char *needle, gboolean case_sen)
+str_release_search_needle (char *needle, bool case_sen)
 {
     used_class.release_search_needle (needle, case_sen);
 }
@@ -809,7 +809,7 @@ str_release_search_needle (char *needle, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 const char *
-str_search_first (const char *text, const char *search, gboolean case_sen)
+str_search_first (const char *text, const char *search, bool case_sen)
 {
     return used_class.search_first (text, search, case_sen);
 }
@@ -817,14 +817,14 @@ str_search_first (const char *text, const char *search, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 const char *
-str_search_last (const char *text, const char *search, gboolean case_sen)
+str_search_last (const char *text, const char *search, bool case_sen)
 {
     return used_class.search_last (text, search, case_sen);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 str_is_valid_string (const char *text)
 {
     return used_class.is_valid_string (text);
@@ -889,7 +889,7 @@ str_fix_string (char *text)
 /* --------------------------------------------------------------------------------------------- */
 
 char *
-str_create_key (const char *text, gboolean case_sen)
+str_create_key (const char *text, bool case_sen)
 {
     return used_class.create_key (text, case_sen);
 }
@@ -897,7 +897,7 @@ str_create_key (const char *text, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 char *
-str_create_key_for_filename (const char *text, gboolean case_sen)
+str_create_key_for_filename (const char *text, bool case_sen)
 {
     return used_class.create_key_for_filename (text, case_sen);
 }
@@ -905,7 +905,7 @@ str_create_key_for_filename (const char *text, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 int
-str_key_collate (const char *t1, const char *t2, gboolean case_sen)
+str_key_collate (const char *t1, const char *t2, bool case_sen)
 {
     return used_class.key_collate (t1, t2, case_sen);
 }
@@ -913,7 +913,7 @@ str_key_collate (const char *t1, const char *t2, gboolean case_sen)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-str_release_key (char *key, gboolean case_sen)
+str_release_key (char *key, bool case_sen)
 {
     used_class.release_key (key, case_sen);
 }
@@ -933,7 +933,7 @@ str_msg_term_size (const char *text, int *lines, int *columns)
     tmp = g_strdup (text);
     p = tmp;
 
-    while (TRUE)
+    while (true)
     {
         int width;
 
@@ -985,13 +985,13 @@ strrstr_skip_count (const char *haystack, const char *needle, size_t skip_count)
 /* Interprete string as a non-negative decimal integer, optionally multiplied by various values.
  *
  * @param str input value
- * @param invalid set to TRUE if "str" does not represent a number in this format
+ * @param invalid set to true if "str" does not represent a number in this format
  *
  * @return non-integer representation of "str", 0 in case of error.
  */
 
 uintmax_t
-parse_integer (const char *str, gboolean * invalid)
+parse_integer (const char *str, bool * invalid)
 {
     uintmax_t n;
     char *suffix;
@@ -1005,7 +1005,7 @@ parse_integer (const char *str, gboolean * invalid)
         multiplier = parse_integer (suffix + 1, invalid);
         if (multiplier != 0 && n * multiplier / multiplier != n)
         {
-            *invalid = TRUE;
+            *invalid = true;
             return 0;
         }
 
@@ -1013,7 +1013,7 @@ parse_integer (const char *str, gboolean * invalid)
     }
     else if (e != LONGINT_OK)
     {
-        *invalid = TRUE;
+        *invalid = true;
         n = 0;
     }
 

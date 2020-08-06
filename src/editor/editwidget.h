@@ -76,7 +76,7 @@ struct WEdit
 
 #ifdef HAVE_CHARSET
     /* multibyte support */
-    gboolean utf8;              /* It's multibyte file codeset */
+    bool utf8;              /* It's multibyte file codeset */
     GIConv converter;
     char charbuf[4 + 1];
     int charpoint;
@@ -123,7 +123,7 @@ struct WEdit
     off_t last_bracket;         /* previous position of a matching bracket */
 
     /* cache speedup for line lookups */
-    gboolean caches_valid;
+    bool caches_valid;
     long line_numbers[N_LINE_CACHES];
     off_t line_offsets[N_LINE_CACHES];
 
@@ -155,7 +155,7 @@ struct WEdit
     edit_syntax_rule_t rule;
     char *syntax_type;          /* description of syntax highlighting type being used */
     GTree *defines;             /* List of defines */
-    gboolean is_case_insensitive;       /* selects language case sensitivity */
+    bool is_case_insensitive;       /* selects language case sensitivity */
 
     /* line break */
     LineBreaks lb;

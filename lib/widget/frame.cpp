@@ -97,7 +97,7 @@ frame_draw (const WFrame * f)
 /* --------------------------------------------------------------------------------------------- */
 
 WFrame *
-frame_new (int y, int x, int lines, int cols, const char *title, gboolean single, gboolean compact)
+frame_new (int y, int x, int lines, int cols, const char *title, bool single, bool compact)
 {
     WFrame *f;
     Widget *w;

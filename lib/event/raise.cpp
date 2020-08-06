@@ -45,7 +45,7 @@
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_event_raise (const gchar * event_group_name, const gchar * event_name, gpointer event_data)
 {
     GTree *event_group;
@@ -53,15 +53,15 @@ mc_event_raise (const gchar * event_group_name, const gchar * event_name, gpoint
     guint array_index;
 
     if (mc_event_grouplist == nullptr || event_group_name == nullptr || event_name == nullptr)
-        return FALSE;
+        return false;
 
-    event_group = mc_event_get_event_group_by_name (event_group_name, FALSE, nullptr);
+    event_group = mc_event_get_event_group_by_name (event_group_name, false, nullptr);
     if (event_group == nullptr)
-        return FALSE;
+        return false;
 
-    callbacks = mc_event_get_event_by_name (event_group, event_name, FALSE, nullptr);
+    callbacks = mc_event_get_event_by_name (event_group, event_name, false, nullptr);
     if (callbacks == nullptr)
-        return FALSE;
+        return false;
 
     for (array_index = callbacks->len; array_index > 0; array_index--)
     {
@@ -69,7 +69,7 @@ mc_event_raise (const gchar * event_group_name, const gchar * event_name, gpoint
         if (!(*cb->callback) (event_group_name, event_name, cb->init_data, event_data))
             break;
     }
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -43,7 +43,7 @@ mc_skin_t mc_skin__default;
 
 /*** file scope variables ************************************************************************/
 
-static gboolean mc_skin_is_init = FALSE;
+static bool mc_skin_is_init = false;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -110,16 +110,16 @@ mc_skin_try_to_load_default (void)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_skin_init (const gchar * skin_override, GError ** mcerror)
 {
-    gboolean is_good_init = TRUE;
+    bool is_good_init = true;
     GError *error = nullptr;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
-    mc_skin__default.have_256_colors = FALSE;
-    mc_skin__default.have_true_colors = FALSE;
+    mc_skin__default.have_256_colors = false;
+    mc_skin__default.have_true_colors = false;
 
     mc_skin__default.name =
         skin_override != nullptr ? g_strdup (skin_override) : mc_skin_get_default_name ();
@@ -132,7 +132,7 @@ mc_skin_init (const gchar * skin_override, GError ** mcerror)
                             _("Unable to load '%s' skin.\nDefault skin has been loaded"),
                             mc_skin__default.name);
         mc_skin_try_to_load_default ();
-        is_good_init = FALSE;
+        is_good_init = false;
     }
     mc_skin_colors_old_configure (&mc_skin__default);
 
@@ -145,7 +145,7 @@ mc_skin_init (const gchar * skin_override, GError ** mcerror)
         mc_skin_try_to_load_default ();
         mc_skin_colors_old_configure (&mc_skin__default);
         (void) mc_skin_ini_file_parse (&mc_skin__default);
-        is_good_init = FALSE;
+        is_good_init = false;
     }
     if (is_good_init && mc_skin__default.have_true_colors && !tty_use_truecolors (&error))
     {
@@ -157,7 +157,7 @@ mc_skin_init (const gchar * skin_override, GError ** mcerror)
         mc_skin_try_to_load_default ();
         mc_skin_colors_old_configure (&mc_skin__default);
         (void) mc_skin_ini_file_parse (&mc_skin__default);
-        is_good_init = FALSE;
+        is_good_init = false;
     }
     if (is_good_init && mc_skin__default.have_256_colors && !tty_use_256colors ())
     {
@@ -168,9 +168,9 @@ mc_skin_init (const gchar * skin_override, GError ** mcerror)
         mc_skin_try_to_load_default ();
         mc_skin_colors_old_configure (&mc_skin__default);
         (void) mc_skin_ini_file_parse (&mc_skin__default);
-        is_good_init = FALSE;
+        is_good_init = false;
     }
-    mc_skin_is_init = TRUE;
+    mc_skin_is_init = true;
     return is_good_init;
 }
 
@@ -191,7 +191,7 @@ mc_skin_deinit (void)
     mc_config_deinit (mc_skin__default.config);
     mc_skin__default.config = nullptr;
 
-    mc_skin_is_init = FALSE;
+    mc_skin_is_init = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

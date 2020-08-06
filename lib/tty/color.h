@@ -31,12 +31,12 @@
 
 /*** declarations of public functions ************************************************************/
 
-void tty_init_colors (gboolean disable, gboolean force);
+void tty_init_colors (bool disable, bool force);
 void tty_colors_done (void);
 
-gboolean tty_use_colors (void);
+bool tty_use_colors (void);
 int tty_try_alloc_color_pair (const char *, const char *, const char *);
-int tty_try_alloc_color_pair2 (const char *, const char *, const char *, gboolean);
+int tty_try_alloc_color_pair2 (const char *, const char *, const char *, bool);
 
 void tty_color_free_all_tmp (void);
 void tty_color_free_all_non_tmp (void);
@@ -47,8 +47,8 @@ void tty_set_normal_attrs (void);
 
 void tty_color_set_defaults (const char *, const char *, const char *);
 
-extern gboolean tty_use_256colors (void);
-extern gboolean tty_use_truecolors (GError **);
+extern bool tty_use_256colors (void);
+extern bool tty_use_truecolors (GError **);
 
 /*** inline functions ****************************************************************************/
 #endif /* MC_COLOR_H */

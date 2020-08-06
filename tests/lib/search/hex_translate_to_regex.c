@@ -159,13 +159,13 @@ START_PARAMETRIZED_TEST (test_hex_translate_to_regex, test_hex_translate_to_rege
     /* when */
     dest_str = mc_search__hex_translate_to_regex (tmp, &error, NULL);
 
-    g_string_free (tmp, TRUE);
+    g_string_free (tmp, true);
 
     /* then */
     if (dest_str != NULL)
     {
         mctest_assert_str_eq (dest_str->str, data->expected_result);
-        g_string_free (dest_str, TRUE);
+        g_string_free (dest_str, true);
     }
     else
     {

@@ -23,7 +23,7 @@ struct vfs_url_struct;
 
 typedef struct
 {
-    gboolean relative;
+    bool relative;
     GArray *path;
     char *str;
 } vfs_path_t;
@@ -33,7 +33,7 @@ typedef struct
     char *user;
     char *password;
     char *host;
-    gboolean ipv6;
+    bool ipv6;
     int port;
     char *path;
     struct vfs_class *clazz;
@@ -80,24 +80,24 @@ void vfs_path_element_free (vfs_path_element_t * element);
 struct vfs_class *vfs_prefix_to_class (const char *prefix);
 
 #ifdef HAVE_CHARSET
-gboolean vfs_path_element_need_cleanup_converter (const vfs_path_element_t * element);
+bool vfs_path_element_need_cleanup_converter (const vfs_path_element_t * element);
 vfs_path_t *vfs_path_change_encoding (vfs_path_t * vpath, const char *encoding);
 #endif
 
 char *vfs_path_serialize (const vfs_path_t * vpath, GError ** error);
 vfs_path_t *vfs_path_deserialize (const char *data, GError ** error);
 
-char *vfs_path_build_url_params_str (const vfs_path_element_t * element, gboolean keep_password);
+char *vfs_path_build_url_params_str (const vfs_path_element_t * element, bool keep_password);
 char *vfs_path_element_build_pretty_path_str (const vfs_path_element_t * element);
 
 size_t vfs_path_len (const vfs_path_t * vpath);
-gboolean vfs_path_equal (const vfs_path_t * vpath1, const vfs_path_t * vpath2);
-gboolean vfs_path_equal_len (const vfs_path_t * vpath1, const vfs_path_t * vpath2, size_t len);
+bool vfs_path_equal (const vfs_path_t * vpath1, const vfs_path_t * vpath2);
+bool vfs_path_equal_len (const vfs_path_t * vpath1, const vfs_path_t * vpath2, size_t len);
 vfs_path_t *vfs_path_to_absolute (const vfs_path_t * vpath);
 
 /*** inline functions ****************************************************************************/
 
-static inline gboolean
+static inline bool
 vfs_path_element_valid (const vfs_path_element_t * element)
 {
     return (element != nullptr && element->clazz != nullptr);

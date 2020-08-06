@@ -164,7 +164,7 @@ statfs (char const *filename, struct fs_info *buf)
 
 /*** global variables ****************************************************************************/
 
-gboolean classic_progressbar = TRUE;
+bool classic_progressbar = true;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -206,8 +206,8 @@ typedef enum
 typedef struct
 {
     /* ETA and bps */
-    gboolean showing_eta;
-    gboolean showing_bps;
+    bool showing_eta;
+    bool showing_bps;
 
     /* Dialog and widgets for the operation progress window */
     WDialog *op_dlg;
@@ -232,7 +232,7 @@ typedef struct
     const char *src_filename;
     const char *tgt_filename;
     replace_action_t replace_result;
-    gboolean dont_overwrite_with_zero;
+    bool dont_overwrite_with_zero;
 
     struct stat *src_stat, *dst_stat;
 } file_op_context_ui_t;
@@ -284,17 +284,17 @@ statvfs_works (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 filegui__check_attrs_on_fs (const char *fs_path)
 {
     STRUCT_STATVFS stfs;
 
 #if USE_STATVFS && defined(STAT_STATVFS)
     if (statvfs_works () && statvfs (fs_path, &stfs) != 0)
-        return TRUE;
+        return true;
 #else
     if (STATFS (fs_path, &stfs) != 0)
-        return TRUE;
+        return true;
 #endif
 
 #if (USE_STATVFS && defined(HAVE_STRUCT_STATVFS_F_TYPE)) || \
@@ -307,7 +307,7 @@ filegui__check_attrs_on_fs (const char *fs_path)
     case SMB_SUPER_MAGIC:
     case NCP_SUPER_MAGIC:
     case USBDEVICE_SUPER_MAGIC:
-        return FALSE;
+        return false;
     default:
         break;
     }
@@ -318,17 +318,17 @@ filegui__check_attrs_on_fs (const char *fs_path)
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "procfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "smbfs") == 0
         || strstr (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "fusefs") != nullptr)
-        return FALSE;
+        return false;
 #elif defined(HAVE_STRUCT_STATVFS_F_BASETYPE)
     if (strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "pcfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "ntfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "proc") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "smbfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "fuse") == 0)
-        return FALSE;
+        return false;
 #endif
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -347,7 +347,7 @@ file_frmt_time (char *buffer, double eta_secs)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-file_eta_prepare_for_show (char *buffer, double eta_secs, gboolean always_show)
+file_eta_prepare_for_show (char *buffer, double eta_secs, bool always_show)
 {
     char _fmt_buff[BUF_TINY];
 
@@ -496,7 +496,7 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
     int w, bw1, bw2;
     unsigned short i;
 
-    gboolean do_append = FALSE, do_reget = FALSE;
+    bool do_append = false, do_reget = false;
     unsigned long yes_id, no_id;
     int result;
 
@@ -561,7 +561,7 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
 
     NEW_LABEL (13, dlg_widgets[13].text);
     dlg_widgets[14].widget =
-        WIDGET (check_new (dlg_widgets[14].y, dlg_widgets[14].x, FALSE, dlg_widgets[14].text));
+        WIDGET (check_new (dlg_widgets[14].y, dlg_widgets[14].x, false, dlg_widgets[14].text));
     for (i = 15; i <= 20; i++)
         NEW_BUTTON (i);
 
@@ -634,7 +634,7 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
 
     /* TODO: write help (ticket #3970) */
     ui->replace_dlg =
-        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, alarm_colors, nullptr, nullptr,
+        dlg_create (true, 0, 0, dlg_height, dlg_width, WPOS_CENTER, false, alarm_colors, nullptr, nullptr,
                     "[Replace]", title);
     wd = WIDGET (ui->replace_dlg);
     g = GROUP (ui->replace_dlg);
@@ -685,33 +685,33 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_wildcarded (const char *p)
 {
-    gboolean escaped = FALSE;
+    bool escaped = false;
 
     for (; *p != '\0'; p++)
     {
         if (*p == '\\')
         {
             if (p[1] >= '1' && p[1] <= '9' && !escaped)
-                return TRUE;
+                return true;
             escaped = !escaped;
         }
         else
         {
             if ((*p == '*' || *p == '?') && !escaped)
-                return TRUE;
-            escaped = FALSE;
+                return true;
+            escaped = false;
         }
     }
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-place_progress_buttons (WDialog * h, gboolean suspended)
+place_progress_buttons (WDialog * h, bool suspended)
 {
     const size_t i = suspended ? 2 : 1;
     Widget *w = WIDGET (h);
@@ -756,7 +756,7 @@ check_progress_buttons (file_op_context_t * ctx)
 
   get_event:
     event.x = -1;               /* Don't show the GPM cursor */
-    c = tty_get_event (&event, FALSE, ctx->suspended);
+    c = tty_get_event (&event, false, ctx->suspended);
     if (c == EV_NONE)
         return FILE_CONT;
 
@@ -770,14 +770,14 @@ check_progress_buttons (file_op_context_t * ctx)
         if (ctx->suspended)
         {
             /* redraw dialog in case of Skip after Suspend */
-            place_progress_buttons (ui->op_dlg, FALSE);
+            place_progress_buttons (ui->op_dlg, false);
             widget_draw (WIDGET (ui->op_dlg));
         }
-        ctx->suspended = FALSE;
+        ctx->suspended = false;
         return FILE_SKIP;
     case B_CANCEL:
     case FILE_ABORT:
-        ctx->suspended = FALSE;
+        ctx->suspended = false;
         return FILE_ABORT;
     case FILE_SUSPEND:
         ctx->suspended = !ctx->suspended;
@@ -795,7 +795,7 @@ check_progress_buttons (file_op_context_t * ctx)
 /* {{{ File progress display routines */
 
 void
-file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
+file_op_context_create_ui (file_op_context_t * ctx, bool with_eta,
                            filegui_dialog_type_t dialog_type)
 {
     Widget *w;
@@ -825,7 +825,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
     ui->replace_result = REPLACE_YES;
 
     ui->op_dlg =
-        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, dialog_colors, nullptr,
+        dlg_create (true, 0, 0, dlg_height, dlg_width, WPOS_CENTER, false, dialog_colors, nullptr,
                     nullptr, nullptr, op_names[ctx->operation]);
     w = WIDGET (ui->op_dlg);
     g = GROUP (ui->op_dlg);
@@ -847,9 +847,9 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
         ui->tgt_file = label_new (y++, x, "");
         group_add_widget (g, ui->tgt_file);
 
-        ui->progress_file_gauge = gauge_new (y++, x + 3, dlg_width - (x + 3) * 2, FALSE, 100, 0);
+        ui->progress_file_gauge = gauge_new (y++, x + 3, dlg_width - (x + 3) * 2, false, 100, 0);
         if (!classic_progressbar && (current_panel == right_panel))
-            ui->progress_file_gauge->from_left_to_right = FALSE;
+            ui->progress_file_gauge->from_left_to_right = false;
         group_add_widget_autopos (g, ui->progress_file_gauge, WPOS_KEEP_TOP | WPOS_KEEP_HORZ, nullptr);
 
         ui->progress_file_label = label_new (y++, x, "");
@@ -863,9 +863,9 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
             if (ctx->progress_totals_computed)
             {
                 ui->progress_total_gauge =
-                    gauge_new (y++, x + 3, dlg_width - (x + 3) * 2, FALSE, 100, 0);
+                    gauge_new (y++, x + 3, dlg_width - (x + 3) * 2, false, 100, 0);
                 if (!classic_progressbar && (current_panel == right_panel))
-                    ui->progress_total_gauge->from_left_to_right = FALSE;
+                    ui->progress_total_gauge->from_left_to_right = false;
                 group_add_widget_autopos (g, ui->progress_total_gauge,
                                           WPOS_KEEP_TOP | WPOS_KEEP_HORZ, nullptr);
             }
@@ -929,7 +929,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
     /* adjust dialog sizes  */
     widget_set_size (w, w->y, w->x, y + 3, MAX (COLS * 2 / 3, buttons_width + 6));
 
-    place_progress_buttons (ui->op_dlg, FALSE);
+    place_progress_buttons (ui->op_dlg, false);
 
     widget_select (progress_buttons[0].w);
 
@@ -960,7 +960,7 @@ file_op_context_destroy_ui (file_op_context_t * ctx)
 
 void
 file_progress_show (file_op_context_t * ctx, off_t done, off_t total,
-                    const char *stalled_msg, gboolean force_update)
+                    const char *stalled_msg, bool force_update)
 {
     file_op_context_ui_t *ui;
 
@@ -971,12 +971,12 @@ file_progress_show (file_op_context_t * ctx, off_t done, off_t total,
 
     if (total == 0)
     {
-        gauge_show (ui->progress_file_gauge, FALSE);
+        gauge_show (ui->progress_file_gauge, false);
         return;
     }
 
     gauge_set_value (ui->progress_file_gauge, 1024, (int) (1024 * done / total));
-    gauge_show (ui->progress_file_gauge, TRUE);
+    gauge_show (ui->progress_file_gauge, true);
 
     if (!force_update)
         return;
@@ -987,7 +987,7 @@ file_progress_show (file_op_context_t * ctx, off_t done, off_t total,
     {
         char buffer2[BUF_TINY];
 
-        file_eta_prepare_for_show (buffer2, ctx->eta_secs, FALSE);
+        file_eta_prepare_for_show (buffer2, ctx->eta_secs, false);
         if (ctx->bps == 0)
             label_set_textv (ui->progress_file_label, "%s %s", buffer2, stalled_msg);
         else
@@ -1025,7 +1025,7 @@ file_progress_show_count (file_op_context_t * ctx, size_t done, size_t total)
 
 void
 file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ctx,
-                          uintmax_t copied_bytes, gboolean show_summary)
+                          uintmax_t copied_bytes, bool show_summary)
 {
     char buffer2[BUF_TINY];
     char buffer3[BUF_TINY];
@@ -1038,12 +1038,12 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
     if (ui->progress_total_gauge != nullptr)
     {
         if (ctx->progress_bytes == 0)
-            gauge_show (ui->progress_total_gauge, FALSE);
+            gauge_show (ui->progress_total_gauge, false);
         else
         {
             gauge_set_value (ui->progress_total_gauge, 1024,
                              (int) (1024 * copied_bytes / ctx->progress_bytes));
-            gauge_show (ui->progress_total_gauge, TRUE);
+            gauge_show (ui->progress_total_gauge, true);
         }
     }
 
@@ -1060,7 +1060,7 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
 
         if (ctx->progress_totals_computed)
         {
-            file_eta_prepare_for_show (buffer3, tctx->eta_secs, TRUE);
+            file_eta_prepare_for_show (buffer3, tctx->eta_secs, true);
             if (tctx->bps == 0)
                 label_set_textv (ui->time_label, _("Time: %s %s"), buffer2, buffer3);
             else
@@ -1147,17 +1147,17 @@ file_progress_show_target (file_op_context_t * ctx, const vfs_path_t * vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 file_progress_show_deleting (file_op_context_t * ctx, const char *s, size_t * count)
 {
     static guint64 timestamp = 0;
     /* update with 25 FPS rate */
     static const guint64 delay = G_USEC_PER_SEC / 25;
 
-    gboolean ret;
+    bool ret;
 
     if (ctx == nullptr || ctx->ui == nullptr)
-        return FALSE;
+        return false;
 
     ret = mc_time_elapsed (&timestamp, delay);
 
@@ -1237,7 +1237,7 @@ file_progress_real_query_replace (file_op_context_t * ctx, enum OperationMode mo
         MC_FALLTHROUGH;
 
     case REPLACE_APPEND:
-        ctx->do_append = TRUE;
+        ctx->do_append = true;
         MC_FALLTHROUGH;
 
     case REPLACE_YES:
@@ -1259,12 +1259,12 @@ file_progress_real_query_replace (file_op_context_t * ctx, enum OperationMode mo
 
 char *
 file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
-                  gboolean only_one,
-                  const char *format, const void *text, const char *def_text, gboolean * do_bg)
+                  bool only_one,
+                  const char *format, const void *text, const char *def_text, bool * do_bg)
 {
     int fmd_xlen;
     vfs_path_t *vpath;
-    gboolean source_easy_patterns = easy_patterns;
+    bool source_easy_patterns = easy_patterns;
     char fmd_buf[BUF_MEDIUM];
     char *dest_dir, *tmp;
     char *def_text_secure;
@@ -1274,8 +1274,8 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
 
     /* unselect checkbox if target filesystem doesn't support attributes */
     ctx->op_preserve = copymove_persistent_attr && filegui__check_attrs_on_fs (def_text);
-    ctx->stable_symlinks = FALSE;
-    *do_bg = FALSE;
+    ctx->stable_symlinks = false;
+    *do_bg = false;
 
     /* filter out a possible password from def_text */
     vpath = vfs_path_from_str_flags (def_text, only_one ? VPF_NO_CANON : VPF_NONE);
@@ -1326,15 +1326,15 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (fmd_buf, input_label_above,
                                  easy_patterns ? "*" : "^(.*)$", "input-def", &source_mask,
-                                 nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
+                                 nullptr, false, false, INPUT_COMPLETE_FILENAMES),
             QUICK_START_COLUMNS,
-                QUICK_SEPARATOR (FALSE),
+                QUICK_SEPARATOR (false),
             QUICK_NEXT_COLUMN,
                 QUICK_CHECKBOX (N_("&Using shell patterns"), &source_easy_patterns, nullptr),
             QUICK_STOP_COLUMNS,
             QUICK_LABELED_INPUT (N_("to:"), input_label_above,
-                                 def_text_secure, "input2", &dest_dir, nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
-            QUICK_SEPARATOR (TRUE),
+                                 def_text_secure, "input2", &dest_dir, nullptr, false, false, INPUT_COMPLETE_FILENAMES),
+            QUICK_SEPARATOR (true),
             QUICK_START_COLUMNS,
                 QUICK_CHECKBOX (N_("Follow &links"), &ctx->follow_links, nullptr),
                 QUICK_CHECKBOX (N_("Preserve &attributes"), &ctx->op_preserve, nullptr),
@@ -1342,7 +1342,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
                 QUICK_CHECKBOX (N_("Di&ve into subdir if exists"), &ctx->dive_into_subdirs, nullptr),
                 QUICK_CHECKBOX (N_("&Stable symlinks"), &ctx->stable_symlinks, nullptr),
             QUICK_STOP_COLUMNS,
-            QUICK_START_BUTTONS (TRUE, TRUE),
+            QUICK_START_BUTTONS (true, true),
                 QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),
 #ifdef ENABLE_BACKGROUND
                 QUICK_BUTTON (N_("&Background"), B_USER, nullptr, nullptr),
@@ -1371,7 +1371,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
 
         if (ctx->op_preserve)
         {
-            ctx->preserve = TRUE;
+            ctx->preserve = true;
             ctx->umask_kill = 0777777;
             ctx->preserve_uidgid = (geteuid () == 0);
         }
@@ -1379,7 +1379,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         {
             mode_t i2;
 
-            ctx->preserve = ctx->preserve_uidgid = FALSE;
+            ctx->preserve = ctx->preserve_uidgid = false;
             i2 = umask (0);
             umask (i2);
             ctx->umask_kill = i2 ^ 0777777;
@@ -1406,7 +1406,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         g_free (def_text_secure);
         g_free (source_mask);
 
-        ctx->search_handle->is_case_sensitive = TRUE;
+        ctx->search_handle->is_case_sensitive = true;
         if (source_easy_patterns)
             ctx->search_handle->search_type = MC_SEARCH_T_GLOB;
         else
@@ -1448,7 +1448,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         vfs_path_free (vpath);
 
         if (val == B_USER)
-            *do_bg = TRUE;
+            *do_bg = true;
     }
 
     return dest_dir;

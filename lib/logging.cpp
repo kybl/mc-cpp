@@ -51,29 +51,29 @@
 
 /*** file scope variables ************************************************************************/
 
-static gboolean logging_initialized = FALSE;
-static gboolean logging_enabled = FALSE;
+static bool logging_initialized = false;
+static bool logging_enabled = false;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_logging_enabled_from_env (void)
 {
     const char *env_is_enabled;
 
     env_is_enabled = g_getenv ("MC_LOG_ENABLE");
     if (env_is_enabled == nullptr)
-        return FALSE;
+        return false;
 
     logging_enabled = (*env_is_enabled == '1' || g_ascii_strcasecmp (env_is_enabled, "true") == 0);
-    logging_initialized = TRUE;
-    return TRUE;
+    logging_initialized = true;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_logging_enabled (void)
 {
 
@@ -84,8 +84,8 @@ is_logging_enabled (void)
         return logging_enabled;
 
     logging_enabled =
-        mc_config_get_bool (mc_global.main_config, CONFIG_GROUP_NAME, CONFIG_KEY_NAME, FALSE);
-    logging_initialized = TRUE;
+        mc_config_get_bool (mc_global.main_config, CONFIG_GROUP_NAME, CONFIG_KEY_NAME, false);
+    logging_initialized = true;
 
     return logging_enabled;
 }

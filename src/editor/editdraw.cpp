@@ -61,10 +61,10 @@
 /*** global variables ****************************************************************************/
 
 /* Toggles statusbar draw style */
-gboolean simple_statusbar = FALSE;
+bool simple_statusbar = false;
 
-gboolean visible_tws = TRUE;
-gboolean visible_tabs = TRUE;
+bool visible_tws = true;
+bool visible_tabs = true;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -337,11 +337,11 @@ edit_status_window (WEdit * edit)
  *
  * @param edit   editor object
  * @param color  color pair
- * @param active TRUE if editor object is focused
+ * @param active true if editor object is focused
  */
 
 static inline void
-edit_draw_frame (const WEdit * edit, int color, gboolean active)
+edit_draw_frame (const WEdit * edit, int color, bool active)
 {
     const Widget *w = CONST_WIDGET (edit);
 
@@ -354,7 +354,7 @@ edit_draw_frame (const WEdit * edit, int color, gboolean active)
     {
         tty_setcolor (EDITOR_FRAME_DRAG);
         widget_gotoyx (w, w->lines - 1, w->cols - 1);
-        tty_print_alt_char (ACS_LRCORNER, TRUE);
+        tty_print_alt_char (ACS_LRCORNER, true);
     }
 }
 
@@ -581,8 +581,8 @@ edit_draw_this_line (WEdit * edit, off_t b, long row, long start_col, long end_c
             {
                 int char_length = 1;
                 unsigned int c;
-                gboolean wide_width_char = FALSE;
-                gboolean control_char = FALSE;
+                bool wide_width_char = false;
+                bool control_char = false;
 
                 p->ch = 0;
                 p->style = q == edit->buffer.curs1 ? MOD_CURSOR : 0;
@@ -731,7 +731,7 @@ edit_draw_this_line (WEdit * edit, off_t b, long row, long start_col, long end_c
                             c = convert_from_8bit_to_utf_c ((unsigned char) c, edit->converter);
                         else if (g_unichar_iswide (c))
                         {
-                            wide_width_char = TRUE;
+                            wide_width_char = true;
                             col++;
                         }
                     }
@@ -751,7 +751,7 @@ edit_draw_this_line (WEdit * edit, off_t b, long row, long start_col, long end_c
                         p->style = abn_style;
                         p++;
                         col += 2;
-                        control_char = TRUE;
+                        control_char = true;
                         break;
                     }
                     if (c == 127)
@@ -763,7 +763,7 @@ edit_draw_this_line (WEdit * edit, off_t b, long row, long start_col, long end_c
                         p->style = abn_style;
                         p++;
                         col += 2;
-                        control_char = TRUE;
+                        control_char = true;
                         break;
                     }
 #ifdef HAVE_CHARSET
@@ -1024,7 +1024,7 @@ edit_render (WEdit * edit, int page, int row_start, int col_start, int row_end, 
 /* --------------------------------------------------------------------------------------------- */
 
 void
-edit_status (WEdit * edit, gboolean active)
+edit_status (WEdit * edit, bool active)
 {
     int color;
 

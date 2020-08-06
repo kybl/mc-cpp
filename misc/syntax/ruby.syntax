@@ -84,11 +84,11 @@ context default
     keyword : brightcyan
 
     keyword whole false brightred
-    keyword whole FALSE brightred
+    keyword whole false brightred
     keyword whole nil brightred
     keyword whole NIL brightred
     keyword whole true brightred
-    keyword whole TRUE brightred
+    keyword whole true brightred
 
 #Variables
 

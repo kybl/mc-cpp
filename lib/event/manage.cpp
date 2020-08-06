@@ -50,7 +50,7 @@ mc_event_group_destroy_value (gpointer data)
 
     callbacks = (GPtrArray *) data;
     g_ptr_array_foreach (callbacks, (GFunc) g_free, nullptr);
-    g_ptr_array_free (callbacks, TRUE);
+    g_ptr_array_free (callbacks, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -60,7 +60,7 @@ mc_event_group_destroy_value (gpointer data)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_event_add (const gchar * event_group_name, const gchar * event_name,
               mc_event_callback_func_t event_callback, gpointer event_init_data, GError ** mcerror)
 {
@@ -69,22 +69,22 @@ mc_event_add (const gchar * event_group_name, const gchar * event_name,
     GPtrArray *callbacks;
     mc_event_callback_t *cb;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (mc_event_grouplist == nullptr || event_group_name == nullptr || event_name == nullptr
         || event_callback == nullptr)
     {
         mc_propagate_error (mcerror, 0, "%s", _("Check input data! Some of parameters are nullptr!"));
-        return FALSE;
+        return false;
     }
 
-    event_group = mc_event_get_event_group_by_name (event_group_name, TRUE, mcerror);
+    event_group = mc_event_get_event_group_by_name (event_group_name, true, mcerror);
     if (event_group == nullptr)
-        return FALSE;
+        return false;
 
-    callbacks = mc_event_get_event_by_name (event_group, event_name, TRUE, mcerror);
+    callbacks = mc_event_get_event_by_name (event_group, event_name, true, mcerror);
     if (callbacks == nullptr)
-        return FALSE;
+        return false;
 
     cb = mc_event_is_callback_in_array (callbacks, event_callback, event_init_data);
     if (cb == nullptr)
@@ -94,7 +94,7 @@ mc_event_add (const gchar * event_group_name, const gchar * event_name,
         g_ptr_array_add (callbacks, (gpointer) cb);
     }
     cb->init_data = event_init_data;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -111,11 +111,11 @@ mc_event_del (const gchar * event_group_name, const gchar * event_name,
         || event_callback == nullptr)
         return;
 
-    event_group = mc_event_get_event_group_by_name (event_group_name, FALSE, nullptr);
+    event_group = mc_event_get_event_group_by_name (event_group_name, false, nullptr);
     if (event_group == nullptr)
         return;
 
-    callbacks = mc_event_get_event_by_name (event_group, event_name, FALSE, nullptr);
+    callbacks = mc_event_get_event_by_name (event_group, event_name, false, nullptr);
     if (callbacks == nullptr)
         return;
 
@@ -138,7 +138,7 @@ mc_event_destroy (const gchar * event_group_name, const gchar * event_name)
     if (mc_event_grouplist == nullptr || event_group_name == nullptr || event_name == nullptr)
         return;
 
-    event_group = mc_event_get_event_group_by_name (event_group_name, FALSE, nullptr);
+    event_group = mc_event_get_event_group_by_name (event_group_name, false, nullptr);
     g_tree_remove (event_group, (gconstpointer) event_name);
 }
 
@@ -155,12 +155,12 @@ mc_event_group_del (const gchar * event_group_name)
 /* --------------------------------------------------------------------------------------------- */
 
 GTree *
-mc_event_get_event_group_by_name (const gchar * event_group_name, gboolean create_new,
+mc_event_get_event_group_by_name (const gchar * event_group_name, bool create_new,
                                   GError ** mcerror)
 {
     GTree *event_group;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, nullptr);
 
     event_group = (GTree *) g_tree_lookup (mc_event_grouplist, (gconstpointer) event_group_name);
     if (event_group == nullptr && create_new)
@@ -184,12 +184,12 @@ mc_event_get_event_group_by_name (const gchar * event_group_name, gboolean creat
 /* --------------------------------------------------------------------------------------------- */
 
 GPtrArray *
-mc_event_get_event_by_name (GTree * event_group, const gchar * event_name, gboolean create_new,
+mc_event_get_event_by_name (GTree * event_group, const gchar * event_name, bool create_new,
                             GError ** mcerror)
 {
     GPtrArray *callbacks;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, nullptr);
 
     callbacks = (GPtrArray *) g_tree_lookup (event_group, (gconstpointer) event_name);
     if (callbacks == nullptr && create_new)

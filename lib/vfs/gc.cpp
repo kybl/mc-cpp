@@ -140,7 +140,7 @@ vfs_addstamp (struct vfs_class *v, vfsid id)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_stamp (struct vfs_class *v, vfsid id)
 {
     struct vfs_stamping what = {
@@ -148,13 +148,13 @@ vfs_stamp (struct vfs_class *v, vfsid id)
         .id = id
     };
     GSList *stamp;
-    gboolean ret = FALSE;
+    bool ret = false;
 
     stamp = g_slist_find_custom (stamps, &what, vfs_stamp_compare);
     if (stamp != nullptr && stamp->data != nullptr)
     {
         VFS_STAMPING (stamp->data)->time = mc_timer_elapsed (mc_global.timer);
-        ret = TRUE;
+        ret = true;
     }
 
     return ret;
@@ -203,7 +203,7 @@ vfs_stamp_create (struct vfs_class *vclass, vfsid id)
 {
     vfsid nvfsid;
 
-    ev_vfs_stamp_create_t event_data = { vclass, id, FALSE };
+    ev_vfs_stamp_create_t event_data = { vclass, id, false };
     const vfs_path_t *vpath;
     const vfs_path_element_t *path_element;
 
@@ -232,13 +232,13 @@ vfs_stamp_create (struct vfs_class *vclass, vfsid id)
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/** This is called from timeout handler with now = FALSE,
-    or can be called with now = TRUE to force freeing all filesystems */
+/** This is called from timeout handler with now = false,
+    or can be called with now = true to force freeing all filesystems */
 
 void
-vfs_expire (gboolean now)
+vfs_expire (bool now)
 {
-    static gboolean locked = FALSE;
+    static bool locked = false;
     guint64 curr_time, exp_time;
     GSList *stamp;
 
@@ -246,7 +246,7 @@ vfs_expire (gboolean now)
        calls message */
     if (locked)
         return;
-    locked = TRUE;
+    locked = true;
 
     curr_time = mc_timer_elapsed (mc_global.timer);
     exp_time = curr_time - vfs_timeout * G_USEC_PER_SEC;
@@ -286,7 +286,7 @@ vfs_expire (gboolean now)
     /* then remove NULLized stamps */
     stamps = g_slist_remove_all (stamps, nullptr);
 
-    locked = FALSE;
+    locked = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -307,7 +307,7 @@ vfs_timeouts (void)
 void
 vfs_timeout_handler (void)
 {
-    vfs_expire (FALSE);
+    vfs_expire (false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -327,7 +327,7 @@ vfs_release_path (const vfs_path_t * vpath)
 void
 vfs_gc_done (void)
 {
-    vfs_expire (TRUE);
+    vfs_expire (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */

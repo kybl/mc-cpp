@@ -64,7 +64,7 @@ static size_t vfs_parce_ls_final_num_spaces = 0;
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_num (int idx)
 {
     char *column = columns[idx];
@@ -73,66 +73,66 @@ is_num (int idx)
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/* Return TRUE for MM-DD-YY and MM-DD-YYYY */
+/* Return true for MM-DD-YY and MM-DD-YYYY */
 
-static gboolean
+static bool
 is_dos_date (const char *str)
 {
     size_t len;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     len = strlen (str);
     if (len != 8 && len != 10)
-        return FALSE;
+        return false;
 
     if (str[2] != str[5])
-        return FALSE;
+        return false;
 
     return (strchr ("\\-/", (int) str[2]) != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_week (const char *str, struct tm *tim)
 {
     static const char *week = "SunMonTueWedThuFriSat";
     const char *pos;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     pos = strstr (week, str);
     if (pos == nullptr)
-        return FALSE;
+        return false;
 
     if (tim != nullptr)
         tim->tm_wday = (pos - week) / 3;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_month (const char *str, struct tm *tim)
 {
     static const char *month = "JanFebMarAprMayJunJulAugSepOctNovDec";
     const char *pos;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     pos = strstr (month, str);
     if (pos == nullptr)
-        return FALSE;
+        return false;
 
     if (tim != nullptr)
         tim->tm_mon = (pos - month) / 3;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -143,13 +143,13 @@ is_month (const char *str, struct tm *tim)
  * locale is "C" and ftp server use Cyrillic.
  * NB: It is assumed there are no whitespaces in month.
  */
-static gboolean
+static bool
 is_localized_month (const char *month)
 {
     int i;
 
     if (month == nullptr)
-        return FALSE;
+        return false;
 
     for (i = 0;
          i < 3 && *month != '\0' && !isdigit ((unsigned char) *month)
@@ -161,69 +161,69 @@ is_localized_month (const char *month)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_time (const char *str, struct tm *tim)
 {
     const char *p, *p2;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     p = strchr (str, ':');
     if (p == nullptr)
-        return FALSE;
+        return false;
 
     p2 = strrchr (str, ':');
     if (p2 == nullptr)
-        return FALSE;
+        return false;
 
     if (p != p2)
     {
         if (sscanf (str, "%2d:%2d:%2d", &tim->tm_hour, &tim->tm_min, &tim->tm_sec) != 3)
-            return FALSE;
+            return false;
     }
     else
     {
         if (sscanf (str, "%2d:%2d", &tim->tm_hour, &tim->tm_min) != 2)
-            return FALSE;
+            return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 is_year (char *str, struct tm *tim)
 {
     long year;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     if (strchr (str, ':') != nullptr)
-        return FALSE;
+        return false;
 
     if (strlen (str) != 4)
-        return FALSE;
+        return false;
 
     /* cppcheck-suppress invalidscanf */
     if (sscanf (str, "%ld", &year) != 1)
-        return FALSE;
+        return false;
 
     if (year < 1900 || year > 3000)
-        return FALSE;
+        return false;
 
     tim->tm_year = (int) (year - 1900);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_parse_filetype (const char *s, size_t * ret_skipped, mode_t * ret_type)
 {
     mode_t type;
@@ -278,18 +278,18 @@ vfs_parse_filetype (const char *s, size_t * ret_skipped, mode_t * ret_type)
         type = S_IFREG;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     *ret_type = type;
     *ret_skipped = 1;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
 {
     const char *p = s;
@@ -303,7 +303,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IRUSR;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -314,7 +314,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IWUSR;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -331,7 +331,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IXUSR;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -342,7 +342,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IRGRP;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -353,7 +353,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IWGRP;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -373,7 +373,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IXGRP;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -384,7 +384,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IROTH;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -395,7 +395,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IWOTH;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     switch (*p++)
@@ -412,7 +412,7 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
         perms |= S_IXOTH;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     if (*p == '+')
@@ -422,12 +422,12 @@ vfs_parse_fileperms (const char *s, size_t * ret_skipped, mode_t * ret_perms)
     *ret_skipped = p - s;
     *ret_perms = perms;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_parse_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
 {
     const char *p = s;
@@ -435,22 +435,22 @@ vfs_parse_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
     size_t skipped;
 
     if (!vfs_parse_filetype (p, &skipped, &type))
-        return FALSE;
+        return false;
 
     p += skipped;
     if (!vfs_parse_fileperms (p, &skipped, &perms))
-        return FALSE;
+        return false;
 
     p += skipped;
     *ret_skipped = p - s;
     *ret_mode = type | perms;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_parse_raw_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
 {
     const char *p = s;
@@ -464,7 +464,7 @@ vfs_parse_raw_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
     }
 
     if (*p++ != ' ')
-        return FALSE;
+        return false;
 
     for (; *p >= '0' && *p <= '7'; p++)
     {
@@ -473,7 +473,7 @@ vfs_parse_raw_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
     }
 
     if (*p++ != ' ')
-        return FALSE;
+        return false;
 
     /* generated with:
        $ perl -e 'use Fcntl ":mode";
@@ -506,7 +506,7 @@ vfs_parse_raw_filemode (const char *s, size_t * ret_skipped, mode_t * ret_mode)
     *ret_skipped = p - s;
     *ret_mode = local_type | perms;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -518,8 +518,8 @@ vfs_parse_filedate (int idx, time_t * t)
     char *p;
     struct tm tim;
     int d[3];
-    gboolean got_year = FALSE;
-    gboolean l10n = FALSE;      /* Locale's abbreviated month name */
+    bool got_year = false;
+    bool l10n = false;      /* Locale's abbreviated month name */
     time_t current_time;
     struct tm *local_time;
 
@@ -599,11 +599,11 @@ vfs_parse_filedate (int idx, time_t * t)
         tim.tm_mon = d[0];
         tim.tm_mday = d[1];
         tim.tm_year = d[2];
-        got_year = TRUE;
+        got_year = true;
     }
     else if (is_localized_month (p) && is_num (idx++))
         /* Locale's abbreviated month name followed by day number */
-        l10n = TRUE;
+        l10n = true;
     else
         return 0;               /* unsupported format */
 
@@ -674,7 +674,7 @@ vfs_parse_ls_lga_get_final_spaces (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkname,
                   size_t * num_spaces)
 {
@@ -686,7 +686,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
     size_t skipped;
 
     if (strncmp (p, "total", 5) == 0)
-        return FALSE;
+        return false;
 
     if (!vfs_parse_filetype (p, &skipped, &s->st_mode))
         goto error;
@@ -862,7 +862,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
     }
 
     g_free (p_copy);
-    return TRUE;
+    return true;
 
   error:
     {
@@ -876,7 +876,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
     }
 
     g_free (p_copy);
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

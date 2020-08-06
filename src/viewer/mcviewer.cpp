@@ -51,26 +51,26 @@
 /*** global variables ****************************************************************************/
 
 mcview_mode_flags_t mcview_global_flags = {
-    .wrap = TRUE,
-    .hex = FALSE,
-    .magic = TRUE,
-    .nroff = FALSE
+    .wrap = true,
+    .hex = false,
+    .magic = true,
+    .nroff = false
 };
 
 mcview_mode_flags_t mcview_altered_flags = {
-    .wrap = FALSE,
-    .hex = FALSE,
-    .magic = FALSE,
-    .nroff = FALSE
+    .wrap = false,
+    .hex = false,
+    .magic = false,
+    .nroff = false
 };
 
-gboolean mcview_remember_file_position = FALSE;
+bool mcview_remember_file_position = false;
 
 /* Maxlimit for skipping updates */
 int mcview_max_dirt_limit = 10;
 
 /* Scrolling is done in pages or line increments */
-gboolean mcview_mouse_move_pages = TRUE;
+bool mcview_mouse_move_pages = true;
 
 /* end of file will be showen from mcview_show_eof */
 char *mcview_show_eof = nullptr;
@@ -89,7 +89,7 @@ static void
 mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 {
     WView *view = (WView *) w;
-    gboolean ok = TRUE;
+    bool ok = true;
 
     switch (msg)
     {
@@ -99,9 +99,9 @@ mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             if (event->y == WIDGET (w->owner)->y)
             {
                 /* return MOU_UNHANDLED */
-                event->result.abort = TRUE;
+                event->result.abort = true;
                 /* don't draw viewer over menu */
-                ok = FALSE;
+                ok = false;
                 break;
             }
 
@@ -129,7 +129,7 @@ mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             else if (x < view->data_area.width * 3 / 4)
             {
                 /* ignore the click */
-                ok = FALSE;
+                ok = false;
             }
             else
             {
@@ -156,7 +156,7 @@ mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             else if (y < view->data_area.top + view->data_area.height * 2 / 3)
             {
                 /* ignore the click */
-                ok = FALSE;
+                ok = false;
             }
             else
             {
@@ -179,7 +179,7 @@ mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         break;
 
     default:
-        ok = FALSE;
+        ok = false;
         break;
     }
 
@@ -192,7 +192,7 @@ mcview_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WView *
-mcview_new (int y, int x, int lines, int cols, gboolean is_panel)
+mcview_new (int y, int x, int lines, int cols, bool is_panel)
 {
     WView *view;
     Widget *w;
@@ -204,10 +204,10 @@ mcview_new (int y, int x, int lines, int cols, gboolean is_panel)
     w->keymap = viewer_map;
 
     mcview_clear_mode_flags (&view->mode_flags);
-    view->hexedit_mode = FALSE;
+    view->hexedit_mode = false;
     view->hex_keymap = viewer_hex_map;
-    view->hexview_in_text = FALSE;
-    view->locked = FALSE;
+    view->hexview_in_text = false;
+    view->locked = false;
 
     view->dpy_frame_size = is_panel ? 1 : 0;
     view->converter = str_cnv_from_term;
@@ -229,28 +229,28 @@ mcview_new (int y, int x, int lines, int cols, gboolean is_panel)
 /* --------------------------------------------------------------------------------------------- */
 /** Real view only */
 
-gboolean
+bool
 mcview_viewer (const char *command, const vfs_path_t * file_vpath, int start_line,
                off_t search_start, off_t search_end)
 {
-    gboolean succeeded;
+    bool succeeded;
     WView *lc_mcview;
     WDialog *view_dlg;
     Widget *vw, *b;
     WGroup *g;
 
     /* Create dialog and widgets, put them on the dialog */
-    view_dlg = dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, nullptr, mcview_dialog_callback,
+    view_dlg = dlg_create (false, 0, 0, 1, 1, WPOS_FULLSCREEN, false, nullptr, mcview_dialog_callback,
                            nullptr, "[Internal File Viewer]", nullptr);
     vw = WIDGET (view_dlg);
-    widget_want_tab (vw, TRUE);
+    widget_want_tab (vw, true);
 
     g = GROUP (view_dlg);
 
-    lc_mcview = mcview_new (vw->y, vw->x, vw->lines - 1, vw->cols, FALSE);
+    lc_mcview = mcview_new (vw->y, vw->x, vw->lines - 1, vw->cols, false);
     group_add_widget_autopos (g, lc_mcview, WPOS_KEEP_ALL, nullptr);
 
-    b = WIDGET (buttonbar_new (TRUE));
+    b = WIDGET (buttonbar_new (true));
     group_add_widget_autopos (g, b, b->pos_flags, nullptr);
 
     view_dlg->get_title = mcview_get_title;
@@ -274,11 +274,11 @@ mcview_viewer (const char *command, const vfs_path_t * file_vpath, int start_lin
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_load (WView * view, const char *command, const char *file, int start_line,
              off_t search_start, off_t search_end)
 {
-    gboolean retval = FALSE;
+    bool retval = false;
     vfs_path_t *vpath = nullptr;
 
     g_assert (view->bytes_per_line != 0);
@@ -412,7 +412,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
 
             mcview_set_datasource_file (view, fd, &st);
         }
-        retval = TRUE;
+        retval = true;
     }
 
   finish:
@@ -420,7 +420,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
     view->dpy_start = 0;
     view->dpy_paragraph_skip_lines = 0;
     mcview_state_machine_init (&view->dpy_state_top, 0);
-    view->dpy_wrap_dirty = FALSE;
+    view->dpy_wrap_dirty = false;
     view->force_max = -1;
     view->dpy_text_column = 0;
 
@@ -441,7 +441,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
         if (!view->mode_flags.hex)
         {
             view->dpy_start = mcview_bol (view, new_offset, 0);
-            view->dpy_wrap_dirty = TRUE;
+            view->dpy_wrap_dirty = true;
         }
         else
         {
@@ -454,8 +454,8 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
 
     view->search_start = search_start;
     view->search_end = search_end;
-    view->hexedit_lownibble = FALSE;
-    view->hexview_in_text = FALSE;
+    view->hexedit_lownibble = false;
+    view->hexview_in_text = false;
     view->change_list = nullptr;
     vfs_path_free (vpath);
     return retval;

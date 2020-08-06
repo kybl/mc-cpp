@@ -185,26 +185,26 @@ resolve_symlinks (const vfs_path_t * vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_util_write_backup_content (const char *from_file_name, const char *to_file_name)
 {
     FILE *backup_fd;
     char *contents;
     gsize length;
-    gboolean ret1 = TRUE;
+    bool ret1 = true;
 
     if (!g_file_get_contents (from_file_name, &contents, &length, nullptr))
-        return FALSE;
+        return false;
 
     backup_fd = fopen (to_file_name, "w");
     if (backup_fd == nullptr)
     {
         g_free (contents);
-        return FALSE;
+        return false;
     }
 
     if (fwrite ((const void *) contents, 1, length, backup_fd) != length)
-        ret1 = FALSE;
+        ret1 = false;
 
     {
         int ret2;
@@ -247,11 +247,11 @@ is_printable (int c)
 /* --------------------------------------------------------------------------------------------- */
 /**
  * Quote the filename for the purpose of inserting it into the command
- * line.  If quote_percent is TRUE, replace "%" with "%%" - the percent is
+ * line.  If quote_percent is true, replace "%" with "%%" - the percent is
  * processed by the mc command line.
  */
 char *
-name_quote (const char *s, gboolean quote_percent)
+name_quote (const char *s, bool quote_percent)
 {
     GString *ret;
 
@@ -304,13 +304,13 @@ name_quote (const char *s, gboolean quote_percent)
         g_string_append_c (ret, *s);
     }
 
-    return g_string_free (ret, FALSE);
+    return g_string_free (ret, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 char *
-fake_name_quote (const char *s, gboolean quote_percent)
+fake_name_quote (const char *s, bool quote_percent)
 {
     (void) quote_percent;
     return g_strdup (s);
@@ -343,7 +343,7 @@ path_trunc (const char *path, size_t trunc_len)
 /* --------------------------------------------------------------------------------------------- */
 
 const char *
-size_trunc (uintmax_t size, gboolean use_si)
+size_trunc (uintmax_t size, bool use_si)
 {
     static char x[BUF_TINY];
     uintmax_t divisor = 1;
@@ -373,7 +373,7 @@ size_trunc (uintmax_t size, gboolean use_si)
 /* --------------------------------------------------------------------------------------------- */
 
 const char *
-size_trunc_sep (uintmax_t size, gboolean use_si)
+size_trunc_sep (uintmax_t size, bool use_si)
 {
     static char x[60];
     int count;
@@ -415,7 +415,7 @@ size_trunc_sep (uintmax_t size, gboolean use_si)
  */
 
 void
-size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, gboolean use_si)
+size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, bool use_si)
 {
     /* Avoid taking power for every file.  */
     /* *INDENT-OFF* */
@@ -1036,7 +1036,7 @@ diff_two_paths (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
         p = my_first;
         q = my_second;
 
-        while (TRUE)
+        while (true)
         {
             char *r, *s;
             ptrdiff_t len;
@@ -1147,7 +1147,7 @@ load_file_position (const vfs_path_t * filename_vpath, long *line, long *column,
 
     /* prepare array for serialized bookmarks */
     if (bookmarks != nullptr)
-        *bookmarks = g_array_sized_new (FALSE, FALSE, sizeof (size_t), MAX_SAVED_BOOKMARKS);
+        *bookmarks = g_array_sized_new (false, false, sizeof (size_t), MAX_SAVED_BOOKMARKS);
 
     while (fgets (buf, sizeof (buf), f) != nullptr)
     {
@@ -1225,7 +1225,7 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
     char buf[MC_MAXPATHLEN + 100];
     size_t i;
     const size_t len = vfs_path_len (filename_vpath);
-    gboolean src_error = FALSE;
+    bool src_error = false;
 
     if (filepos_max_saved_entries == 0)
         filepos_max_saved_entries = mc_config_get_int (mc_global.main_config, CONFIG_APP_SECTION,
@@ -1246,7 +1246,7 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
     tmp_f = fopen (tmp_fn, "r");
     if (tmp_f == nullptr)
     {
-        src_error = TRUE;
+        src_error = true;
         goto open_source_error;
     }
 
@@ -1291,7 +1291,7 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
     g_free (fn);
   early_error:
     if (bookmarks != nullptr)
-        g_array_free (bookmarks, TRUE);
+        g_array_free (bookmarks, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1320,19 +1320,19 @@ Q_ (const char *s)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_util_make_backup_if_possible (const char *file_name, const char *backup_suffix)
 {
     struct stat stat_buf;
     char *backup_path;
-    gboolean ret;
+    bool ret;
 
     if (!exist_file (file_name))
-        return FALSE;
+        return false;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
     if (backup_path == nullptr)
-        return FALSE;
+        return false;
 
     ret = mc_util_write_backup_content (file_name, backup_path);
     if (ret)
@@ -1351,15 +1351,15 @@ mc_util_make_backup_if_possible (const char *file_name, const char *backup_suffi
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_util_restore_from_backup_if_possible (const char *file_name, const char *backup_suffix)
 {
-    gboolean ret;
+    bool ret;
     char *backup_path;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
     if (backup_path == nullptr)
-        return FALSE;
+        return false;
 
     ret = mc_util_write_backup_content (backup_path, file_name);
     g_free (backup_path);
@@ -1369,14 +1369,14 @@ mc_util_restore_from_backup_if_possible (const char *file_name, const char *back
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_util_unlink_backup_if_possible (const char *file_name, const char *backup_suffix)
 {
     char *backup_path;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
     if (backup_path == nullptr)
-        return FALSE;
+        return false;
 
     if (exist_file (backup_path))
     {
@@ -1388,7 +1388,7 @@ mc_util_unlink_backup_if_possible (const char *file_name, const char *backup_suf
     }
 
     g_free (backup_path);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1515,9 +1515,9 @@ mc_replace_error (GError ** dest, int code, const char *format, ...)
  * @param timestamp the last timestamp in microseconds, updated if the given time elapsed
  * @param deleay amount of time in microseconds
 
- * @return TRUE if clock skew detected, FALSE otherwise
+ * @return true if clock skew detected, false otherwise
  */
-gboolean
+bool
 mc_time_elapsed (guint64 * timestamp, guint64 delay)
 {
     guint64 now;
@@ -1525,10 +1525,10 @@ mc_time_elapsed (guint64 * timestamp, guint64 delay)
     now = mc_timer_elapsed (mc_global.timer);
 
     if (now >= *timestamp && now < *timestamp + delay)
-        return FALSE;
+        return false;
 
     *timestamp = now;
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

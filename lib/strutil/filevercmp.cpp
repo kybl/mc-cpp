@@ -49,19 +49,19 @@ static const char *
 match_suffix (const char **str)
 {
     const char *match = nullptr;
-    gboolean read_alpha = FALSE;
+    bool read_alpha = false;
 
     while (**str != '\0')
     {
         if (read_alpha)
         {
-            read_alpha = FALSE;
+            read_alpha = false;
             if (!g_ascii_isalpha (**str) && **str != '~')
                 match = nullptr;
         }
         else if (**str == '.')
         {
-            read_alpha = TRUE;
+            read_alpha = true;
             if (match == nullptr)
                 match = *str;
         }

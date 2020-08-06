@@ -202,8 +202,8 @@ lock_file (const vfs_path_t * fname_vpath)
     char *lockfname = nullptr, *newlock, *msg;
     struct stat statbuf;
     lock_s *lockinfo;
-    gboolean is_local;
-    gboolean symlink_ok = FALSE;
+    bool is_local;
+    bool symlink_ok = false;
     const char *elpath;
 
     if (fname_vpath == nullptr)

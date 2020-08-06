@@ -82,7 +82,7 @@ mc_config_history_get (const char *name)
         return nullptr;
 
     profile = mc_config_get_full_path (MC_HISTORY_FILE);
-    cfg = mc_config_init (profile, TRUE);
+    cfg = mc_config_init (profile, true);
 
     hist = mc_config_history_load (cfg, name);
 
@@ -147,7 +147,7 @@ mc_config_history_load (mc_config_t * cfg, const char *name)
         }
     }
 
-    g_string_free (buffer, TRUE);
+    g_string_free (buffer, true);
     if (conv != INVALID_CONV)
         str_close_conv (conv);
 
@@ -211,7 +211,7 @@ mc_config_history_save (mc_config_t * cfg, const char *name, GList * h)
         }
     }
 
-    g_string_free (buffer, TRUE);
+    g_string_free (buffer, true);
     if (conv != INVALID_CONV)
         str_close_conv (conv);
 }

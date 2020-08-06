@@ -61,15 +61,15 @@ extern const key_code_name_t key_name_conv_tab[];
 extern int old_esc_mode_timeout;
 
 extern int double_click_speed;
-extern gboolean old_esc_mode;
-extern gboolean use_8th_bit_as_meta;
+extern bool old_esc_mode;
+extern bool use_8th_bit_as_meta;
 extern int mou_auto_repeat;
 
-extern gboolean bracketed_pasting_in_progress;
+extern bool bracketed_pasting_in_progress;
 
 /*** declarations of public functions ************************************************************/
 
-gboolean define_sequence (int code, const char *seq, int action);
+bool define_sequence (int code, const char *seq, int action);
 
 void init_key (void);
 void init_key_input_fd (void);
@@ -78,8 +78,8 @@ void done_key (void);
 long lookup_key (const char *name, char **label);
 char *lookup_key_by_code (const int keycode);
 /* mouse support */
-int tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block);
-gboolean is_idle (void);
+int tty_get_event (struct Gpm_Event *event, bool redo_event, bool block);
+bool is_idle (void);
 int tty_getch (void);
 
 /* While waiting for input, the program can select on more than one file */
@@ -112,7 +112,7 @@ void disable_bracketed_paste (void);
 
 /*** inline functions ****************************************************************************/
 
-static inline gboolean
+static inline bool
 is_abort_char (int c)
 {
     return ((c == (int) ESC_CHAR) || (c == (int) KEY_F (10)));

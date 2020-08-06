@@ -53,7 +53,7 @@ static GList *mc_dialogs = nullptr;
 /* Currently active dialog */
 static GList *mc_current = nullptr;
 /* Is there any dialogs that we have to run after returning to the manager from another dialog */
-static gboolean dialog_switch_pending = FALSE;
+static bool dialog_switch_pending = false;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -72,7 +72,7 @@ dialog_switch_suspend (void *data, void *user_data)
     (void) user_data;
 
     if (data != mc_current->data)
-        widget_set_state (WIDGET (data), WST_SUSPENDED, TRUE);
+        widget_set_state (WIDGET (data), WST_SUSPENDED, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -89,22 +89,22 @@ dialog_switch_goto (GList * dlg)
         if (old == midnight_dlg)
         {
             /* switch from panels to another dialog (editor, viewer, etc) */
-            dialog_switch_pending = TRUE;
+            dialog_switch_pending = true;
             dialog_switch_process_pending ();
         }
         else
         {
             /* switch from editor, viewer, etc to another dialog */
-            widget_set_state (WIDGET (old), WST_SUSPENDED, TRUE);
+            widget_set_state (WIDGET (old), WST_SUSPENDED, true);
 
             if (DIALOG (dlg->data) != midnight_dlg)
                 /* switch to another editor, viewer, etc */
                 /* return to panels before run the required dialog */
-                dialog_switch_pending = TRUE;
+                dialog_switch_pending = true;
             else
             {
                 /* switch to panels */
-                widget_set_state (WIDGET (midnight_dlg), WST_ACTIVE, TRUE);
+                widget_set_state (WIDGET (midnight_dlg), WST_ACTIVE, true);
                 do_refresh ();
             }
         }
@@ -119,7 +119,7 @@ dialog_switch_resize (WDialog * d)
     if (widget_get_state (WIDGET (d), WST_ACTIVE))
         send_message (d, nullptr, MSG_RESIZE, 0, nullptr);
     else
-        GROUP (d)->winch_pending = TRUE;
+        GROUP (d)->winch_pending = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -167,7 +167,7 @@ dialog_switch_remove (WDialog * h)
 
     /* resume forced the current screen */
     if (mc_current != nullptr)
-        widget_set_state (WIDGET (mc_current->data), WST_ACTIVE, TRUE);
+        widget_set_state (WIDGET (mc_current->data), WST_ACTIVE, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -241,7 +241,7 @@ dialog_switch_list (void)
         else
             title = g_strdup ("");
 
-        listbox_add_item (listbox->list, LISTBOX_APPEND_BEFORE, get_hotkey (i++), title, h, FALSE);
+        listbox_add_item (listbox->list, LISTBOX_APPEND_BEFORE, get_hotkey (i++), title, h, false);
 
         g_free (title);
     }
@@ -263,8 +263,8 @@ dialog_switch_process_pending (void)
         WDialog *h = DIALOG (mc_current->data);
         Widget *wh = WIDGET (h);
 
-        dialog_switch_pending = FALSE;
-        widget_set_state (wh, WST_SUSPENDED, TRUE);
+        dialog_switch_pending = false;
+        widget_set_state (wh, WST_SUSPENDED, true);
         ret = dlg_run (h);
         if (widget_get_state (wh, WST_CLOSED))
         {
@@ -293,7 +293,7 @@ dialog_switch_got_winch (void)
 
     for (dlg = mc_dialogs; dlg != nullptr; dlg = g_list_next (dlg))
         if (dlg != mc_current)
-            GROUP (dlg->data)->winch_pending = TRUE;
+            GROUP (dlg->data)->winch_pending = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -360,8 +360,8 @@ dialog_change_screen_size (void)
     tty_change_screen_size ();
 
 #ifdef HAVE_SLANG
-    tty_keypad (TRUE);
-    tty_nodelay (FALSE);
+    tty_keypad (true);
+    tty_nodelay (false);
 #endif
 
     /* Inform all suspending dialogs */

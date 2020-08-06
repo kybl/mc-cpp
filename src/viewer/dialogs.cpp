@@ -54,10 +54,10 @@
 
 mcview_search_options_t mcview_search_options = {
     .type = MC_SEARCH_T_NORMAL,
-    .case_sens = FALSE,
-    .backwards = FALSE,
-    .whole_words = FALSE,
-    .all_codepages = FALSE
+    .case_sens = false,
+    .backwards = false,
+    .whole_words = false,
+    .all_codepages = false
 };
 
 /*** file scope macro definitions ****************************************************************/
@@ -73,7 +73,7 @@ mcview_search_options_t mcview_search_options = {
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_dialog_search (WView * view)
 {
     char *exp = nullptr;
@@ -88,8 +88,8 @@ mcview_dialog_search (WView * view)
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Enter search string:"), input_label_above,
                                  INPUT_LAST_TEXT, MC_HISTORY_SHARED_SEARCH, &exp,
-                                 nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
-            QUICK_SEPARATOR (TRUE),
+                                 nullptr, false, false, INPUT_COMPLETE_NONE),
+            QUICK_SEPARATOR (true),
             QUICK_START_COLUMNS,
                 QUICK_RADIO (num_of_types, (const char **) list_of_types,
                              (int *) &mcview_search_options.type, nullptr),
@@ -120,7 +120,7 @@ mcview_dialog_search (WView * view)
     if ((qd_result == B_CANCEL) || (exp == nullptr) || (exp[0] == '\0'))
     {
         g_free (exp);
-        return FALSE;
+        return false;
     }
 
 #ifdef HAVE_CHARSET
@@ -129,7 +129,7 @@ mcview_dialog_search (WView * view)
 
         tmp = str_convert_to_input (exp);
         g_free (exp);
-        exp = g_string_free (tmp, FALSE);
+        exp = g_string_free (tmp, false);
     }
 #endif
 
@@ -161,7 +161,7 @@ mcview_dialog_search (WView * view)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_dialog_goto (WView * view, off_t * offset)
 {
     typedef enum
@@ -183,7 +183,7 @@ mcview_dialog_goto (WView * view, off_t * offset)
 
     char *exp = nullptr;
     int qd_result;
-    gboolean res;
+    bool res;
 
     int num_of_types = G_N_ELEMENTS (mc_view_goto_str);
 
@@ -198,7 +198,7 @@ mcview_dialog_goto (WView * view, off_t * offset)
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_INPUT (INPUT_LAST_TEXT, MC_HISTORY_VIEW_GOTO, &exp, nullptr,
-                         FALSE, FALSE, INPUT_COMPLETE_NONE),
+                         false, false, INPUT_COMPLETE_NONE),
             QUICK_RADIO (num_of_types, (const char **) mc_view_goto_str, (int *) &current_goto_type,
                          nullptr),
             QUICK_BUTTONS_OK_CANCEL,

@@ -95,12 +95,12 @@ static void
 mc_search__cond_struct_free (mc_search_cond_t * mc_search_cond)
 {
     if (mc_search_cond->upper)
-        g_string_free (mc_search_cond->upper, TRUE);
+        g_string_free (mc_search_cond->upper, true);
 
     if (mc_search_cond->lower)
-        g_string_free (mc_search_cond->lower, TRUE);
+        g_string_free (mc_search_cond->lower, true);
 
-    g_string_free (mc_search_cond->str, TRUE);
+    g_string_free (mc_search_cond->str, true);
     g_free (mc_search_cond->charset);
 
 #ifdef SEARCH_TYPE_GLIB
@@ -119,7 +119,7 @@ static void
 mc_search__conditions_free (GPtrArray * array)
 {
     g_ptr_array_foreach (array, (GFunc) mc_search__cond_struct_free, nullptr);
-    g_ptr_array_free (array, TRUE);
+    g_ptr_array_free (array, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -199,14 +199,14 @@ mc_search_free (mc_search_t * lc_mc_search)
 #endif /* SEARCH_TYPE_GLIB */
 
     if (lc_mc_search->regex_buffer != nullptr)
-        g_string_free (lc_mc_search->regex_buffer, TRUE);
+        g_string_free (lc_mc_search->regex_buffer, true);
 
     g_free (lc_mc_search);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_search_prepare (mc_search_t * lc_mc_search)
 {
     GPtrArray *ret;
@@ -266,9 +266,9 @@ mc_search_prepare (mc_search_t * lc_mc_search)
 /**
  * Carries out the search.
  *
- * Returns TRUE if found.
+ * Returns true if found.
  *
- * Returns FALSE if not found. In this case, lc_mc_search->error reveals
+ * Returns false if not found. In this case, lc_mc_search->error reveals
  * the reason:
  *
  *   - MC_SEARCH_E_NOTFOUND: the pattern isn't in the subject string.
@@ -276,18 +276,18 @@ mc_search_prepare (mc_search_t * lc_mc_search)
  *   - For any other reason (but not for the above two!): the description
  *     is in lc_mc_search->error_str.
  */
-gboolean
+bool
 mc_search_run (mc_search_t * lc_mc_search, const void *user_data,
                gsize start_search, gsize end_search, gsize * found_len)
 {
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (lc_mc_search == nullptr || user_data == nullptr)
-        return FALSE;
+        return false;
     if (!mc_search_is_type_avail (lc_mc_search->search_type))
     {
         mc_search_set_error (lc_mc_search, MC_SEARCH_E_INPUT, "%s", _(STR_E_UNKNOWN_TYPE));
-        return FALSE;
+        return false;
     }
 #ifdef SEARCH_TYPE_GLIB
     if (lc_mc_search->regex_match_info != nullptr)
@@ -300,7 +300,7 @@ mc_search_run (mc_search_t * lc_mc_search, const void *user_data,
     mc_search_set_error (lc_mc_search, MC_SEARCH_E_OK, nullptr);
 
     if ((lc_mc_search->conditions == nullptr) && !mc_search_prepare (lc_mc_search))
-        return FALSE;
+        return false;
 
     switch (lc_mc_search->search_type)
     {
@@ -324,7 +324,7 @@ mc_search_run (mc_search_t * lc_mc_search, const void *user_data,
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_search_is_type_avail (mc_search_type_t search_type)
 {
     switch (search_type)
@@ -333,11 +333,11 @@ mc_search_is_type_avail (mc_search_type_t search_type)
     case MC_SEARCH_T_NORMAL:
     case MC_SEARCH_T_REGEX:
     case MC_SEARCH_T_HEX:
-        return TRUE;
+        return true;
     default:
         break;
     }
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -396,24 +396,24 @@ mc_search_prepare_replace_str2 (mc_search_t * lc_mc_search, const char *replace_
 
     replace_str2 = g_string_new (replace_str);
     ret = mc_search_prepare_replace_str (lc_mc_search, replace_str2);
-    g_string_free (replace_str2, TRUE);
-    return (ret != nullptr) ? g_string_free (ret, FALSE) : nullptr;
+    g_string_free (replace_str2, true);
+    return (ret != nullptr) ? g_string_free (ret, false) : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_search_is_fixed_search_str (mc_search_t * lc_mc_search)
 {
     if (lc_mc_search == nullptr)
-        return FALSE;
+        return false;
     switch (lc_mc_search->search_type)
     {
     case MC_SEARCH_T_REGEX:
     case MC_SEARCH_T_GLOB:
-        return FALSE;
+        return false;
     default:
-        return TRUE;
+        return true;
     }
 }
 
@@ -425,28 +425,28 @@ mc_search_is_fixed_search_str (mc_search_t * lc_mc_search)
  * @param str string where search #pattern
  * @param search type (normal, regex, hex or glob)
  *
- * @return TRUE if found is successful, FALSE otherwise.
+ * @return true if found is successful, false otherwise.
  */
 
-gboolean
+bool
 mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * str,
            mc_search_type_t type)
 {
-    gboolean ret;
+    bool ret;
     mc_search_t *search;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     search = mc_search_new (pattern, pattern_charset);
     if (search == nullptr)
-        return FALSE;
+        return false;
 
     search->search_type = type;
-    search->is_case_sensitive = TRUE;
+    search->is_case_sensitive = true;
 
     if (type == MC_SEARCH_T_GLOB)
-        search->is_entire_line = TRUE;
+        search->is_entire_line = true;
 
     ret = mc_search_run (search, str, 0, strlen (str), nullptr);
     mc_search_free (search);

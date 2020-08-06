@@ -166,13 +166,13 @@ edit_buffer_clean (edit_buffer_t * buf)
     if (buf->b1 != nullptr)
     {
         g_ptr_array_foreach (buf->b1, (GFunc) g_free, nullptr);
-        g_ptr_array_free (buf->b1, TRUE);
+        g_ptr_array_free (buf->b1, true);
     }
 
     if (buf->b2 != nullptr)
     {
         g_ptr_array_foreach (buf->b2, (GFunc) g_free, nullptr);
-        g_ptr_array_free (buf->b2, TRUE);
+        g_ptr_array_free (buf->b2, true);
     }
 }
 
@@ -647,7 +647,7 @@ edit_buffer_get_backward_offset (const edit_buffer_t * buf, off_t current, long 
 
 off_t
 edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
-                       edit_buffer_read_file_status_msg_t * sm, gboolean * aborted)
+                       edit_buffer_read_file_status_msg_t * sm, bool * aborted)
 {
     off_t ret = 0;
     off_t i, j;
@@ -656,7 +656,7 @@ edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
     status_msg_t *s = STATUS_MSG (sm);
     unsigned short update_cnt = 0;
 
-    *aborted = FALSE;
+    *aborted = false;
 
     buf->lines = 0;
     buf->curs2 = size;
@@ -709,7 +709,7 @@ edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
                 sm->loaded = ret;
                 if (s->update (s) == B_CANCEL)
                 {
-                    *aborted = TRUE;
+                    *aborted = true;
                     return (-1);
                 }
             }
@@ -739,7 +739,7 @@ edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
                 sm->loaded = ret;
                 if (s->update (s) == B_CANCEL)
                 {
-                    *aborted = TRUE;
+                    *aborted = true;
                     return (-1);
                 }
             }

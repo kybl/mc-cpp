@@ -64,61 +64,61 @@ teardown (void)
 static const struct test_is_wildcarded_ds
 {
     const char *input_value;
-    gboolean expected_result;
+    bool expected_result;
 } test_is_wildcarded_ds[] =
 {
     { /* 0 */
         "blabla",
-        FALSE
+        false
     },
     { /* 1 */
         "bla?bla",
-        TRUE
+        true
     },
     { /* 2 */
         "bla*bla",
-        TRUE
+        true
     },
     { /* 3 */
         "bla\\*bla",
-        FALSE
+        false
     },
 
     { /* 4 */
         "bla\\\\*bla",
-        TRUE
+        true
     },
     { /* 5 */
         "bla\\1bla",
-        TRUE
+        true
     },
     { /* 6 */
         "bla\\\\1bla",
-        FALSE
+        false
     },
     { /* 7 */
         "bla\\\t\\\\1bla",
-        FALSE
+        false
     },
     { /* 8 */
         "bla\\\t\\\\\\1bla",
-        TRUE
+        true
     },
     { /* 9 */
         "bla\\9bla",
-        TRUE
+        true
     },
     { /* 10 */
         "blabla\\",
-        FALSE
+        false
     },
     { /* 11 */
         "blab\\?la",
-        FALSE
+        false
     },
     { /* 12 */
         "blab\\\\?la",
-        TRUE
+        true
     },
 };
 /* *INDENT-ON* */
@@ -129,7 +129,7 @@ START_PARAMETRIZED_TEST (test_is_wildcarded, test_is_wildcarded_ds)
 /* *INDENT-ON* */
 {
     /* given */
-    gboolean actual_result;
+    bool actual_result;
 
     /* when */
     actual_result = is_wildcarded (data->input_value);

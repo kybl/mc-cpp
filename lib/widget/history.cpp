@@ -158,7 +158,7 @@ history_create_item (history_descriptor_t * hd, void *data)
     width = str_term_width1 (text);
     hd->max_width = MAX (width, hd->max_width);
 
-    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, text, nullptr, TRUE);
+    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, text, nullptr, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -190,7 +190,7 @@ history_descriptor_init (history_descriptor_t * hd, int y, int x, GList * histor
     hd->action = CK_IgnoreKey;
     hd->text = nullptr;
     hd->max_width = 0;
-    hd->listbox = listbox_new (1, 1, 2, 2, TRUE, nullptr);
+    hd->listbox = listbox_new (1, 1, 2, 2, true, nullptr);
     /* in most cases history list contains string only and no any other data */
     hd->create = history_create_item;
     hd->release = history_release_item;
@@ -225,7 +225,7 @@ history_show (history_descriptor_t * hd)
     hist_data.max_width = hd->max_width;
 
     query_dlg =
-        dlg_create (TRUE, 0, 0, 4, 4, WPOS_KEEP_DEFAULT, TRUE, dialog_colors, history_dlg_callback,
+        dlg_create (true, 0, 0, 4, 4, WPOS_KEEP_DEFAULT, true, dialog_colors, history_dlg_callback,
                     nullptr, "[History-query]", _("History"));
     query_dlg->data = &hist_data;
 

@@ -124,10 +124,10 @@ static const char *machine_str = N_("Enter machine name (F1 for details):");
 /* --------------------------------------------------------------------------------------------- */
 /**
  * Run viewer (internal or external) on the currently selected file.
- * If normal is TRUE, force internal viewer and raw mode (used for F13).
+ * If normal is true, force internal viewer and raw mode (used for F13).
  */
 static void
-do_view_cmd (gboolean normal)
+do_view_cmd (bool normal)
 {
     /* Directories are viewed by changing to them */
     if (S_ISDIR (selection (current_panel)->st.st_mode) || link_isdir (selection (current_panel)))
@@ -194,7 +194,7 @@ set_panel_filter (WPanel * p)
 
     reg_exp = input_dialog_help (_("Filter"),
                                  _("Set expression for filtering filenames"),
-                                 "[Filter...]", MC_HISTORY_FM_PANEL_FILTER, x, FALSE,
+                                 "[Filter...]", MC_HISTORY_FM_PANEL_FILTER, x, false,
                                  INPUT_COMPLETE_FILENAMES);
     if (reg_exp != nullptr)
         set_panel_filter_to (p, reg_exp);
@@ -231,7 +231,7 @@ compare_files (const vfs_path_t * vpath1, const vfs_path_t * vpath2, off_t size)
                 data2 = mmap (0, size, PROT_READ, MAP_FILE | MAP_PRIVATE, file2, 0);
                 if (data2 != (char *) -1)
                 {
-                    rotate_dash (TRUE);
+                    rotate_dash (true);
                     result = memcmp (data1, data2, size);
                     munmap (data2, size);
                 }
@@ -242,7 +242,7 @@ compare_files (const vfs_path_t * vpath1, const vfs_path_t * vpath2, off_t size)
             char buf1[BUFSIZ], buf2[BUFSIZ];
             int n1, n2;
 
-            rotate_dash (TRUE);
+            rotate_dash (true);
             do
             {
                 while ((n1 = read (file1, buf1, sizeof (buf1))) == -1 && errno == EINTR)
@@ -257,7 +257,7 @@ compare_files (const vfs_path_t * vpath1, const vfs_path_t * vpath2, off_t size)
         }
         close (file1);
     }
-    rotate_dash (FALSE);
+    rotate_dash (false);
 
     return result;
 }
@@ -419,7 +419,7 @@ do_link (link_type_t link_type, const char *fname)
 #if defined(ENABLE_VFS_UNDELFS) || defined(ENABLE_VFS_NET)
 static void
 nice_cd (const char *text, const char *xtext, const char *help,
-         const char *history_name, const char *prefix, int to_home, gboolean strip_password)
+         const char *history_name, const char *prefix, int to_home, bool strip_password)
 {
     char *machine;
     char *cd_path;
@@ -479,7 +479,7 @@ nice_cd (const char *text, const char *xtext, const char *help,
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-configure_panel_listing (WPanel * p, list_format_t list_format, int brief_cols, gboolean use_msformat,
+configure_panel_listing (WPanel * p, list_format_t list_format, int brief_cols, bool use_msformat,
                          char **user, char **status)
 {
     p->user_mini_status = use_msformat;
@@ -518,38 +518,38 @@ switch_to_listing (int panel_index)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
-view_file_at_line (const vfs_path_t * filename_vpath, gboolean plain_view, gboolean internal,
+bool
+view_file_at_line (const vfs_path_t * filename_vpath, bool plain_view, bool internal,
                    long start_line, off_t search_start, off_t search_end)
 {
-    gboolean ret = TRUE;
+    bool ret = true;
 
     if (plain_view)
     {
         mcview_mode_flags_t changed_flags;
 
         mcview_clear_mode_flags (&changed_flags);
-        mcview_altered_flags.hex = FALSE;
-        mcview_altered_flags.magic = FALSE;
-        mcview_altered_flags.nroff = FALSE;
+        mcview_altered_flags.hex = false;
+        mcview_altered_flags.magic = false;
+        mcview_altered_flags.nroff = false;
         if (mcview_global_flags.hex)
-            changed_flags.hex = TRUE;
+            changed_flags.hex = true;
         if (mcview_global_flags.magic)
-            changed_flags.magic = TRUE;
+            changed_flags.magic = true;
         if (mcview_global_flags.nroff)
-            changed_flags.nroff = TRUE;
-        mcview_global_flags.hex = FALSE;
-        mcview_global_flags.magic = FALSE;
-        mcview_global_flags.nroff = FALSE;
+            changed_flags.nroff = true;
+        mcview_global_flags.hex = false;
+        mcview_global_flags.magic = false;
+        mcview_global_flags.nroff = false;
 
         ret = mcview_viewer (nullptr, filename_vpath, start_line, search_start, search_end);
 
         if (changed_flags.hex && !mcview_altered_flags.hex)
-            mcview_global_flags.hex = TRUE;
+            mcview_global_flags.hex = true;
         if (changed_flags.magic && !mcview_altered_flags.magic)
-            mcview_global_flags.magic = TRUE;
+            mcview_global_flags.magic = true;
         if (changed_flags.nroff && !mcview_altered_flags.nroff)
-            mcview_global_flags.nroff = TRUE;
+            mcview_global_flags.nroff = true;
 
         dialog_switch_process_pending ();
     }
@@ -598,8 +598,8 @@ view_file_at_line (const vfs_path_t * filename_vpath, gboolean plain_view, gbool
  *   internal:       If set uses the internal viewer, otherwise an external viewer.
  */
 
-gboolean
-view_file (const vfs_path_t * filename_vpath, gboolean plain_view, gboolean internal)
+bool
+view_file (const vfs_path_t * filename_vpath, bool plain_view, bool internal)
 {
     return view_file_at_line (filename_vpath, plain_view, internal, 0, 0, 0);
 }
@@ -611,7 +611,7 @@ view_file (const vfs_path_t * filename_vpath, gboolean plain_view, gboolean inte
 void
 view_cmd (void)
 {
-    do_view_cmd (FALSE);
+    do_view_cmd (false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -632,7 +632,7 @@ view_file_cmd (void)
 
     vpath = vfs_path_from_str (filename);
     g_free (filename);
-    view_file (vpath, FALSE, use_internal_view);
+    view_file (vpath, false, use_internal_view);
     vfs_path_free (vpath);
 }
 
@@ -641,7 +641,7 @@ view_file_cmd (void)
 void
 view_raw_cmd (void)
 {
-    do_view_cmd (TRUE);
+    do_view_cmd (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -674,7 +674,7 @@ view_filtered_cmd (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-edit_file_at_line (const vfs_path_t * what_vpath, gboolean internal, long start_line)
+edit_file_at_line (const vfs_path_t * what_vpath, bool internal, long start_line)
 {
 
 #ifdef USE_INTERNAL_EDIT
@@ -731,7 +731,7 @@ edit_cmd_force_internal (void)
 
     fname = vfs_path_from_str (selection (current_panel)->fname);
     if (regex_command (fname, "Edit") == 0)
-        edit_file_at_line (fname, TRUE, 1);
+        edit_file_at_line (fname, true, 1);
     vfs_path_free (fname);
 }
 #endif
@@ -774,7 +774,7 @@ copy_cmd (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_COPY, FALSE))
+    if (panel_operate (current_panel, OP_COPY, false))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -789,7 +789,7 @@ rename_cmd (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_MOVE, FALSE))
+    if (panel_operate (current_panel, OP_MOVE, false))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -804,7 +804,7 @@ copy_cmd_local (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_COPY, TRUE))
+    if (panel_operate (current_panel, OP_COPY, true))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -819,7 +819,7 @@ rename_cmd_local (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_MOVE, TRUE))
+    if (panel_operate (current_panel, OP_MOVE, true))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -884,7 +884,7 @@ delete_cmd (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_DELETE, FALSE))
+    if (panel_operate (current_panel, OP_DELETE, false))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -899,7 +899,7 @@ delete_cmd_local (void)
 {
     save_cwds_stat ();
 
-    if (panel_operate (current_panel, OP_DELETE, TRUE))
+    if (panel_operate (current_panel, OP_DELETE, true))
     {
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
         repaint_screen ();
@@ -1074,7 +1074,7 @@ edit_fhl_cmd (void)
     vfs_path_free (fhlfile_vpath);
     /* refresh highlighting rules */
     mc_fhl_free (&mc_filehighlight);
-    mc_filehighlight = mc_fhl_new (TRUE);
+    mc_filehighlight = mc_fhl_new (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1295,7 +1295,7 @@ void
 ftplink_cmd (void)
 {
     nice_cd (_("FTP to machine"), _(machine_str),
-             "[FTP File System]", ":ftplink_cmd: FTP to machine ", "ftp://", 1, TRUE);
+             "[FTP File System]", ":ftplink_cmd: FTP to machine ", "ftp://", 1, true);
 }
 #endif /* ENABLE_VFS_FTP */
 
@@ -1307,7 +1307,7 @@ sftplink_cmd (void)
 {
     nice_cd (_("SFTP to machine"), _(machine_str),
              "[SFTP (SSH File Transfer Protocol) filesystem]",
-             ":sftplink_cmd: SFTP to machine ", "sftp://", 1, TRUE);
+             ":sftplink_cmd: SFTP to machine ", "sftp://", 1, true);
 }
 #endif /* ENABLE_VFS_SFTP */
 
@@ -1319,7 +1319,7 @@ fishlink_cmd (void)
 {
     nice_cd (_("Shell link to machine"), _(machine_str),
              "[FIle transfer over SHell filesystem]", ":fishlink_cmd: Shell link to machine ",
-             "sh://", 1, TRUE);
+             "sh://", 1, true);
 }
 #endif /* ENABLE_VFS_FISH */
 
@@ -1330,7 +1330,7 @@ void
 smblink_cmd (void)
 {
     nice_cd (_("SMB link to machine"), _(machine_str),
-             "[SMB File System]", ":smblink_cmd: SMB link to machine ", "smb://", 0, TRUE);
+             "[SMB File System]", ":smblink_cmd: SMB link to machine ", "smb://", 0, true);
 }
 #endif /* ENABLE_VFS_SMB */
 
@@ -1342,7 +1342,7 @@ undelete_cmd (void)
 {
     nice_cd (_("Undelete files on an ext2 file system"),
              _("Enter device (without /dev/) to undelete\nfiles on: (F1 for details)"),
-             "[Undelete File System]", ":undelete_cmd: Undel on ext2 fs ", "undel://", 0, FALSE);
+             "[Undelete File System]", ":undelete_cmd: Undel on ext2 fs ", "undel://", 0, false);
 }
 #endif /* ENABLE_VFS_UNDELFS */
 
@@ -1412,7 +1412,7 @@ single_dirsize_cmd (void)
         status_msg_init (STATUS_MSG (&dsm), _("Directory scanning"), 0, dirsize_status_init_cb,
                          dirsize_status_update_cb, dirsize_status_deinit_cb);
 
-        if (compute_dir_size (p, &dsm, &dir_count, &count, &total, FALSE) == FILE_CONT)
+        if (compute_dir_size (p, &dsm, &dir_count, &count, &total, false) == FILE_CONT)
         {
             entry->st.st_size = (off_t) total;
             entry->f.dir_size_computed = 1;
@@ -1456,10 +1456,10 @@ dirsizes_cmd (void)
             size_t dir_count = 0;
             size_t count = 0;
             uintmax_t total = 0;
-            gboolean ok;
+            bool ok;
 
             p = vfs_path_from_str (panel->dir.list[i].fname);
-            ok = compute_dir_size (p, &dsm, &dir_count, &count, &total, FALSE) != FILE_CONT;
+            ok = compute_dir_size (p, &dsm, &dir_count, &count, &total, false) != FILE_CONT;
             vfs_path_free (p);
             if (ok)
                 break;
@@ -1489,7 +1489,7 @@ save_setup_cmd (void)
     vpath = vfs_path_from_str_flags (mc_config_get_path (), VPF_STRIP_HOME);
     path = vfs_path_as_str (vpath);
 
-    if (save_setup (TRUE, TRUE))
+    if (save_setup (true, true))
         message (D_NORMAL, _("Setup"), _("Setup saved to %s"), path);
     else
         message (D_ERROR, _("Setup"), _("Unable to save setup to %s"), path);
@@ -1534,7 +1534,7 @@ listing_cmd (void)
 
     p = PANEL (get_panel_widget (MENU_PANEL_IDX));
 
-    p->is_panelized = FALSE;
+    p->is_panelized = false;
     set_panel_filter_to (p, nullptr);      /* including panel reload */
 }
 
@@ -1543,7 +1543,7 @@ listing_cmd (void)
 void
 setup_listing_format_cmd (void)
 {
-    gboolean use_msformat;
+    bool use_msformat;
     int brief_cols;
     char *user, *status;
     WPanel *p = nullptr;

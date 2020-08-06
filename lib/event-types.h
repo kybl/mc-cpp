@@ -27,7 +27,7 @@ typedef struct
 {
     struct vfs_class *vclass;
     gpointer id;
-    gboolean ret;
+    bool ret;
 } ev_vfs_stamp_create_t;
 
 /* MCEVENT_GROUP_CORE:vfs_print_message */
@@ -40,7 +40,7 @@ typedef struct
 typedef struct
 {
     char **text;
-    gboolean ret;
+    bool ret;
 } ev_clipboard_text_from_file_t;
 
 /* MCEVENT_GROUP_CORE:help */

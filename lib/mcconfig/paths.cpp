@@ -46,12 +46,12 @@
 
 /*** file scope variables ************************************************************************/
 
-static gboolean xdg_vars_initialized = FALSE;
+static bool xdg_vars_initialized = false;
 static char *mc_config_str = nullptr;
 static char *mc_cache_str = nullptr;
 static char *mc_data_str = nullptr;
 
-static gboolean config_dir_present = FALSE;
+static bool config_dir_present = false;
 
 static const struct
 {
@@ -143,14 +143,14 @@ mc_config_init_one_config_path (const char *path_base, const char *subdir, GErro
 {
     char *full_path;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, nullptr);
 
     full_path = g_build_filename (path_base, subdir, (char *) nullptr);
 
     if (g_file_test (full_path, G_FILE_TEST_EXISTS))
     {
         if (g_file_test (full_path, G_FILE_TEST_IS_DIR))
-            config_dir_present = TRUE;
+            config_dir_present = true;
         else
         {
             fprintf (stderr, "%s %s\n", _("FATAL: not a directory:"), full_path);
@@ -257,11 +257,11 @@ mc_config_fix_migrated_rules (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_config_deprecated_dir_present (void)
 {
     char *old_dir;
-    gboolean is_present;
+    bool is_present;
 
     old_dir = mc_config_get_deprecated_path ();
     is_present = g_file_test (old_dir, static_cast<GFileTest> (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR));
@@ -338,7 +338,7 @@ mc_config_init_config_paths (GError ** mcerror)
     g_free (dir);
 #endif /* MC_HOMEDIR_XDG */
 
-    xdg_vars_initialized = TRUE;
+    xdg_vars_initialized = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -358,7 +358,7 @@ mc_config_deinit_config_paths (void)
     g_free (mc_global.share_data_dir);
     g_free (mc_global.sysconfig_dir);
 
-    xdg_vars_initialized = FALSE;
+    xdg_vars_initialized = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -417,16 +417,16 @@ mc_config_get_path (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_migrate_from_old_place (GError ** mcerror, char **msg)
 {
     char *old_dir;
     size_t rule_index;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (!mc_config_deprecated_dir_present ())
-        return FALSE;
+        return false;
 
     old_dir = mc_config_get_deprecated_path ();
 
@@ -436,7 +436,7 @@ mc_config_migrate_from_old_place (GError ** mcerror, char **msg)
     g_free (mc_config_init_one_config_path (mc_data_str, EDIT_HOME_DIR, mcerror));
 #endif /* MC_HOMEDIR_XDG */
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     for (rule_index = 0; mc_config_files_reference[rule_index].old_filename != nullptr; rule_index++)
     {
@@ -476,7 +476,7 @@ mc_config_migrate_from_old_place (GError ** mcerror, char **msg)
 
     g_free (old_dir);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

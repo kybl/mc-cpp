@@ -27,7 +27,7 @@ typedef struct hook_t
 void add_hook (hook_t ** hook_list, void (*hook_fn) (void *), void *data);
 void execute_hooks (hook_t * hook_list);
 void delete_hook (hook_t ** hook_list, void (*hook_fn) (void *));
-gboolean hook_present (hook_t * hook_list, void (*hook_fn) (void *));
+bool hook_present (hook_t * hook_list, void (*hook_fn) (void *));
 
 /*** inline functions **************************************************/
 

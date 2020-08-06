@@ -59,7 +59,7 @@ mc_fhl_array_free (mc_fhl_t * fhl)
     if (fhl->filters != nullptr)
     {
         g_ptr_array_foreach (fhl->filters, (GFunc) mc_fhl_filter_free, nullptr);
-        fhl->filters = (GPtrArray *) g_ptr_array_free (fhl->filters, TRUE);
+        fhl->filters = (GPtrArray *) g_ptr_array_free (fhl->filters, true);
     }
 }
 
@@ -68,7 +68,7 @@ mc_fhl_array_free (mc_fhl_t * fhl)
 /* --------------------------------------------------------------------------------------------- */
 
 mc_fhl_t *
-mc_fhl_new (gboolean need_auto_fill)
+mc_fhl_new (bool need_auto_fill)
 {
     mc_fhl_t *fhl;
 

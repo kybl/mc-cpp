@@ -204,7 +204,7 @@ mcview_update (WView * view)
 
     if (view->dpy_bbar_dirty)
     {
-        view->dpy_bbar_dirty = FALSE;
+        view->dpy_bbar_dirty = false;
         mcview_set_buttonbar (view);
         widget_draw (WIDGET (find_buttonbar (DIALOG (WIDGET (view)->owner))));
     }
@@ -357,7 +357,7 @@ mcview_display_clean (WView * view)
     tty_setcolor (VIEW_NORMAL_COLOR);
     widget_erase (w);
     if (view->dpy_frame_size != 0)
-        tty_draw_box (w->y, w->x, w->lines, w->cols, FALSE);
+        tty_draw_box (w->y, w->x, w->lines, w->cols, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -74,14 +74,14 @@ file_op_context_new (FileOperation op)
     ctx->operation = op;
     ctx->eta_secs = 0.0;
     ctx->progress_bytes = 0;
-    ctx->op_preserve = TRUE;
+    ctx->op_preserve = true;
     ctx->do_reget = 1;
     ctx->stat_func = mc_lstat;
-    ctx->preserve = TRUE;
+    ctx->preserve = true;
     ctx->preserve_uidgid = (geteuid () == 0);
     ctx->umask_kill = 0777777;
-    ctx->erase_at_end = TRUE;
-    ctx->skip_all = FALSE;
+    ctx->erase_at_end = true;
+    ctx->skip_all = false;
 
     return ctx;
 }
@@ -113,7 +113,7 @@ file_op_total_context_new (void)
 {
     file_op_total_context_t *tctx;
     tctx = g_new0 (file_op_total_context_t, 1);
-    tctx->ask_overwrite = TRUE;
+    tctx->ask_overwrite = true;
     return tctx;
 }
 

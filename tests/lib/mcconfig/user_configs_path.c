@@ -53,11 +53,11 @@
 static void
 setup (void)
 {
-    g_setenv ("HOME", HOME_DIR, TRUE);
+    g_setenv ("HOME", HOME_DIR, true);
 #if MC_HOMEDIR_XDG
-    g_setenv ("XDG_CONFIG_HOME", CONF_MAIN, TRUE);
-    g_setenv ("XDG_DATA_HOME", CONF_DATA, TRUE);
-    g_setenv ("XDG_CACHE_HOME", CONF_CACHE, TRUE);
+    g_setenv ("XDG_CONFIG_HOME", CONF_MAIN, true);
+    g_setenv ("XDG_DATA_HOME", CONF_DATA, true);
+    g_setenv ("XDG_CACHE_HOME", CONF_CACHE, true);
 #endif
     mc_global.timer = mc_timer_new ();
     str_init_strings ("UTF-8");

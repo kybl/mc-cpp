@@ -54,9 +54,9 @@ typedef struct
     char *real_host;            /* host DNS name or ip address */
     int port;                   /* port for connect to host */
     char *user;                 /* the user to log in as */
-    gboolean password_auth;     /* FALSE - no passwords allowed (default TRUE) */
-    gboolean identities_only;   /* TRUE - no ssh agent (default FALSE) */
-    gboolean pubkey_auth;       /* FALSE - disable public key authentication (default TRUE) */
+    bool password_auth;     /* false - no passwords allowed (default true) */
+    bool identities_only;   /* true - no ssh agent (default false) */
+    bool pubkey_auth;       /* false - disable public key authentication (default true) */
     char *identity_file;        /* A file from which the user's DSA, ECDSA or DSA authentication identity is read. */
 } sftpfs_ssh_config_entity_t;
 
@@ -156,7 +156,7 @@ sftpfs_fill_config_entity_from_string (sftpfs_ssh_config_entity_t * config_entit
 
             int *pointer_int;
             char **pointer_str;
-            gboolean *pointer_bool;
+            bool *pointer_bool;
 
             /* Calculate start of value in string */
             value_offset = mc_search_getstart_result_by_num (config_variables[i].pattern_regexp, 1);
@@ -177,7 +177,7 @@ sftpfs_fill_config_entity_from_string (sftpfs_ssh_config_entity_t * config_entit
                 *pointer_int = atoi (value);
                 break;
             case BOOLEAN:
-                pointer_bool = POINTER_TO_STRUCTURE_MEMBER (gboolean *);
+                pointer_bool = POINTER_TO_STRUCTURE_MEMBER (bool *);
                 *pointer_bool = strcasecmp (value, "True") == 0;
                 break;
             default:
@@ -198,27 +198,27 @@ sftpfs_fill_config_entity_from_string (sftpfs_ssh_config_entity_t * config_entit
  * @param config_entity      config entity structure
  * @param vpath_element      path element with host data (hostname, port)
  * @param mcerror            pointer to the error handler
- * @return TRUE if config entity was filled successfully, FALSE otherwise
+ * @return true if config entity was filled successfully, false otherwise
  */
 
-static gboolean
+static bool
 sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
                                        sftpfs_ssh_config_entity_t * config_entity,
                                        const vfs_path_element_t * vpath_element, GError ** mcerror)
 {
     char buffer[BUF_MEDIUM];
-    gboolean host_block_hit = FALSE;
-    gboolean pattern_block_hit = FALSE;
+    bool host_block_hit = false;
+    bool pattern_block_hit = false;
     mc_search_t *host_regexp;
-    gboolean ok = TRUE;
+    bool ok = true;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     host_regexp = mc_search_new ("^\\s*host\\s+(.*)$", DEFAULT_CHARSET);
     host_regexp->search_type = MC_SEARCH_T_REGEX;
-    host_regexp->is_case_sensitive = FALSE;
+    host_regexp->is_case_sensitive = false;
 
-    while (TRUE)
+    while (true)
     {
         char *cr;
 
@@ -233,7 +233,7 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
                 mc_propagate_error (mcerror, e,
                                     _("sftp: an error occurred while reading %s: %s"),
                                     SFTPFS_SSH_CONFIG, strerror (e));
-                ok = FALSE;
+                ok = false;
                 goto done;
             }
 
@@ -258,7 +258,7 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
             if (strcmp (host_pattern, vpath_element->host) == 0)
             {
                 /* current host block describe our connection */
-                host_block_hit = TRUE;
+                host_block_hit = true;
             }
             else
             {
@@ -266,8 +266,8 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
 
                 pattern_regexp = mc_search_new (host_pattern, DEFAULT_CHARSET);
                 pattern_regexp->search_type = MC_SEARCH_T_GLOB;
-                pattern_regexp->is_case_sensitive = FALSE;
-                pattern_regexp->is_entire_line = TRUE;
+                pattern_regexp->is_case_sensitive = false;
+                pattern_regexp->is_entire_line = true;
                 pattern_block_hit =
                     mc_search_run (pattern_regexp, vpath_element->host, 0,
                                    strlen (vpath_element->host), nullptr);
@@ -301,12 +301,12 @@ sftpfs_get_config_entity (const vfs_path_element_t * vpath_element, GError ** mc
     FILE *ssh_config_handler;
     char *config_filename;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, nullptr);
 
     config_entity = g_new0 (sftpfs_ssh_config_entity_t, 1);
-    config_entity->password_auth = TRUE;
-    config_entity->identities_only = FALSE;
-    config_entity->pubkey_auth = TRUE;
+    config_entity->password_auth = true;
+    config_entity->identities_only = false;
+    config_entity->pubkey_auth = true;
     config_entity->port = SFTP_DEFAULT_PORT;
 
     config_filename = sftpfs_correct_file_name (SFTPFS_SSH_CONFIG);
@@ -315,7 +315,7 @@ sftpfs_get_config_entity (const vfs_path_element_t * vpath_element, GError ** mc
 
     if (ssh_config_handler != nullptr)
     {
-        gboolean ok;
+        bool ok;
 
         ok = sftpfs_fill_config_entity_from_config
             (ssh_config_handler, config_entity, vpath_element, mcerror);
@@ -403,7 +403,7 @@ sftpfs_init_config_variables_patterns (void)
         config_variables[i].pattern_regexp =
             mc_search_new (config_variables[i].pattern, DEFAULT_CHARSET);
         config_variables[i].pattern_regexp->search_type = MC_SEARCH_T_REGEX;
-        config_variables[i].pattern_regexp->is_case_sensitive = FALSE;
+        config_variables[i].pattern_regexp->is_case_sensitive = false;
     }
 }
 

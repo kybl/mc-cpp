@@ -41,12 +41,12 @@ extern const char *mc_prompt;
 
 void update_menu (void);
 void midnight_set_buttonbar (WButtonBar * b);
-char *get_random_hint (gboolean force);
-void load_hint (gboolean force);
+char *get_random_hint (bool force);
+void load_hint (bool force);
 void change_panel (void);
 void save_cwds_stat (void);
-gboolean quiet_quit_cmd (void);
-gboolean do_nc (void);
+bool quiet_quit_cmd (void);
+bool do_nc (void);
 
 /*** inline functions ****************************************************************************/
 

@@ -57,7 +57,7 @@
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_nroff_get_char (mcview_nroff_t * nroff, int *ret_val, off_t nroff_index)
 {
     int c = 0;
@@ -70,7 +70,7 @@ mcview_nroff_get_char (mcview_nroff_t * nroff, int *ret_val, off_t nroff_index)
             /* we need got symbol in any case */
             nroff->char_length = 1;
             if (!mcview_get_byte (nroff->view, nroff_index, &c) || !g_ascii_isprint (c))
-                return FALSE;
+                return false;
         }
     }
     else
@@ -78,7 +78,7 @@ mcview_nroff_get_char (mcview_nroff_t * nroff, int *ret_val, off_t nroff_index)
     {
         nroff->char_length = 1;
         if (!mcview_get_byte (nroff->view, nroff_index, &c))
-            return FALSE;
+            return false;
     }
 
     *ret_val = c;

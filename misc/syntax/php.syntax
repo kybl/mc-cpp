@@ -1683,7 +1683,7 @@ context default
 # MySQL Functions (PDO_MYSQL) constants
     keyword whole PDO_ATTR_DRIVER_NAME white
     keyword whole PDO_MYSQL_ATTR_USE_BUFFERED_QUERY white
-    keyword whole TRUE white
+    keyword whole true white
 
 # MySQL Improved Extension
     keyword whole mysqli\_\[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\] yellow
@@ -1980,7 +1980,7 @@ context default
     keyword whole PDOStatement yellow
 
 # PDO Functions constants
-    keyword whole FALSE white
+    keyword whole false white
     keyword whole PDO::ATTR_AUTOCOMMIT white
     keyword whole PDO::ATTR_CASE white
     keyword whole PDO::ATTR_CLIENT_VERSION white

@@ -101,7 +101,7 @@ sftpfs_file__handle_error (sftpfs_super_t * super, int sftp_res, GError ** mcerr
 /* --------------------------------------------------------------------------------------------- */
 
 vfs_file_handler_t *
-sftpfs_fh_new (struct vfs_s_inode * ino, gboolean changed)
+sftpfs_fh_new (struct vfs_s_inode * ino, bool changed)
 {
     sftpfs_file_handler_t *fh;
 
@@ -119,25 +119,25 @@ sftpfs_fh_new (struct vfs_s_inode * ino, gboolean changed)
  * @param flags   flags (see man 2 open)
  * @param mode    mode (see man 2 open)
  * @param mcerror pointer to the error handler
- * @return TRUE if connection was created successfully, FALSE otherwise
+ * @return true if connection was created successfully, false otherwise
  */
 
-gboolean
+bool
 sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mcerror)
 {
     unsigned long sftp_open_flags = 0;
     int sftp_open_mode = 0;
-    gboolean do_append = FALSE;
+    bool do_append = false;
     sftpfs_file_handler_t *file = SFTP_FILE_HANDLER (fh);
     sftpfs_super_t *super = SFTP_SUPER (fh->ino->super);
     char *name;
 
     (void) mode;
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     name = vfs_s_fullpath (sftpfs_class, fh->ino);
     if (name == nullptr)
-        return FALSE;
+        return false;
 
     if ((flags & O_CREAT) != 0 || (flags & O_WRONLY) != 0)
     {
@@ -146,7 +146,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
         if ((flags & O_APPEND) != 0)
         {
             sftp_open_flags |= LIBSSH2_FXF_APPEND;
-            do_append = TRUE;
+            do_append = true;
         }
         sftp_open_flags |= (flags & O_TRUNC) != 0 ? LIBSSH2_FXF_TRUNC : 0;
 
@@ -156,7 +156,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
     else
         sftp_open_flags = LIBSSH2_FXF_READ;
 
-    while (TRUE)
+    while (true)
     {
         const char *fixfname;
         unsigned int fixfname_len = 0;
@@ -176,7 +176,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
             sftpfs_ssherror_to_gliberror (super, libssh_errno, mcerror);
             g_free (name);
             g_free (file);
-            return FALSE;
+            return false;
         }
     }
 
@@ -205,7 +205,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
         if (sftpfs_fstat (fh, &file_info, mcerror) == 0)
             libssh2_sftp_seek64 (file->handle, file_info.st_size);
     }
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

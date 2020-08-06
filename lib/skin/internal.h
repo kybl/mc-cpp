@@ -22,12 +22,12 @@ typedef struct mc_skin_color_struct
 
 /*** declarations of public functions ************************************************************/
 
-gboolean mc_skin_ini_file_load (mc_skin_t *);
-gboolean mc_skin_ini_file_parse (mc_skin_t *);
+bool mc_skin_ini_file_load (mc_skin_t *);
+bool mc_skin_ini_file_parse (mc_skin_t *);
 void mc_skin_set_hardcoded_skin (mc_skin_t *);
 
-gboolean mc_skin_ini_file_parse_colors (mc_skin_t *);
-gboolean mc_skin_color_parse_ini_file (mc_skin_t *);
+bool mc_skin_ini_file_parse_colors (mc_skin_t *);
+bool mc_skin_color_parse_ini_file (mc_skin_t *);
 
 void mc_skin_hardcoded_ugly_lines (mc_skin_t *);
 void mc_skin_hardcoded_space_lines (mc_skin_t *);

@@ -69,15 +69,15 @@ static Bool (*func_XQueryPointer) (Display *, Window, Window *, Window *,
 static GModule *x11_module;
 #endif
 
-static gboolean handlers_installed = FALSE;
+static bool handlers_installed = false;
 
 /* This flag is set as soon as an X11 error is reported. Usually that
  * means that the DISPLAY is not available anymore. We do not try to
  * reconnect, as that would violate the X11 protocol. */
-static gboolean lost_connection = FALSE;
+static bool lost_connection = false;
 
 static jmp_buf x11_exception;   /* FIXME: get a better name */
-static gboolean longjmp_allowed = FALSE;
+static bool longjmp_allowed = false;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -87,10 +87,10 @@ x_io_error_handler (Display * dpy)
 {
     (void) dpy;
 
-    lost_connection = TRUE;
+    lost_connection = true;
     if (longjmp_allowed)
     {
-        longjmp_allowed = FALSE;
+        longjmp_allowed = false;
         longjmp (x11_exception, 1);
     }
     return 0;
@@ -116,22 +116,22 @@ install_error_handlers (void)
 
     (void) func_XSetErrorHandler (x_error_handler);
     (void) func_XSetIOErrorHandler (x_io_error_handler);
-    handlers_installed = TRUE;
+    handlers_installed = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 x11_available (void)
 {
 #ifdef HAVE_GMODULE
     gchar *x11_module_fname;
 
     if (lost_connection)
-        return FALSE;
+        return false;
 
     if (x11_module != nullptr)
-        return TRUE;
+        return true;
 
     x11_module_fname = g_module_build_path (nullptr, "X11");
     x11_module = g_module_open (x11_module_fname, G_MODULE_BIND_LAZY);
@@ -141,7 +141,7 @@ x11_available (void)
     g_free (x11_module_fname);
 
     if (x11_module == nullptr)
-        return FALSE;
+        return false;
 
     if (!g_module_symbol (x11_module, "XOpenDisplay", (void **) &func_XOpenDisplay))
         goto cleanup;
@@ -155,7 +155,7 @@ x11_available (void)
         goto cleanup;
 
     install_error_handlers ();
-    return TRUE;
+    return true;
 
   cleanup:
     func_XOpenDisplay = 0;
@@ -165,7 +165,7 @@ x11_available (void)
     func_XSetIOErrorHandler = 0;
     g_module_close (x11_module);
     x11_module = nullptr;
-    return FALSE;
+    return false;
 #else
     install_error_handlers ();
     return !(lost_connection);
@@ -186,12 +186,12 @@ mc_XOpenDisplay (const char *displayname)
             Display *retval;
 
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = TRUE;
+            longjmp_allowed = true;
 
             retval = func_XOpenDisplay (displayname);
 
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = FALSE;
+            longjmp_allowed = false;
             return retval;
         }
     }
@@ -210,12 +210,12 @@ mc_XCloseDisplay (Display * display)
             int retval;
 
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = TRUE;
+            longjmp_allowed = true;
 
             retval = func_XCloseDisplay (display);
 
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = FALSE;
+            longjmp_allowed = false;
 
             return retval;
         }
@@ -237,14 +237,14 @@ mc_XQueryPointer (Display * display, Window win, Window * root_return,
         if (setjmp (x11_exception) == 0)
         {
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = TRUE;
+            longjmp_allowed = true;
 
             retval = func_XQueryPointer (display, win, root_return,
                                          child_return, root_x_return, root_y_return,
                                          win_x_return, win_y_return, mask_return);
 
             /* cppcheck-suppress redundantAssignment */
-            longjmp_allowed = FALSE;
+            longjmp_allowed = false;
 
             return retval;
         }

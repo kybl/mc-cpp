@@ -55,7 +55,7 @@ API. Всё, что нужно будет знать "плагинам" - как
 
 Любой каллбэк должен быть вида:
 
-gboolean mc_event_callback_func_t (const gchar *event_group, const gchar *event_name, gpointer init_data, gpointer event_data);
+bool mc_event_callback_func_t (const gchar *event_group, const gchar *event_name, gpointer init_data, gpointer event_data);
 где:
  event_group:
     название группы, в которой было инициировано событие
@@ -71,8 +71,8 @@ gboolean mc_event_callback_func_t (const gchar *event_group, const gchar *event_
  event_data:
     Данные, предоставляемые обработчику событий в момент возникновения события.
 
-Каллбэк должен вернуть TRUE, чтобы разрешить исполниться всем последующим за ним каллбэкам в данном событии; либо
-FALSE если необходимо немедленно прекратить дальнейшую обработку события (оставшиеся каллбэки не вызываются).
+Каллбэк должен вернуть true, чтобы разрешить исполниться всем последующим за ним каллбэкам в данном событии; либо
+false если необходимо немедленно прекратить дальнейшую обработку события (оставшиеся каллбэки не вызываются).
 
 Если для одного и того же события будет привязано множество каллбэков, то порядок из исполнения будет следующим:
 "Последним добавился - первым выполнился". Это позволяет в последствии переопределять стандартные обработчики событий
@@ -109,13 +109,13 @@ FALSE если необходимо немедленно прекратить д
 
 Сам каллбэк:
 
-gboolean mc_temp_event_logger (const gchar *event_group, const gchar *event_name, gpointer init_data, gpointer data)
+bool mc_temp_event_logger (const gchar *event_group, const gchar *event_name, gpointer init_data, gpointer data)
 {
     (void) init_data;
     (void) data;
 
     mc_log("Event: %s:%s",event_group,event_name);
-    return TRUE;
+    return true;
 }
 
 Добавляем его в src/event_init.c в виде записей к инициализационной структуре

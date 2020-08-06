@@ -145,10 +145,10 @@ book_mark_find (WEdit * edit, long line)
  * @param edit editor object
  * @param line line where book mark is
  * @param c color of book mark
- * @return TRUE if bookmark exists at this line of color c, FALSE otherwise
+ * @return true if bookmark exists at this line of color c, false otherwise
  */
 
-gboolean
+bool
 book_mark_query_color (WEdit * edit, long line, int c)
 {
     if (edit->book_mark != nullptr)
@@ -158,13 +158,13 @@ book_mark_query_color (WEdit * edit, long line, int c)
         for (p = book_mark_find (edit, line); p != nullptr; p = p->prev)
         {
             if (p->line != line)
-                return FALSE;
+                return false;
             if (p->c == c)
-                return TRUE;
+                return true;
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -209,14 +209,14 @@ book_mark_insert (WEdit * edit, long line, int c)
  * @param edit editor object
  * @param line line where book mark is
  * @param c color of book mark or -1 to clear all book marks on this line
- * @return FALSE if not found, TRUE otherwise
+ * @return false if not found, true otherwise
  */
 
-gboolean
+bool
 book_mark_clear (WEdit * edit, long line, int c)
 {
     edit_book_mark_t *p, *q;
-    gboolean r = FALSE;
+    bool r = false;
 
     if (edit->book_mark == nullptr)
         return r;
@@ -226,7 +226,7 @@ book_mark_clear (WEdit * edit, long line, int c)
         q = p->prev;
         if (p->line == line && (p->c == c || c == -1))
         {
-            r = TRUE;
+            r = true;
             edit->book_mark = p->prev;
             p->prev->next = p->next;
             if (p->next != nullptr)
@@ -320,7 +320,7 @@ book_mark_serialize (WEdit * edit, int color)
         edit_book_mark_t *p;
 
         if (edit->serialized_bookmarks == nullptr)
-            edit->serialized_bookmarks = g_array_sized_new (FALSE, FALSE, sizeof (size_t),
+            edit->serialized_bookmarks = g_array_sized_new (false, false, sizeof (size_t),
                                                             MAX_SAVED_BOOKMARKS);
 
         for (p = book_mark_find (edit, 0); p != nullptr; p = p->next)

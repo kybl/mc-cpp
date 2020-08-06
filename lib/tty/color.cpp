@@ -51,7 +51,7 @@ static char *tty_color_defaults__bg = nullptr;
 static char *tty_color_defaults__attrs = nullptr;
 
 /* Set if we are actually using colors */
-gboolean use_colors = FALSE;
+bool use_colors = false;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -67,7 +67,7 @@ static GHashTable *mc_tty_color__hashtable = nullptr;
 static gboolean
 tty_color_free_condition_cb (gpointer key, gpointer value, gpointer user_data)
 {
-    gboolean is_temp_color;
+    bool is_temp_color;
     tty_color_pair_t *mc_color_pair;
     (void) key;
 
@@ -79,7 +79,7 @@ tty_color_free_condition_cb (gpointer key, gpointer value, gpointer user_data)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-tty_color_free_all (gboolean is_temp_color)
+tty_color_free_all (bool is_temp_color)
 {
     g_hash_table_foreach_remove (mc_tty_color__hashtable, tty_color_free_condition_cb,
                                  is_temp_color ? GSIZE_TO_POINTER (1) : nullptr);
@@ -121,7 +121,7 @@ tty_color_get_next__color_pair_number (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_init_colors (gboolean disable, gboolean force)
+tty_init_colors (bool disable, bool force)
 {
     tty_color_init_lib (disable, force);
     mc_tty_color__hashtable = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
@@ -142,7 +142,7 @@ tty_colors_done (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_use_colors (void)
 {
     return use_colors;
@@ -152,7 +152,7 @@ tty_use_colors (void)
 
 int
 tty_try_alloc_color_pair2 (const char *fg, const char *bg, const char *attrs,
-                           gboolean is_temp_color)
+                           bool is_temp_color)
 {
     gchar *color_pair;
     tty_color_pair_t *mc_color_pair;
@@ -207,7 +207,7 @@ tty_try_alloc_color_pair2 (const char *fg, const char *bg, const char *attrs,
 int
 tty_try_alloc_color_pair (const char *fg, const char *bg, const char *attrs)
 {
-    return tty_try_alloc_color_pair2 (fg, bg, attrs, TRUE);
+    return tty_try_alloc_color_pair2 (fg, bg, attrs, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -215,7 +215,7 @@ tty_try_alloc_color_pair (const char *fg, const char *bg, const char *attrs)
 void
 tty_color_free_all_tmp (void)
 {
-    tty_color_free_all (TRUE);
+    tty_color_free_all (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -223,7 +223,7 @@ tty_color_free_all_tmp (void)
 void
 tty_color_free_all_non_tmp (void)
 {
-    tty_color_free_all (FALSE);
+    tty_color_free_all (false);
 }
 
 /* --------------------------------------------------------------------------------------------- */

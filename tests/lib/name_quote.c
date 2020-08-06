@@ -49,14 +49,14 @@ teardown (void)
 /* *INDENT-OFF* */
 static const struct data_source1
 {
-    gboolean input_quote_percent;
+    bool input_quote_percent;
     const char *input_string;
 
     const char *expected_string;
 } data_source1[] =
 {
-    { TRUE, "%%", "%%%%"},
-    { FALSE, "%%", "%%"},
+    { true, "%%", "%%%%"},
+    { false, "%%", "%%"},
 };
 /* *INDENT-ON* */
 
@@ -112,7 +112,7 @@ START_PARAMETRIZED_TEST (name_quote_test, data_source2)
     char *actual_string;
 
     /* when */
-    actual_string = name_quote (data->input_string, FALSE);
+    actual_string = name_quote (data->input_string, false);
 
     /* then */
     mctest_assert_str_eq (actual_string, data->expected_string);

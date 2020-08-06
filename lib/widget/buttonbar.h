@@ -22,7 +22,7 @@
 typedef struct WButtonBar
 {
     Widget widget;
-    gboolean visible;           /* Is it visible? */
+    bool visible;           /* Is it visible? */
     struct
     {
         char *text;
@@ -36,7 +36,7 @@ typedef struct WButtonBar
 
 /*** declarations of public functions ************************************************************/
 
-WButtonBar *buttonbar_new (gboolean visible);
+WButtonBar *buttonbar_new (bool visible);
 void buttonbar_set_label (WButtonBar * bb, int idx, const char *text,
                           const global_keymap_t * keymap, Widget * receiver);
 WButtonBar *find_buttonbar (const WDialog * h);
@@ -44,7 +44,7 @@ WButtonBar *find_buttonbar (const WDialog * h);
 /*** inline functions ****************************************************************************/
 
 static inline void
-buttonbar_set_visible (WButtonBar * bb, gboolean visible)
+buttonbar_set_visible (WButtonBar * bb, bool visible)
 {
     bb->visible = visible;
 }

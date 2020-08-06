@@ -53,7 +53,7 @@ typedef struct
 {
     simple_status_msg_t status_msg;     /* base class */
 
-    gboolean first;
+    bool first;
     WView *view;
     off_t offset;
 } mcview_search_status_msg_t;
@@ -92,7 +92,7 @@ mcview_search_status_update_cb (status_msg_t * sm)
         wd_width = MAX (wd->cols, lw->cols + 6);
         widget_set_size (wd, wd->y, wd->x, wd->lines, wd_width);
         widget_set_size (lw, lw->y, wd->x + (wd->cols - lw->cols) / 2, lw->lines, lw->cols);
-        vsm->first = FALSE;
+        vsm->first = false;
     }
 
     return status_msg_common_update (sm);
@@ -123,7 +123,7 @@ mcview_search_update_steps (WView * view)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_find (mcview_search_status_msg_t * ssm, off_t search_start, off_t search_end, gsize * len)
 {
     WView *view = ssm->view;
@@ -136,7 +136,7 @@ mcview_find (mcview_search_status_msg_t * ssm, off_t search_start, off_t search_
         search_end = mcview_get_filesize (view);
         while (search_start >= 0)
         {
-            gboolean ok;
+            bool ok;
 
             view->search_nroff_seq->index = search_start;
             mcview_nroff_seq_info (view->search_nroff_seq);
@@ -150,19 +150,19 @@ mcview_find (mcview_search_status_msg_t * ssm, off_t search_start, off_t search_
             {
                 if (view->mode_flags.nroff)
                     view->search->normal_offset++;
-                return TRUE;
+                return true;
             }
 
             /* We abort the search in case of a pattern error, or if the user aborts
                the search. In other words: in all cases except "string not found". */
             if (!ok && view->search->error != MC_SEARCH_E_NOTFOUND)
-                return FALSE;
+                return false;
 
             search_start--;
         }
 
         mc_search_set_error (view->search, MC_SEARCH_E_NOTFOUND, "%s", _(STR_E_NOTFOUND));
-        return FALSE;
+        return false;
     }
     view->search_nroff_seq->index = search_start;
     mcview_nroff_seq_info (view->search_nroff_seq);
@@ -259,7 +259,7 @@ mcview_search_update_cmd_callback (const void *user_data, gsize char_offset)
     status_msg_t *sm = STATUS_MSG (user_data);
     mcview_search_status_msg_t *vsm = (mcview_search_status_msg_t *) user_data;
     WView *view = vsm->view;
-    gboolean do_update = FALSE;
+    bool do_update = false;
     enum mc_search_cbret_t result = MC_SEARCH_CB_OK;
 
     vsm->offset = (off_t) char_offset;
@@ -270,7 +270,7 @@ mcview_search_update_cmd_callback (const void *user_data, gsize char_offset)
         {
             view->update_activate -= view->update_steps;
 
-            do_update = TRUE;
+            do_update = true;
         }
     }
     else
@@ -279,7 +279,7 @@ mcview_search_update_cmd_callback (const void *user_data, gsize char_offset)
         {
             view->update_activate += view->update_steps;
 
-            do_update = TRUE;
+            do_update = true;
         }
     }
 
@@ -300,7 +300,7 @@ mcview_do_search (WView * view, off_t want_search_start)
 
     off_t search_start = 0;
     off_t orig_search_start = view->search_start;
-    gboolean found = FALSE;
+    bool found = false;
 
     size_t match_len;
 
@@ -343,7 +343,7 @@ mcview_do_search (WView * view, off_t want_search_start)
 
     view->update_activate = search_start;
 
-    vsm.first = TRUE;
+    vsm.first = true;
     vsm.view = view;
     vsm.offset = search_start;
 
@@ -362,7 +362,7 @@ mcview_do_search (WView * view, off_t want_search_start)
         if (mcview_find (&vsm, search_start, mcview_get_filesize (view), &match_len))
         {
             mcview_search_show_result (view, match_len);
-            found = TRUE;
+            found = true;
             break;
         }
 
@@ -377,13 +377,13 @@ mcview_do_search (WView * view, off_t want_search_start)
     }
     while (search_start > 0 && mcview_may_still_grow (view));
 
-    /* After mcview_may_still_grow (view) == FALSE we have remained last chunk. Search there. */
+    /* After mcview_may_still_grow (view) == false we have remained last chunk. Search there. */
     if (view->growbuf_in_use && !found && view->search->error == MC_SEARCH_E_NOTFOUND
         && !mcview_search_options.backwards
         && mcview_find (&vsm, search_start, mcview_get_filesize (view), &match_len))
     {
         mcview_search_show_result (view, match_len);
-        found = TRUE;
+        found = true;
     }
 
     status_msg_deinit (STATUS_MSG (&vsm));
@@ -397,13 +397,13 @@ mcview_do_search (WView * view, off_t want_search_start)
         if (query_dialog
             (_("Search done"), _("Continue from beginning?"), D_NORMAL, 2, _("&Yes"),
              _("&No")) != 0)
-            found = TRUE;
+            found = true;
         else
         {
             /* continue search from beginning */
             view->update_activate = 0;
 
-            vsm.first = TRUE;
+            vsm.first = true;
             vsm.view = view;
             vsm.offset = 0;
 
@@ -414,7 +414,7 @@ mcview_do_search (WView * view, off_t want_search_start)
             if (mcview_find (&vsm, 0, orig_search_start, &match_len))
             {
                 mcview_search_show_result (view, match_len);
-                found = TRUE;
+                found = true;
             }
 
             status_msg_deinit (STATUS_MSG (&vsm));

@@ -328,7 +328,7 @@ local_getlocalcopy (const vfs_path_t * vpath)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-local_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboolean has_changed)
+local_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, bool has_changed)
 {
     (void) vpath;
     (void) local;
@@ -425,12 +425,12 @@ local_lseek (void *data, off_t offset, int whence)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 local_nothingisopen (vfsid id)
 {
     (void) id;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

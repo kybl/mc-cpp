@@ -110,7 +110,7 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
     sug_dlg_w += max_btn_len;
     sug_dlg_w = MAX (sug_dlg_w, word_label_len) + 1;
 
-    sug_dlg = dlg_create (TRUE, ypos, xpos, sug_dlg_h, sug_dlg_w, WPOS_KEEP_DEFAULT, TRUE,
+    sug_dlg = dlg_create (true, ypos, xpos, sug_dlg_h, sug_dlg_w, WPOS_KEEP_DEFAULT, true,
                           dialog_colors, nullptr, nullptr, "[ASpell]", _("Check word"));
     g = GROUP (sug_dlg);
 
@@ -119,10 +119,10 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
 
     group_add_widget (g, groupbox_new (4, 2, sug_dlg_h - 5, 25, _("Suggest")));
 
-    sug_list = listbox_new (5, 2, sug_dlg_h - 7, 24, FALSE, nullptr);
+    sug_list = listbox_new (5, 2, sug_dlg_h - 7, 24, false, nullptr);
     for (i = 0; i < suggest->len; i++)
         listbox_add_item (sug_list, LISTBOX_APPEND_AT_END, 0, g_array_index (suggest, char *, i),
-                          nullptr, FALSE);
+                          nullptr, false);
     group_add_widget (g, sug_list);
 
     group_add_widget (g, add_btn);
@@ -172,7 +172,7 @@ spell_dialog_lang_list_show (GArray * languages)
                                                 _("Select language"), "[ASpell]");
 
     for (i = 0; i < languages->len; i++)
-        LISTBOX_APPEND_TEXT (lang_list, 0, g_array_index (languages, char *, i), nullptr, FALSE);
+        LISTBOX_APPEND_TEXT (lang_list, 0, g_array_index (languages, char *, i), nullptr, false);
 
     res = run_listbox (lang_list);
     if (res >= 0)

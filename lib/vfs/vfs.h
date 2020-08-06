@@ -144,7 +144,7 @@ typedef struct vfs_class
     vfs_flags_t flags;
     const char *prefix;         /* "fish:" */
     int verrno;                 /* can't use errno because glibc2 might define errno as function */
-    gboolean flush;             /* if set to TRUE, invalidate directory cache */
+    bool flush;             /* if set to true, invalidate directory cache */
     FILE *logfile;
 
     /* *INDENT-OFF* */
@@ -192,12 +192,12 @@ typedef struct vfs_class
 
     vfsid (*getid) (const vfs_path_t * vpath);
 
-    gboolean (*nothingisopen) (vfsid id);
+    bool (*nothingisopen) (vfsid id);
     void (*free) (vfsid id);
 
     vfs_path_t *(*getlocalcopy) (const vfs_path_t * vpath);
     int (*ungetlocalcopy) (const vfs_path_t * vpath, const vfs_path_t * local_vpath,
-                           gboolean has_changed);
+                           bool has_changed);
 
     int (*mkdir) (const vfs_path_t * vpath, mode_t mode);
     int (*rmdir) (const vfs_path_t * vpath);
@@ -243,22 +243,22 @@ vfsid vfs_getid (const vfs_path_t * vpath);
 void vfs_init (void);
 void vfs_shut (void);
 /* Register a file system class */
-gboolean vfs_register_class (struct vfs_class *vfs);
+bool vfs_register_class (struct vfs_class *vfs);
 void vfs_unregister_class (struct vfs_class *vfs);
 
 void vfs_setup_work_dir (void);
 
 void vfs_timeout_handler (void);
 int vfs_timeouts (void);
-void vfs_expire (gboolean now);
+void vfs_expire (bool now);
 
 const char *vfs_get_current_dir (void);
 char *vfs_get_current_dir_n (void);
 const vfs_path_t *vfs_get_raw_current_dir (void);
 void vfs_set_raw_current_dir (const vfs_path_t * vpath);
 
-gboolean vfs_current_is_local (void);
-gboolean vfs_file_is_local (const vfs_path_t * vpath);
+bool vfs_current_is_local (void);
+bool vfs_file_is_local (const vfs_path_t * vpath);
 
 char *vfs_strip_suffix_from_filename (const char *filename);
 
@@ -326,7 +326,7 @@ int mc_setctl (const vfs_path_t * vpath, int ctlop, void *arg);
 int mc_open (const vfs_path_t * vpath, int flags, ...);
 vfs_path_t *mc_getlocalcopy (const vfs_path_t * pathname_vpath);
 int mc_ungetlocalcopy (const vfs_path_t * pathname_vpath, const vfs_path_t * local_vpath,
-                       gboolean has_changed);
+                       bool has_changed);
 int mc_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *suffix);
 
 /* Creating temporary files safely */

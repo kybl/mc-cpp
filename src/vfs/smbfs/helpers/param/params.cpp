@@ -531,7 +531,7 @@ pm_process (const char *FileName,
    *          pfunc     - A pointer to a function that will be called when
    *                      a parameter name and value are discovered.
    *
-   *  Output: TRUE if the file was successfully parsed, else FALSE.
+   *  Output: true if the file was successfully parsed, else false.
    *
    * ------------------------------------------------------------------------ **
    */

@@ -34,26 +34,26 @@ typedef enum
 /* panels ini options; [Panels] section */
 typedef struct
 {
-    gboolean show_mini_info;    /* If true, show the mini-info on the panel */
-    gboolean kilobyte_si;       /* If TRUE, SI units (1000 based) will be used for larger units
-                                 * (kilobyte, megabyte, ...). If FALSE, binary units (1024 based) will be used */
-    gboolean mix_all_files;     /* If FALSE then directories are shown separately from files */
-    gboolean show_backups;      /* If TRUE, show files ending in ~ */
-    gboolean show_dot_files;    /* If TRUE, show files starting with a dot */
-    gboolean fast_reload;       /* If TRUE then use stat() on the cwd to determine directory changes */
-    gboolean fast_reload_msg_shown;     /* Have we shown the fast-reload warning in the past? */
-    gboolean mark_moves_down;   /* If TRUE, marking a files moves the cursor down */
-    gboolean reverse_files_only;        /* If TRUE, only selection of files is inverted */
-    gboolean auto_save_setup;
-    gboolean navigate_with_arrows;      /* If TRUE: l&r arrows are used to chdir if the input line is empty */
-    gboolean scroll_pages;      /* If TRUE, panel is scrolled by half the display when the cursor reaches
+    bool show_mini_info;    /* If true, show the mini-info on the panel */
+    bool kilobyte_si;       /* If true, SI units (1000 based) will be used for larger units
+                                 * (kilobyte, megabyte, ...). If false, binary units (1024 based) will be used */
+    bool mix_all_files;     /* If false then directories are shown separately from files */
+    bool show_backups;      /* If true, show files ending in ~ */
+    bool show_dot_files;    /* If true, show files starting with a dot */
+    bool fast_reload;       /* If true then use stat() on the cwd to determine directory changes */
+    bool fast_reload_msg_shown;     /* Have we shown the fast-reload warning in the past? */
+    bool mark_moves_down;   /* If true, marking a files moves the cursor down */
+    bool reverse_files_only;        /* If true, only selection of files is inverted */
+    bool auto_save_setup;
+    bool navigate_with_arrows;      /* If true: l&r arrows are used to chdir if the input line is empty */
+    bool scroll_pages;      /* If true, panel is scrolled by half the display when the cursor reaches
                                    the end or the beginning of the panel */
-    gboolean scroll_center;     /* If TRUE, scroll when the cursor hits the middle of the panel */
-    gboolean mouse_move_pages;  /* Scroll page/item using mouse wheel */
-    gboolean filetype_mode;     /* If TRUE then add per file type hilighting */
-    gboolean permission_mode;   /* If TRUE, we use permission hilighting */
+    bool scroll_center;     /* If true, scroll when the cursor hits the middle of the panel */
+    bool mouse_move_pages;  /* Scroll page/item using mouse wheel */
+    bool filetype_mode;     /* If true then add per file type hilighting */
+    bool permission_mode;   /* If true, we use permission hilighting */
     qsearch_mode_t qsearch_mode;        /* Quick search mode */
-    gboolean torben_fj_mode;    /* If TRUE, use some usability hacks by Torben */
+    bool torben_fj_mode;    /* If true, use some usability hacks by Torben */
     panel_select_flags_t select_flags;  /* Select/unselect file flags */
 } panels_options_t;
 
@@ -75,43 +75,43 @@ struct mc_fhl_struct;
 
 /* global parameters */
 extern char *global_profile_name;
-extern gboolean confirm_delete;
-extern gboolean confirm_directory_hotlist_delete;
-extern gboolean confirm_execute;
-extern gboolean confirm_exit;
-extern gboolean confirm_overwrite;
-extern gboolean confirm_view_dir;
-extern gboolean safe_delete;
-extern gboolean safe_overwrite;
-extern gboolean clear_before_exec;
-extern gboolean auto_menu;
-extern gboolean drop_menus;
-extern gboolean verbose;
-extern gboolean copymove_persistent_attr;
-extern gboolean classic_progressbar;
-extern gboolean easy_patterns;
+extern bool confirm_delete;
+extern bool confirm_directory_hotlist_delete;
+extern bool confirm_execute;
+extern bool confirm_exit;
+extern bool confirm_overwrite;
+extern bool confirm_view_dir;
+extern bool safe_delete;
+extern bool safe_overwrite;
+extern bool clear_before_exec;
+extern bool auto_menu;
+extern bool drop_menus;
+extern bool verbose;
+extern bool copymove_persistent_attr;
+extern bool classic_progressbar;
+extern bool easy_patterns;
 extern int option_tab_spacing;
-extern gboolean auto_save_setup;
-extern gboolean only_leading_plus_minus;
+extern bool auto_save_setup;
+extern bool only_leading_plus_minus;
 extern int cd_symlinks;
-extern gboolean auto_fill_mkdir_name;
-extern gboolean output_starts_shell;
-extern gboolean use_file_to_check_type;
-extern gboolean file_op_compute_totals;
-extern gboolean editor_ask_filename_before_edit;
+extern bool auto_fill_mkdir_name;
+extern bool output_starts_shell;
+extern bool use_file_to_check_type;
+extern bool file_op_compute_totals;
+extern bool editor_ask_filename_before_edit;
 
 extern panels_options_t panels_options;
 
 extern panel_view_mode_t startup_left_mode;
 extern panel_view_mode_t startup_right_mode;
-extern gboolean boot_current_is_left;
-extern gboolean use_internal_view;
-extern gboolean use_internal_edit;
+extern bool boot_current_is_left;
+extern bool use_internal_view;
+extern bool use_internal_edit;
 
 #ifdef HAVE_CHARSET
 extern int default_source_codepage;
 extern char *autodetect_codeset;
-extern gboolean is_autodetect_codeset_enabled;
+extern bool is_autodetect_codeset_enabled;
 #endif /* !HAVE_CHARSET */
 
 #ifdef HAVE_ASPELL
@@ -125,8 +125,8 @@ extern char *saved_other_dir;
 extern char *last_wd_string;
 
 extern int quit;
-/* Set to TRUE to suppress printing the last directory */
-extern gboolean print_last_revert;
+/* Set to true to suppress printing the last directory */
+extern bool print_last_revert;
 
 #ifdef USE_INTERNAL_EDIT
 /* index to record_macro_buf[], -1 if not recording a macro */
@@ -144,7 +144,7 @@ extern int saving_setup;
 
 const char *setup_init (void);
 void load_setup (void);
-gboolean save_setup (gboolean save_options, gboolean save_panel_options);
+bool save_setup (bool save_options, bool save_panel_options);
 void done_setup (void);
 void setup_save_config_show_error (const char *filename, GError ** mcerror);
 
@@ -153,7 +153,7 @@ void load_key_defs (void);
 char *load_anon_passwd (void);
 #endif /* ENABLE_VFS_FTP */
 
-void load_keymap_defs (gboolean load_from_file);
+void load_keymap_defs (bool load_from_file);
 void free_keymap_defs (void);
 
 void panel_load_setup (WPanel * panel, const char *section);

@@ -25,8 +25,8 @@ typedef struct tree_entry
     int sublevel;               /* Number of parent directories (slashes) */
     long submask;               /* Bitmask of existing sublevels after this entry */
     const char *subname;        /* The last part of name (the actual name) */
-    gboolean mark;              /* Flag: Is this entry marked (e. g. for delete)? */
-    gboolean scanned;           /* Flag: childs scanned or not */
+    bool mark;              /* Flag: Is this entry marked (e. g. for delete)? */
+    bool scanned;           /* Flag: childs scanned or not */
     struct tree_entry *next;    /* Next item in the list */
     struct tree_entry *prev;    /* Previous item in the list */
 } tree_entry;
@@ -38,8 +38,8 @@ struct TreeStore
     tree_entry *check_start;    /* Start of checked subdirectories */
     vfs_path_t *check_name;
     GList *add_queue_vpath;     /* List of vfs_path_t objects of added directories */
-    gboolean loaded;
-    gboolean dirty;
+    bool loaded;
+    bool dirty;
 };
 
 /*** global variables defined in .c file *********************************************************/

@@ -56,7 +56,7 @@ mc_fhl_parse_fill_color_info (mc_fhl_filter_t * mc_filter, mc_fhl_t * fhl, const
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
 {
     mc_fhl_filter_t *mc_filter;
@@ -76,7 +76,7 @@ mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
     if (*param_type == '\0')
     {
         g_free (param_type);
-        return FALSE;
+        return false;
     }
 
     for (i = 0; types[i] != nullptr; i++)
@@ -86,7 +86,7 @@ mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
     }
     g_free (param_type);
     if (types[i] == nullptr)
-        return FALSE;
+        return false;
 
     mc_filter = g_new0 (mc_fhl_filter_t, 1);
     mc_filter->type = MC_FLHGH_T_FTYPE;
@@ -94,12 +94,12 @@ mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
     mc_fhl_parse_fill_color_info (mc_filter, fhl, group_name);
 
     g_ptr_array_add (fhl->filters, (gpointer) mc_filter);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_fhl_parse_get_regexp (mc_fhl_t * fhl, const gchar * group_name)
 {
     mc_fhl_filter_t *mc_filter;
@@ -108,24 +108,24 @@ mc_fhl_parse_get_regexp (mc_fhl_t * fhl, const gchar * group_name)
     if (*regexp == '\0')
     {
         g_free (regexp);
-        return FALSE;
+        return false;
     }
 
     mc_filter = g_new0 (mc_fhl_filter_t, 1);
     mc_filter->type = MC_FLHGH_T_FREGEXP;
     mc_filter->search_condition = mc_search_new (regexp, DEFAULT_CHARSET);
-    mc_filter->search_condition->is_case_sensitive = TRUE;
+    mc_filter->search_condition->is_case_sensitive = true;
     mc_filter->search_condition->search_type = MC_SEARCH_T_REGEX;
 
     mc_fhl_parse_fill_color_info (mc_filter, fhl, group_name);
     g_ptr_array_add (fhl->filters, (gpointer) mc_filter);
     g_free (regexp);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
 {
     mc_fhl_filter_t *mc_filter;
@@ -136,7 +136,7 @@ mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
     if (exts_orig == nullptr || exts_orig[0] == nullptr)
     {
         g_strfreev (exts_orig);
-        return FALSE;
+        return false;
     }
 
     buf = g_string_sized_new (64);
@@ -160,53 +160,53 @@ mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
     mc_filter->type = MC_FLHGH_T_FREGEXP;
     mc_filter->search_condition = mc_search_new_len (buf->str, buf->len, DEFAULT_CHARSET);
     mc_filter->search_condition->is_case_sensitive =
-        mc_config_get_bool (fhl->config, group_name, "extensions_case", FALSE);
+        mc_config_get_bool (fhl->config, group_name, "extensions_case", false);
     mc_filter->search_condition->search_type = MC_SEARCH_T_REGEX;
 
     mc_fhl_parse_fill_color_info (mc_filter, fhl, group_name);
     g_ptr_array_add (fhl->filters, (gpointer) mc_filter);
-    g_string_free (buf, TRUE);
-    return TRUE;
+    g_string_free (buf, true);
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_fhl_read_ini_file (mc_fhl_t * fhl, const gchar * filename)
 {
     if (fhl == nullptr || filename == nullptr || !exist_file (filename))
-        return FALSE;
+        return false;
 
     if (fhl->config != nullptr)
-        return mc_config_read_file (fhl->config, filename, TRUE, FALSE);
+        return mc_config_read_file (fhl->config, filename, true, false);
 
-    fhl->config = mc_config_init (filename, TRUE);
+    fhl->config = mc_config_init (filename, true);
     return (fhl->config != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_fhl_init_from_standard_files (mc_fhl_t * fhl)
 {
     gchar *name;
-    gboolean ok;
+    bool ok;
 
     /* ${XDG_CONFIG_HOME}/mc/filehighlight.ini */
     name = mc_config_get_full_path (MC_FHL_INI_FILE);
     ok = mc_fhl_read_ini_file (fhl, name);
     g_free (name);
     if (ok)
-        return TRUE;
+        return true;
 
     /* ${sysconfdir}/mc/filehighlight.ini  */
     name = g_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) nullptr);
     ok = mc_fhl_read_ini_file (fhl, name);
     g_free (name);
     if (ok)
-        return TRUE;
+        return true;
 
     /* ${datadir}/mc/filehighlight.ini  */
     name = g_build_filename (mc_global.share_data_dir, MC_FHL_INI_FILE, (char *) nullptr);
@@ -217,11 +217,11 @@ mc_fhl_init_from_standard_files (mc_fhl_t * fhl)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_fhl_parse_ini_file (mc_fhl_t * fhl)
 {
     gchar **group_names, **orig_group_names;
-    gboolean ok;
+    bool ok;
 
     mc_fhl_array_free (fhl);
     fhl->filters = g_ptr_array_new ();

@@ -6,8 +6,8 @@ caseinsensitive
 context default
 
 # Keywords
-    keyword whole TRUE                                     white
-    keyword whole FALSE                                    white
+    keyword whole true                                     white
+    keyword whole false                                    white
     keyword whole ALL                                      white
     keyword whole NONE                                     white
     keyword whole AND                                      white

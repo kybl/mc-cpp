@@ -72,7 +72,7 @@ START_PARAMETRIZED_TEST (test_translate_replace_glob_to_regex, test_translate_re
 
     /* then */
     mctest_assert_str_eq (dest_str->str, data->expected_result);
-    g_string_free (dest_str, TRUE);
+    g_string_free (dest_str, true);
 }
 /* *INDENT-OFF* */
 END_PARAMETRIZED_TEST

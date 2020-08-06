@@ -67,12 +67,12 @@ typedef struct panel_field_struct
 {
     const char *id;
     int min_size;
-    gboolean expands;
+    bool expands;
     align_crt_t default_just;
     const char *hotkey;
     const char *title_hotkey;
-    gboolean is_user_choice;
-    gboolean use_in_user_format;
+    bool is_user_choice;
+    bool use_in_user_format;
     const char *(*string_fn) (file_entry_t *, int);
     GCompareFunc sort_routine;  /* used by mouse_sort_col() */
 } panel_field_t;
@@ -102,7 +102,7 @@ typedef struct
     int selected;               /* Index to the selected file */
     int list_cols;              /* Number of file list columns */
     int brief_cols;             /* Number of columns in case of list_brief format */
-    gboolean is_panelized;      /* Flag: special filelisting, can't reload */
+    bool is_panelized;      /* Flag: special filelisting, can't reload */
     panel_display_t frame_size; /* half or full frame */
     char *filter;               /* File name filter */
 
@@ -112,7 +112,7 @@ typedef struct
 
     int dirty;                  /* Should we redisplay the panel? */
 
-    gboolean user_mini_status;  /* Is user_status_format used */
+    bool user_mini_status;  /* Is user_status_format used */
     char *user_format;          /* User format */
     char *user_status_format[LIST_FORMATS];     /* User format for status line */
 
@@ -126,7 +126,7 @@ typedef struct
     int codepage;               /* panel codepage */
 #endif
 
-    gboolean searching;
+    bool searching;
     char search_buffer[MC_MAXFILENAMELEN];
     char prev_search_buffer[MC_MAXFILENAMELEN];
     char search_char[MB_LEN_MAX];       /*buffer for multibytes characters */
@@ -172,7 +172,7 @@ void recalculate_panel_summary (WPanel * panel);
 void file_mark (WPanel * panel, int idx, int val);
 void do_file_mark (WPanel * panel, int idx, int val);
 
-gboolean do_panel_cd (WPanel * panel, const vfs_path_t * new_dir_vpath, enum cd_enum cd_type);
+bool do_panel_cd (WPanel * panel, const vfs_path_t * new_dir_vpath, enum cd_enum cd_type);
 
 gsize panel_get_num_of_sortable_fields (void);
 char **panel_get_sortable_fields (gsize *);
@@ -186,7 +186,7 @@ void panel_set_lwd (WPanel * panel, const vfs_path_t * vpath);
 
 void panel_init (void);
 void panel_deinit (void);
-gboolean do_cd (const vfs_path_t * new_dir_vpath, enum cd_enum cd_type);
+bool do_cd (const vfs_path_t * new_dir_vpath, enum cd_enum cd_type);
 
 /* --------------------------------------------------------------------------------------------- */
 /*** inline functions ****************************************************************************/

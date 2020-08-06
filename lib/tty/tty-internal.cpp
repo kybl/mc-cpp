@@ -79,7 +79,7 @@ tty_create_winch_pipe (void)
      * from the pipe to allow the write to complete..
      * Therefore, use nonblocking I/O.
      */
-    if (!g_unix_set_fd_nonblocking (sigwinch_pipe[0], TRUE, &mcerror))
+    if (!g_unix_set_fd_nonblocking (sigwinch_pipe[0], true, &mcerror))
     {
         fprintf (stderr, _("\nCannot configure write end of SIGWINCH pipe: %s (%d)\n"),
                  mcerror->message, mcerror->code);
@@ -88,7 +88,7 @@ tty_create_winch_pipe (void)
         exit (EXIT_FAILURE);
     }
 
-    if (!g_unix_set_fd_nonblocking (sigwinch_pipe[1], TRUE, &mcerror))
+    if (!g_unix_set_fd_nonblocking (sigwinch_pipe[1], true, &mcerror))
     {
         fprintf (stderr, _("\nCannot configure read end of SIGWINCH pipe: %s (%d)\n"),
                  mcerror->message, mcerror->code);

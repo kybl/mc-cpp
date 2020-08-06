@@ -44,8 +44,8 @@ g_get_current_dir (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean mc_stat__is_2nd_call_different = FALSE;
-static gboolean mc_stat__call_count = 0;
+static bool mc_stat__is_2nd_call_different = false;
+static bool mc_stat__call_count = 0;
 
 /* @Mock */
 int
@@ -101,16 +101,16 @@ teardown (void)
 /* *INDENT-OFF* */
 static const struct test_vfs_setup_cwd_symlink_ds
 {
-    gboolean is_2nd_call_different;
+    bool is_2nd_call_different;
     const char *expected_result;
 } test_vfs_setup_cwd_symlink_ds[] =
 {
     { /* 0. */
-        TRUE,
+        true,
         "/some/path"
     },
     { /* 1. */
-        FALSE,
+        false,
         "/some/path2"
     },
 };

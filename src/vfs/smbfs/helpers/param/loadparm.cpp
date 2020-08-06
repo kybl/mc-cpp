@@ -1555,7 +1555,7 @@ Do a case-insensitive, whitespace-ignoring string compare.
 static int
 strwicmp (const char *psz1, const char *psz2)
 {
-    /* if BOTH strings are nullptr, return TRUE, if ONE is nullptr return */
+    /* if BOTH strings are nullptr, return true, if ONE is nullptr return */
     /* appropriate value. */
     if (psz1 == psz2)
         return (0);
@@ -1582,7 +1582,7 @@ strwicmp (const char *psz1, const char *psz2)
 
 /***************************************************************************
 Map a parameter's string representation to something we can use. 
-Returns False if the parameter string is not recognised, else TRUE.
+Returns False if the parameter string is not recognised, else true.
 ***************************************************************************/
 static int
 map_parameter (const char *pszParmName)
@@ -2271,7 +2271,7 @@ lp_next_parameter (int snum, int *i, int allparameters)
 #endif /* 0 */
 #if 0
 /***************************************************************************
-Return TRUE if the passed service number is within range.
+Return true if the passed service number is within range.
 ***************************************************************************/
 BOOL
 lp_snum_ok (int iService)

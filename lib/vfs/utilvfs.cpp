@@ -201,7 +201,7 @@ vfs_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *param_b
             g_string_append_c (suffix, *p);
 
     fd = mc_mkstemps (pname_vpath, prefix, suffix->str);
-    g_string_free (suffix, TRUE);
+    g_string_free (suffix, true);
 
     return fd;
 }

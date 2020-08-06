@@ -75,7 +75,7 @@ mcview_toggle_magic_mode (WView * view)
     dir_list *dir;
     int *dir_idx;
 
-    mcview_altered_flags.magic = TRUE;
+    mcview_altered_flags.magic = true;
     view->mode_flags.magic = !view->mode_flags.magic;
 
     /* reinit view */
@@ -93,7 +93,7 @@ mcview_toggle_magic_mode (WView * view)
     g_free (filename);
     g_free (command);
 
-    view->dpy_bbar_dirty = TRUE;
+    view->dpy_bbar_dirty = true;
     view->dirty++;
 }
 
@@ -103,8 +103,8 @@ void
 mcview_toggle_wrap_mode (WView * view)
 {
     view->mode_flags.wrap = !view->mode_flags.wrap;
-    view->dpy_wrap_dirty = TRUE;
-    view->dpy_bbar_dirty = TRUE;
+    view->dpy_wrap_dirty = true;
+    view->dpy_bbar_dirty = true;
     view->dirty++;
 }
 
@@ -114,9 +114,9 @@ void
 mcview_toggle_nroff_mode (WView * view)
 {
     view->mode_flags.nroff = !view->mode_flags.nroff;
-    mcview_altered_flags.nroff = TRUE;
-    view->dpy_wrap_dirty = TRUE;
-    view->dpy_bbar_dirty = TRUE;
+    mcview_altered_flags.nroff = true;
+    view->dpy_wrap_dirty = true;
+    view->dpy_bbar_dirty = true;
     view->dirty++;
 }
 
@@ -131,18 +131,18 @@ mcview_toggle_hex_mode (WView * view)
     {
         view->hex_cursor = view->dpy_start;
         view->dpy_start = mcview_offset_rounddown (view->dpy_start, view->bytes_per_line);
-        widget_want_cursor (WIDGET (view), TRUE);
+        widget_want_cursor (WIDGET (view), true);
     }
     else
     {
         view->dpy_start = mcview_bol (view, view->hex_cursor, 0);
         view->hex_cursor = view->dpy_start;
-        widget_want_cursor (WIDGET (view), FALSE);
+        widget_want_cursor (WIDGET (view), false);
     }
-    mcview_altered_flags.hex = TRUE;
+    mcview_altered_flags.hex = true;
     view->dpy_paragraph_skip_lines = 0;
-    view->dpy_wrap_dirty = TRUE;
-    view->dpy_bbar_dirty = TRUE;
+    view->dpy_wrap_dirty = true;
+    view->dpy_bbar_dirty = true;
     view->dirty++;
 }
 
@@ -160,17 +160,17 @@ mcview_init (WView * view)
 
     mcview_set_datasource_none (view);
 
-    view->growbuf_in_use = FALSE;
+    view->growbuf_in_use = false;
     /* leave the other growbuf fields uninitialized */
 
-    view->hexedit_lownibble = FALSE;
-    view->locked = FALSE;
+    view->hexedit_lownibble = false;
+    view->locked = false;
     view->coord_cache = nullptr;
 
     view->dpy_start = 0;
     view->dpy_paragraph_skip_lines = 0;
     mcview_state_machine_init (&view->dpy_state_top, 0);
-    view->dpy_wrap_dirty = FALSE;
+    view->dpy_wrap_dirty = false;
     view->force_max = -1;
     view->dpy_text_column = 0;
     view->dpy_end = 0;
@@ -182,7 +182,7 @@ mcview_init (WView * view)
     /* {status,ruler,data}_area are left uninitialized */
 
     view->dirty = 0;
-    view->dpy_bbar_dirty = TRUE;
+    view->dpy_bbar_dirty = true;
     view->bytes_per_line = 1;
 
     view->search_start = 0;
@@ -263,7 +263,7 @@ mcview_set_codeset (WView * view)
 {
     const char *cp_id = nullptr;
 
-    view->utf8 = TRUE;
+    view->utf8 = true;
     cp_id =
         get_codepage_id (mc_global.source_codepage >=
                          0 ? mc_global.source_codepage : mc_global.display_codepage);
@@ -277,8 +277,8 @@ mcview_set_codeset (WView * view)
                 str_close_conv (view->converter);
             view->converter = conv;
         }
-        view->utf8 = (gboolean) str_isutf8 (cp_id);
-        view->dpy_wrap_dirty = TRUE;
+        view->utf8 = (bool) str_isutf8 (cp_id);
+        view->dpy_wrap_dirty = true;
     }
 }
 
@@ -351,7 +351,7 @@ mcview_eol (WView * view, off_t current)
     if (current < 0)
         return 0;
 
-    while (TRUE)
+    while (true)
     {
         if (!mcview_get_byte (view, current, &c))
             break;

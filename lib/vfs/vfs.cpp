@@ -207,7 +207,7 @@ vfs_get_openfile (int handle)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 vfs_test_current_dir (const vfs_path_t * vpath)
 {
     struct stat my_stat, my_stat2;
@@ -303,16 +303,16 @@ vfs_ferrno (struct vfs_class *vfs)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_register_class (struct vfs_class * vfs)
 {
     if (vfs->init != nullptr)      /* vfs has own initialization function */
         if (!vfs->init (vfs))   /* but it failed */
-            return FALSE;
+            return false;
 
     g_ptr_array_add (vfs__classes_list, vfs);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -433,9 +433,9 @@ vfs_set_raw_current_dir (const vfs_path_t * vpath)
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/* Return TRUE is the current VFS class is local */
+/* Return true is the current VFS class is local */
 
-gboolean
+bool
 vfs_current_is_local (void)
 {
     return (current_vfs->flags & VFSF_LOCAL) != 0;
@@ -510,11 +510,11 @@ vfs_shut (void)
     }
 
     /* nullptr-ize pointers to make unit tests happy */
-    g_ptr_array_free (vfs_openfiles, TRUE);
+    g_ptr_array_free (vfs_openfiles, true);
     vfs_openfiles = nullptr;
-    g_ptr_array_free (vfs__classes_list, TRUE);
+    g_ptr_array_free (vfs__classes_list, true);
     vfs__classes_list = nullptr;
-    g_string_free (vfs_str_buffer, TRUE);
+    g_string_free (vfs_str_buffer, true);
     vfs_str_buffer = nullptr;
     current_vfs = nullptr;
     vfs_free_handle_list = -1;
@@ -543,7 +543,7 @@ vfs_fill_names (fill_names_f func)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 vfs_file_is_local (const vfs_path_t * vpath)
 {
     return (vfs_file_class_flags (vpath) & VFSF_LOCAL) != 0;

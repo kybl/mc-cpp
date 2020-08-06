@@ -15,8 +15,8 @@
 
 /*** declarations of public functions ************************************************************/
 
-char *strutils_escape (const char *, gsize, const char *, gboolean);
-char *strutils_unescape (const char *, gsize, const char *, gboolean);
+char *strutils_escape (const char *, gsize, const char *, bool);
+char *strutils_unescape (const char *, gsize, const char *, bool);
 
 char *strutils_shell_unescape (const char *);
 char *strutils_shell_escape (const char *);
@@ -27,6 +27,6 @@ char *strutils_glob_unescape (const char *);
 char *strutils_regex_escape (const char *);
 char *strutils_regex_unescape (const char *);
 
-gboolean strutils_is_char_escaped (const char *, const char *);
+bool strutils_is_char_escaped (const char *, const char *);
 
 #endif

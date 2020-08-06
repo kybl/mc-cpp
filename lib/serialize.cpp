@@ -209,7 +209,7 @@ mc_serialize_config (mc_config_t * data, GError ** error)
         serialized_str = mc_serialize_str ('g', *group_iterator, error);
         if (serialized_str == nullptr)
         {
-            g_string_free (buffer, TRUE);
+            g_string_free (buffer, true);
             g_strfreev (groups);
             return nullptr;
         }
@@ -225,7 +225,7 @@ mc_serialize_config (mc_config_t * data, GError ** error)
             serialized_str = mc_serialize_str ('p', *param_iterator, error);
             if (serialized_str == nullptr)
             {
-                g_string_free (buffer, TRUE);
+                g_string_free (buffer, true);
                 g_strfreev (params);
                 g_strfreev (groups);
                 return nullptr;
@@ -239,7 +239,7 @@ mc_serialize_config (mc_config_t * data, GError ** error)
 
             if (serialized_str == nullptr)
             {
-                g_string_free (buffer, TRUE);
+                g_string_free (buffer, true);
                 g_strfreev (params);
                 g_strfreev (groups);
                 return nullptr;
@@ -251,7 +251,7 @@ mc_serialize_config (mc_config_t * data, GError ** error)
 
         g_strfreev (params);
     }
-    return g_string_free (buffer, FALSE);
+    return g_string_free (buffer, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -284,7 +284,7 @@ mc_deserialize_config (const char *data, GError ** error)
         WAIT_VALUE
     } current_status = WAIT_GROUP;
 
-    ret_data = mc_config_init (nullptr, FALSE);
+    ret_data = mc_config_init (nullptr, false);
 
     while (data != nullptr)
     {

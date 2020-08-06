@@ -105,8 +105,8 @@
 tkn = hot_next_token (); \
 if (tkn != _TKN_) \
 { \
-    hotlist_state.readonly = TRUE; \
-    hotlist_state.file_error = TRUE; \
+    hotlist_state.readonly = true; \
+    hotlist_state.file_error = true; \
     while (tkn != TKN_EOL && tkn != TKN_EOF) \
         tkn = hot_next_token (); \
     break; \
@@ -128,13 +128,13 @@ static struct
      * these reflect run time state
      */
 
-    gboolean loaded;            /* hotlist is loaded */
-    gboolean readonly;          /* hotlist readonly */
-    gboolean file_error;        /* parse error while reading file */
-    gboolean running;           /* we are running dlg (and have to
+    bool loaded;            /* hotlist is loaded */
+    bool readonly;          /* hotlist readonly */
+    bool file_error;        /* parse error while reading file */
+    bool running;           /* we are running dlg (and have to
                                    update listbox */
-    gboolean moving;            /* we are in moving hotlist currently */
-    gboolean modified;          /* hotlist was modified */
+    bool moving;            /* we are in moving hotlist currently */
+    bool modified;          /* hotlist was modified */
     hotlist_t type;             /* LIST_HOTLIST || LIST_VFSLIST */
 } hotlist_state;
 
@@ -151,7 +151,7 @@ struct hotlist
 
 /*** file scope variables ************************************************************************/
 
-static gboolean hotlist_has_dot_dot = TRUE;
+static bool hotlist_has_dot_dot = true;
 
 static WDialog *hotlist_dlg, *movelist_dlg;
 static WGroupbox *hotlist_group, *movelist_group;
@@ -283,17 +283,17 @@ fill_listbox (WListbox * list)
                 g_string_truncate (buff, 0);
                 g_string_append (buff, "->");
                 g_string_append (buff, current->label);
-                listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, buff->str, current, FALSE);
+                listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, buff->str, current, false);
             }
             break;
         case HL_TYPE_DOTDOT:
         case HL_TYPE_ENTRY:
-            listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, current->label, current, FALSE);
+            listbox_add_item (list, LISTBOX_APPEND_AT_END, 0, current->label, current, false);
         default:
             break;
         }
 
-    g_string_free (buff, TRUE);
+    g_string_free (buff, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -321,7 +321,7 @@ unlink_entry (struct hotlist *entry)
 static void
 add_name_to_list (const char *path)
 {
-    listbox_add_item (l_hotlist, LISTBOX_APPEND_AT_END, 0, path, nullptr, FALSE);
+    listbox_add_item (l_hotlist, LISTBOX_APPEND_AT_END, 0, path, nullptr, false);
 }
 #endif /* !ENABLE_VFS */
 
@@ -345,9 +345,9 @@ hotlist_run_cmd (int action)
 
             listbox_get_current (l_hotlist, nullptr, (void **) &item);
             init_movelist (item);
-            hotlist_state.moving = TRUE;
+            hotlist_state.moving = true;
             ret = dlg_run (movelist_dlg);
-            hotlist_state.moving = FALSE;
+            hotlist_state.moving = false;
             listbox_get_current (l_movelist, nullptr, (void **) &moveto_item);
             moveto_group = current_group;
             dlg_destroy (movelist_dlg);
@@ -398,7 +398,7 @@ hotlist_run_cmd (int action)
             listbox_remove_list (l_hotlist);
             fill_listbox (l_hotlist);
             repaint_screen ();
-            hotlist_state.modified = TRUE;
+            hotlist_state.modified = true;
             return 0;
         }
     case B_REMOVE:
@@ -462,13 +462,13 @@ hotlist_run_cmd (int action)
 
 #ifdef ENABLE_VFS
     case B_FREE_ALL_VFS:
-        vfs_expire (TRUE);
+        vfs_expire (true);
         MC_FALLTHROUGH;
 
     case B_REFRESH_VFS:
         listbox_remove_list (l_hotlist);
         listbox_add_item (l_hotlist, LISTBOX_APPEND_AT_END, 0, mc_config_get_home_dir (), nullptr,
-                          FALSE);
+                          false);
         vfs_fill_names (add_name_to_list);
         return 0;
 #endif /* ENABLE_VFS */
@@ -546,7 +546,7 @@ hotlist_handle_key (WDialog * h, int key)
                     char *tmp;
 
                     tmp = g_strconcat ("cd ", hlp->directory, (char *) nullptr);
-                    input_insert (cmdline, tmp, FALSE);
+                    input_insert (cmdline, tmp, false);
                     g_free (tmp);
                     h->ret_value = B_CANCEL;
                     dlg_stop (h);
@@ -680,7 +680,7 @@ init_i18n_stuff (int list_type, int cols)
 {
     size_t i;
 
-    static gboolean i18n_flag = FALSE;
+    static bool i18n_flag = false;
 
     if (!i18n_flag)
     {
@@ -694,7 +694,7 @@ init_i18n_stuff (int list_type, int cols)
                 hotlist_but[i].len += 2;
         }
 
-        i18n_flag = TRUE;
+        i18n_flag = true;
     }
 
     /* Dynamic resizing of buttonbars */
@@ -780,7 +780,7 @@ init_hotlist (hotlist_t list_type)
     }
 
     hotlist_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, hotlist_callback,
+        dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors, hotlist_callback,
                     nullptr, help_node, title);
     g = GROUP (hotlist_dlg);
 
@@ -790,7 +790,7 @@ init_hotlist (hotlist_t list_type)
     group_add_widget_autopos (g, hotlist_widget, WPOS_KEEP_ALL, nullptr);
 
     l_hotlist =
-        listbox_new (y + 1, UX + 1, hotlist_widget->lines - 2, hotlist_widget->cols - 2, FALSE,
+        listbox_new (y + 1, UX + 1, hotlist_widget->lines - 2, hotlist_widget->cols - 2, false,
                      hotlist_listbox_callback);
 
     /* Fill the hotlist with the active VFS or the hotlist */
@@ -798,7 +798,7 @@ init_hotlist (hotlist_t list_type)
     if (list_type == LIST_VFSLIST)
     {
         listbox_add_item (l_hotlist, LISTBOX_APPEND_AT_END, 0, mc_config_get_home_dir (), nullptr,
-                          FALSE);
+                          false);
         vfs_fill_names (add_name_to_list);
     }
     else
@@ -850,7 +850,7 @@ init_movelist (struct hotlist *item)
     hdr = g_strdup_printf (_("Moving %s"), item->label);
 
     movelist_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, hotlist_callback,
+        dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors, hotlist_callback,
                     nullptr, "[Hotlist]", hdr);
     g = GROUP (movelist_dlg);
 
@@ -862,7 +862,7 @@ init_movelist (struct hotlist *item)
     group_add_widget_autopos (g, movelist_widget, WPOS_KEEP_ALL, nullptr);
 
     l_movelist =
-        listbox_new (y + 1, UX + 1, movelist_widget->lines - 2, movelist_widget->cols - 2, FALSE,
+        listbox_new (y + 1, UX + 1, movelist_widget->lines - 2, movelist_widget->cols - 2, false,
                      hotlist_listbox_callback);
     fill_listbox (l_movelist);
     /* insert before groupbox to view scrollbar */
@@ -985,11 +985,11 @@ add2hotlist (char *label, char *directory, enum HotListType type, listbox_append
             char *lbl;
 
             lbl = g_strconcat ("->", new_->label, (char *) nullptr);
-            listbox_add_item (l_hotlist, pos, 0, lbl, new_, FALSE);
+            listbox_add_item (l_hotlist, pos, 0, lbl, new_, false);
             g_free (lbl);
         }
         else
-            listbox_add_item (l_hotlist, pos, 0, new_->label, new_, FALSE);
+            listbox_add_item (l_hotlist, pos, 0, new_->label, new_, false);
         listbox_select_entry (l_hotlist, l_hotlist->pos);
     }
 
@@ -1005,11 +1005,11 @@ add_new_entry_input (const char *header, const char *text1, const char *text2,
     quick_widget_t quick_widgets[] = {
         /* *INDENT-OFF* */
         QUICK_LABELED_INPUT (text1, input_label_above, *r1, "input-lbl", r1, nullptr,
-                             FALSE, FALSE, INPUT_COMPLETE_NONE),
-        QUICK_SEPARATOR (FALSE),
+                             false, false, INPUT_COMPLETE_NONE),
+        QUICK_SEPARATOR (false),
         QUICK_LABELED_INPUT (text2, input_label_above, *r2, "input-lbl", r2, nullptr,
-                             FALSE, FALSE, INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD),
-        QUICK_START_BUTTONS (TRUE, TRUE),
+                             false, false, INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD),
+        QUICK_START_BUTTONS (true, true),
             QUICK_BUTTON (N_("&Append"), B_APPEND, nullptr, nullptr),
             QUICK_BUTTON (N_("&Insert"), B_INSERT, nullptr, nullptr),
             QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr),
@@ -1059,7 +1059,7 @@ add_new_entry_cmd (void)
     else
         add2hotlist (title, url, HL_TYPE_ENTRY, LISTBOX_APPEND_BEFORE);
 
-    hotlist_state.modified = TRUE;
+    hotlist_state.modified = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1070,8 +1070,8 @@ add_new_group_input (const char *header, const char *label, char **result)
     quick_widget_t quick_widgets[] = {
         /* *INDENT-OFF* */
         QUICK_LABELED_INPUT (label, input_label_above, "", "input", result, nullptr,
-                             FALSE, FALSE, INPUT_COMPLETE_NONE),
-        QUICK_START_BUTTONS (TRUE, TRUE),
+                             false, false, INPUT_COMPLETE_NONE),
+        QUICK_START_BUTTONS (true, true),
             QUICK_BUTTON (N_("&Append"), B_APPEND, nullptr, nullptr),
             QUICK_BUTTON (N_("&Insert"), B_INSERT, nullptr, nullptr),
             QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr),
@@ -1109,7 +1109,7 @@ add_new_group_cmd (void)
     else
         add2hotlist (label, 0, HL_TYPE_GROUP, LISTBOX_APPEND_BEFORE);
 
-    hotlist_state.modified = TRUE;
+    hotlist_state.modified = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1188,7 +1188,7 @@ remove_from_hotlist (struct hotlist *entry)
     g_free (entry);
     /* now remove list entry from screen */
     listbox_remove_current (l_hotlist);
-    hotlist_state.modified = TRUE;
+    hotlist_state.modified = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1272,7 +1272,7 @@ hot_next_token (void)
                 c = getc (hotlist_file);
                 if (c == EOF)
                 {
-                    g_string_free (tkn_buf, TRUE);
+                    g_string_free (tkn_buf, true);
                     return TKN_EOF;
                 }
             }
@@ -1284,7 +1284,7 @@ hot_next_token (void)
         c = getc (hotlist_file);
         if (c == EOF)
         {
-            g_string_free (tkn_buf, TRUE);
+            g_string_free (tkn_buf, true);
             return TKN_EOF;
         }
         if (c == '\n')
@@ -1355,15 +1355,15 @@ hot_load_group (struct hotlist *grp)
             add2hotlist (label, 0, HL_TYPE_COMMENT, LISTBOX_APPEND_AT_END);
             break;
         case TKN_EOF:
-            hotlist_state.readonly = TRUE;
-            hotlist_state.file_error = TRUE;
+            hotlist_state.readonly = true;
+            hotlist_state.file_error = true;
             return;
         case TKN_EOL:
             /* skip empty lines */
             break;
         default:
-            hotlist_state.readonly = TRUE;
-            hotlist_state.file_error = TRUE;
+            hotlist_state.readonly = true;
+            hotlist_state.file_error = true;
             SKIP_TO_EOL;
             break;
         }
@@ -1412,8 +1412,8 @@ hot_load_file (struct hotlist *grp)
             /* skip empty lines */
             break;
         default:
-            hotlist_state.readonly = TRUE;
-            hotlist_state.file_error = TRUE;
+            hotlist_state.readonly = true;
+            hotlist_state.file_error = true;
             SKIP_TO_EOL;
             break;
         }
@@ -1450,7 +1450,7 @@ clean_up_hotlist_groups (const char *section)
 static void
 load_hotlist (void)
 {
-    gboolean remove_old_list = FALSE;
+    bool remove_old_list = false;
     struct stat stat_buf;
 
     if (hotlist_state.loaded)
@@ -1480,15 +1480,15 @@ load_hotlist (void)
         int result;
 
         load_group (hotlist);
-        hotlist_state.loaded = TRUE;
+        hotlist_state.loaded = true;
         /*
          * just to be sure we got copy
          */
-        hotlist_state.modified = TRUE;
+        hotlist_state.modified = true;
         result = save_hotlist ();
-        hotlist_state.modified = FALSE;
+        hotlist_state.modified = false;
         if (result != 0)
-            remove_old_list = TRUE;
+            remove_old_list = true;
         else
             message (D_ERROR, _("Hotlist Load"),
                      _
@@ -1499,7 +1499,7 @@ load_hotlist (void)
     {
         hot_load_file (hotlist);
         fclose (hotlist_file);
-        hotlist_state.loaded = TRUE;
+        hotlist_state.loaded = true;
     }
 
     if (remove_old_list)
@@ -1622,7 +1622,7 @@ add2hotlist_cmd (void)
     else
     {
         add2hotlist (label, label_string, HL_TYPE_ENTRY, LISTBOX_APPEND_AT_END);
-        hotlist_state.modified = TRUE;
+        hotlist_state.modified = true;
     }
 }
 
@@ -1642,9 +1642,9 @@ hotlist_show (hotlist_t list_type)
     /* display file info */
     tty_setcolor (SELECTED_COLOR);
 
-    hotlist_state.running = TRUE;
+    hotlist_state.running = true;
     res = dlg_run (hotlist_dlg);
-    hotlist_state.running = FALSE;
+    hotlist_state.running = false;
     save_hotlist ();
 
     if (res == B_ENTER)
@@ -1662,10 +1662,10 @@ hotlist_show (hotlist_t list_type)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 save_hotlist (void)
 {
-    gboolean saved = FALSE;
+    bool saved = false;
     struct stat stat_buf;
 
     if (!hotlist_state.readonly && hotlist_state.modified && hotlist_file_name != nullptr)
@@ -1681,8 +1681,8 @@ save_hotlist (void)
             fclose (hotlist_file);
             stat (hotlist_file_name, &stat_buf);
             hotlist_file_mtime = stat_buf.st_mtime;
-            hotlist_state.modified = FALSE;
-            saved = TRUE;
+            hotlist_state.modified = false;
+            saved = true;
         }
     }
 
@@ -1706,7 +1706,7 @@ done_hotlist (void)
         MC_PTR_FREE (hotlist);
     }
 
-    hotlist_state.loaded = FALSE;
+    hotlist_state.loaded = false;
 
     MC_PTR_FREE (hotlist_file_name);
     l_hotlist = nullptr;
@@ -1714,7 +1714,7 @@ done_hotlist (void)
 
     if (tkn_buf != nullptr)
     {
-        g_string_free (tkn_buf, TRUE);
+        g_string_free (tkn_buf, true);
         tkn_buf = nullptr;
     }
 }

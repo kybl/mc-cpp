@@ -121,13 +121,13 @@ mc_config_get_string (mc_config_t * mc_config, const gchar * group,
 
     if (conv_res == ESTR_FAILURE)
     {
-        g_string_free (buffer, TRUE);
+        g_string_free (buffer, true);
         return ret;
     }
 
     g_free (ret);
 
-    return g_string_free (buffer, FALSE);
+    return g_string_free (buffer, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -155,8 +155,8 @@ mc_config_get_string_raw (mc_config_t * mc_config, const gchar * group,
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
-mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * param, gboolean def)
+bool
+mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * param, bool def)
 {
     if (mc_config == nullptr || group == nullptr || param == nullptr)
         return def;

@@ -83,43 +83,43 @@
 char *global_profile_name;      /* mc.lib */
 
 /* Only used at program boot */
-gboolean boot_current_is_left = TRUE;
+bool boot_current_is_left = true;
 
 /* If on, default for "No" in delete operations */
-gboolean safe_delete = FALSE;
+bool safe_delete = false;
 /* If on, default for "No" in overwrite files */
-gboolean safe_overwrite = FALSE;
+bool safe_overwrite = false;
 
 /* Controls screen clearing before an exec */
-gboolean clear_before_exec = TRUE;
+bool clear_before_exec = true;
 
 /* Asks for confirmation before deleting a file */
-gboolean confirm_delete = TRUE;
+bool confirm_delete = true;
 /* Asks for confirmation before deleting a hotlist entry */
-gboolean confirm_directory_hotlist_delete = FALSE;
+bool confirm_directory_hotlist_delete = false;
 /* Asks for confirmation before overwriting a file */
-gboolean confirm_overwrite = TRUE;
+bool confirm_overwrite = true;
 /* Asks for confirmation before executing a program by pressing enter */
-gboolean confirm_execute = FALSE;
+bool confirm_execute = false;
 /* Asks for confirmation before leaving the program */
-gboolean confirm_exit = FALSE;
+bool confirm_exit = false;
 
 /* If true, at startup the user-menu is invoked */
-gboolean auto_menu = FALSE;
+bool auto_menu = false;
 /* This flag indicates if the pull down menus by default drop down */
-gboolean drop_menus = FALSE;
+bool drop_menus = false;
 
 /* Asks for confirmation when using F3 to view a directory and there
    are tagged files */
-gboolean confirm_view_dir = FALSE;
+bool confirm_view_dir = false;
 
 /* Ask file name before start the editor */
-gboolean editor_ask_filename_before_edit = FALSE;
+bool editor_ask_filename_before_edit = false;
 
 panel_view_mode_t startup_left_mode;
 panel_view_mode_t startup_right_mode;
 
-gboolean copymove_persistent_attr = TRUE;
+bool copymove_persistent_attr = true;
 
 /* Tab size */
 int option_tab_spacing = DEFAULT_TAB_SPACING;
@@ -129,65 +129,65 @@ int option_tab_spacing = DEFAULT_TAB_SPACING;
 int saving_setup;
 
 panels_options_t panels_options = {
-    .show_mini_info = TRUE,
-    .kilobyte_si = FALSE,
-    .mix_all_files = FALSE,
-    .show_backups = TRUE,
-    .show_dot_files = TRUE,
-    .fast_reload = FALSE,
-    .fast_reload_msg_shown = FALSE,
-    .mark_moves_down = TRUE,
-    .reverse_files_only = TRUE,
-    .auto_save_setup = FALSE,
-    .navigate_with_arrows = FALSE,
-    .scroll_pages = TRUE,
-    .scroll_center = FALSE,
-    .mouse_move_pages = TRUE,
-    .filetype_mode = TRUE,
-    .permission_mode = FALSE,
+    .show_mini_info = true,
+    .kilobyte_si = false,
+    .mix_all_files = false,
+    .show_backups = true,
+    .show_dot_files = true,
+    .fast_reload = false,
+    .fast_reload_msg_shown = false,
+    .mark_moves_down = true,
+    .reverse_files_only = true,
+    .auto_save_setup = false,
+    .navigate_with_arrows = false,
+    .scroll_pages = true,
+    .scroll_center = false,
+    .mouse_move_pages = true,
+    .filetype_mode = true,
+    .permission_mode = false,
     .qsearch_mode = QSEARCH_PANEL_CASE,
-    .torben_fj_mode = FALSE,
+    .torben_fj_mode = false,
     .select_flags = SELECT_MATCH_CASE | SELECT_SHELL_PATTERNS
 };
 
-gboolean easy_patterns = TRUE;
+bool easy_patterns = true;
 
 /* It true saves the setup when quitting */
-gboolean auto_save_setup = TRUE;
+bool auto_save_setup = true;
 
 /* If true, then the +, - and \ keys have their special meaning only if the
  * command line is empty, otherwise they behave like regular letters
  */
-gboolean only_leading_plus_minus = TRUE;
+bool only_leading_plus_minus = true;
 
 /* Automatically fills name with current selected item name on mkdir */
-gboolean auto_fill_mkdir_name = TRUE;
+bool auto_fill_mkdir_name = true;
 
 /* If set and you don't have subshell support, then C-o will give you a shell */
-gboolean output_starts_shell = FALSE;
+bool output_starts_shell = false;
 
 /* If set, we execute the file command to check the file type */
-gboolean use_file_to_check_type = TRUE;
+bool use_file_to_check_type = true;
 
-gboolean verbose = TRUE;
+bool verbose = true;
 
 /*
  * Whether the Midnight Commander tries to provide more
  * information about copy/move sizes and bytes transferred
  * at the expense of some speed
  */
-gboolean file_op_compute_totals = TRUE;
+bool file_op_compute_totals = true;
 
 /* If true use the internal viewer */
-gboolean use_internal_view = TRUE;
+bool use_internal_view = true;
 /* If set, use the builtin editor */
-gboolean use_internal_edit = TRUE;
+bool use_internal_edit = true;
 
 #ifdef HAVE_CHARSET
 /* Numbers of (file I/O) and (input/display) codepages. -1 if not selected */
 int default_source_codepage = -1;
 char *autodetect_codeset = nullptr;
-gboolean is_autodetect_codeset_enabled = FALSE;
+bool is_autodetect_codeset_enabled = false;
 #endif /* !HAVE_CHARSET */
 
 #ifdef HAVE_ASPELL
@@ -203,8 +203,8 @@ char *last_wd_string = nullptr;
 /* Set when main loop should be terminated */
 int quit = 0;
 
-/* Set to TRUE to suppress printing the last directory */
-int print_last_revert = FALSE;
+/* Set to true to suppress printing the last directory */
+bool print_last_revert = false;
 
 #ifdef USE_INTERNAL_EDIT
 /* index to record_macro_buf[], -1 if not recording a macro */
@@ -268,7 +268,7 @@ static const struct
 static const struct
 {
     const char *opt_name;
-    gboolean *opt_addr;
+    bool *opt_addr;
 } layout_bool_options [] = {
     { "message_visible", &mc_global.message_visible },
     { "keybar_visible", &mc_global.keybar_visible },
@@ -285,7 +285,7 @@ static const struct
 static const struct
 {
     const char *opt_name;
-    gboolean *opt_addr;
+    bool *opt_addr;
 } bool_options [] = {
     { "verbose", &verbose },
     { "shell_patterns", &easy_patterns },
@@ -415,7 +415,7 @@ static const struct
 static const struct
 {
     const char *opt_name;
-    gboolean *opt_addr;
+    bool *opt_addr;
 } panels_ini_options[] = {
     { "show_mini_info", &panels_options.show_mini_info },
     { "kilobyte_si", &panels_options.kilobyte_si },
@@ -545,7 +545,7 @@ setup__move_panels_config_into_separate_file (const char *profile)
     if (!exist_file (profile))
         return;
 
-    tmp_cfg = mc_config_init (profile, FALSE);
+    tmp_cfg = mc_config_init (profile, false);
     if (tmp_cfg == nullptr)
         return;
 
@@ -564,7 +564,7 @@ setup__move_panels_config_into_separate_file (const char *profile)
     mc_config_save_to_file (tmp_cfg, panels_profile_name, nullptr);
     mc_config_deinit (tmp_cfg);
 
-    tmp_cfg = mc_config_init (profile, FALSE);
+    tmp_cfg = mc_config_init (profile, false);
     if (tmp_cfg == nullptr)
     {
         g_strfreev (groups);
@@ -592,7 +592,7 @@ setup__move_panels_config_into_separate_file (const char *profile)
 */
 
 static void
-load_setup_init_config_from_file (mc_config_t ** config, const char *fname, gboolean read_only)
+load_setup_init_config_from_file (mc_config_t ** config, const char *fname, bool read_only)
 {
     /*
        TODO: IMHO, in future, this function shall be placed in mcconfig module.
@@ -600,7 +600,7 @@ load_setup_init_config_from_file (mc_config_t ** config, const char *fname, gboo
     if (exist_file (fname))
     {
         if (*config != nullptr)
-            mc_config_read_file (*config, fname, read_only, TRUE);
+            mc_config_read_file (*config, fname, read_only, true);
         else
             *config = mc_config_init (fname, read_only);
     }
@@ -638,7 +638,7 @@ load_config (void)
         option_word_wrap_line_length = DEFAULT_WRAP_LINE_LENGTH;
 #else
     /* Reset forced in case of build without internal editor */
-    use_internal_edit = FALSE;
+    use_internal_edit = false;
 #endif /* USE_INTERNAL_EDIT */
 
     if (option_tab_spacing <= 0)
@@ -699,7 +699,7 @@ load_layout (void)
         startup_left_mode = view_listing;
 
     boot_current_is_left =
-        mc_config_get_bool (mc_global.panels_config, "Dirs", "current_is_left", TRUE);
+        mc_config_get_bool (mc_global.panels_config, "Dirs", "current_is_left", true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -802,7 +802,7 @@ load_keymap_from_section (const char *section_name, GArray * keymap, mc_config_t
 /* --------------------------------------------------------------------------------------------- */
 
 static mc_config_t *
-load_setup_get_keymap_profile_config (gboolean load_from_file)
+load_setup_get_keymap_profile_config (bool load_from_file)
 {
     /*
        TODO: IMHO, in future, this function shall be placed in mcconfig module.
@@ -820,12 +820,12 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
 
     /* 1) /usr/share/mc (mc_global.share_data_dir) */
     share_keymap = g_build_filename (mc_global.share_data_dir, GLOBAL_KEYMAP_FILE, (char *) nullptr);
-    load_setup_init_config_from_file (&keymap_config, share_keymap, TRUE);
+    load_setup_init_config_from_file (&keymap_config, share_keymap, true);
 
     /* 2) /etc/mc (mc_global.sysconfig_dir) */
     sysconfig_keymap =
         g_build_filename (mc_global.sysconfig_dir, GLOBAL_KEYMAP_FILE, (char *) nullptr);
-    load_setup_init_config_from_file (&keymap_config, sysconfig_keymap, TRUE);
+    load_setup_init_config_from_file (&keymap_config, sysconfig_keymap, true);
 
     /* then load and merge one of user-defined keymap */
 
@@ -833,7 +833,7 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     fname = load_setup_get_full_config_name (nullptr, mc_args__keymap_file);
     if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
-        load_setup_init_config_from_file (&keymap_config, fname, TRUE);
+        load_setup_init_config_from_file (&keymap_config, fname, true);
         goto done;
     }
     g_free (fname);
@@ -842,7 +842,7 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     fname = load_setup_get_full_config_name (nullptr, g_getenv ("MC_KEYMAP"));
     if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
-        load_setup_init_config_from_file (&keymap_config, fname, TRUE);
+        load_setup_init_config_from_file (&keymap_config, fname, true);
         goto done;
     }
 
@@ -855,14 +855,14 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     g_free (fname2);
     if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
-        load_setup_init_config_from_file (&keymap_config, fname, TRUE);
+        load_setup_init_config_from_file (&keymap_config, fname, true);
         goto done;
     }
     g_free (fname);
 
     /* 6) ${XDG_CONFIG_HOME}/mc/mc.keymap */
     fname = mc_config_get_full_path (GLOBAL_KEYMAP_FILE);
-    load_setup_init_config_from_file (&keymap_config, fname, TRUE);
+    load_setup_init_config_from_file (&keymap_config, fname, true);
 
   done:
     g_free (fname);
@@ -1094,12 +1094,12 @@ load_setup (void)
 
     panels_profile_name = mc_config_get_full_path (MC_PANELS_FILE);
 
-    mc_global.main_config = mc_config_init (profile, FALSE);
+    mc_global.main_config = mc_config_init (profile, false);
 
     if (!exist_file (panels_profile_name))
         setup__move_panels_config_into_separate_file (profile);
 
-    mc_global.panels_config = mc_config_init (panels_profile_name, FALSE);
+    mc_global.panels_config = mc_config_init (panels_profile_name, false);
 
     load_config ();
     load_layout ();
@@ -1161,7 +1161,7 @@ load_setup (void)
     autodetect_codeset =
         mc_config_get_string (mc_global.main_config, CONFIG_MISC_SECTION, "autodetect_codeset", "");
     if ((autodetect_codeset[0] != '\0') && (strcmp (autodetect_codeset, "off") != 0))
-        is_autodetect_codeset_enabled = TRUE;
+        is_autodetect_codeset_enabled = true;
 
     g_free (init_translation_table (mc_global.source_codepage, mc_global.display_codepage));
     cbuffer = get_codepage_id (mc_global.display_codepage);
@@ -1182,10 +1182,10 @@ load_setup (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
-save_setup (gboolean save_options, gboolean save_panel_options)
+bool
+save_setup (bool save_options, bool save_panel_options)
 {
-    gboolean ret = TRUE;
+    bool ret = true;
 
     saving_setup = 1;
 
@@ -1305,7 +1305,7 @@ load_key_defs (void)
      */
     mc_config_t *mc_global_config;
 
-    mc_global_config = mc_config_init (global_profile_name, FALSE);
+    mc_global_config = mc_config_init (global_profile_name, false);
     if (mc_global_config != nullptr)
     {
         load_keys_from_section ("general", mc_global_config);
@@ -1339,7 +1339,7 @@ load_anon_passwd (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-load_keymap_defs (gboolean load_from_file)
+load_keymap_defs (bool load_from_file)
 {
     /*
      * Load keymap from GLOBAL_KEYMAP_FILE before ${XDG_CONFIG_HOME}/mc/mc.keymap, so that the user
@@ -1352,7 +1352,7 @@ load_keymap_defs (gboolean load_from_file)
     if (mc_global_keymap != nullptr)
     {
 #define LOAD_KEYMAP(s,km) \
-    km##_keymap = g_array_new (TRUE, FALSE, sizeof (global_keymap_t)); \
+    km##_keymap = g_array_new (true, false, sizeof (global_keymap_t)); \
     load_keymap_from_section (KEYMAP_SECTION_##s, km##_keymap, mc_global_keymap)
 
         LOAD_KEYMAP (MAIN, main);
@@ -1418,7 +1418,7 @@ free_keymap_defs (void)
 {
 #define FREE_KEYMAP(km) \
     if (km##_keymap != nullptr) \
-        g_array_free (km##_keymap, TRUE)
+        g_array_free (km##_keymap, true)
 
     FREE_KEYMAP (main);
     FREE_KEYMAP (main_x);
@@ -1455,12 +1455,12 @@ panel_load_setup (WPanel * panel, const char *section)
     char *buffer, buffer2[BUF_TINY];
 
     panel->sort_info.reverse =
-        mc_config_get_bool (mc_global.panels_config, section, "reverse", FALSE);
+        mc_config_get_bool (mc_global.panels_config, section, "reverse", false);
     panel->sort_info.case_sensitive =
         mc_config_get_bool (mc_global.panels_config, section, "case_sensitive",
                             OS_SORT_CASE_SENSITIVE_DEFAULT);
     panel->sort_info.exec_first =
-        mc_config_get_bool (mc_global.panels_config, section, "exec_first", FALSE);
+        mc_config_get_bool (mc_global.panels_config, section, "exec_first", false);
 
     /* Load sort order */
     buffer = mc_config_get_string (mc_global.panels_config, section, "sort_order", "name");
@@ -1502,7 +1502,7 @@ panel_load_setup (WPanel * panel, const char *section)
     }
 
     panel->user_mini_status =
-        mc_config_get_bool (mc_global.panels_config, section, "user_mini_status", FALSE);
+        mc_config_get_bool (mc_global.panels_config, section, "user_mini_status", false);
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -40,7 +40,7 @@ typedef struct mc_search_cond_struct
 
 gchar *mc_search__recode_str (const char *, gsize, const char *, const char *, gsize *);
 
-gchar *mc_search__get_one_symbol (const char *, const char *, gsize, gboolean *);
+gchar *mc_search__get_one_symbol (const char *, const char *, gsize, bool *);
 
 GString *mc_search__tolower_case_str (const char *, const char *, gsize);
 
@@ -50,7 +50,7 @@ GString *mc_search__toupper_case_str (const char *, const char *, gsize);
 
 void mc_search__cond_struct_new_init_regex (const char *, mc_search_t *, mc_search_cond_t *);
 
-gboolean mc_search__run_regex (mc_search_t *, const void *, gsize, gsize, gsize *);
+bool mc_search__run_regex (mc_search_t *, const void *, gsize, gsize, gsize *);
 
 GString *mc_search_regex_prepare_replace_str (mc_search_t *, GString *);
 
@@ -58,7 +58,7 @@ GString *mc_search_regex_prepare_replace_str (mc_search_t *, GString *);
 
 void mc_search__cond_struct_new_init_normal (const char *, mc_search_t *, mc_search_cond_t *);
 
-gboolean mc_search__run_normal (mc_search_t *, const void *, gsize, gsize, gsize *);
+bool mc_search__run_normal (mc_search_t *, const void *, gsize, gsize, gsize *);
 
 GString *mc_search_normal_prepare_replace_str (mc_search_t *, GString *);
 
@@ -66,7 +66,7 @@ GString *mc_search_normal_prepare_replace_str (mc_search_t *, GString *);
 
 void mc_search__cond_struct_new_init_glob (const char *, mc_search_t *, mc_search_cond_t *);
 
-gboolean mc_search__run_glob (mc_search_t *, const void *, gsize, gsize, gsize *);
+bool mc_search__run_glob (mc_search_t *, const void *, gsize, gsize, gsize *);
 
 GString *mc_search_glob_prepare_replace_str (mc_search_t *, GString *);
 
@@ -74,7 +74,7 @@ GString *mc_search_glob_prepare_replace_str (mc_search_t *, GString *);
 
 void mc_search__cond_struct_new_init_hex (const char *, mc_search_t *, mc_search_cond_t *);
 
-gboolean mc_search__run_hex (mc_search_t *, const void *, gsize, gsize, gsize *);
+bool mc_search__run_hex (mc_search_t *, const void *, gsize, gsize, gsize *);
 
 GString *mc_search_hex_prepare_replace_str (mc_search_t *, GString *);
 

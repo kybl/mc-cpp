@@ -140,8 +140,8 @@ set_label_text (WButtonBar * bb, int idx, const char *text)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/* returns TRUE if a function has been called, FALSE otherwise. */
-static gboolean
+/* returns true if a function has been called, false otherwise. */
+static bool
 buttonbar_call (WButtonBar * bb, int i)
 {
     cb_ret_t ret = MSG_NOT_HANDLED;
@@ -238,7 +238,7 @@ buttonbar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WButtonBar *
-buttonbar_new (gboolean visible)
+buttonbar_new (bool visible)
 {
     WButtonBar *bb;
     Widget *w;
@@ -249,7 +249,7 @@ buttonbar_new (gboolean visible)
 
     w->pos_flags = WPOS_KEEP_HORZ | WPOS_KEEP_BOTTOM;
     bb->visible = visible;
-    widget_want_hotkey (w, TRUE);
+    widget_want_hotkey (w, true);
 
     return bb;
 }

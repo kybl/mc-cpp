@@ -96,7 +96,7 @@ string_array_comparator (gconstpointer a, gconstpointer b)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_skin_ini_file_load_search_in_dir (mc_skin_t * mc_skin, const gchar * base_dir)
 {
     char *file_name, *file_name2;
@@ -104,7 +104,7 @@ mc_skin_ini_file_load_search_in_dir (mc_skin_t * mc_skin, const gchar * base_dir
     file_name = g_build_filename (base_dir, MC_SKINS_DIR, mc_skin->name, (char *) nullptr);
     if (exist_file (file_name))
     {
-        mc_skin->config = mc_config_init (file_name, TRUE);
+        mc_skin->config = mc_config_init (file_name, true);
         g_free (file_name);
         return (mc_skin->config != nullptr);
     }
@@ -116,12 +116,12 @@ mc_skin_ini_file_load_search_in_dir (mc_skin_t * mc_skin, const gchar * base_dir
 
     if (exist_file (file_name))
     {
-        mc_skin->config = mc_config_init (file_name, TRUE);
+        mc_skin->config = mc_config_init (file_name, true);
         g_free (file_name);
         return (mc_skin->config != nullptr);
     }
     g_free (file_name);
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -144,32 +144,32 @@ mc_skin_list (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_skin_ini_file_load (mc_skin_t * mc_skin)
 {
     char *file_name;
 
     file_name = g_path_get_basename (mc_skin->name);
     if (file_name == nullptr)
-        return FALSE;
+        return false;
 
     if (strcmp (file_name, mc_skin->name) != 0)
     {
         g_free (file_name);
         if (!g_path_is_absolute (mc_skin->name))
-            return FALSE;
-        mc_skin->config = mc_config_init (mc_skin->name, TRUE);
+            return false;
+        mc_skin->config = mc_config_init (mc_skin->name, true);
         return (mc_skin->config != nullptr);
     }
     g_free (file_name);
 
     /* ${XDG_DATA_HOME}/mc/skins/ */
     if (mc_skin_ini_file_load_search_in_dir (mc_skin, mc_config_get_data_path ()))
-        return TRUE;
+        return true;
 
     /* /etc/mc/skins/ */
     if (mc_skin_ini_file_load_search_in_dir (mc_skin, mc_global.sysconfig_dir))
-        return TRUE;
+        return true;
 
     /* /usr/share/mc/skins/ */
     return mc_skin_ini_file_load_search_in_dir (mc_skin, mc_global.share_data_dir);
@@ -177,19 +177,19 @@ mc_skin_ini_file_load (mc_skin_t * mc_skin)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_skin_ini_file_parse (mc_skin_t * mc_skin)
 {
     mc_skin->description =
         mc_config_get_string (mc_skin->config, "skin", "description", "- no description -");
     if (!mc_skin_color_parse_ini_file (mc_skin))
-        return FALSE;
+        return false;
 
     mc_skin_lines_parse_ini_file (mc_skin);
-    mc_skin->have_256_colors = mc_config_get_bool (mc_skin->config, "skin", "256colors", FALSE);
-    mc_skin->have_true_colors = mc_config_get_bool (mc_skin->config, "skin", "truecolors", FALSE);
+    mc_skin->have_256_colors = mc_config_get_bool (mc_skin->config, "skin", "256colors", false);
+    mc_skin->have_true_colors = mc_config_get_bool (mc_skin->config, "skin", "truecolors", false);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -197,7 +197,7 @@ mc_skin_ini_file_parse (mc_skin_t * mc_skin)
 void
 mc_skin_set_hardcoded_skin (mc_skin_t * mc_skin)
 {
-    mc_skin->config = mc_config_init (nullptr, TRUE);
+    mc_skin->config = mc_config_init (nullptr, true);
 
     mc_config_set_string (mc_skin->config, "skin", "description", "hardcoded skin");
 

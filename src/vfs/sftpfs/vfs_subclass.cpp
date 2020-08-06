@@ -52,10 +52,10 @@
  * @param super         data with exists connection
  * @param vpath         unused
  * @param cookie        unused
- * @return TRUE if connections is equal, FALSE otherwise
+ * @return true if connections is equal, false otherwise
  */
 
-static gboolean
+static int
 sftpfs_cb_is_equal_connection (const vfs_path_element_t * vpath_element, struct vfs_s_super *super,
                                const vfs_path_t * vpath, void *cookie)
 {

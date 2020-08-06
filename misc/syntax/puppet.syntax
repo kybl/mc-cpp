@@ -38,13 +38,13 @@ context default
 # Booleans
 
   keyword whole false brightred
-  keyword whole FALSE brightred
+  keyword whole false brightred
   keyword whole nil   brightred
   keyword whole NIL   brightred
   keyword whole undef brightred
   keyword whole UNDEF brightred
   keyword whole true  brightred
-  keyword whole TRUE  brightred
+  keyword whole true  brightred
 
 # Variables
 

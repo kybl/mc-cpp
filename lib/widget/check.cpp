@@ -84,10 +84,10 @@ check_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 
     case MSG_DRAW:
         {
-            gboolean focused;
+            bool focused;
 
             focused = widget_get_state (w, WST_FOCUSED);
-            widget_selectcolor (w, focused, FALSE);
+            widget_selectcolor (w, focused, false);
             widget_gotoyx (w, 0, 0);
             tty_print_string (c->state ? "[x] " : "[ ] ");
             hotkey_draw (w, c->text, focused);
@@ -131,7 +131,7 @@ check_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WCheck *
-check_new (int y, int x, gboolean state, const char *text)
+check_new (int y, int x, bool state, const char *text)
 {
     WCheck *c;
     Widget *w;

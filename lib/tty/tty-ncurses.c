@@ -125,9 +125,9 @@ sigwinch_handler (int dummy)
 /**
  * Get visible part of area.
  *
- * @returns TRUE if any part of area is in screen bounds, FALSE otherwise.
+ * @returns true if any part of area is in screen bounds, false otherwise.
  */
-static gboolean
+static bool
 tty_clip (int *y, int *x, int *rows, int *cols)
 {
     if (*y < 0)
@@ -135,7 +135,7 @@ tty_clip (int *y, int *x, int *rows, int *cols)
         *rows += *y;
 
         if (*rows <= 0)
-            return FALSE;
+            return false;
 
         *y = 0;
     }
@@ -145,7 +145,7 @@ tty_clip (int *y, int *x, int *rows, int *cols)
         *cols += *x;
 
         if (*cols <= 0)
-            return FALSE;
+            return false;
 
         *x = 0;
     }
@@ -155,7 +155,7 @@ tty_clip (int *y, int *x, int *rows, int *cols)
     if (*x + *cols > COLS)
         *cols = COLS - *x;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -221,7 +221,7 @@ mc_tty_normalize_lines_char (const char *ch)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_init (gboolean mouse_enable, gboolean is_xterm)
+tty_init (bool mouse_enable, bool is_xterm)
 {
     struct termios mode;
 
@@ -258,8 +258,8 @@ tty_init (gboolean mouse_enable, gboolean is_xterm)
     tty_enter_ca_mode ();
     tty_raw_mode ();
     noecho ();
-    keypad (stdscr, TRUE);
-    nodelay (stdscr, FALSE);
+    keypad (stdscr, true);
+    nodelay (stdscr, false);
 
     tty_setup_sigwinch (sigwinch_handler);
 }
@@ -272,7 +272,7 @@ tty_shutdown (void)
     tty_destroy_winch_pipe ();
     tty_reset_shell_mode ();
     tty_noraw_mode ();
-    tty_keypad (FALSE);
+    tty_keypad (false);
     tty_reset_screen ();
     tty_exit_ca_mode ();
 }
@@ -322,7 +322,7 @@ tty_change_screen_size (void)
     {
 #if defined(NCURSES_VERSION) && defined(HAVE_RESIZETERM)
         resizeterm (winsz.ws_row, winsz.ws_col);
-        clearok (stdscr, TRUE); /* sigwinch's should use a semaphore! */
+        clearok (stdscr, true); /* sigwinch's should use a semaphore! */
 #else
         COLS = winsz.ws_col;
         LINES = winsz.ws_row;
@@ -389,7 +389,7 @@ tty_flush_input (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_keypad (gboolean set)
+tty_keypad (bool set)
 {
     keypad (stdscr, (bool) set);
 }
@@ -397,7 +397,7 @@ tty_keypad (gboolean set)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_nodelay (gboolean set)
+tty_nodelay (bool set)
 {
     nodelay (stdscr, (bool) set);
 }
@@ -583,7 +583,7 @@ tty_colorize_area (int y, int x, int rows, int cols, int color)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_set_alt_charset (gboolean alt_charset)
+tty_set_alt_charset (bool alt_charset)
 {
     (void) alt_charset;
 }
@@ -591,7 +591,7 @@ tty_set_alt_charset (gboolean alt_charset)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_display_8bit (gboolean what)
+tty_display_8bit (bool what)
 {
     meta (stdscr, (int) what);
 }
@@ -650,7 +650,7 @@ tty_print_anychar (int c)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_print_alt_char (int c, gboolean single)
+tty_print_alt_char (int c, bool single)
 {
     if (yx_in_screen (mc_curs_row, mc_curs_col))
     {

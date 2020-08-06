@@ -393,13 +393,13 @@ name_keymap_comparator (const void *p1, const void *p2)
 static inline void
 sort_command_names (void)
 {
-    static gboolean has_been_sorted = FALSE;
+    static bool has_been_sorted = false;
 
     if (!has_been_sorted)
     {
         qsort (command_names, num_command_names,
                sizeof (command_names[0]), &name_keymap_comparator);
-        has_been_sorted = TRUE;
+        has_been_sorted = true;
     }
 }
 

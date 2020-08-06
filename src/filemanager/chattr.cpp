@@ -138,69 +138,69 @@ static struct
     unsigned long flags;
     char attr;
     const char *text;
-    gboolean selected;
-    gboolean state;             /* state of checkboxes */
+    bool selected;
+    bool state;             /* state of checkboxes */
 } check_attr[] =
 {
     /* *INDENT-OFF* */
-    { EXT2_SECRM_FL,        's', N_("Secure deletion"),               FALSE, FALSE },
-    { EXT2_UNRM_FL,         'u', N_("Undelete"),                      FALSE, FALSE },
-    { EXT2_SYNC_FL,         'S', N_("Synchronous updates"),           FALSE, FALSE },
-    { EXT2_DIRSYNC_FL,      'D', N_("Synchronous directory updates"), FALSE, FALSE },
-    { EXT2_IMMUTABLE_FL,    'i', N_("Immutable"),                     FALSE, FALSE },
-    { EXT2_APPEND_FL,       'a', N_("Append only"),                   FALSE, FALSE },
-    { EXT2_NODUMP_FL,       'd', N_("No dump"),                       FALSE, FALSE },
-    { EXT2_NOATIME_FL,      'A', N_("No update atime"),               FALSE, FALSE },
-    { EXT2_COMPR_FL,        'c', N_("Compress"),                      FALSE, FALSE },
+    { EXT2_SECRM_FL,        's', N_("Secure deletion"),               false, false },
+    { EXT2_UNRM_FL,         'u', N_("Undelete"),                      false, false },
+    { EXT2_SYNC_FL,         'S', N_("Synchronous updates"),           false, false },
+    { EXT2_DIRSYNC_FL,      'D', N_("Synchronous directory updates"), false, false },
+    { EXT2_IMMUTABLE_FL,    'i', N_("Immutable"),                     false, false },
+    { EXT2_APPEND_FL,       'a', N_("Append only"),                   false, false },
+    { EXT2_NODUMP_FL,       'd', N_("No dump"),                       false, false },
+    { EXT2_NOATIME_FL,      'A', N_("No update atime"),               false, false },
+    { EXT2_COMPR_FL,        'c', N_("Compress"),                      false, false },
 #ifdef EXT2_COMPRBLK_FL
     /* removed in v1.43-WIP-2015-05-18
        ext2fsprogs 4a05268cf86f7138c78d80a53f7e162f32128a3d 2015-04-12 */
-    { EXT2_COMPRBLK_FL,     'B', N_("Compressed clusters"),           FALSE, FALSE },
+    { EXT2_COMPRBLK_FL,     'B', N_("Compressed clusters"),           false, false },
 #endif
 #ifdef EXT2_DIRTY_FL
     /* removed in v1.43-WIP-2015-05-18
        ext2fsprogs 4a05268cf86f7138c78d80a53f7e162f32128a3d 2015-04-12 */
-    { EXT2_DIRTY_FL,        'Z', N_("Compressed dirty file"),         FALSE, FALSE },
+    { EXT2_DIRTY_FL,        'Z', N_("Compressed dirty file"),         false, false },
 #endif
 #ifdef EXT2_NOCOMPR_FL
     /* removed in v1.43-WIP-2015-05-18
        ext2fsprogs 4a05268cf86f7138c78d80a53f7e162f32128a3d 2015-04-12 */
-    { EXT2_NOCOMPR_FL,      'X', N_("Compression raw access"),        FALSE, FALSE },
+    { EXT2_NOCOMPR_FL,      'X', N_("Compression raw access"),        false, false },
 #endif
 #ifdef EXT4_ENCRYPT_FL
-    { EXT4_ENCRYPT_FL,      'E', N_("Encrypted inode"),               FALSE, FALSE },
+    { EXT4_ENCRYPT_FL,      'E', N_("Encrypted inode"),               false, false },
 #endif
-    { EXT3_JOURNAL_DATA_FL, 'j', N_("Journaled data"),                FALSE, FALSE },
-    { EXT2_INDEX_FL,        'I', N_("Indexed directory"),             FALSE, FALSE },
-    { EXT2_NOTAIL_FL,       't', N_("No tail merging"),               FALSE, FALSE },
-    { EXT2_TOPDIR_FL,       'T', N_("Top of directory hierarchies"),  FALSE, FALSE },
-    { EXT4_EXTENTS_FL,      'e', N_("Inode uses extents"),            FALSE, FALSE },
+    { EXT3_JOURNAL_DATA_FL, 'j', N_("Journaled data"),                false, false },
+    { EXT2_INDEX_FL,        'I', N_("Indexed directory"),             false, false },
+    { EXT2_NOTAIL_FL,       't', N_("No tail merging"),               false, false },
+    { EXT2_TOPDIR_FL,       'T', N_("Top of directory hierarchies"),  false, false },
+    { EXT4_EXTENTS_FL,      'e', N_("Inode uses extents"),            false, false },
 #ifdef EXT4_HUGE_FILE_FL
     /* removed in v1.43.9
        ext2fsprogs 4825daeb0228e556444d199274b08c499ac3706c 2018-02-06 */
-    { EXT4_HUGE_FILE_FL,    'h', N_("Huge_file"),                     FALSE, FALSE },
+    { EXT4_HUGE_FILE_FL,    'h', N_("Huge_file"),                     false, false },
 #endif
-    { FS_NOCOW_FL,          'C', N_("No COW"),                        FALSE, FALSE },
+    { FS_NOCOW_FL,          'C', N_("No COW"),                        false, false },
 #ifdef EXT4_CASEFOLD_FL
     /* added in v1.45.0
        ext2fsprogs 1378bb6515e98a27f0f5c220381d49d20544204e 2018-12-01 */
-    { EXT4_CASEFOLD_FL,     'F', N_("Casefolded file"),               FALSE, FALSE },
+    { EXT4_CASEFOLD_FL,     'F', N_("Casefolded file"),               false, false },
 #endif
 #ifdef EXT4_INLINE_DATA_FL
-    { EXT4_INLINE_DATA_FL,  'N', N_("Inode has inline data"),         FALSE, FALSE },
+    { EXT4_INLINE_DATA_FL,  'N', N_("Inode has inline data"),         false, false },
 #endif
 #ifdef EXT4_PROJINHERIT_FL
     /* added in v1.43-WIP-2016-05-12
        ext2fsprogs e1cec4464bdaf93ea609de43c5cdeb6a1f553483 2016-03-07
                    97d7e2fdb2ebec70c3124c1a6370d28ec02efad0 2016-05-09 */
-    { EXT4_PROJINHERIT_FL,  'P', N_("Project hierarchy"),             FALSE, FALSE },
+    { EXT4_PROJINHERIT_FL,  'P', N_("Project hierarchy"),             false, false },
 #endif
 #ifdef EXT4_VERITY_FL
     /* added in v1.44.4
        ext2fsprogs faae7aa00df0abe7c6151fc4947aa6501b981ee1 2018-08-14
        v1.44.5
        ext2fsprogs 7e5a95e3d59719361661086ec7188ca6e674f139 2018-08-21 */
-    { EXT4_VERITY_FL,       'V', N_("Verity protected inode"),        FALSE, FALSE }
+    { EXT4_VERITY_FL,       'V', N_("Verity protected inode"),        false, false }
 #endif
     /* *INDENT-ON* */
 };
@@ -234,9 +234,9 @@ static struct
     /* *INDENT-ON* */
 };
 
-static gboolean flags_changed;
+static bool flags_changed;
 static int current_file;
-static gboolean ignore_all;
+static bool ignore_all;
 
 static unsigned long and_mask, or_mask, flags;
 
@@ -249,7 +249,7 @@ static const int wx = 3;
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static inline gboolean
+static inline bool
 chattr_is_modifiable (size_t i)
 {
     return ((check_attr[i].flags & EXT2_FL_USER_MODIFIABLE) != 0);
@@ -379,7 +379,7 @@ fileattrtext_new (int y, int x, const char *filename, unsigned long attr)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-chattr_draw_select (const Widget * w, gboolean selected)
+chattr_draw_select (const Widget * w, bool selected)
 {
     widget_gotoyx (w, 0, -1);
     tty_print_char (selected ? '*' : ' ');
@@ -415,7 +415,7 @@ chattrboxes_draw_scrollbar (const WChattrBoxes * cb)
     /* Are we at the top? */
     widget_gotoyx (w, 0, w->cols);
     if (cb->top == 0)
-        tty_print_one_vline (TRUE);
+        tty_print_one_vline (true);
     else
         tty_print_char ('^');
 
@@ -424,7 +424,7 @@ chattrboxes_draw_scrollbar (const WChattrBoxes * cb)
     /* Are we at the bottom? */
     widget_gotoyx (w, max_line, w->cols);
     if (cb->top + w->lines == check_attr_mod_num || w->lines >= check_attr_mod_num)
-        tty_print_one_vline (TRUE);
+        tty_print_one_vline (true);
     else
         tty_print_char ('v');
 
@@ -435,7 +435,7 @@ chattrboxes_draw_scrollbar (const WChattrBoxes * cb)
     {
         widget_gotoyx (w, i, w->cols);
         if (i != line)
-            tty_print_one_vline (TRUE);
+            tty_print_one_vline (true);
         else
             tty_print_char ('*');
     }
@@ -474,7 +474,7 @@ static void
 chattrboxes_rename (WChattrBoxes * cb)
 {
     Widget *w = WIDGET (cb);
-    gboolean active;
+    bool active;
     int i;
     GList *l;
     char btext[BUF_SMALL];      /* FIXME: is 128 bytes enough? */
@@ -483,7 +483,7 @@ chattrboxes_rename (WChattrBoxes * cb)
 
     /* lock the group to avoid redraw of checkboxes individually */
     if (active)
-        widget_set_state (w, WST_SUSPENDED, TRUE);
+        widget_set_state (w, WST_SUSPENDED, true);
 
     for (i = cb->top, l = GROUP (cb)->widgets; l != nullptr; i++, l = g_list_next (l))
     {
@@ -498,7 +498,7 @@ chattrboxes_rename (WChattrBoxes * cb)
 
     /* unlock */
     if (active)
-        widget_set_state (w, WST_ACTIVE, TRUE);
+        widget_set_state (w, WST_ACTIVE, true);
 
     widget_draw (w);
 }
@@ -792,7 +792,7 @@ chattrboxes_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
                 flags ^= check_attr[m].flags;
                 fileattrtext_fill (file_attr, flags);
                 chattr_toggle_select (cb, i);
-                flags_changed = TRUE;
+                flags_changed = true;
                 return MSG_HANDLED;
             }
         }
@@ -868,7 +868,7 @@ chattrboxes_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 
     default:
         /* return MOU_UNHANDLED */
-        event->result.abort = TRUE;
+        event->result.abort = true;
         break;
     }
 }
@@ -899,16 +899,16 @@ chattrboxes_new (int y, int x, int height, int width)
 static void
 chattr_init (void)
 {
-    static gboolean i18n = FALSE;
+    static bool i18n = false;
     size_t i;
 
     for (i = 0; i < check_attr_num; i++)
-        check_attr[i].selected = FALSE;
+        check_attr[i].selected = false;
 
     if (i18n)
         return;
 
-    i18n = TRUE;
+    i18n = true;
 
     for (i = 0; i < check_attr_num; i++)
         if (chattr_is_modifiable (i))
@@ -945,7 +945,7 @@ static WDialog *
 chattr_dlg_create (const char *fname, unsigned long attr)
 {
     const Widget *mw = CONST_WIDGET (midnight_dlg);
-    gboolean single_set;
+    bool single_set;
     WDialog *ch_dlg;
     int lines, cols;
     int checkboxes_lines = check_attr_mod_num;
@@ -978,7 +978,7 @@ chattr_dlg_create (const char *fname, unsigned long attr)
     }
 
     ch_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols + wx * 2, WPOS_CENTER, FALSE, dialog_colors,
+        dlg_create (true, 0, 0, lines, cols + wx * 2, WPOS_CENTER, false, dialog_colors,
                     dlg_default_callback, nullptr, "[Chattr]", _("Chattr command"));
     dg = GROUP (ch_dlg);
     dw = WIDGET (ch_dlg);
@@ -1067,7 +1067,7 @@ chattr_dlg_create (const char *fname, unsigned long attr)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-chattr_done (gboolean need_update)
+chattr_done (bool need_update)
 {
     if (need_update)
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
@@ -1087,7 +1087,7 @@ next_file (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 try_chattr (const char *p, unsigned long m)
 {
     while (fsetflags (p, m) == -1 && !ignore_all)
@@ -1108,12 +1108,12 @@ try_chattr (const char *p, unsigned long m)
         {
         case 0:
             /* try next file */
-            return TRUE;
+            return true;
 
         case 1:
-            ignore_all = TRUE;
+            ignore_all = true;
             /* try next file */
-            return TRUE;
+            return true;
 
         case 2:
             /* retry this file */
@@ -1122,19 +1122,19 @@ try_chattr (const char *p, unsigned long m)
         case 3:
         default:
             /* stop remain files processing */
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 do_chattr (const vfs_path_t * p, unsigned long m)
 {
-    gboolean ret;
+    bool ret;
 
     m &= and_mask;
     m |= or_mask;
@@ -1151,7 +1151,7 @@ do_chattr (const vfs_path_t * p, unsigned long m)
 static void
 chattr_apply_mask (vfs_path_t * vpath, unsigned long m)
 {
-    gboolean ok;
+    bool ok;
 
     if (!do_chattr (vpath, m))
         return;
@@ -1170,7 +1170,7 @@ chattr_apply_mask (vfs_path_t * vpath, unsigned long m)
             do_file_mark (current_panel, current_file, 0);
 
             /* try next file */
-            ok = TRUE;
+            ok = true;
         }
         else
         {
@@ -1190,13 +1190,13 @@ chattr_apply_mask (vfs_path_t * vpath, unsigned long m)
 void
 chattr_cmd (void)
 {
-    gboolean need_update = FALSE;
-    gboolean end_chattr = FALSE;
+    bool need_update = false;
+    bool end_chattr = false;
 
     chattr_init ();
 
     current_file = 0;
-    ignore_all = FALSE;
+    ignore_all = false;
 
     do
     {                           /* do while any files remaining */
@@ -1215,8 +1215,8 @@ chattr_cmd (void)
 
         do_refresh ();
 
-        need_update = FALSE;
-        end_chattr = FALSE;
+        need_update = false;
+        end_chattr = false;
 
         if (current_panel->marked != 0)
             fname = next_file ();       /* next marked file */
@@ -1234,7 +1234,7 @@ chattr_cmd (void)
             break;
         }
 
-        flags_changed = FALSE;
+        flags_changed = false;
 
         ch_dlg = chattr_dlg_create (fname, flags);
         result = dlg_run (ch_dlg);
@@ -1243,7 +1243,7 @@ chattr_cmd (void)
         switch (result)
         {
         case B_CANCEL:
-            end_chattr = TRUE;
+            end_chattr = true;
             break;
 
         case B_ENTER:
@@ -1255,17 +1255,17 @@ chattr_cmd (void)
                     if (fsetflags (fname2, flags) == -1 && !ignore_all)
                         message (D_ERROR, MSG_ERROR, _("Cannot chattr \"%s\"\n%s"), fname,
                                  unix_error_string (errno));
-                    end_chattr = TRUE;
+                    end_chattr = true;
                 }
                 else if (!try_chattr (fname2, flags))
                 {
                     /* stop multiple files processing */
                     result = B_CANCEL;
-                    end_chattr = TRUE;
+                    end_chattr = true;
                 }
             }
 
-            need_update = TRUE;
+            need_update = true;
             break;
 
         case B_SETALL:
@@ -1283,8 +1283,8 @@ chattr_cmd (void)
                 }
 
             chattr_apply_mask (vpath, flags);
-            need_update = TRUE;
-            end_chattr = TRUE;
+            need_update = true;
+            end_chattr = true;
             break;
 
         case B_SETMRK:
@@ -1296,8 +1296,8 @@ chattr_cmd (void)
                     or_mask |= check_attr[i].flags;
 
             chattr_apply_mask (vpath, flags);
-            need_update = TRUE;
-            end_chattr = TRUE;
+            need_update = true;
+            end_chattr = true;
             break;
 
         case B_CLRMRK:
@@ -1309,8 +1309,8 @@ chattr_cmd (void)
                     and_mask &= ~check_attr[i].flags;
 
             chattr_apply_mask (vpath, flags);
-            need_update = TRUE;
-            end_chattr = TRUE;
+            need_update = true;
+            end_chattr = true;
             break;
 
         default:
@@ -1320,7 +1320,7 @@ chattr_cmd (void)
         if (current_panel->marked != 0 && result != B_CANCEL)
         {
             do_file_mark (current_panel, current_file, 0);
-            need_update = TRUE;
+            need_update = true;
         }
 
         vfs_path_free (vpath);

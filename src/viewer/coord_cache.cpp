@@ -67,7 +67,7 @@
 
 /*** file scope type declarations ****************************************************************/
 
-typedef gboolean (*cmp_func_t) (const coord_cache_entry_t * a, const coord_cache_entry_t * b);
+typedef bool (*cmp_func_t) (const coord_cache_entry_t * a, const coord_cache_entry_t * b);
 
 /*** file scope variables ************************************************************************/
 
@@ -100,7 +100,7 @@ mcview_ccache_add_entry (coord_cache_t * cache, size_t pos, const coord_cache_en
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_coord_cache_entry_less_offset (const coord_cache_entry_t * a, const coord_cache_entry_t * b)
 {
     return (a->cc_offset < b->cc_offset);
@@ -108,31 +108,31 @@ mcview_coord_cache_entry_less_offset (const coord_cache_entry_t * a, const coord
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_coord_cache_entry_less_plain (const coord_cache_entry_t * a, const coord_cache_entry_t * b)
 {
     if (a->cc_line < b->cc_line)
-        return TRUE;
+        return true;
 
     if (a->cc_line == b->cc_line)
         return (a->cc_column < b->cc_column);
 
-    return FALSE;
+    return false;
 }
 
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_coord_cache_entry_less_nroff (const coord_cache_entry_t * a, const coord_cache_entry_t * b)
 {
     if (a->cc_line < b->cc_line)
-        return TRUE;
+        return true;
 
     if (a->cc_line == b->cc_line)
         return (a->cc_nroff_column < b->cc_nroff_column);
 
-    return FALSE;
+    return false;
 }
 
 
@@ -247,12 +247,12 @@ mcview_ccache_dump (WView * view)
     }
 
     /* line/column -> offset translation */
-    for (line = 0; TRUE; line++)
+    for (line = 0; true; line++)
     {
         mcview_coord_to_offset (view, &nextline_offset, line + 1, 0);
         (void) fprintf (f, "nextline_offset %8" PRIuMAX "\n", (uintmax_t) nextline_offset);
 
-        for (column = 0; TRUE; column++)
+        for (column = 0; true; column++)
         {
             mcview_coord_to_offset (view, &offset, line, column);
             if (offset >= nextline_offset)

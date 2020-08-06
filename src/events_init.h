@@ -12,7 +12,7 @@
 
 /*** declarations of public functions ************************************************************/
 
-gboolean events_init (GError **);
+bool events_init (GError **);
 
 /*** inline functions ****************************************************************************/
 

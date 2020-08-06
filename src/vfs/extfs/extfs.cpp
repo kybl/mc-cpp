@@ -92,15 +92,15 @@ typedef struct
 {
     char *path;
     char *prefix;
-    gboolean need_archive;
+    bool need_archive;
 } extfs_plugin_info_t;
 
 /*** file scope variables ************************************************************************/
 
 static GArray *extfs_plugins = nullptr;
 
-static gboolean errloop;
-static gboolean notadir;
+static bool errloop;
+static bool notadir;
 
 static struct vfs_s_subclass extfs_subclass;
 static struct vfs_class *vfs_extfs_ops = VFS_CLASS (&extfs_subclass);
@@ -269,7 +269,7 @@ extfs_find_entry_int (struct vfs_s_inode *dir, char *name, GSList * list, int fl
             if (!S_ISDIR (pent->ino->st.st_mode))
             {
                 *q = c;
-                notadir = TRUE;
+                notadir = true;
                 return nullptr;
             }
 
@@ -308,8 +308,8 @@ extfs_find_entry (struct vfs_s_inode *dir, char *name, int flags)
 {
     struct vfs_s_entry *res;
 
-    errloop = FALSE;
-    notadir = FALSE;
+    errloop = false;
+    notadir = false;
 
     res = extfs_find_entry_int (dir, name, nullptr, flags);
     if (res == nullptr)
@@ -402,7 +402,7 @@ extfs_open_archive (int fstype, const char *name, struct extfs_super_t **pparc)
                 goto ret;
         }
 
-        tmp = name_quote (vfs_path_get_last_path_str (name_vpath), FALSE);
+        tmp = name_quote (vfs_path_get_last_path_str (name_vpath), false);
     }
 
     cmd = g_strconcat (info->path, info->prefix, " list ",
@@ -418,7 +418,7 @@ extfs_open_archive (int fstype, const char *name, struct extfs_super_t **pparc)
         close_error_pipe (D_ERROR, nullptr);
         if (local_name_vpath != nullptr)
         {
-            mc_ungetlocalcopy (name_vpath, local_name_vpath, FALSE);
+            mc_ungetlocalcopy (name_vpath, local_name_vpath, false);
             vfs_path_free (local_name_vpath);
         }
         goto ret;
@@ -710,7 +710,7 @@ extfs_get_path_from_entry (const struct vfs_s_entry *entry)
             g_string_prepend_c (localpath, PATH_SEP);
     }
 
-    return g_string_free (localpath, FALSE);
+    return g_string_free (localpath, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -726,7 +726,7 @@ extfs_resolve_symlinks_int (struct vfs_s_entry *entry, GSList * list)
     if (g_slist_find (list, entry) != nullptr)
     {
         /* Here we protect us against symlink looping */
-        errloop = TRUE;
+        errloop = true;
     }
     else
     {
@@ -750,8 +750,8 @@ extfs_resolve_symlinks (struct vfs_s_entry *entry)
 {
     struct vfs_s_entry *res;
 
-    errloop = FALSE;
-    notadir = FALSE;
+    errloop = false;
+    notadir = false;
     res = extfs_resolve_symlinks_int (entry, nullptr);
     if (res == nullptr)
     {
@@ -807,13 +807,13 @@ extfs_cmd (const char *str_extfs_cmd, const struct extfs_super_t *archive,
     int retval;
 
     file = extfs_get_path_from_entry (entry);
-    quoted_file = name_quote (file, FALSE);
+    quoted_file = name_quote (file, false);
     g_free (file);
 
     archive_name = extfs_get_archive_name (archive);
-    quoted_archive_name = name_quote (archive_name, FALSE);
+    quoted_archive_name = name_quote (archive_name, false);
     g_free (archive_name);
-    quoted_localname = name_quote (localname, FALSE);
+    quoted_localname = name_quote (localname, false);
     info = &g_array_index (extfs_plugins, extfs_plugin_info_t, archive->fstype);
     cmd = g_strconcat (info->path, info->prefix, str_extfs_cmd,
                        quoted_archive_name, " ", quoted_file, " ", quoted_localname, (char *) nullptr);
@@ -842,10 +842,10 @@ extfs_run (const vfs_path_t * vpath)
     p = extfs_get_path (vpath, &archive, FL_NONE);
     if (p == nullptr)
         return;
-    q = name_quote (p, FALSE);
+    q = name_quote (p, false);
 
     archive_name = extfs_get_archive_name (archive);
-    quoted_archive_name = name_quote (archive_name, FALSE);
+    quoted_archive_name = name_quote (archive_name, false);
     g_free (archive_name);
     info = &g_array_index (extfs_plugins, extfs_plugin_info_t, archive->fstype);
     cmd =
@@ -866,7 +866,7 @@ extfs_open (const vfs_path_t * vpath, int flags, mode_t mode)
     char *q;
     struct vfs_s_entry *entry;
     int local_handle;
-    gboolean created = FALSE;
+    bool created = false;
 
     q = extfs_get_path (vpath, &archive, FL_NONE);
     if (q == nullptr)
@@ -1065,7 +1065,7 @@ extfs_stat_move (struct stat *buf, const struct vfs_s_inode *inode)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-extfs_internal_stat (const vfs_path_t * vpath, struct stat *buf, gboolean resolve)
+extfs_internal_stat (const vfs_path_t * vpath, struct stat *buf, bool resolve)
 {
     struct extfs_super_t *archive;
     struct vfs_s_entry *entry;
@@ -1094,7 +1094,7 @@ extfs_internal_stat (const vfs_path_t * vpath, struct stat *buf, gboolean resolv
 static int
 extfs_stat (const vfs_path_t * vpath, struct stat *buf)
 {
-    return extfs_internal_stat (vpath, buf, TRUE);
+    return extfs_internal_stat (vpath, buf, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1102,7 +1102,7 @@ extfs_stat (const vfs_path_t * vpath, struct stat *buf)
 static int
 extfs_lstat (const vfs_path_t * vpath, struct stat *buf)
 {
-    return extfs_internal_stat (vpath, buf, FALSE);
+    return extfs_internal_stat (vpath, buf, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1178,7 +1178,7 @@ extfs_write (void *fh, const char *buf, size_t nbyte)
 {
     vfs_file_handler_t *file = VFS_FILE_HANDLER (fh);
 
-    file->changed = TRUE;
+    file->changed = true;
     return write (file->handle, buf, nbyte);
 }
 
@@ -1365,7 +1365,7 @@ extfs_getlocalcopy (const vfs_path_t * vpath)
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-extfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboolean has_changed)
+extfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, bool has_changed)
 {
     vfs_file_handler_t *fh;
 
@@ -1377,7 +1377,7 @@ extfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboole
     {
         VFS_FILE_HANDLER_SUPER (fh)->fd_usage--;
         if (has_changed)
-            fh->changed = TRUE;
+            fh->changed = true;
         extfs_close ((void *) fh);
         return 0;
     }
@@ -1391,8 +1391,8 @@ extfs_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboole
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
-extfs_get_plugins (const char *where, gboolean silent)
+static bool
+extfs_get_plugins (const char *where, bool silent)
 {
     char *dirname;
     GDir *dir;
@@ -1409,11 +1409,11 @@ extfs_get_plugins (const char *where, gboolean silent)
         if (!silent)
             fprintf (stderr, _("Warning: cannot open %s directory\n"), dirname);
         g_free (dirname);
-        return FALSE;
+        return false;
     }
 
     if (extfs_plugins == nullptr)
-        extfs_plugins = g_array_sized_new (FALSE, TRUE, sizeof (extfs_plugin_info_t), 32);
+        extfs_plugins = g_array_sized_new (false, true, sizeof (extfs_plugin_info_t), 32);
 
     while ((filename = g_dir_read_name (dir)) != nullptr)
     {
@@ -1435,7 +1435,7 @@ extfs_get_plugins (const char *where, gboolean silent)
             {
                 size_t len, i;
                 extfs_plugin_info_t info;
-                gboolean found = FALSE;
+                bool found = false;
 
                 close (f);
 
@@ -1462,7 +1462,7 @@ extfs_get_plugins (const char *where, gboolean silent)
                     if ((strcmp (info.path, p->path) != 0)
                         && (strcmp (info.prefix, p->prefix) == 0))
                     {
-                        found = TRUE;
+                        found = true;
                         break;
                     }
                 }
@@ -1486,7 +1486,7 @@ extfs_get_plugins (const char *where, gboolean silent)
     g_dir_close (dir);
     g_free (dirname);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1494,12 +1494,12 @@ extfs_get_plugins (const char *where, gboolean silent)
 static int
 extfs_init (struct vfs_class *me)
 {
-    gboolean d1, d2;
+    bool d1, d2;
 
     (void) me;
 
     /* 1st: scan user directory */
-    d1 = extfs_get_plugins (mc_config_get_data_path (), TRUE);  /* silent about user dir */
+    d1 = extfs_get_plugins (mc_config_get_data_path (), true);  /* silent about user dir */
     /* 2nd: scan system dir */
     d2 = extfs_get_plugins (LIBEXECDIR, d1);
 
@@ -1528,7 +1528,7 @@ extfs_done (struct vfs_class *me)
         g_free (info->prefix);
     }
 
-    g_array_free (extfs_plugins, TRUE);
+    g_array_free (extfs_plugins, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -63,7 +63,7 @@ struct vfs_s_super
     char *name;                 /* My name, whatever it means */
     int fd_usage;               /* Number of open files */
     int ino_usage;              /* Usage count of this superblock */
-    gboolean want_stale;        /* If set, we do not flush cache properly */
+    bool want_stale;        /* If set, we do not flush cache properly */
 #ifdef ENABLE_VFS_NET
     vfs_path_element_t *path_element;
 #endif                          /* ENABLE_VFS_NET */
@@ -101,7 +101,7 @@ typedef struct
     struct vfs_s_inode *ino;
     off_t pos;                  /* This is for module's use */
     int handle;                 /* This is for module's use, but if != -1, will be mc_close()d */
-    gboolean changed;           /* Did this file change? */
+    bool changed;           /* Did this file change? */
     vfs_linear_state_t linear;  /* Is that file open with O_LINEAR? */
 } vfs_file_handler_t;
 
@@ -130,7 +130,7 @@ struct vfs_s_subclass
                          const vfs_path_t * vpath, const vfs_path_element_t * vpath_element);
     void (*free_archive) (struct vfs_class * me, struct vfs_s_super * psup);
 
-    vfs_file_handler_t *(*fh_new) (struct vfs_s_inode * ino, gboolean changed);
+    vfs_file_handler_t *(*fh_new) (struct vfs_s_inode * ino, bool changed);
     int (*fh_open) (struct vfs_class * me, vfs_file_handler_t * fh, int flags, mode_t mode);
     int (*fh_close) (struct vfs_class * me, vfs_file_handler_t * fh);
     void (*fh_free) (vfs_file_handler_t * fh);
@@ -139,7 +139,7 @@ struct vfs_s_subclass
                                        struct vfs_s_inode * root,
                                        const char *path, int follow, int flags);
     int (*dir_load) (struct vfs_class * me, struct vfs_s_inode * ino, char *path);
-    gboolean (*dir_uptodate) (struct vfs_class * me, struct vfs_s_inode * ino);
+    bool (*dir_uptodate) (struct vfs_class * me, struct vfs_s_inode * ino);
     int (*file_store) (struct vfs_class * me, vfs_file_handler_t * fh, char *path, char *localname);
 
     int (*linear_start) (struct vfs_class * me, vfs_file_handler_t * fh, off_t from);
@@ -180,7 +180,7 @@ struct vfs_s_super *vfs_get_super_by_vpath (const vfs_path_t * vpath);
 void vfs_s_invalidate (struct vfs_class *me, struct vfs_s_super *super);
 char *vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino);
 
-void vfs_s_init_fh (vfs_file_handler_t * fh, struct vfs_s_inode *ino, gboolean changed);
+void vfs_s_init_fh (vfs_file_handler_t * fh, struct vfs_s_inode *ino, bool changed);
 
 /* network filesystems support */
 int vfs_s_select_on_two (int fd1, int fd2);

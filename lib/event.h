@@ -5,7 +5,7 @@
 
 /*** typedefs(not structures) and defined constants **********************************************/
 
-typedef gboolean (*mc_event_callback_func_t) (const gchar *, const gchar *, gpointer, gpointer);
+typedef bool (*mc_event_callback_func_t) (const gchar *, const gchar *, gpointer, gpointer);
 
 /*** enums ***************************************************************************************/
 
@@ -24,20 +24,20 @@ typedef struct
 /*** declarations of public functions ************************************************************/
 
 /* event.c: */
-gboolean mc_event_init (GError **);
-gboolean mc_event_deinit (GError **);
+bool mc_event_init (GError **);
+bool mc_event_deinit (GError **);
 
 
 /* manage.c: */
-gboolean mc_event_add (const gchar *, const gchar *, mc_event_callback_func_t, gpointer, GError **);
+bool mc_event_add (const gchar *, const gchar *, mc_event_callback_func_t, gpointer, GError **);
 void mc_event_del (const gchar *, const gchar *, mc_event_callback_func_t, gpointer);
 void mc_event_destroy (const gchar *, const gchar *);
 void mc_event_group_del (const gchar *);
-gboolean mc_event_present (const gchar *, const gchar *);
-gboolean mc_event_mass_add (const event_init_t *, GError **);
+bool mc_event_present (const gchar *, const gchar *);
+bool mc_event_mass_add (const event_init_t *, GError **);
 
 /* raise.c: */
-gboolean mc_event_raise (const gchar *, const gchar *, gpointer);
+bool mc_event_raise (const gchar *, const gchar *, gpointer);
 
 
 /*** inline functions ****************************************************************************/

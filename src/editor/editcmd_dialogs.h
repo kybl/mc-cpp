@@ -21,9 +21,9 @@ struct etags_hash_struct;
 
 void editcmd_dialog_replace_show (WEdit *, const char *, const char *, char **, char **);
 
-gboolean editcmd_dialog_search_show (WEdit * edit);
+bool editcmd_dialog_search_show (WEdit * edit);
 
-int editcmd_dialog_raw_key_query (const char *heading, const char *query, gboolean cancel);
+int editcmd_dialog_raw_key_query (const char *heading, const char *query, bool cancel);
 
 char *editcmd_dialog_completion_show (const WEdit * edit, int max_len, GString ** compl_,
                                       int num_compl);

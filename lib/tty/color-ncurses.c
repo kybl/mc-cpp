@@ -115,13 +115,13 @@ mc_tty_color_pair_init_special (tty_color_pair_t * mc_color_pair,
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_color_init_lib (gboolean disable, gboolean force)
+tty_color_init_lib (bool disable, bool force)
 {
     (void) force;
 
     if (has_colors () && !disable)
     {
-        use_colors = TRUE;
+        use_colors = true;
         start_color ();
         use_default_colors ();
     }
@@ -227,7 +227,7 @@ tty_set_normal_attrs (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_use_256colors (void)
 {
     return (COLORS == 256);
@@ -235,12 +235,12 @@ tty_use_256colors (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_use_truecolors (GError ** error)
 {
     /* Not yet supported in ncurses */
     g_set_error (error, MC_ERROR, -1, _("True color not supported with ncurses."));
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

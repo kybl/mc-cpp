@@ -78,44 +78,44 @@ static const struct test_path_equal_ds
 {
     const char *input_path1;
     const char *input_path2;
-    const gboolean expected_result;
+    const bool expected_result;
 } test_path_equal_ds[] =
 {
     { /* 0. */
         NULL,
         NULL,
-        FALSE
+        false
     },
     { /* 1. */
         NULL,
         "/test/path",
-        FALSE
+        false
     },
     { /* 2. */
         "/test/path",
         NULL,
-        FALSE
+        false
     },
     { /* 3. */
         "/test/path",
         "/test/path",
-        TRUE
+        true
     },
 #ifdef HAVE_CHARSET
     { /* 4. */
         "/#enc:KOI8-R/тестовый/путь",
         "/тестовый/путь",
-        FALSE
+        false
     },
     { /* 5. */
         "/тестовый/путь",
         "/#enc:KOI8-R/тестовый/путь",
-        FALSE
+        false
     },
     { /* 6. */
         "/#enc:KOI8-R/тестовый/путь",
         "/#enc:KOI8-R/тестовый/путь",
-        TRUE
+        true
     },
 #endif
 };
@@ -128,7 +128,7 @@ START_PARAMETRIZED_TEST (test_path_equal, test_path_equal_ds)
 {
     /* given */
     vfs_path_t *vpath1, *vpath2;
-    gboolean actual_result;
+    bool actual_result;
 
     vpath1 = vfs_path_from_str (data->input_path1);
     vpath2 = vfs_path_from_str (data->input_path2);
@@ -155,56 +155,56 @@ static const struct test_path_equal_len_ds
     const char *input_path1;
     const char *input_path2;
     const size_t input_length;
-    const gboolean expected_result;
+    const bool expected_result;
 } test_path_equal_len_ds[] =
 {
     { /* 0. */
         NULL,
         NULL,
         0,
-        FALSE
+        false
     },
     { /* 1. */
         NULL,
         NULL,
         100,
-        FALSE
+        false
     },
     { /* 2. */
         NULL,
         "/тестовый/путь",
         10,
-        FALSE
+        false
     },
     { /* 3. */
         "/тестовый/путь",
         NULL,
         10,
-        FALSE
+        false
     },
     { /* 4. */
         "/тестовый/путь",
         "/тестовый/путь",
         10,
-        TRUE
+        true
     },
     { /* 5. */
         "/тест/овый/путь",
         "/тестовый/путь",
         8,
-        TRUE
+        true
     },
     { /* 6. */
         "/тест/овый/путь",
         "/тестовый/путь",
         10,
-        FALSE
+        false
     },
     { /* 7. */
         "/тестовый/путь",
         "/тест/овый/путь",
         10,
-        FALSE
+        false
     },
 };
 /* *INDENT-ON* */
@@ -216,7 +216,7 @@ START_PARAMETRIZED_TEST (test_path_equal_len, test_path_equal_len_ds)
 {
     /* given */
     vfs_path_t *vpath1, *vpath2;
-    gboolean actual_result;
+    bool actual_result;
 
     vpath1 = vfs_path_from_str (data->input_path1);
     vpath2 = vfs_path_from_str (data->input_path2);

@@ -89,13 +89,13 @@ typedef struct WDiff
     char *label[DIFF_COUNT];
     FBUF *f[DIFF_COUNT];
     const char *backup_sufix;
-    gboolean merged[DIFF_COUNT];
+    bool merged[DIFF_COUNT];
     GArray *a[DIFF_COUNT];
     GPtrArray *hdiff;
     int ndiff;                  /* number of hunks */
     DSRC dsrc;                  /* data source: memory or temporary file */
 
-    gboolean view_quit;         /* Quit flag */
+    bool view_quit;         /* Quit flag */
 
     int height;
     int half1;
@@ -103,18 +103,18 @@ typedef struct WDiff
     int width1;
     int width2;
     int bias;
-    gboolean new_frame;
+    bool new_frame;
     int skip_rows;
     int skip_cols;
     int display_symbols;
     int display_numbers;
-    gboolean show_cr;
+    bool show_cr;
     int tab_size;
     diff_place_t ord;
-    gboolean full;
+    bool full;
 
 #ifdef HAVE_CHARSET
-    gboolean utf8;
+    bool utf8;
     /* converter for translation of text */
     GIConv converter;
 #endif                          /* HAVE_CHARSET */
@@ -122,11 +122,11 @@ typedef struct WDiff
     struct
     {
         int quality;
-        gboolean strip_trailing_cr;
-        gboolean ignore_tab_expansion;
-        gboolean ignore_space_change;
-        gboolean ignore_all_space;
-        gboolean ignore_case;
+        bool strip_trailing_cr;
+        bool ignore_tab_expansion;
+        bool ignore_space_change;
+        bool ignore_all_space;
+        bool ignore_case;
     } opt;
 
     /* Search variables */

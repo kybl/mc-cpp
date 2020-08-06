@@ -133,7 +133,7 @@ extern "C" {
 #define TMPDIR_DEFAULT "/tmp"
 #define SCRIPT_SUFFIX ""
 #define get_default_editor() "vi"
-#define OS_SORT_CASE_SENSITIVE_DEFAULT TRUE
+#define OS_SORT_CASE_SENSITIVE_DEFAULT true
 #define UTF8_CHAR_LEN 6
 
 /* struct stat members */
@@ -169,11 +169,11 @@ typedef enum
 typedef struct
 {
     mc_run_mode_t mc_run_mode;
-    gboolean run_from_parent_mc;
+    bool run_from_parent_mc;
     /* global timer */
     mc_timer_t *timer;
     /* Used so that widgets know if they are being destroyed or shut down */
-    gboolean midnight_shutdown;
+    bool midnight_shutdown;
 
     /* sysconfig_dir: Area for default settings from maintainers of distributuves
        default is /etc/mc or may be defined by MC_DATADIR */
@@ -190,40 +190,40 @@ typedef struct
     int display_codepage;
 #else
     /* If true, allow characters in the range 160-255 */
-    gboolean eight_bit_clean;
+    bool eight_bit_clean;
     /*
      * If true, also allow characters in the range 128-159.
      * This is reported to break on many terminals (xterm, qansi-m).
      */
-    gboolean full_eight_bits;
+    bool full_eight_bits;
 #endif                          /* !HAVE_CHARSET */
     /*
-     * If utf-8 terminal utf8_display = TRUE
+     * If utf-8 terminal utf8_display = true
      * Display bits set UTF-8
      */
-    gboolean utf8_display;
+    bool utf8_display;
 
     /* Set if the nice message (hint) bar is visible */
-    gboolean message_visible;
+    bool message_visible;
     /* Set if the nice and useful keybar is visible */
-    gboolean keybar_visible;
+    bool keybar_visible;
 
 #ifdef ENABLE_BACKGROUND
     /* If true, this is a background process */
-    gboolean we_are_background;
+    bool we_are_background;
 #endif                          /* ENABLE_BACKGROUND */
 
     struct
     {
         /* Asks for confirmation before clean up of history */
-        gboolean confirm_history_cleanup;
+        bool confirm_history_cleanup;
 
         /* Set if you want the possible completions dialog for the first time */
-        gboolean show_all_if_ambiguous;
+        bool show_all_if_ambiguous;
 
         /* Ugly hack in order to distinguish between left and right panel in menubar */
         /* Set if the command is being run from the "Right" menu */
-        gboolean is_right;      /* If the selected menu was the right */
+        bool is_right;      /* If the selected menu was the right */
     } widget;
 
     /* The user's shell */
@@ -234,7 +234,7 @@ typedef struct
         /* Use the specified skin */
         char *skin;
         /* Dialog window and frop down menu have a shadow */
-        gboolean shadows;
+        bool shadows;
 
         char *setup_color_string;
         char *term_color_string;
@@ -247,7 +247,7 @@ typedef struct
         char console_flag;
 #endif                          /* !LINUX_CONS_SAVER_C */
         /* If using a subshell for evaluating commands this is true */
-        gboolean use_subshell;
+        bool use_subshell;
 
 #ifdef ENABLE_SUBSHELL
         /* File descriptors of the pseudoterminal used by the subshell */
@@ -256,36 +256,36 @@ typedef struct
 
         /* This flag is set by xterm detection routine in function main() */
         /* It is used by function toggle_subshell() */
-        gboolean xterm_flag;
+        bool xterm_flag;
 
         /* disable x11 support */
-        gboolean disable_x11;
+        bool disable_x11;
 
         /* For slow terminals */
         /* If true lines are shown by spaces */
-        gboolean slow_terminal;
+        bool slow_terminal;
 
         /* Set to force black and white display at program startup */
-        gboolean disable_colors;
+        bool disable_colors;
 
         /* If true use +, -, | for line drawing */
-        gboolean ugly_line_drawing;
+        bool ugly_line_drawing;
 
         /* Tries to use old highlight mouse tracking */
-        gboolean old_mouse;
+        bool old_mouse;
 
         /* If true, use + and \ keys normally and select/unselect do if M-+ / M-\.
            and M-- and keypad + / - */
-        gboolean alternate_plus_minus;
+        bool alternate_plus_minus;
     } tty;
 
     struct
     {
         /* Set when cd symlink following is desirable (bash mode) */
-        gboolean cd_symlinks;
+        bool cd_symlinks;
 
         /* Preallocate space before file copying */
-        gboolean preallocate_space;
+        bool preallocate_space;
 
     } vfs;
 } mc_global_t;

@@ -111,9 +111,9 @@ hline_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
         if (l->auto_adjust_cols)
         {
             widget_gotoyx (w, 0, 0);
-            tty_print_alt_char (ACS_LTEE, FALSE);
+            tty_print_alt_char (ACS_LTEE, false);
             widget_gotoyx (w, 0, w->cols - 1);
-            tty_print_alt_char (ACS_RTEE, FALSE);
+            tty_print_alt_char (ACS_RTEE, false);
         }
 
         if (l->text != nullptr)
@@ -151,7 +151,7 @@ hline_new (int y, int x, int width)
     widget_init (w, y, x, lines, width < 0 ? 1 : width, hline_callback, nullptr);
     l->text = nullptr;
     l->auto_adjust_cols = (width < 0);
-    l->transparent = FALSE;
+    l->transparent = false;
 
     return l;
 }

@@ -83,7 +83,7 @@ typedef struct
     char *p;
     char *q;
     char *r;
-    gboolean is_cd;
+    bool is_cd;
     input_complete_t flags;
 } try_complete_automation_state_t;
 
@@ -138,7 +138,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
     static size_t filename_len = 0;
     static vfs_path_t *dirname_vpath = nullptr;
 
-    gboolean isdir = TRUE, isexec = FALSE;
+    bool isdir = true, isexec = false;
     struct dirent *entry = nullptr;
 
     SHOW_C_CTX ("filename_completion_function");
@@ -221,8 +221,8 @@ filename_completion_function (const char *text, int state, input_complete_t flag
                 continue;
         }
 
-        isdir = TRUE;
-        isexec = FALSE;
+        isdir = true;
+        isexec = false;
 
         {
             struct stat tempstat;
@@ -241,19 +241,19 @@ filename_completion_function (const char *text, int state, input_complete_t flag
 
                 if (!S_ISDIR (tempstat.st_mode))
                 {
-                    isdir = FALSE;
+                    isdir = false;
 
                     if ((my_uid == 0 && (tempstat.st_mode & 0111) != 0) ||
                         (my_uid == tempstat.st_uid && (tempstat.st_mode & 0100) != 0) ||
                         (my_gid == tempstat.st_gid && (tempstat.st_mode & 0010) != 0) ||
                         (tempstat.st_mode & 0001) != 0)
-                        isexec = TRUE;
+                        isexec = true;
                 }
             }
             else
             {
                 /* stat failed, strange. not a dir in any case */
-                isdir = FALSE;
+                isdir = false;
             }
             vfs_path_free (tmp_vpath);
         }
@@ -298,7 +298,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
         if (isdir)
             g_string_append_c (temp, PATH_SEP);
 
-        return g_string_free (temp, FALSE);
+        return g_string_free (temp, false);
     }
 }
 
@@ -347,7 +347,7 @@ static char *
 variable_completion_function (const char *text, int state, input_complete_t flags)
 {
     static char **env_p = nullptr;
-    static gboolean isbrace = FALSE;
+    static bool isbrace = false;
     static size_t varlen = 0;
     const char *p = nullptr;
 
@@ -387,7 +387,7 @@ variable_completion_function (const char *text, int state, input_complete_t flag
 
         env_p++;
 
-        return g_string_free (temp, FALSE);
+        return g_string_free (temp, false);
     }
 }
 
@@ -539,7 +539,7 @@ hostname_completion_function (const char *text, int state, input_complete_t flag
         g_string_append (temp, *host_p);
         host_p++;
 
-        return g_string_free (temp, FALSE);
+        return g_string_free (temp, false);
     }
 }
 
@@ -555,7 +555,7 @@ static char *
 command_completion_function (const char *text, int state, input_complete_t flags)
 {
     static const char *path_end = nullptr;
-    static gboolean isabsolute = FALSE;
+    static bool isabsolute = false;
     static int phase = 0;
     static size_t text_len = 0;
     static const char *const *words = nullptr;
@@ -811,7 +811,7 @@ completion_matches (const char *text, CompletionFunction entry_function, input_c
 
 /* --------------------------------------------------------------------------------------------- */
 /** Check if directory completion is needed */
-static gboolean
+static bool
 check_is_cd (const char *text, int lc_start, input_complete_t flags)
 {
     const char *p, *q;
@@ -819,7 +819,7 @@ check_is_cd (const char *text, int lc_start, input_complete_t flags)
     SHOW_C_CTX ("check_is_cd");
 
     if ((flags & INPUT_COMPLETE_CD) == 0)
-        return FALSE;
+        return false;
 
     /* Skip initial spaces */
     p = text;
@@ -975,7 +975,7 @@ try_complete_all_possible (try_complete_automation_state_t * state, char *text, 
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 insert_text (WInput * in, char *text, ssize_t size)
 {
     size_t text_len;
@@ -1003,7 +1003,7 @@ insert_text (WInput * in, char *text, ssize_t size)
             memmove (in->buffer + end + size, in->buffer + end, strlen (&in->buffer[end]) + 1);
         memmove (in->buffer + start, text, size - (start - end));
         in->point += str_length (in->buffer) - buff_len;
-        input_update (in, TRUE);
+        input_update (in, true);
         end += size;
     }
 
@@ -1191,8 +1191,8 @@ complete_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
 
 /* --------------------------------------------------------------------------------------------- */
 
-/** Returns TRUE if the user would like to see us again */
-static gboolean
+/** Returns true if the user would like to see us again */
+static bool
 complete_engine (WInput * in, int what_to_do)
 {
     if (in->completions != nullptr && str_offset_to_pos (in->buffer, in->point) != end)
@@ -1264,13 +1264,13 @@ complete_engine (WInput * in, int what_to_do)
             complete_width = w;
 
             complete_dlg =
-                dlg_create (TRUE, y, x, complete_height, complete_width, WPOS_KEEP_DEFAULT, TRUE,
+                dlg_create (true, y, x, complete_height, complete_width, WPOS_KEEP_DEFAULT, true,
                             dialog_colors, complete_callback, nullptr, "[Completion]", nullptr);
-            complete_list = listbox_new (1, 1, h - 2, w - 2, FALSE, nullptr);
+            complete_list = listbox_new (1, 1, h - 2, w - 2, false, nullptr);
             group_add_widget (GROUP (complete_dlg), complete_list);
 
             for (p = in->completions + 1; *p != nullptr; p++)
-                listbox_add_item (complete_list, LISTBOX_APPEND_AT_END, 0, *p, nullptr, FALSE);
+                listbox_add_item (complete_list, LISTBOX_APPEND_AT_END, 0, *p, nullptr, false);
 
             i = dlg_run (complete_dlg);
             q = nullptr;
@@ -1289,7 +1289,7 @@ complete_engine (WInput * in, int what_to_do)
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

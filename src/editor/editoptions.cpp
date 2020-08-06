@@ -120,15 +120,15 @@ edit_options_dialog (WDialog * h)
     char wrap_length[16], tab_spacing[16];
     char *p, *q;
     int wrap_mode = 0;
-    gboolean old_syntax_hl;
+    bool old_syntax_hl;
 
 #ifdef ENABLE_NLS
-    static gboolean i18n_flag = FALSE;
+    static bool i18n_flag = false;
 
     if (!i18n_flag)
     {
         i18n_translate_array (wrap_str);
-        i18n_flag = TRUE;
+        i18n_flag = true;
     }
 #endif /* ENABLE_NLS */
 
@@ -149,8 +149,8 @@ edit_options_dialog (WDialog * h)
                 QUICK_START_GROUPBOX (N_("Wrap mode")),
                     QUICK_RADIO (3, wrap_str, &wrap_mode, nullptr),
                 QUICK_STOP_GROUPBOX,
-                QUICK_SEPARATOR (FALSE),
-                QUICK_SEPARATOR (FALSE),
+                QUICK_SEPARATOR (false),
+                QUICK_SEPARATOR (false),
                 QUICK_START_GROUPBOX (N_("Tabulation")),
                     QUICK_CHECKBOX (N_("&Fake half tabs"), &option_fake_half_tabs, nullptr),
                     QUICK_CHECKBOX (N_("&Backspace through tabs"), &option_backspace_through_tabs,
@@ -158,7 +158,7 @@ edit_options_dialog (WDialog * h)
                     QUICK_CHECKBOX (N_("Fill tabs with &spaces"), &option_fill_tabs_with_spaces,
                                     nullptr),
                     QUICK_LABELED_INPUT (N_("Tab spacing:"), input_label_left, tab_spacing,
-                                          "edit-tab-spacing", &q, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                          "edit-tab-spacing", &q, nullptr, false, false, INPUT_COMPLETE_NONE),
                 QUICK_STOP_GROUPBOX,
             QUICK_NEXT_COLUMN,
                 QUICK_START_GROUPBOX (N_("Other options")),
@@ -176,7 +176,7 @@ edit_options_dialog (WDialog * h)
                                      nullptr),
                     QUICK_CHECKBOX (N_("&Group undo"), &option_group_undo, nullptr),
                     QUICK_LABELED_INPUT (N_("Word wrap line length:"), input_label_left, wrap_length,
-                                         "edit-word-wrap", &p, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                         "edit-word-wrap", &p, nullptr, false, false, INPUT_COMPLETE_NONE),
                 QUICK_STOP_GROUPBOX,
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
@@ -217,18 +217,18 @@ edit_options_dialog (WDialog * h)
 
     if (wrap_mode == 1)
     {
-        option_auto_para_formatting = TRUE;
-        option_typewriter_wrap = FALSE;
+        option_auto_para_formatting = true;
+        option_typewriter_wrap = false;
     }
     else if (wrap_mode == 2)
     {
-        option_auto_para_formatting = FALSE;
-        option_typewriter_wrap = TRUE;
+        option_auto_para_formatting = false;
+        option_typewriter_wrap = true;
     }
     else
     {
-        option_auto_para_formatting = FALSE;
-        option_typewriter_wrap = FALSE;
+        option_auto_para_formatting = false;
+        option_typewriter_wrap = false;
     }
 
     /* Load or unload syntax rules if the option has changed */

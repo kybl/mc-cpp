@@ -55,64 +55,64 @@ static const struct parse_integer_test_ds
 {
     const char *haystack;
     uintmax_t expected_result;
-    gboolean invalid;
+    bool invalid;
 } parse_integer_test_ds[] =
 {
     {
         /* too big */
         "99999999999999999999999999999999999999999999999999999999999999999999",
         0,
-        TRUE
+        true
     },
     {
         "x",
         0,
-        TRUE
+        true
     },
     {
         "9x",
         0,
-        TRUE
+        true
     },
     {
         "1",
         1,
-        FALSE
+        false
     },
     {
         "-1",
         0,
-        TRUE
+        true
     },
     {
         "1k",
         1024,
-        FALSE
+        false
     },
     {
         "1K",
         1024,
-        FALSE
+        false
     },
     {
         "1M",
         1024 * 1024,
-        FALSE
+        false
     },
     {
         "1m",
         0,
-        TRUE
+        true
     },
     {
         "64M",
         64 * 1024 * 1024,
-        FALSE
+        false
     },
     {
         "1G",
         1 * 1024 * 1024 * 1024,
-        FALSE
+        false
     }
 };
 /* *INDENT-ON* */
@@ -124,7 +124,7 @@ START_PARAMETRIZED_TEST (parse_integer_test, parse_integer_test_ds)
 {
     /* given */
     uintmax_t actual_result;
-    gboolean invalid = FALSE;
+    bool invalid = false;
 
     /* when */
     actual_result = parse_integer (data->haystack, &invalid);

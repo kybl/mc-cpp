@@ -142,12 +142,12 @@ edit_about (void)
     quick_widget_t quick_widgets[] = {
         /* *INDENT-OFF* */
         QUICK_LABEL ("MCEdit " VERSION, nullptr),
-        QUICK_SEPARATOR (TRUE),
+        QUICK_SEPARATOR (true),
         QUICK_LABEL (N_("A user friendly text editor\n"
                         "written for the Midnight Commander."), nullptr),
-        QUICK_SEPARATOR (FALSE),
+        QUICK_SEPARATOR (false),
         QUICK_LABEL (N_("Copyright (C) 1996-2020 the Free Software Foundation"), nullptr),
-        QUICK_START_BUTTONS (TRUE, TRUE),
+        QUICK_START_BUTTONS (true, true),
             QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),
         QUICK_END
         /* *INDENT-ON* */
@@ -191,7 +191,7 @@ edit_restore_size (WEdit * edit)
     Widget *w = WIDGET (edit);
 
     edit->drag_state = MCEDIT_DRAG_NONE;
-    w->mouse.forced_capture = FALSE;
+    w->mouse.forced_capture = false;
     widget_set_size_rect (w, &edit->loc_prev);
     widget_draw (WIDGET (w->owner));
 }
@@ -323,7 +323,7 @@ edit_window_list (const WDialog * h)
                                      vfs_path_as_str (e->filename_vpath));
 
             listbox_add_item (listbox->list, LISTBOX_APPEND_AT_END, get_hotkey (i++),
-                              str_term_trim (fname, WIDGET (listbox->list)->cols - 2), e, FALSE);
+                              str_term_trim (fname, WIDGET (listbox->list)->cols - 2), e, false);
             g_free (fname);
         }
 
@@ -488,7 +488,7 @@ edit_dialog_command_execute (WDialog * h, long command)
  * 'command' is one of the editor commands from cmddef.h.
  */
 
-static gboolean
+static bool
 edit_translate_key (WEdit * edit, long x_key, int *cmd, int *ch)
 {
     Widget *w = WIDGET (edit);
@@ -612,7 +612,7 @@ edit_quit (WDialog * h)
     GSList *me;
 
     /* don't stop the dialog before final decision */
-    widget_set_state (WIDGET (h), WST_ACTIVE, TRUE);
+    widget_set_state (WIDGET (h), WST_ACTIVE, true);
 
     /* check window state and get modified files */
     for (l = GROUP (h)->widgets; l != nullptr; l = g_list_next (l))
@@ -682,17 +682,17 @@ edit_total_update (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 edit_update_cursor (WEdit * edit, const mouse_event_t * event)
 {
     int x, y;
-    gboolean done;
+    bool done;
 
     x = event->x - (edit->fullscreen ? 0 : 1);
     y = event->y - (edit->fullscreen ? 0 : 1);
 
     if (edit->mark2 != -1 && event->msg == MSG_MOUSE_UP)
-        return TRUE;            /* don't do anything */
+        return true;            /* don't do anything */
 
     if (event->msg == MSG_MOUSE_DOWN || event->msg == MSG_MOUSE_UP)
         edit_push_key_press (edit);
@@ -720,21 +720,21 @@ edit_update_cursor (WEdit * edit, const mouse_event_t * event)
     }
 
     if (y > edit->curs_row)
-        edit_move_down (edit, y - edit->curs_row, FALSE);
+        edit_move_down (edit, y - edit->curs_row, false);
     else if (y < edit->curs_row)
-        edit_move_up (edit, edit->curs_row - y, FALSE);
+        edit_move_up (edit, edit->curs_row - y, false);
     else
         edit_move_to_prev_col (edit, edit_buffer_get_current_bol (&edit->buffer));
 
     if (event->msg == MSG_MOUSE_CLICK)
     {
-        edit_mark_cmd (edit, TRUE);     /* reset */
+        edit_mark_cmd (edit, true);     /* reset */
         edit->highlight = 0;
     }
 
     done = (event->msg != MSG_MOUSE_DRAG);
     if (done)
-        edit_mark_cmd (edit, FALSE);
+        edit_mark_cmd (edit, false);
 
     return done;
 }
@@ -782,7 +782,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
 
             if (edit_widget_is_editor (we))
             {
-                gboolean ext_mode;
+                bool ext_mode;
                 long command;
 
                 /* keep and then extmod flag */
@@ -791,14 +791,14 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
                 we->ext_mode = ext_mode;
 
                 if (command == CK_IgnoreKey)
-                    we->ext_mode = FALSE;
+                    we->ext_mode = false;
                 else
                 {
                     ret = edit_dialog_command_execute (h, command);
                     /* if command was not handled, keep the extended mode
                        for the further key processing */
                     if (ret == MSG_HANDLED)
-                        we->ext_mode = FALSE;
+                        we->ext_mode = false;
                 }
             }
 
@@ -810,7 +810,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
              * So let's trigger an IDLE signal.
              */
             if (!is_idle ())
-                widget_idle (w, TRUE);
+                widget_idle (w, true);
             return ret;
         }
 
@@ -827,7 +827,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
         return MSG_HANDLED;
 
     case MSG_IDLE:
-        widget_idle (w, FALSE);
+        widget_idle (w, false);
         return send_message (g->current->data, nullptr, MSG_IDLE, 0, nullptr);
 
     default:
@@ -847,7 +847,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
 static void
 edit_dialog_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 {
-    gboolean unhandled = TRUE;
+    bool unhandled = true;
 
     if (msg == MSG_MOUSE_DOWN && event->y == 0)
     {
@@ -890,7 +890,7 @@ edit_dialog_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
                 else
                     send_message (h, nullptr, MSG_ACTION, CK_Close, nullptr);
 
-                unhandled = FALSE;
+                unhandled = false;
             }
 
             if (unhandled)
@@ -1086,7 +1086,7 @@ edit_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
      * the buttonbar in Z-order. */
     if (msg == MSG_MOUSE_DOWN && (event->y + w->y == LINES - 1))
     {
-        event->result.abort = TRUE;
+        event->result.abort = true;
         return;
     }
 
@@ -1161,12 +1161,12 @@ edit_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         break;
 
     case MSG_MOUSE_SCROLL_UP:
-        edit_move_up (edit, 2, TRUE);
+        edit_move_up (edit, 2, true);
         edit_total_update (edit);
         break;
 
     case MSG_MOUSE_SCROLL_DOWN:
-        edit_move_down (edit, 2, TRUE);
+        edit_move_down (edit, 2, true);
         edit_total_update (edit);
         break;
 
@@ -1183,15 +1183,15 @@ edit_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
  *
  * @param file_vpath file object
  * @param line       line number
- * @return TRUE if no errors was occurred, FALSE otherwise
+ * @return true if no errors was occurred, false otherwise
  */
 
-gboolean
+bool
 edit_file (const vfs_path_t * file_vpath, long line)
 {
     mcedit_arg_t arg = { (vfs_path_t *) file_vpath, line };
     GList *files;
-    gboolean ok;
+    bool ok;
 
     files = g_list_prepend (nullptr, &arg);
     ok = edit_files (files);
@@ -1202,16 +1202,16 @@ edit_file (const vfs_path_t * file_vpath, long line)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_files (const GList * files)
 {
-    static gboolean made_directory = FALSE;
+    static bool made_directory = false;
     WDialog *edit_dlg;
     WGroup *g;
     WMenuBar *menubar;
     Widget *w, *wd;
     const GList *file;
-    gboolean ok = FALSE;
+    bool ok = false;
 
     if (!made_directory)
     {
@@ -1232,10 +1232,10 @@ edit_files (const GList * files)
 
     /* Create a new dialog and add it widgets to it */
     edit_dlg =
-        dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, nullptr, edit_dialog_callback,
+        dlg_create (false, 0, 0, 1, 1, WPOS_FULLSCREEN, false, nullptr, edit_dialog_callback,
                     edit_dialog_mouse_callback, "[Internal File Editor]", nullptr);
     wd = WIDGET (edit_dlg);
-    widget_want_tab (wd, TRUE);
+    widget_want_tab (wd, true);
     wd->keymap = editor_map;
     wd->ext_keymap = editor_x_map;
 
@@ -1249,18 +1249,18 @@ edit_files (const GList * files)
                 (1, 0, wd->lines - 2, wd->cols, EDITOR_BACKGROUND, ' ', edit_dialog_bg_callback));
     group_add_widget (g, edit_dlg->bg);
 
-    menubar = menubar_new (nullptr, TRUE);
+    menubar = menubar_new (nullptr, true);
     w = WIDGET (menubar);
     group_add_widget_autopos (g, w, w->pos_flags, nullptr);
     edit_init_menu (menubar);
 
-    w = WIDGET (buttonbar_new (TRUE));
+    w = WIDGET (buttonbar_new (true));
     group_add_widget_autopos (g, w, w->pos_flags, nullptr);
 
     for (file = files; file != nullptr; file = g_list_next (file))
     {
         mcedit_arg_t *f = (mcedit_arg_t *) file->data;
-        gboolean f_ok;
+        bool f_ok;
 
         f_ok = edit_add_window (edit_dlg, wd->y + 1, wd->x, wd->lines - 2, wd->cols, f->file_vpath,
                                 f->line_number);
@@ -1302,10 +1302,10 @@ find_editor (const WDialog * h)
  * Check if widget is an WEdit class.
  *
  * @param w probably editor object
- * @return TRUE if widget is an WEdit class, FALSE otherwise
+ * @return true if widget is an WEdit class, false otherwise
  */
 
-gboolean
+bool
 edit_widget_is_editor (const Widget * w)
 {
     return (w != nullptr && w->callback == edit_callback);
@@ -1359,11 +1359,11 @@ edit_save_size (WEdit * edit)
  * @param cols  window width
  * @param f     file object
  * @param fline line number in file
- * @return TRUE if new window was successfully created and inserted into editor screen,
- *         FALSE otherwise
+ * @return true if new window was successfully created and inserted into editor screen,
+ *         false otherwise
  */
 
-gboolean
+bool
 edit_add_window (WDialog * h, int y, int x, int lines, int cols, const vfs_path_t * f, long fline)
 {
     WEdit *edit;
@@ -1371,7 +1371,7 @@ edit_add_window (WDialog * h, int y, int x, int lines, int cols, const vfs_path_
 
     edit = edit_init (nullptr, y, x, lines, cols, f, fline);
     if (edit == nullptr)
-        return FALSE;
+        return false;
 
     w = WIDGET (edit);
     w->callback = edit_callback;
@@ -1381,7 +1381,7 @@ edit_add_window (WDialog * h, int y, int x, int lines, int cols, const vfs_path_
     edit_set_buttonbar (edit, find_buttonbar (h));
     widget_draw (WIDGET (h));
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1390,19 +1390,19 @@ edit_add_window (WDialog * h, int y, int x, int lines, int cols, const vfs_path_
  *
  * @param edit    editor object
  * @param command action id
- * @return TRUE if the action was handled, FALSE otherwise
+ * @return true if the action was handled, false otherwise
  */
 
-gboolean
+bool
 edit_handle_move_resize (WEdit * edit, long command)
 {
     Widget *w = WIDGET (edit);
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (edit->fullscreen)
     {
         edit->drag_state = MCEDIT_DRAG_NONE;
-        w->mouse.forced_capture = FALSE;
+        w->mouse.forced_capture = false;
         return ret;
     }
 
@@ -1415,20 +1415,20 @@ edit_handle_move_resize (WEdit * edit, long command)
         case CK_WindowMove:
             edit->drag_state = MCEDIT_DRAG_MOVE;
             edit_save_size (edit);
-            edit_status (edit, TRUE);   /* redraw frame and status */
+            edit_status (edit, true);   /* redraw frame and status */
             /**
              * If a user initiates a move by the menu, not by the mouse, we
              * make a subsequent mouse drag pull the frame from its middle.
              * (We can instead choose '0' to pull it from the corner.)
              */
             edit->drag_state_start = w->cols / 2;
-            ret = TRUE;
+            ret = true;
             break;
         case CK_WindowResize:
             edit->drag_state = MCEDIT_DRAG_RESIZE;
             edit_save_size (edit);
-            edit_status (edit, TRUE);   /* redraw frame and status */
-            ret = TRUE;
+            edit_status (edit, true);   /* redraw frame and status */
+            ret = true;
             break;
         default:
             break;
@@ -1440,22 +1440,22 @@ edit_handle_move_resize (WEdit * edit, long command)
         {
         case CK_WindowResize:
             edit->drag_state = MCEDIT_DRAG_RESIZE;
-            ret = TRUE;
+            ret = true;
             break;
         case CK_Up:
         case CK_Down:
         case CK_Left:
         case CK_Right:
             edit_window_move (edit, command);
-            ret = TRUE;
+            ret = true;
             break;
         case CK_Enter:
         case CK_WindowMove:
             edit->drag_state = MCEDIT_DRAG_NONE;
-            edit_status (edit, TRUE);   /* redraw frame and status */
+            edit_status (edit, true);   /* redraw frame and status */
             MC_FALLTHROUGH;
         default:
-            ret = TRUE;
+            ret = true;
             break;
         }
         break;
@@ -1465,22 +1465,22 @@ edit_handle_move_resize (WEdit * edit, long command)
         {
         case CK_WindowMove:
             edit->drag_state = MCEDIT_DRAG_MOVE;
-            ret = TRUE;
+            ret = true;
             break;
         case CK_Up:
         case CK_Down:
         case CK_Left:
         case CK_Right:
             edit_window_resize (edit, command);
-            ret = TRUE;
+            ret = true;
             break;
         case CK_Enter:
         case CK_WindowResize:
             edit->drag_state = MCEDIT_DRAG_NONE;
-            edit_status (edit, TRUE);   /* redraw frame and status */
+            edit_status (edit, true);   /* redraw frame and status */
             MC_FALLTHROUGH;
         default:
-            ret = TRUE;
+            ret = true;
             break;
         }
         break;

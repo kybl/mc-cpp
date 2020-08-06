@@ -100,7 +100,7 @@ update_command (void)
         listbox_get_current (l_panelize, nullptr, (void **) &data);
         input_assign_text (pname, data->command);
         pname->point = 0;
-        input_update (pname, TRUE);
+        input_update (pname, true);
     }
 }
 
@@ -172,7 +172,7 @@ init_panelize (void)
     panelize_cols = MAX (panelize_cols, blen + 4);
 
     panelize_dlg =
-        dlg_create (TRUE, 0, 0, 20, panelize_cols, WPOS_CENTER, FALSE, dialog_colors,
+        dlg_create (true, 0, 0, 20, panelize_cols, WPOS_CENTER, false, dialog_colors,
                     panelize_callback, nullptr, "[External panelize]", _("External panelize"));
     g = GROUP (panelize_dlg);
 
@@ -180,9 +180,9 @@ init_panelize (void)
     y = UY;
     group_add_widget (g, groupbox_new (y++, UX, 12, panelize_cols - UX * 2, ""));
 
-    l_panelize = listbox_new (y, UX + 1, 10, panelize_cols - UX * 2 - 2, FALSE, nullptr);
+    l_panelize = listbox_new (y, UX + 1, 10, panelize_cols - UX * 2 - 2, false, nullptr);
     for (current = panelize; current != nullptr; current = current->next)
-        listbox_add_item (l_panelize, LISTBOX_APPEND_AT_END, 0, current->label, current, FALSE);
+        listbox_add_item (l_panelize, LISTBOX_APPEND_AT_END, 0, current->label, current, false);
     listbox_select_entry (l_panelize, listbox_search_text (l_panelize, _("Other command")));
     group_add_widget (g, l_panelize);
 
@@ -320,12 +320,12 @@ do_external_panelize (char *command)
 
     dir_list_init (list);
 
-    while (TRUE)
+    while (true)
     {
         char line[MC_MAXPATHLEN];
         size_t len;
         char *name;
-        gboolean link_to_dir, stale_link;
+        bool link_to_dir, stale_link;
         struct stat st;
 
         clearerr (external);
@@ -355,10 +355,10 @@ do_external_panelize (char *command)
         file_mark (current_panel, list->len - 1, 0);
 
         if ((list->len & 31) == 0)
-            rotate_dash (TRUE);
+            rotate_dash (true);
     }
 
-    current_panel->is_panelized = TRUE;
+    current_panel->is_panelized = true;
     panelize_absolutize_if_needed (current_panel);
 
     if (pclose (external) < 0)
@@ -366,7 +366,7 @@ do_external_panelize (char *command)
     close_error_pipe (D_NORMAL, nullptr);
     try_to_select (current_panel, nullptr);
     panel_re_sort (current_panel);
-    rotate_dash (FALSE);
+    rotate_dash (false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -376,7 +376,7 @@ do_panelize_cd (WPanel * panel)
 {
     int i;
     dir_list *list;
-    gboolean panelized_same;
+    bool panelized_same;
 
     dir_list_clean (&panel->dir);
     if (panelized_panel.root_vpath == nullptr)
@@ -422,7 +422,7 @@ do_panelize_cd (WPanel * panel)
         list->list[i].second_sort_key = panelized_panel.list.list[i].second_sort_key;
     }
 
-    panel->is_panelized = TRUE;
+    panel->is_panelized = true;
     panelize_absolutize_if_needed (panel);
 
     try_to_select (panel, nullptr);
@@ -623,7 +623,7 @@ load_panelize (void)
                     g_string_assign (buffer, *profile_keys);
             }
 
-            add2panelize (g_string_free (buffer, FALSE),
+            add2panelize (g_string_free (buffer, false),
                           mc_config_get_string (mc_global.main_config, panelize_section,
                                                 *profile_keys, ""));
         }

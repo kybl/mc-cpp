@@ -85,7 +85,7 @@ static tree_entry *tree_store_add_entry (const vfs_path_t * name);
 /* --------------------------------------------------------------------------------------------- */
 
 static inline void
-tree_store_dirty (gboolean dirty)
+tree_store_dirty (bool dirty)
 {
     ts.dirty = dirty;
 }
@@ -232,13 +232,13 @@ tree_store_load_from (const char *name)
     {
         char oldname[MC_MAXPATHLEN] = "\0";
 
-        ts.loaded = TRUE;
+        ts.loaded = true;
 
         /* File open -> read contents */
         while (fgets (buffer, MC_MAXPATHLEN, file))
         {
             tree_entry *e;
-            gboolean scanned;
+            bool scanned;
             char *lc_name;
 
             /* Skip invalid records */
@@ -311,7 +311,7 @@ tree_store_load_from (const char *name)
         tree_store_add_entry (tmp_vpath);
         tree_store_rescan (tmp_vpath);
         vfs_path_free (tmp_vpath);
-        ts.loaded = TRUE;
+        ts.loaded = true;
     }
 
     return 1;
@@ -322,7 +322,7 @@ tree_store_load_from (const char *name)
 static char *
 encode (const vfs_path_t * vpath, size_t offset)
 {
-    return strutils_escape (vfs_path_as_str (vpath) + offset, -1, "\n\\", FALSE);
+    return strutils_escape (vfs_path_as_str (vpath) + offset, -1, "\n\\", false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -372,7 +372,7 @@ tree_store_save_to (char *name)
             }
         }
 
-    tree_store_dirty (FALSE);
+    tree_store_dirty (false);
     fclose (file);
 
     return 0;
@@ -460,14 +460,14 @@ tree_store_add_entry (const vfs_path_t * name)
     submask |= 1 << new_->sublevel;
     submask &= (2 << new_->sublevel) - 1;
     new_->submask = submask;
-    new_->mark = FALSE;
+    new_->mark = false;
 
     /* Correct the submasks of the previous entries */
     for (current = new_->prev;
          current != nullptr && current->sublevel > new_->sublevel; current = current->prev)
         current->submask |= 1 << new_->sublevel;
 
-    tree_store_dirty (TRUE);
+    tree_store_dirty (true);
     return new_;
 }
 
@@ -534,7 +534,7 @@ process_special_dirs (GList ** special_dirs, const char *file)
     gchar **start_buff;
     mc_config_t *cfg;
 
-    cfg = mc_config_init (file, TRUE);
+    cfg = mc_config_init (file, true);
     if (cfg == nullptr)
         return;
 
@@ -556,13 +556,13 @@ process_special_dirs (GList ** special_dirs, const char *file)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 should_skip_directory (const vfs_path_t * vpath)
 {
     static GList *special_dirs = nullptr;
     GList *l;
-    static gboolean loaded = FALSE;
-    gboolean ret = FALSE;
+    static bool loaded = false;
+    bool ret = false;
 
     if (!loaded)
     {
@@ -572,14 +572,14 @@ should_skip_directory (const vfs_path_t * vpath)
         process_special_dirs (&special_dirs, profile_name);
         process_special_dirs (&special_dirs, global_profile_name);
 
-        loaded = TRUE;
+        loaded = true;
     }
 
     for (l = special_dirs; l != nullptr; l = g_list_next (l))
     {
         const char *cdata = static_cast<const char *> (l->data);
         if (strncmp (vfs_path_as_str (vpath), cdata, strlen (cdata)) == 0) {
-            ret = TRUE;
+            ret = true;
             break;
         }
     }
@@ -687,7 +687,7 @@ tree_store_remove_entry (const vfs_path_t * name_vpath)
 
     /* Miguel Ugly hack */
     {
-        gboolean is_root;
+        bool is_root;
         const char *name_vpath_str;
 
         name_vpath_str = vfs_path_as_str (name_vpath);
@@ -705,7 +705,7 @@ tree_store_remove_entry (const vfs_path_t * name_vpath)
     current = base->next;
     while (current != nullptr && vfs_path_equal_len (current->name, base->name, len))
     {
-        gboolean ok;
+        bool ok;
         tree_entry *old;
         const char *cname;
 
@@ -719,7 +719,7 @@ tree_store_remove_entry (const vfs_path_t * name_vpath)
         remove_entry (old);
     }
     remove_entry (base);
-    tree_store_dirty (TRUE);
+    tree_store_dirty (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -770,19 +770,19 @@ tree_store_mark_checked (const char *subname)
         size_t len;
 
         len = vfs_path_len (base->name);
-        base->mark = FALSE;
+        base->mark = false;
         for (current = base->next;
              current != nullptr && vfs_path_equal_len (current->name, base->name, len);
              current = current->next)
         {
-            gboolean ok;
+            bool ok;
 
             cname = vfs_path_as_str (current->name);
             ok = (cname[len] == '\0' || IS_PATH_SEP (cname[len]) || len == 1);
             if (!ok)
                 break;
 
-            current->mark = FALSE;
+            current->mark = false;
         }
     }
 }
@@ -829,7 +829,7 @@ tree_store_start_check (const vfs_path_t * vpath)
          current != nullptr && vfs_path_equal_len (current->name, ts.check_name, len);
          current = current->next)
     {
-        gboolean ok;
+        bool ok;
         const char *cname;
 
         cname = vfs_path_as_str (current->name);
@@ -837,7 +837,7 @@ tree_store_start_check (const vfs_path_t * vpath)
         if (!ok)
             break;
 
-        current->mark = TRUE;
+        current->mark = true;
     }
 
     return retval;
@@ -864,7 +864,7 @@ tree_store_end_check (void)
     current = ts.check_start;
     while (current != nullptr && vfs_path_equal_len (current->name, ts.check_name, len))
     {
-        gboolean ok;
+        bool ok;
         tree_entry *old;
         const char *cname;
 
@@ -900,7 +900,7 @@ tree_store_rescan (const vfs_path_t * vpath)
     if (should_skip_directory (vpath))
     {
         entry = tree_store_add_entry (vpath);
-        entry->scanned = TRUE;
+        entry->scanned = true;
         return entry;
     }
 
@@ -927,7 +927,7 @@ tree_store_rescan (const vfs_path_t * vpath)
         mc_closedir (dirp);
     }
     tree_store_end_check ();
-    entry->scanned = TRUE;
+    entry->scanned = true;
 
     return entry;
 }

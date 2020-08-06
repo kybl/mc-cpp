@@ -24,7 +24,7 @@ typedef enum
 
 void add2hotlist_cmd (void);
 char *hotlist_show (hotlist_t list_type);
-gboolean save_hotlist (void);
+bool save_hotlist (void);
 void done_hotlist (void);
 
 /*** inline functions ****************************************************************************/

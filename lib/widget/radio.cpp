@@ -89,7 +89,7 @@ radio_execute_cmd (WRadio * r, long command)
 
     case CK_Select:
         r->sel = r->pos;
-        widget_set_state (w, WST_FOCUSED, TRUE);        /* Also draws the widget */
+        widget_set_state (w, WST_FOCUSED, true);        /* Also draws the widget */
         send_message (w->owner, w, MSG_NOTIFY, 0, nullptr);
         return MSG_HANDLED;
 
@@ -156,13 +156,13 @@ radio_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 
     case MSG_DRAW:
         {
-            gboolean focused;
+            bool focused;
 
             focused = widget_get_state (w, WST_FOCUSED);
 
             for (i = 0; i < r->count; i++)
             {
-                widget_selectcolor (w, i == r->pos && focused, FALSE);
+                widget_selectcolor (w, i == r->pos && focused, false);
                 widget_gotoyx (w, i, 0);
                 tty_draw_hline (w->y + i, w->x, ' ', w->cols);
                 tty_print_string ((r->sel == i) ? "(*) " : "( ) ");

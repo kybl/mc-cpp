@@ -49,27 +49,27 @@
 typedef struct mcdiffview_search_options_struct
 {
     mc_search_type_t type;
-    gboolean case_sens;
-    gboolean backwards;
-    gboolean whole_words;
-    gboolean all_codepages;
+    bool case_sens;
+    bool backwards;
+    bool whole_words;
+    bool all_codepages;
 } mcdiffview_search_options_t;
 
 /*** file scope variables ************************************************************************/
 
 static mcdiffview_search_options_t mcdiffview_search_options = {
     .type = MC_SEARCH_T_NORMAL,
-    .case_sens = FALSE,
-    .backwards = FALSE,
-    .whole_words = FALSE,
-    .all_codepages = FALSE,
+    .case_sens = false,
+    .backwards = false,
+    .whole_words = false,
+    .all_codepages = false,
 };
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcdiffview_dialog_search (WDiff * dview)
 {
     char *exp = nullptr;
@@ -83,8 +83,8 @@ mcdiffview_dialog_search (WDiff * dview)
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Enter search string:"), input_label_above, INPUT_LAST_TEXT,
-            MC_HISTORY_SHARED_SEARCH, &exp, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
-            QUICK_SEPARATOR (TRUE),
+            MC_HISTORY_SHARED_SEARCH, &exp, nullptr, false, false, INPUT_COMPLETE_NONE),
+            QUICK_SEPARATOR (true),
             QUICK_START_COLUMNS,
                 QUICK_RADIO (num_of_types, (const char **) list_of_types,
                              (int *) &mcdiffview_search_options.type, nullptr),
@@ -115,7 +115,7 @@ mcdiffview_dialog_search (WDiff * dview)
     if ((qd_result == B_CANCEL) || (exp == nullptr) || (exp[0] == '\0'))
     {
         g_free (exp);
-        return FALSE;
+        return false;
     }
 
 #ifdef HAVE_CHARSET
@@ -124,19 +124,19 @@ mcdiffview_dialog_search (WDiff * dview)
 
         tmp = str_convert_to_input (exp);
         g_free (exp);
-        exp = g_string_free (tmp, FALSE);
+        exp = g_string_free (tmp, false);
     }
 #endif
 
     g_free (dview->search.last_string);
     dview->search.last_string = exp;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcdiffview_do_search_backward (WDiff * dview)
 {
     ssize_t ind;
@@ -144,7 +144,7 @@ mcdiffview_do_search_backward (WDiff * dview)
     if (dview->search.last_accessed_num_line < 0)
     {
         dview->search.last_accessed_num_line = -1;
-        return FALSE;
+        return false;
     }
 
     if ((size_t) dview->search.last_accessed_num_line >= dview->a[dview->ord]->len)
@@ -162,16 +162,16 @@ mcdiffview_do_search_backward (WDiff * dview)
         {
             dview->skip_rows = dview->search.last_found_line =
                 dview->search.last_accessed_num_line = ind;
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 
-static gboolean
+static bool
 mcdiffview_do_search_forward (WDiff * dview)
 {
     size_t ind;
@@ -181,7 +181,7 @@ mcdiffview_do_search_forward (WDiff * dview)
     else if ((size_t) dview->search.last_accessed_num_line >= dview->a[dview->ord]->len)
     {
         dview->search.last_accessed_num_line = (ssize_t) dview->a[dview->ord]->len;
-        return FALSE;
+        return false;
     }
 
     for (ind = (size_t)++ dview->search.last_accessed_num_line; ind < dview->a[dview->ord]->len;
@@ -197,10 +197,10 @@ mcdiffview_do_search_forward (WDiff * dview)
         {
             dview->skip_rows = dview->search.last_found_line =
                 dview->search.last_accessed_num_line = (ssize_t) ind;
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -208,7 +208,7 @@ mcdiffview_do_search_forward (WDiff * dview)
 static void
 mcdiffview_do_search (WDiff * dview)
 {
-    gboolean present_result = FALSE;
+    bool present_result = false;
 
     tty_enable_interrupt_key ();
 

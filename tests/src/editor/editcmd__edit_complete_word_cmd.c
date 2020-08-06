@@ -77,12 +77,12 @@ edit_get_syntax_color (WEdit * _edit, off_t _byte_index)
 /* --------------------------------------------------------------------------------------------- */
 
 /* @Mock */
-gboolean
+bool
 edit_load_macro_cmd (WEdit * _edit)
 {
     (void) _edit;
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -139,7 +139,7 @@ editcmd_dialog_completion_show__deinit (void)
         int iterator;
 
         for (iterator = 0; iterator < editcmd_dialog_completion_show__num_compl; iterator++)
-            g_string_free (editcmd_dialog_completion_show__compl[iterator], TRUE);
+            g_string_free (editcmd_dialog_completion_show__compl[iterator], true);
 
         g_free (editcmd_dialog_completion_show__compl);
     }
@@ -272,7 +272,7 @@ START_PARAMETRIZED_TEST (test_autocomplete, test_autocomplete_ds)
 
         actual_completed_str = g_string_new ("");
 
-        while (TRUE)
+        while (true)
         {
             int chr;
 
@@ -284,7 +284,7 @@ START_PARAMETRIZED_TEST (test_autocomplete, test_autocomplete_ds)
             g_string_append_c (actual_completed_str, chr);
         }
         mctest_assert_str_eq (actual_completed_str->str, data->expected_completed_word);
-        g_string_free (actual_completed_str, TRUE);
+        g_string_free (actual_completed_str, true);
     }
 }
 /* *INDENT-OFF* */
@@ -346,7 +346,7 @@ START_PARAMETRIZED_TEST (test_autocomplete_single, test_autocomplete_single_ds)
 
         actual_completed_str = g_string_new ("");
 
-        while (TRUE)
+        while (true)
         {
             int chr;
 
@@ -358,7 +358,7 @@ START_PARAMETRIZED_TEST (test_autocomplete_single, test_autocomplete_single_ds)
             g_string_append_c (actual_completed_str, chr);
         }
         mctest_assert_str_eq (actual_completed_str->str, data->expected_completed_word);
-        g_string_free (actual_completed_str, TRUE);
+        g_string_free (actual_completed_str, true);
     }
 }
 /* *INDENT-OFF* */

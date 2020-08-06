@@ -135,10 +135,10 @@ menubar_paint_idx (const WMenuBar * menubar, unsigned int idx, int color)
         tty_setcolor (MENU_ENTRY_COLOR);
 
         widget_gotoyx (w, y, x - 1);
-        tty_print_alt_char (ACS_LTEE, FALSE);
+        tty_print_alt_char (ACS_LTEE, false);
         tty_draw_hline (w->y + y, w->x + x, ACS_HLINE, menu->max_entry_len + 3);
         widget_gotoyx (w, y, x + menu->max_entry_len + 3);
-        tty_print_alt_char (ACS_RTEE, FALSE);
+        tty_print_alt_char (ACS_RTEE, false);
     }
     else
     {
@@ -192,7 +192,7 @@ menubar_draw_drop (const WMenuBar * menubar)
                              SHADOW_COLOR);
 
     tty_setcolor (MENU_ENTRY_COLOR);
-    tty_draw_box (w->y + 1, w->x + column, count + 2, menu->max_entry_len + 5, FALSE);
+    tty_draw_box (w->y + 1, w->x + column, count + 2, menu->max_entry_len + 5, false);
 
     for (i = 0; i < count; i++)
         menubar_paint_idx (menubar, i,
@@ -202,7 +202,7 @@ menubar_draw_drop (const WMenuBar * menubar)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-menubar_set_color (const WMenuBar * menubar, gboolean current, gboolean hotkey)
+menubar_set_color (const WMenuBar * menubar, bool current, bool hotkey)
 {
     if (!widget_get_state (CONST_WIDGET (menubar), WST_FOCUSED))
         tty_setcolor (MENU_INACTIVE_COLOR);
@@ -228,9 +228,9 @@ menubar_draw (const WMenuBar * menubar)
     for (i = menubar->menu; i != nullptr; i = g_list_next (i))
     {
         menu_t *menu = MENU (i->data);
-        gboolean is_selected = (menubar->selected == (gsize) g_list_position (menubar->menu, i));
+        bool is_selected = (menubar->selected == (gsize) g_list_position (menubar->menu, i));
 
-        menubar_set_color (menubar, is_selected, FALSE);
+        menubar_set_color (menubar, is_selected, false);
         widget_gotoyx (w, 0, menu->start_x);
 
         tty_print_char (' ');
@@ -238,9 +238,9 @@ menubar_draw (const WMenuBar * menubar)
 
         if (menu->text.hotkey != nullptr)
         {
-            menubar_set_color (menubar, is_selected, TRUE);
+            menubar_set_color (menubar, is_selected, true);
             tty_print_string (menu->text.hotkey);
-            menubar_set_color (menubar, is_selected, FALSE);
+            menubar_set_color (menubar, is_selected, false);
         }
 
         if (menu->text.end != nullptr)
@@ -272,9 +272,9 @@ menubar_remove (WMenuBar * menubar)
     g = WIDGET (WIDGET (menubar)->owner);
     GROUP (g)->current = widget_find (g, widget_find_by_id (g, menubar->previous_widget));
 
-    menubar->is_dropped = FALSE;
+    menubar->is_dropped = false;
     do_refresh ();
-    menubar->is_dropped = TRUE;
+    menubar->is_dropped = true;
 
     /* restore current widget */
     GROUP (g)->current = widget_find (g, WIDGET (menubar));
@@ -310,11 +310,11 @@ menubar_finish (WMenuBar * menubar)
 {
     Widget *w = WIDGET (menubar);
 
-    widget_set_state (w, WST_FOCUSED, FALSE);
-    menubar->is_dropped = FALSE;
+    widget_set_state (w, WST_FOCUSED, false);
+    menubar->is_dropped = false;
     w->lines = 1;
-    widget_want_hotkey (w, FALSE);
-    widget_set_options (w, WOP_SELECTABLE, FALSE);
+    widget_want_hotkey (w, false);
+    widget_set_options (w, WOP_SELECTABLE, false);
 
     /* Move the menubar to the bottom so that widgets displayed on top of
      * an "invisible" menubar get the first chance to respond to mouse events. */
@@ -332,7 +332,7 @@ menubar_finish (WMenuBar * menubar)
 static void
 menubar_drop (WMenuBar * menubar, unsigned int selected)
 {
-    menubar->is_dropped = TRUE;
+    menubar->is_dropped = true;
     menubar->selected = selected;
     menubar_draw (menubar);
 }
@@ -417,7 +417,7 @@ menubar_first (WMenuBar * menubar)
 
         menu->selected = 0;
 
-        while (TRUE)
+        while (true)
         {
             menu_entry_t *entry;
 
@@ -610,20 +610,20 @@ menubar_handle_key (WMenuBar * menubar, int key)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 menubar_refresh (WMenuBar * menubar)
 {
     Widget *w = WIDGET (menubar);
 
     if (!widget_get_state (w, WST_FOCUSED))
-        return FALSE;
+        return false;
 
     /* Trick to get all the mouse events */
     w->lines = LINES;
 
     /* Trick to get all of the hotkeys */
-    widget_want_hotkey (w, TRUE);
-    return TRUE;
+    widget_want_hotkey (w, true);
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -710,7 +710,7 @@ menubar_get_menu_by_x_coord (const WMenuBar * menubar, int x)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 menubar_mouse_on_menu (const WMenuBar * menubar, int y, int x)
 {
     Widget *w = WIDGET (menubar);
@@ -718,7 +718,7 @@ menubar_mouse_on_menu (const WMenuBar * menubar, int y, int x)
     int left_x, right_x, bottom_y;
 
     if (!menubar->is_dropped)
-        return FALSE;
+        return false;
 
     menu = MENU (g_list_nth_data (menubar->menu, menubar->selected));
     left_x = menu->start_x;
@@ -759,17 +759,17 @@ menubar_change_selected_item (WMenuBar * menubar, int y)
 static void
 menubar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 {
-    static gboolean was_drag = FALSE;
+    static bool was_drag = false;
 
     WMenuBar *menubar = MENUBAR (w);
-    gboolean mouse_on_drop;
+    bool mouse_on_drop;
 
     mouse_on_drop = menubar_mouse_on_menu (menubar, event->y, event->x);
 
     switch (msg)
     {
     case MSG_MOUSE_DOWN:
-        was_drag = FALSE;
+        was_drag = false;
 
         if (event->y == 0)
         {
@@ -777,7 +777,7 @@ menubar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             unsigned int selected;
 
             selected = menubar_get_menu_by_x_coord (menubar, event->x);
-            menubar_activate (menubar, TRUE, selected);
+            menubar_activate (menubar, true, selected);
             menubar_remove (menubar);   /* if already shown */
             menubar_drop (menubar, selected);
         }
@@ -800,18 +800,18 @@ menubar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
              * touched by us. We should think of some other way of communicating
              * this to the system.
              */
-            w->mouse.capture = FALSE;
+            w->mouse.capture = false;
         }
         break;
 
     case MSG_MOUSE_UP:
         if (was_drag && mouse_on_drop)
             menubar_execute (menubar);
-        was_drag = FALSE;
+        was_drag = false;
         break;
 
     case MSG_MOUSE_CLICK:
-        was_drag = FALSE;
+        was_drag = false;
 
         if ((event->buttons & GPM_B_MIDDLE) != 0 && event->y > 0 && menubar->is_dropped)
         {
@@ -834,12 +834,12 @@ menubar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         else if (mouse_on_drop)
             menubar_change_selected_item (menubar, event->y);
 
-        was_drag = TRUE;
+        was_drag = true;
         break;
 
     case MSG_MOUSE_SCROLL_UP:
     case MSG_MOUSE_SCROLL_DOWN:
-        was_drag = FALSE;
+        was_drag = false;
 
         if (widget_get_state (w, WST_FOCUSED))
         {
@@ -863,7 +863,7 @@ menubar_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         break;
 
     default:
-        was_drag = FALSE;
+        was_drag = false;
         break;
     }
 }
@@ -941,7 +941,7 @@ destroy_menu (menu_t * menu)
 /* --------------------------------------------------------------------------------------------- */
 
 WMenuBar *
-menubar_new (GList * menu, gboolean visible)
+menubar_new (GList * menu, bool visible)
 {
     WMenuBar *menubar;
     Widget *w;
@@ -951,7 +951,7 @@ menubar_new (GList * menu, gboolean visible)
     widget_init (w, 0, 0, 1, COLS, menubar_callback, menubar_mouse_callback);
     w->pos_flags = WPOS_KEEP_HORZ | WPOS_KEEP_TOP;
     /* initially, menubar is not selectable */
-    widget_set_options (w, WOP_SELECTABLE, FALSE);
+    widget_set_options (w, WOP_SELECTABLE, false);
     w->options |= WOP_TOP_SELECT;
     w->keymap = menu_map;
     menubar->is_visible = visible;
@@ -968,11 +968,11 @@ menubar_set_menu (WMenuBar * menubar, GList * menu)
     /* delete previous menu */
     menubar_free_menu (menubar);
     /* add new menu */
-    menubar->is_dropped = FALSE;
+    menubar->is_dropped = false;
     menubar->menu = menu;
     menubar->selected = 0;
     menubar_arrange (menubar);
-    widget_set_state (WIDGET (menubar), WST_FOCUSED, FALSE);
+    widget_set_state (WIDGET (menubar), WST_FOCUSED, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1060,15 +1060,15 @@ find_menubar (const WDialog * h)
  * @which number of active dropdown menu
  */
 void
-menubar_activate (WMenuBar * menubar, gboolean dropped, int which)
+menubar_activate (WMenuBar * menubar, bool dropped, int which)
 {
     Widget *w = WIDGET (menubar);
 
     if (!widget_get_state (w, WST_FOCUSED))
     {
-        widget_set_options (w, WOP_SELECTABLE, TRUE);
+        widget_set_options (w, WOP_SELECTABLE, true);
 
-        widget_set_state (w, WST_FOCUSED, TRUE);        /* FIXME: unneeded? */
+        widget_set_state (w, WST_FOCUSED, true);        /* FIXME: unneeded? */
         menubar->is_dropped = dropped;
         if (which >= 0)
             menubar->selected = (guint) which;

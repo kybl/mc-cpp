@@ -78,7 +78,7 @@
 
 /*** file scope type declarations ****************************************************************/
 
-typedef char *(*quote_func_t) (const char *name, gboolean quote_percent);
+typedef char *(*quote_func_t) (const char *name, bool quote_percent);
 
 /*** file scope variables ************************************************************************/
 
@@ -93,10 +93,10 @@ static char buffer[BUF_1K];
 static char *pbuffer = nullptr;
 static time_t localmtime = 0;
 static quote_func_t quote_func = name_quote;
-static gboolean run_view = FALSE;
-static gboolean is_cd = FALSE;
-static gboolean written_nonspace = FALSE;
-static gboolean do_local_copy = FALSE;
+static bool run_view = false;
+static bool is_cd = false;
+static bool written_nonspace = false;
+static bool do_local_copy = false;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -115,7 +115,7 @@ exec_cleanup_script (vfs_path_t * script_vpath)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-exec_cleanup_file_name (const vfs_path_t * filename_vpath, gboolean has_changed)
+exec_cleanup_file_name (const vfs_path_t * filename_vpath, bool has_changed)
 {
     if (localfilecopy_vpath == nullptr)
         return;
@@ -138,7 +138,7 @@ static char *
 exec_get_file_name (const vfs_path_t * filename_vpath)
 {
     if (!do_local_copy)
-        return quote_func (vfs_path_get_last_path_str (filename_vpath), FALSE);
+        return quote_func (vfs_path_get_last_path_str (filename_vpath), false);
 
     if (localfilecopy_vpath == nullptr)
     {
@@ -151,17 +151,17 @@ exec_get_file_name (const vfs_path_t * filename_vpath)
         localmtime = mystat.st_mtime;
     }
 
-    return quote_func (vfs_path_get_last_path_str (localfilecopy_vpath), FALSE);
+    return quote_func (vfs_path_get_last_path_str (localfilecopy_vpath), false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
 static char *
-exec_expand_format (char symbol, gboolean is_result_quoted)
+exec_expand_format (char symbol, bool is_result_quoted)
 {
     char *text;
 
-    text = expand_format (nullptr, symbol, TRUE);
+    text = expand_format (nullptr, symbol, true);
     if (is_result_quoted && text != nullptr)
     {
         char *quoted_text;
@@ -187,13 +187,13 @@ exec_get_export_variables (const vfs_path_t * filename_vpath)
     {
         const char symbol;
         const char *name;
-        const gboolean is_result_quoted;
+        const bool is_result_quoted;
     } export_variables[] = {
-        {'p', "MC_EXT_BASENAME", FALSE},
-        {'d', "MC_EXT_CURRENTDIR", FALSE},
-        {'s', "MC_EXT_SELECTED", TRUE},
-        {'t', "MC_EXT_ONLYTAGGED", TRUE},
-        {'\0', nullptr, FALSE}
+        {'p', "MC_EXT_BASENAME", false},
+        {'d', "MC_EXT_CURRENTDIR", false},
+        {'s', "MC_EXT_SELECTED", true},
+        {'t', "MC_EXT_ONLYTAGGED", true},
+        {'\0', nullptr, false}
     };
     /* *INDENT-ON* */
 
@@ -217,7 +217,7 @@ exec_get_export_variables (const vfs_path_t * filename_vpath)
             g_free (text);
         }
     }
-    return g_string_free (export_vars_string, FALSE);
+    return g_string_free (export_vars_string, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -227,8 +227,8 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
 {
     GString *shell_string;
     char lc_prompt[80] = "\0";
-    gboolean parameter_found = FALSE;
-    gboolean expand_prefix_found = FALSE;
+    bool parameter_found = false;
+    bool expand_prefix_found = false;
 
     shell_string = g_string_new ("");
 
@@ -240,19 +240,19 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
             {
                 char *parameter;
 
-                parameter_found = FALSE;
+                parameter_found = false;
                 parameter =
                     input_dialog (_("Parameter"), lc_prompt, MC_HISTORY_EXT_PARAMETER, "",
                                   INPUT_COMPLETE_NONE);
                 if (parameter == nullptr)
                 {
                     /* User canceled */
-                    g_string_free (shell_string, TRUE);
-                    exec_cleanup_file_name (filename_vpath, FALSE);
+                    g_string_free (shell_string, true);
+                    exec_cleanup_file_name (filename_vpath, false);
                     return nullptr;
                 }
                 g_string_append (shell_string, parameter);
-                written_nonspace = TRUE;
+                written_nonspace = true;
                 g_free (parameter);
             }
             else
@@ -268,9 +268,9 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
         }
         else if (expand_prefix_found)
         {
-            expand_prefix_found = FALSE;
+            expand_prefix_found = false;
             if (*lc_data == '{')
-                parameter_found = TRUE;
+                parameter_found = true;
             else
             {
                 int i;
@@ -280,16 +280,16 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                 if (i != 0)
                 {
                     lc_data += i - 1;
-                    run_view = TRUE;
+                    run_view = true;
                 }
                 else
                 {
                     i = check_format_cd (lc_data);
                     if (i > 0)
                     {
-                        is_cd = TRUE;
+                        is_cd = true;
                         quote_func = fake_name_quote;
-                        do_local_copy = FALSE;
+                        do_local_copy = false;
                         pbuffer = buffer;
                         lc_data += i - 1;
                     }
@@ -313,7 +313,7 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                                 text = exec_get_file_name (filename_vpath);
                                 if (text == nullptr)
                                 {
-                                    g_string_free (shell_string, TRUE);
+                                    g_string_free (shell_string, true);
                                     return nullptr;
                                 }
                             }
@@ -327,25 +327,25 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                             }
 
                             g_free (text);
-                            written_nonspace = TRUE;
+                            written_nonspace = true;
                         }
                     }
                 }
             }
         }
         else if (*lc_data == '%')
-            expand_prefix_found = TRUE;
+            expand_prefix_found = true;
         else
         {
             if (!whitespace (*lc_data))
-                written_nonspace = TRUE;
+                written_nonspace = true;
             if (is_cd)
                 *(pbuffer++) = *lc_data;
             else
                 g_string_append_c (shell_string, *lc_data);
         }
     }                           /* for */
-    return g_string_free (shell_string, FALSE);
+    return g_string_free (shell_string, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -355,9 +355,9 @@ exec_extension_view (void *target, char *cmd, const vfs_path_t * filename_vpath,
 {
     mcview_mode_flags_t def_flags = {
         /* *INDENT-OFF* */
-        .wrap = FALSE,
+        .wrap = false,
         .hex = mcview_global_flags.hex,
-        .magic = FALSE,
+        .magic = false,
         .nroff = mcview_global_flags.nroff
         /* *INDENT-ON* */
     };
@@ -365,12 +365,12 @@ exec_extension_view (void *target, char *cmd, const vfs_path_t * filename_vpath,
     mcview_mode_flags_t changed_flags;
 
     mcview_clear_mode_flags (&changed_flags);
-    mcview_altered_flags.hex = FALSE;
-    mcview_altered_flags.nroff = FALSE;
+    mcview_altered_flags.hex = false;
+    mcview_altered_flags.nroff = false;
     if (def_flags.hex != mcview_global_flags.hex)
-        changed_flags.hex = TRUE;
+        changed_flags.hex = true;
     if (def_flags.nroff != mcview_global_flags.nroff)
-        changed_flags.nroff = TRUE;
+        changed_flags.nroff = true;
 
     if (target == nullptr)
         mcview_viewer (cmd, filename_vpath, start_line, 0, 0);
@@ -425,9 +425,9 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
     pbuffer = nullptr;
     localmtime = 0;
     quote_func = name_quote;
-    run_view = FALSE;
-    is_cd = FALSE;
-    written_nonspace = FALSE;
+    run_view = false;
+    is_cd = false;
+    written_nonspace = false;
 
     /* Avoid making a local copy if we are doing a cd */
     do_local_copy = !vfs_file_is_local (filename_vpath);
@@ -521,7 +521,7 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
 
     g_free (cmd);
 
-    exec_cleanup_file_name (filename_vpath, TRUE);
+    exec_cleanup_file_name (filename_vpath, true);
   ret:
     return script_vpath;
 }
@@ -538,7 +538,7 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
 static int
 get_popen_information (const char *cmd_file, const char *args, char *buf, int buflen)
 {
-    gboolean read_bytes = FALSE;
+    bool read_bytes = false;
     char *command;
     FILE *f;
 
@@ -583,7 +583,7 @@ get_file_type_local (const vfs_path_t * filename_vpath, char *buf, int buflen)
     char *tmp;
     int ret;
 
-    tmp = name_quote (vfs_path_get_last_path_str (filename_vpath), FALSE);
+    tmp = name_quote (vfs_path_get_last_path_str (filename_vpath), false);
     ret = get_popen_information (FILE_CMD, tmp, buf, buflen);
     g_free (tmp);
 
@@ -603,8 +603,8 @@ get_file_encoding_local (const vfs_path_t * filename_vpath, char *buf, int bufle
     char *tmp, *lang, *args;
     int ret;
 
-    tmp = name_quote (vfs_path_get_last_path_str (filename_vpath), FALSE);
-    lang = name_quote (autodetect_codeset, FALSE);
+    tmp = name_quote (vfs_path_get_last_path_str (filename_vpath), false);
+    lang = name_quote (autodetect_codeset, false);
     args = g_strconcat (" -L", lang, " -i ", tmp, (char *) nullptr);
 
     ret = get_popen_information ("enca", args, buf, buflen);
@@ -622,24 +622,24 @@ get_file_encoding_local (const vfs_path_t * filename_vpath, char *buf, int bufle
  * Invoke the "file" command on the file and match its output against PTR.
  * have_type is a flag that is set if we already have tried to determine
  * the type of that file.
- * Return TRUE for match, FALSE otherwise.
+ * Return true for match, false otherwise.
  */
 
-static gboolean
-regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean case_insense,
-                  gboolean * have_type, GError ** mcerror)
+static bool
+regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, bool case_insense,
+                  bool * have_type, GError ** mcerror)
 {
-    gboolean found = FALSE;
+    bool found = false;
 
-    /* Following variables are valid if *have_type is TRUE */
+    /* Following variables are valid if *have_type is true */
     static char content_string[2048];
     static size_t content_shift = 0;
     static int got_data = 0;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (!use_file_to_check_type)
-        return FALSE;
+        return false;
 
     if (!*have_type)
     {
@@ -652,14 +652,14 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
 #endif /* HAVE_CHARSET */
 
         /* Don't repeate even unsuccessful checks */
-        *have_type = TRUE;
+        *have_type = true;
 
         localfile_vpath = mc_getlocalcopy (filename_vpath);
         if (localfile_vpath == nullptr)
         {
             mc_propagate_error (mcerror, 0, _("Cannot fetch a local copy of %s"),
                                 vfs_path_as_str (filename_vpath));
-            return FALSE;
+            return false;
         }
 
         realname = vfs_path_get_last_path_str (localfile_vpath);
@@ -687,7 +687,7 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
 
         got_data = get_file_type_local (localfile_vpath, content_string, sizeof (content_string));
 
-        mc_ungetlocalcopy (filename_vpath, localfile_vpath, FALSE);
+        mc_ungetlocalcopy (filename_vpath, localfile_vpath, false);
 
         if (got_data > 0)
         {
@@ -724,7 +724,7 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
     if (got_data == -1)
     {
         mc_propagate_error (mcerror, 0, "%s", _("Pipe failed"));
-        return FALSE;
+        return false;
     }
 
     if (content_string[0] != '\0')
@@ -780,14 +780,14 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
     char *p, *q, *r, c;
     const char *filename;
     size_t file_len;
-    gboolean found = FALSE;
-    gboolean error_flag = FALSE;
+    bool found = false;
+    bool error_flag = false;
     int ret = 0;
     struct stat mystat;
     int view_at_line_number = 0;
     char *include_target = nullptr;
     size_t include_target_len = 0;
-    gboolean have_type = FALSE; /* Flag used by regex_check_type() */
+    bool have_type = false; /* Flag used by regex_check_type() */
 
     if (filename_vpath == nullptr)
         return 0;
@@ -805,8 +805,8 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
     if (data == nullptr)
     {
         char *extension_file;
-        gboolean mc_user_ext = TRUE;
-        gboolean home_error = FALSE;
+        bool mc_user_ext = true;
+        bool home_error = false;
 
         extension_file = mc_config_get_full_path (MC_FILEBIND_FILE);
         if (!exist_file (extension_file))
@@ -820,7 +820,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                 extension_file =
                     mc_build_filename (mc_global.share_data_dir, MC_LIB_EXT, (char *) nullptr);
             }
-            mc_user_ext = FALSE;
+            mc_user_ext = false;
         }
 
         g_file_get_contents (extension_file, &data, nullptr, nullptr);
@@ -850,7 +850,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                     return 0;
                 }
 
-                home_error = TRUE;
+                home_error = true;
                 goto check_stock_mc_ext;
             }
         }
@@ -894,9 +894,9 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
         if (p == q)
         {
             /* i.e. starts in the first column, should be keyword/descNL */
-            gboolean case_insense;
+            bool case_insense;
 
-            found = FALSE;
+            found = false;
             q = strchr (p, '\n');
             if (q == nullptr)
                 q = strchr (p, '\0');
@@ -906,7 +906,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
             {
                 if ((strncmp (p, "include/", 8) == 0)
                     && (strncmp (p + 8, include_target, include_target_len) == 0))
-                    found = TRUE;
+                    found = true;
             }
             else if (strncmp (p, "regex/", 6) == 0)
             {
@@ -931,7 +931,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                 if (S_ISDIR (mystat.st_mode)
                     && mc_search (p + 10, DEFAULT_CHARSET, vfs_path_as_str (filename_vpath),
                                   MC_SEARCH_T_REGEX))
-                    found = TRUE;
+                    found = true;
             }
             else if (strncmp (p, "shell/", 6) == 0)
             {
@@ -948,12 +948,12 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                 if (*p == '.' && file_len >= (size_t) (q - p))
                 {
                     if (cmp_func (p, filename + file_len - (q - p), q - p) == 0)
-                        found = TRUE;
+                        found = true;
                 }
                 else
                 {
                     if ((size_t) (q - p) == file_len && cmp_func (p, filename, file_len) == 0)
-                        found = TRUE;
+                        found = true;
                 }
             }
             else if (strncmp (p, "type/", 5) == 0)
@@ -968,10 +968,10 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
 
                 found = regex_check_type (filename_vpath, p, case_insense, &have_type, &mcerror);
                 if (mc_error_message (&mcerror, nullptr))
-                    error_flag = TRUE;  /* leave it if file cannot be opened */
+                    error_flag = true;  /* leave it if file cannot be opened */
             }
             else if (strncmp (p, "default/", 8) == 0)
-                found = TRUE;
+                found = true;
 
             *q = c;
         }
@@ -1002,7 +1002,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
 
                         *r = c;
                         p = q;
-                        found = FALSE;
+                        found = false;
 
                         if (*p == '\0')
                             break;

@@ -363,7 +363,7 @@ vfs_s_free_super (struct vfs_class *me, struct vfs_s_super *super)
 /* --------------------------------------------------------------------------------------------- */
 
 static vfs_file_handler_t *
-vfs_s_new_fh (struct vfs_s_inode *ino, gboolean changed)
+vfs_s_new_fh (struct vfs_s_inode *ino, bool changed)
 {
     vfs_file_handler_t *fh;
 
@@ -595,7 +595,7 @@ vfs_s_write (void *fh, const char *buffer, size_t count)
     if (file->linear != LS_NOT_LINEAR)
         vfs_die ("no writing to linear files, please");
 
-    file->changed = TRUE;
+    file->changed = true;
     if (file->handle != -1)
     {
         ssize_t n;
@@ -780,7 +780,7 @@ vfs_s_getlocalcopy (const vfs_path_t * vpath)
  */
 
 static int
-vfs_s_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, gboolean has_changed)
+vfs_s_ungetlocalcopy (const vfs_path_t * vpath, const vfs_path_t * local, bool has_changed)
 {
     (void) vpath;
     (void) local;
@@ -807,10 +807,10 @@ vfs_s_setctl (const vfs_path_t * vpath, int ctlop, void *arg)
             if (ino == nullptr)
                 return 0;
             if (arg != nullptr)
-                ino->super->want_stale = TRUE;
+                ino->super->want_stale = true;
             else
             {
-                ino->super->want_stale = FALSE;
+                ino->super->want_stale = false;
                 vfs_s_invalidate (path_element->clazz, ino->super);
             }
             return 1;
@@ -819,7 +819,7 @@ vfs_s_setctl (const vfs_path_t * vpath, int ctlop, void *arg)
         path_element->clazz->logfile = fopen ((char *) arg, "w");
         return 1;
     case VFS_SETCTL_FLUSH:
-        path_element->clazz->flush = TRUE;
+        path_element->clazz->flush = true;
         return 1;
     default:
         return 0;
@@ -844,7 +844,7 @@ vfs_s_getid (const vfs_path_t * vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 vfs_s_nothingisopen (vfsid id)
 {
     return (VFS_SUPER (id)->fd_usage <= 0);
@@ -860,14 +860,14 @@ vfs_s_free (vfsid id)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 vfs_s_dir_uptodate (struct vfs_class *me, struct vfs_s_inode *ino)
 {
     guint64 tim;
 
     if (me->flush)
     {
-        me->flush = FALSE;
+        me->flush = false;
         return 0;
     }
 
@@ -1254,7 +1254,7 @@ vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino)
 
         path = g_strdup (ino->ent->name);
 
-        while (TRUE)
+        while (true)
         {
             char *newpath;
 
@@ -1279,7 +1279,7 @@ vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-vfs_s_init_fh (vfs_file_handler_t * fh, struct vfs_s_inode *ino, gboolean changed)
+vfs_s_init_fh (vfs_file_handler_t * fh, struct vfs_s_inode *ino, bool changed)
 {
     fh->ino = ino;
     fh->handle = -1;
@@ -1293,7 +1293,7 @@ vfs_s_init_fh (vfs_file_handler_t * fh, struct vfs_s_inode *ino, gboolean change
 void *
 vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
 {
-    gboolean was_changed = FALSE;
+    bool was_changed = false;
     vfs_file_handler_t *fh;
     struct vfs_s_super *super;
     const char *q;
@@ -1358,7 +1358,7 @@ vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
         }
         g_free (dirname);
         g_free (name);
-        was_changed = TRUE;
+        was_changed = true;
     }
 
     if (S_ISDIR (ino->st.st_mode))
@@ -1456,7 +1456,7 @@ vfs_s_retrieve_file (struct vfs_class *me, struct vfs_s_inode *ino)
         goto error_4;
     }
 
-    fh = s->fh_new != nullptr ? s->fh_new (ino, FALSE) : vfs_s_new_fh (ino, FALSE);
+    fh = s->fh_new != nullptr ? s->fh_new (ino, false) : vfs_s_new_fh (ino, false);
 
     if (s->linear_start (me, fh, 0) == 0)
         goto error_3;

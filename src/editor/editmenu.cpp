@@ -308,7 +308,7 @@ edit_menu_cmd (WDialog * h)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_drop_hotkey_menu (WDialog * h, int key)
 {
     int m = 0;
@@ -336,11 +336,11 @@ edit_drop_hotkey_menu (WDialog * h, int key)
         m = 6;
         break;
     default:
-        return FALSE;
+        return false;
     }
 
     edit_drop_menu_cmd (h, m);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

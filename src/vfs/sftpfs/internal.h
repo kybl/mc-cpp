@@ -66,9 +66,9 @@ void sftpfs_init_subclass (void);
 void sftpfs_init_config_variables_patterns (void);
 void sftpfs_deinit_config_variables_patterns (void);
 
-gboolean sftpfs_is_sftp_error (LIBSSH2_SFTP * sftp_session, int sftp_res, int sftp_error);
+bool sftpfs_is_sftp_error (LIBSSH2_SFTP * sftp_session, int sftp_res, int sftp_error);
 void sftpfs_ssherror_to_gliberror (sftpfs_super_t * super, int libssh_errno, GError ** mcerror);
-gboolean sftpfs_waitsocket (sftpfs_super_t * super, int sftp_res, GError ** mcerror);
+bool sftpfs_waitsocket (sftpfs_super_t * super, int sftp_res, GError ** mcerror);
 
 const char *sftpfs_fix_filename (const char *file_name, unsigned int *length);
 void sftpfs_attr_to_stat (const LIBSSH2_SFTP_ATTRIBUTES * attrs, struct stat *s);
@@ -86,7 +86,7 @@ int sftpfs_open_connection (struct vfs_s_super *super, GError ** mcerror);
 void sftpfs_close_connection (struct vfs_s_super *super, const char *shutdown_message,
                               GError ** mcerror);
 
-vfs_file_handler_t *sftpfs_fh_new (struct vfs_s_inode *ino, gboolean changed);
+vfs_file_handler_t *sftpfs_fh_new (struct vfs_s_inode *ino, bool changed);
 
 void *sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror);
 void *sftpfs_readdir (void *sftpfs_dir, GError ** mcerror);
@@ -94,7 +94,7 @@ int sftpfs_closedir (void *data, GError ** mcerror);
 int sftpfs_mkdir (const vfs_path_t * vpath, mode_t mode, GError ** mcerror);
 int sftpfs_rmdir (const vfs_path_t * vpath, GError ** mcerror);
 
-gboolean sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mcerror);
+bool sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mcerror);
 ssize_t sftpfs_read_file (vfs_file_handler_t * fh, char *buffer, size_t count, GError ** mcerror);
 ssize_t sftpfs_write_file (vfs_file_handler_t * fh, const char *buffer, size_t count,
                            GError ** mcerror);

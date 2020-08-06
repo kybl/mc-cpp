@@ -207,7 +207,7 @@ init_sigchld (void)
          * This may happen on QNX Neutrino 6, where SA_RESTART
          * is defined but not implemented.  Fallback to no subshell.
          */
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
 #endif /* ENABLE_SUBSHELL */
     }
 }
@@ -216,10 +216,10 @@ init_sigchld (void)
 /**
  * Check MC_SID to prevent running one mc from another.
  *
- * @return TRUE if no parent mc in our session was found, FALSE otherwise.
+ * @return true if no parent mc in our session was found, false otherwise.
  */
 
-static gboolean
+static bool
 check_sid (void)
 {
     pid_t my_sid, old_sid;
@@ -227,15 +227,15 @@ check_sid (void)
 
     sid_str = getenv ("MC_SID");
     if (sid_str == nullptr)
-        return TRUE;
+        return true;
 
     old_sid = (pid_t) strtol (sid_str, nullptr, 0);
     if (old_sid == 0)
-        return TRUE;
+        return true;
 
     my_sid = getsid (0);
     if (my_sid == -1)
-        return TRUE;
+        return true;
 
     /* The parent mc is in a different session, it's OK */
     return (old_sid != my_sid);
@@ -249,7 +249,7 @@ int
 main (int argc, char *argv[])
 {
     GError *mcerror = nullptr;
-    gboolean config_migrated = FALSE;
+    bool config_migrated = false;
     char *config_migrate_msg = nullptr;
     int exit_code = EXIT_FAILURE;
 
@@ -366,7 +366,7 @@ main (int argc, char *argv[])
 #ifdef ENABLE_SUBSHELL
     /* Disallow subshell when invoked as standalone viewer or editor from running mc */
     if (mc_global.mc_run_mode != MC_RUN_FULL && mc_global.run_from_parent_mc)
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
 
     if (mc_global.tty.use_subshell)
         subshell_get_console_attributes ();
@@ -391,7 +391,7 @@ main (int argc, char *argv[])
     load_keymap_defs (!mc_args__nokeymap);
 
 #ifdef USE_INTERNAL_EDIT
-    macros_list = g_array_new (TRUE, FALSE, sizeof (macros_t));
+    macros_list = g_array_new (true, false, sizeof (macros_t));
 #endif /* USE_INTERNAL_EDIT */
 
     tty_init_colors (mc_global.tty.disable_colors, mc_args__force_colors);
@@ -423,10 +423,10 @@ main (int argc, char *argv[])
         else
         {
             /* parent mc was found and the user wants to quit mc */
-            mc_global.midnight_shutdown = TRUE;
+            mc_global.midnight_shutdown = true;
         }
 
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
     }
 
     if (mc_global.tty.use_subshell)
@@ -531,9 +531,9 @@ main (int argc, char *argv[])
 
             macros = &g_array_index (macros_list, struct macros_t, i);
             if (macros != nullptr && macros->macro != nullptr)
-                (void) g_array_free (macros->macro, TRUE);
+                (void) g_array_free (macros->macro, true);
         }
-        (void) g_array_free (macros_list, TRUE);
+        (void) g_array_free (macros_list, true);
     }
 #endif /* USE_INTERNAL_EDIT */
 

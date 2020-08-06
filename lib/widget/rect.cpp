@@ -202,10 +202,10 @@ rect_union (WRect * r, const WRect * r1)
   * @param r1 WRect object
   * @param r2 WRect object
   *
-  * @return TRUE if rectangle areas are overlapped, FALSE otherwise.
+  * @return true if rectangle areas are overlapped, false otherwise.
   */
 
-gboolean
+bool
 rects_are_overlapped (const WRect * r1, const WRect * r2)
 {
     return !((r2->x >= r1->x + r1->cols) || (r1->x >= r2->x + r2->cols)
@@ -219,10 +219,10 @@ rects_are_overlapped (const WRect * r1, const WRect * r2)
   * @param r1 WRect object
   * @param r2 WRect object
   *
-  * @return TRUE if rectangle areas are equal, FALSE otherwise.
+  * @return true if rectangle areas are equal, false otherwise.
   */
 
-gboolean
+bool
 rects_are_equal (const WRect * r1, const WRect * r2)
 {
     return (r1->y == r2->y && r1->x == r2->x && r1->lines == r2->lines && r1->cols == r2->cols);

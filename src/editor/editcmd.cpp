@@ -82,13 +82,13 @@
 /*** global variables ****************************************************************************/
 
 /* search and replace: */
-int search_create_bookmark = FALSE;
+bool search_create_bookmark = false;
 
 /* queries on a save */
-gboolean edit_confirm_save = TRUE;
+bool edit_confirm_save = true;
 
 /* whether we need to drop selection on copy to buffer */
-gboolean option_drop_selection_on_copy = TRUE;
+bool option_drop_selection_on_copy = true;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -104,7 +104,7 @@ typedef struct
 {
     simple_status_msg_t status_msg;     /* base class */
 
-    gboolean first;
+    bool first;
     WEdit *edit;
     off_t offset;
 } edit_search_status_msg_t;
@@ -138,7 +138,7 @@ edit_search_status_update_cb (status_msg_t * sm)
         wd_width = MAX (wd->cols, lw->cols + 6);
         widget_set_size (wd, wd->y, wd->x, wd->lines, wd_width);
         widget_set_size (lw, lw->y, wd->x + (wd->cols - lw->cols) / 2, lw->lines, lw->cols);
-        esm->first = FALSE;
+        esm->first = false;
     }
 
     return status_msg_common_update (sm);
@@ -382,7 +382,7 @@ edit_save_file (WEdit * edit, const vfs_path_t * filename_vpath)
         char *tmp_store_filename;
         vfs_path_element_t *last_vpath_element;
         vfs_path_t *tmp_vpath;
-        gboolean ok;
+        bool ok;
 
         g_assert (option_backup_ext != nullptr);
 
@@ -417,7 +417,7 @@ edit_save_file (WEdit * edit, const vfs_path_t * filename_vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 edit_check_newline (const edit_buffer_t * buf)
 {
     return !(option_check_nl_at_eof && buf->size > 0
@@ -447,8 +447,8 @@ edit_get_save_file_as (WEdit * edit)
         /* *INDENT-OFF* */
         QUICK_LABELED_INPUT (N_("Enter file name:"), input_label_above,
                              vfs_path_as_str (edit->filename_vpath), "save-as",
-                             &filename_res, nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
-        QUICK_SEPARATOR (TRUE),
+                             &filename_res, nullptr, false, false, INPUT_COMPLETE_FILENAMES),
+        QUICK_SEPARATOR (true),
         QUICK_LABEL (N_("Change line breaks to:"), nullptr),
         QUICK_RADIO (LB_NAMES, lb_names, (int *) &cur_lb, nullptr),
         QUICK_BUTTONS_OK_CANCEL,
@@ -478,9 +478,9 @@ edit_get_save_file_as (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/** returns TRUE on success */
+/** returns true on success */
 
-static gboolean
+static bool
 edit_save_cmd (WEdit * edit)
 {
     int res, save_lock = 0;
@@ -505,7 +505,7 @@ edit_save_cmd (WEdit * edit)
 
     edit->force |= REDRAW_COMPLETELY;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -514,10 +514,10 @@ edit_save_cmd (WEdit * edit)
  *
  * @param h screen the owner of editor window
  * @param vpath vfs file path
- * @return TRUE if file content was successfully loaded, FALSE otherwise
+ * @return true if file content was successfully loaded, false otherwise
  */
 
-static inline gboolean
+static inline bool
 edit_load_file_from_filename (WDialog * h, const vfs_path_t * vpath)
 {
     Widget *w = WIDGET (h);
@@ -554,7 +554,7 @@ edit_delete_column_of_text (WEdit * edit)
         /* delete line between margins */
         for (; q > p; q--)
             if (edit_buffer_get_current_byte (&edit->buffer) != '\n')
-                edit_delete (edit, TRUE);
+                edit_delete (edit, true);
 
         /* move to next line except on the last delete */
         if (n != 0)
@@ -578,7 +578,7 @@ edit_block_delete (WEdit * edit)
         return 0;
 
     if (edit->column_highlight && edit->mark2 < 0)
-        edit_mark_cmd (edit, FALSE);
+        edit_mark_cmd (edit, false);
 
     /* Warning message with a query to continue or cancel the operation */
     if ((end_mark - start_mark) > option_max_undo / 2 &&
@@ -609,7 +609,7 @@ edit_block_delete (WEdit * edit)
             off_t line_width;
 
             if (edit->mark2 < 0)
-                edit_mark_cmd (edit, FALSE);
+                edit_mark_cmd (edit, false);
             edit_delete_column_of_text (edit);
             /* move cursor to the saved position */
             edit_move_to_line (edit, curs_line);
@@ -624,7 +624,7 @@ edit_block_delete (WEdit * edit)
             off_t count;
 
             for (count = start_mark; count < end_mark; count++)
-                edit_delete (edit, TRUE);
+                edit_delete (edit, true);
         }
     }
 
@@ -800,7 +800,7 @@ edit_search_fix_search_start_if_selection (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 editcmd_find (edit_search_status_msg_t * esm, gsize * len)
 {
     WEdit *edit = esm->edit;
@@ -818,7 +818,7 @@ editcmd_find (edit_search_status_msg_t * esm, gsize * len)
         if (!eval_marks (edit, &start_mark, &end_mark))
         {
             mc_search_set_error (edit->search, MC_SEARCH_E_NOTFOUND, "%s", _(STR_E_NOTFOUND));
-            return FALSE;
+            return false;
         }
 
         /* fix the start and the end of search block positions */
@@ -838,7 +838,7 @@ editcmd_find (edit_search_status_msg_t * esm, gsize * len)
         if (start_mark >= end_mark)
         {
             mc_search_set_error (edit->search, MC_SEARCH_E_NOTFOUND, "%s", _(STR_E_NOTFOUND));
-            return FALSE;
+            return false;
         }
     }
     else if (edit_search_options.backwards)
@@ -857,7 +857,7 @@ editcmd_find (edit_search_status_msg_t * esm, gsize * len)
 
         while (search_start >= start_mark)
         {
-            gboolean ok;
+            bool ok;
 
             if (search_end > (off_t) (search_start + edit->search->original_len)
                 && mc_search_is_fixed_search_str (edit->search))
@@ -866,12 +866,12 @@ editcmd_find (edit_search_status_msg_t * esm, gsize * len)
             ok = mc_search_run (edit->search, (void *) esm, search_start, search_end, len);
 
             if (ok && edit->search->normal_offset == search_start)
-                return TRUE;
+                return true;
 
             /* We abort the search in case of a pattern error, or if the user aborts
                the search. In other words: in all cases except "string not found". */
             if (!ok && edit->search->error != MC_SEARCH_E_NOTFOUND)
-                return FALSE;
+                return false;
 
             if ((edit->search_line_type & AT_START_LINE) != 0)
                 search_start =
@@ -882,7 +882,7 @@ editcmd_find (edit_search_status_msg_t * esm, gsize * len)
         }
 
         mc_search_set_error (edit->search, MC_SEARCH_E_NOTFOUND, "%s", _(STR_E_NOTFOUND));
-        return FALSE;
+        return false;
     }
 
     /* forward search */
@@ -906,8 +906,8 @@ edit_replace_cmd__conv_to_display (const char *str)
     if (tmp != nullptr)
     {
         if (tmp->len != 0)
-            return g_string_free (tmp, FALSE);
-        g_string_free (tmp, TRUE);
+            return g_string_free (tmp, false);
+        g_string_free (tmp, true);
     }
 #endif
     return g_strdup (str);
@@ -923,8 +923,8 @@ edit_replace_cmd__conv_to_input (char *str)
 
     tmp = str_convert_to_input (str);
     if (tmp->len != 0)
-        return g_string_free (tmp, FALSE);
-    g_string_free (tmp, TRUE);
+        return g_string_free (tmp, false);
+    g_string_free (tmp, true);
 #endif
     return g_strdup (str);
 }
@@ -953,7 +953,7 @@ edit_do_search (WEdit * edit)
 
     edit_push_undo_action (edit, KEY_PRESS + edit->start_display);
 
-    esm.first = TRUE;
+    esm.first = true;
     esm.edit = edit;
     esm.offset = edit->search_start;
 
@@ -962,18 +962,18 @@ edit_do_search (WEdit * edit)
 
     if (search_create_bookmark)
     {
-        gboolean found = FALSE;
+        bool found = false;
         long l = 0, l_last = -1;
         long q = 0;
 
-        search_create_bookmark = FALSE;
+        search_create_bookmark = false;
         book_mark_flush (edit, -1);
 
         while (mc_search_run (edit->search, (void *) &esm, q, edit->buffer.size, &len))
         {
             if (!found)
                 edit->search_start = edit->search->normal_offset;
-            found = TRUE;
+            found = true;
 
             l += edit_buffer_count_lines (&edit->buffer, q, edit->search->normal_offset);
             if (l != l_last)
@@ -1081,10 +1081,10 @@ edit_get_block (WEdit * edit, off_t start, off_t finish, off_t * l)
 /* --------------------------------------------------------------------------------------------- */
 /** copies a block to clipboard file */
 
-static gboolean
+static bool
 edit_save_block_to_clip_file (WEdit * edit, off_t start, off_t finish)
 {
-    gboolean ret;
+    bool ret;
     gchar *tmp;
 
     tmp = mc_config_get_full_path (EDIT_HOME_CLIP_FILE);
@@ -1102,9 +1102,9 @@ pipe_mail (const edit_buffer_t * buf, char *to, char *subject, char *cc)
     FILE *p = 0;
     char *s;
 
-    to = name_quote (to, FALSE);
-    subject = name_quote (subject, FALSE);
-    cc = name_quote (cc, FALSE);
+    to = name_quote (to, false);
+    subject = name_quote (subject, false);
+    cc = name_quote (cc, false);
     s = g_strconcat ("mail -s ", subject, *cc ? " -c " : "", cc, " ", to, (char *) nullptr);
     g_free (to);
     g_free (subject);
@@ -1129,7 +1129,7 @@ pipe_mail (const edit_buffer_t * buf, char *to, char *subject, char *cc)
 /* --------------------------------------------------------------------------------------------- */
 /** find first character of current word */
 
-static gboolean
+static bool
 edit_find_word_start (const edit_buffer_t * buf, off_t * word_start, gsize * word_len)
 {
     int c;
@@ -1137,12 +1137,12 @@ edit_find_word_start (const edit_buffer_t * buf, off_t * word_start, gsize * wor
 
     /* return if at begin of file */
     if (buf->curs1 <= 0)
-        return FALSE;
+        return false;
 
     c = edit_buffer_get_previous_byte (buf);
     /* return if not at end or in word */
     if (is_break_char (c))
-        return FALSE;
+        return false;
 
     /* search start of word to be completed */
     for (i = 1;; i++)
@@ -1156,7 +1156,7 @@ edit_find_word_start (const edit_buffer_t * buf, off_t * word_start, gsize * wor
         {
             /* return if word starts with digit */
             if (isdigit (last))
-                return FALSE;
+                return false;
 
             break;
         }
@@ -1166,7 +1166,7 @@ edit_find_word_start (const edit_buffer_t * buf, off_t * word_start, gsize * wor
     *word_start = buf->curs1 - i;       /* start found */
     *word_len = (gsize) i;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1221,7 +1221,7 @@ edit_collect_completions (WEdit * edit, off_t word_start, gsize word_len,
     mc_search_t *srch;
     off_t last_byte, start = -1;
     char *current_word;
-    gboolean entire_file;
+    bool entire_file;
     edit_search_status_msg_t esm;
 
 #ifdef HAVE_CHARSET
@@ -1239,11 +1239,11 @@ edit_collect_completions (WEdit * edit, off_t word_start, gsize word_len,
     last_byte = entire_file ? edit->buffer.size : word_start;
 
     srch->search_type = MC_SEARCH_T_REGEX;
-    srch->is_case_sensitive = TRUE;
+    srch->is_case_sensitive = true;
     srch->search_fn = edit_search_cmd_callback;
     srch->update_fn = edit_search_update_callback;
 
-    esm.first = TRUE;
+    esm.first = true;
     esm.edit = edit;
     esm.offset = entire_file ? 0 : word_start;
 
@@ -1303,7 +1303,7 @@ edit_collect_completions (WEdit * edit, off_t word_start, gsize word_len,
 
         if (*num == MAX_WORD_COMPLETIONS)
         {
-            g_string_free (compl_[0], TRUE);
+            g_string_free (compl_[0], true);
             for (i = 1; i < *num; i++)
                 compl_[i - 1] = compl_[i];
             (*num)--;
@@ -1316,7 +1316,7 @@ edit_collect_completions (WEdit * edit, off_t word_start, gsize word_len,
             if (recoded->len != 0)
                 g_string_assign (temp, recoded->str);
 
-            g_string_free (recoded, TRUE);
+            g_string_free (recoded, true);
         }
 #endif
         compl_[(*num)++] = g_string_new_len (temp->str, temp->len);
@@ -1329,7 +1329,7 @@ edit_collect_completions (WEdit * edit, off_t word_start, gsize word_len,
 
     status_msg_deinit (STATUS_MSG (&esm));
     mc_search_free (srch);
-    g_string_free (temp, TRUE);
+    g_string_free (temp, true);
     g_free (current_word);
 
     return max_len;
@@ -1412,7 +1412,7 @@ edit_macro_sort_by_hotkey (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 edit_get_macro (WEdit * edit, int hotkey, const macros_t ** macros, guint * indx)
 {
     const macros_t *array_start = &g_array_index (macros_list, struct macros_t, 0);
@@ -1429,16 +1429,16 @@ edit_get_macro (WEdit * edit, int hotkey, const macros_t ** macros, guint * indx
     {
         *indx = (result - array_start);
         *macros = result;
-        return TRUE;
+        return true;
     }
     *indx = 0;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/** returns FALSE on error */
+/** returns false on error */
 
-static gboolean
+static bool
 edit_delete_macro (WEdit * edit, int hotkey)
 {
     mc_config_t *macros_config = nullptr;
@@ -1452,18 +1452,18 @@ edit_delete_macro (WEdit * edit, int hotkey)
     while (edit_get_macro (edit, hotkey, &macros, &indx))
     {
         if (macros->macro != nullptr)
-            g_array_free (macros->macro, TRUE);
+            g_array_free (macros->macro, true);
         macros = nullptr;
         g_array_remove_index (macros_list, indx);
         edit_macro_sort_by_hotkey ();
     }
 
     macros_fname = mc_config_get_full_path (MC_MACRO_FILE);
-    macros_config = mc_config_init (macros_fname, FALSE);
+    macros_config = mc_config_init (macros_fname, false);
     g_free (macros_fname);
 
     if (macros_config == nullptr)
-        return FALSE;
+        return false;
 
     skeyname = lookup_key_by_code (hotkey);
     while (mc_config_del_key (macros_config, section_name, skeyname))
@@ -1471,7 +1471,7 @@ edit_delete_macro (WEdit * edit, int hotkey)
     g_free (skeyname);
     mc_config_save_file (macros_config, nullptr);
     mc_config_deinit (macros_config);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1517,7 +1517,7 @@ edit_complete_word_insert_recoded_completion (WEdit * edit, char *completion, gs
 
     for (completion = temp->str + word_len; *completion != '\0'; completion++)
         edit_insert (edit, *completion);
-    g_string_free (temp, TRUE);
+    g_string_free (temp, true);
 #else
     for (completion += word_len; *completion != '\0'; completion++)
         edit_insert (edit, *completion);
@@ -1533,7 +1533,7 @@ edit_refresh_cmd (void)
 {
     clr_scr ();
     repaint_screen ();
-    tty_keypad (TRUE);
+    tty_keypad (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1621,8 +1621,8 @@ edit_save_mode_cmd (void)
             /* *INDENT-OFF* */
             QUICK_RADIO (3, str, &option_save_mode, &edit_save_mode_radio_id),
             QUICK_INPUT (option_backup_ext, "edit-backup-ext", &str_result,
-                         &edit_save_mode_input_id, FALSE, FALSE, INPUT_COMPLETE_NONE),
-            QUICK_SEPARATOR (TRUE),
+                         &edit_save_mode_input_id, false, false, INPUT_COMPLETE_NONE),
+            QUICK_SEPARATOR (true),
             QUICK_CHECKBOX (N_("Check &POSIX new line"), &option_check_nl_at_eof, nullptr),
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END
@@ -1658,18 +1658,18 @@ edit_set_filename (WEdit * edit, const vfs_path_t * name_vpath)
 /* --------------------------------------------------------------------------------------------- */
 /* Here we want to warn the users of overwriting an existing file,
    but only if they have made a change to the filename */
-/* returns TRUE on success */
-gboolean
+/* returns true on success */
+bool
 edit_save_as_cmd (WEdit * edit)
 {
     /* This heads the 'Save As' dialog box */
     vfs_path_t *exp_vpath;
     int save_lock = 0;
-    gboolean different_filename = FALSE;
-    gboolean ret = FALSE;
+    bool different_filename = false;
+    bool ret = false;
 
     if (!edit_check_newline (&edit->buffer))
-        return FALSE;
+        return false;
 
     exp_vpath = edit_get_save_file_as (edit);
     edit_push_undo_action (edit, KEY_PRESS + edit->start_display);
@@ -1691,7 +1691,7 @@ edit_save_as_cmd (WEdit * edit)
                 goto ret;
             }
 
-            different_filename = TRUE;
+            different_filename = true;
             file = mc_open (exp_vpath, O_RDONLY | O_BINARY);
 
             if (file == -1)
@@ -1740,7 +1740,7 @@ edit_save_as_cmd (WEdit * edit)
             edit->delete_file = 0;
             if (different_filename)
                 edit_load_syntax (edit, nullptr, edit->syntax_type);
-            ret = TRUE;
+            ret = true;
             break;
 
         default:
@@ -1769,7 +1769,7 @@ edit_delete_macro_cmd (WEdit * edit)
 {
     int hotkey;
 
-    hotkey = editcmd_dialog_raw_key_query (_("Delete macro"), _("Press macro hotkey:"), TRUE);
+    hotkey = editcmd_dialog_raw_key_query (_("Delete macro"), _("Press macro hotkey:"), true);
 
     if (hotkey != 0 && !edit_delete_macro (edit, hotkey))
         message (D_ERROR, _("Delete macro"), _("Macro not deleted"));
@@ -1777,11 +1777,11 @@ edit_delete_macro_cmd (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/** returns FALSE on error */
-gboolean
+/** returns false on error */
+bool
 edit_execute_macro (WEdit * edit, int hotkey)
 {
-    gboolean res = FALSE;
+    bool res = false;
 
     if (hotkey != 0)
     {
@@ -1801,7 +1801,7 @@ edit_execute_macro (WEdit * edit, int hotkey)
 
                 m_act = &g_array_index (macros->macro, struct macro_action_t, i);
                 edit_execute_cmd (edit, m_act->action, m_act->ch);
-                res = TRUE;
+                res = true;
             }
         }
     }
@@ -1811,8 +1811,8 @@ edit_execute_macro (WEdit * edit, int hotkey)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/** returns FALSE on error */
-gboolean
+/** returns false on error */
+bool
 edit_store_macro_cmd (WEdit * edit)
 {
     int i;
@@ -1823,34 +1823,34 @@ edit_store_macro_cmd (WEdit * edit)
     gchar *macros_fname;
     GArray *macros;             /* current macro */
     int tmp_act;
-    gboolean have_macro = FALSE;
+    bool have_macro = false;
     char *skeyname = nullptr;
 
     hotkey =
-        editcmd_dialog_raw_key_query (_("Save macro"), _("Press the macro's new hotkey:"), TRUE);
+        editcmd_dialog_raw_key_query (_("Save macro"), _("Press the macro's new hotkey:"), true);
     if (hotkey == ESC_CHAR)
-        return FALSE;
+        return false;
 
     tmp_act = keybind_lookup_keymap_command (WIDGET (edit)->keymap, hotkey);
 
-    /* return FALSE if try assign macro into restricted hotkeys */
+    /* return false if try assign macro into restricted hotkeys */
     if (tmp_act == CK_MacroStartRecord
         || tmp_act == CK_MacroStopRecord || tmp_act == CK_MacroStartStopRecord)
-        return FALSE;
+        return false;
 
     edit_delete_macro (edit, hotkey);
 
     macros_fname = mc_config_get_full_path (MC_MACRO_FILE);
-    macros_config = mc_config_init (macros_fname, FALSE);
+    macros_config = mc_config_init (macros_fname, false);
     g_free (macros_fname);
 
     if (macros_config == nullptr)
-        return FALSE;
+        return false;
 
     edit_push_undo_action (edit, KEY_PRESS + edit->start_display);
 
     marcros_string = g_string_sized_new (250);
-    macros = g_array_new (TRUE, FALSE, sizeof (macro_action_t));
+    macros = g_array_new (true, false, sizeof (macro_action_t));
 
     skeyname = lookup_key_by_code (hotkey);
 
@@ -1867,7 +1867,7 @@ edit_store_macro_cmd (WEdit * edit)
         m_act.action = record_macro_buf[i].action;
         m_act.ch = record_macro_buf[i].ch;
         g_array_append_val (macros, m_act);
-        have_macro = TRUE;
+        have_macro = true;
         g_string_append_printf (marcros_string, "%s:%i;", action_name,
                                 (int) record_macro_buf[i].ch);
     }
@@ -1886,15 +1886,15 @@ edit_store_macro_cmd (WEdit * edit)
     g_free (skeyname);
     edit_macro_sort_by_hotkey ();
 
-    g_string_free (marcros_string, TRUE);
+    g_string_free (marcros_string, true);
     mc_config_save_file (macros_config, nullptr);
     mc_config_deinit (macros_config);
-    return TRUE;
+    return true;
 }
 
  /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_repeat_macro_cmd (WEdit * edit)
 {
     int i, j;
@@ -1907,7 +1907,7 @@ edit_repeat_macro_cmd (WEdit * edit)
     if (f == nullptr || *f == '\0')
     {
         g_free (f);
-        return FALSE;
+        return false;
     }
 
     count_repeat = strtol (f, &error, 0);
@@ -1915,7 +1915,7 @@ edit_repeat_macro_cmd (WEdit * edit)
     if (*error != '\0')
     {
         g_free (f);
-        return FALSE;
+        return false;
     }
 
     g_free (f);
@@ -1928,13 +1928,13 @@ edit_repeat_macro_cmd (WEdit * edit)
             edit_execute_cmd (edit, record_macro_buf[i].action, record_macro_buf[i].ch);
 
     edit_update_screen (edit);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/** return FALSE on error */
+/** return false on error */
 
-gboolean
+bool
 edit_load_macro_cmd (WEdit * edit)
 {
     mc_config_t *macros_config = nullptr;
@@ -1946,25 +1946,25 @@ edit_load_macro_cmd (WEdit * edit)
     (void) edit;
 
     if (macros_list == nullptr || macros_list->len != 0)
-        return FALSE;
+        return false;
 
     macros_fname = mc_config_get_full_path (MC_MACRO_FILE);
-    macros_config = mc_config_init (macros_fname, TRUE);
+    macros_config = mc_config_init (macros_fname, true);
     g_free (macros_fname);
 
     if (macros_config == nullptr)
-        return FALSE;
+        return false;
 
     keys = mc_config_get_keys (macros_config, section_name, nullptr);
 
     for (profile_keys = keys; *profile_keys != nullptr; profile_keys++)
     {
         int hotkey;
-        gboolean have_macro = FALSE;
+        bool have_macro = false;
         GArray *macros;
         macros_t macro;
 
-        macros = g_array_new (TRUE, FALSE, sizeof (macro_action_t));
+        macros = g_array_new (true, false, sizeof (macro_action_t));
         values = mc_config_get_string_list (macros_config, section_name, *profile_keys, nullptr);
         hotkey = lookup_key (*profile_keys, nullptr);
 
@@ -1999,7 +1999,7 @@ edit_load_macro_cmd (WEdit * edit)
                         m_act.ch = -1;
                     }
                     g_array_append_val (macros, m_act);
-                    have_macro = TRUE;
+                    have_macro = true;
                 }
                 g_strfreev (macro_pair);
                 macro_pair = nullptr;
@@ -2020,34 +2020,34 @@ edit_load_macro_cmd (WEdit * edit)
     mc_config_deinit (macros_config);
     edit_macro_sort_by_hotkey ();
 
-    return TRUE;
+    return true;
 }
 
 /* }}} Macro stuff end here */
 
 /* --------------------------------------------------------------------------------------------- */
-/** returns TRUE on success */
+/** returns true on success */
 
-gboolean
+bool
 edit_save_confirm_cmd (WEdit * edit)
 {
     if (edit->filename_vpath == nullptr)
         return edit_save_as_cmd (edit);
 
     if (!edit_check_newline (&edit->buffer))
-        return FALSE;
+        return false;
 
     if (edit_confirm_save)
     {
         char *f;
-        gboolean ok;
+        bool ok;
 
         f = g_strdup_printf (_("Confirm save file: \"%s\""),
                              vfs_path_as_str (edit->filename_vpath));
         ok = (edit_query_dialog2 (_("Save file"), f, _("&Save"), _("&Cancel")) == 0);
         g_free (f);
         if (!ok)
-            return FALSE;
+            return false;
     }
 
     return edit_save_cmd (edit);
@@ -2057,14 +2057,14 @@ edit_save_confirm_cmd (WEdit * edit)
 /**
   * Ask file to edit and load it.
   *
-  * @return TRUE on success or cancel of ask.
+  * @return true on success or cancel of ask.
   */
 
-gboolean
+bool
 edit_load_cmd (WDialog * h)
 {
     char *exp;
-    gboolean ret = TRUE;        /* possible cancel */
+    bool ret = true;        /* possible cancel */
 
     exp = input_expand_dialog (_("Load"), _("Enter file name:"),
                                MC_HISTORY_EDIT_LOAD, INPUT_LAST_TEXT,
@@ -2088,15 +2088,15 @@ edit_load_cmd (WDialog * h)
 /**
   * Show history od edited or viewed files and open selected file.
   *
-  * @return TRUE on success, FALSE otherwise.
+  * @return true on success, false otherwise.
   */
 
-gboolean
+bool
 edit_load_file_from_history (WDialog * h)
 {
     char *exp;
     int action;
-    gboolean ret = TRUE;        /* possible cancel */
+    bool ret = true;        /* possible cancel */
 
     exp = show_file_history (CONST_WIDGET (h), &action);
     if (exp != nullptr && (action == CK_Edit || action == CK_Enter))
@@ -2117,15 +2117,15 @@ edit_load_file_from_history (WDialog * h)
 /**
   * Load syntax file to edit.
   *
-  * @return TRUE on success
+  * @return true on success
   */
 
-gboolean
+bool
 edit_load_syntax_file (WDialog * h)
 {
     vfs_path_t *extdir_vpath;
     int dir = 0;
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (geteuid () == 0)
         dir = query_dialog (_("Syntax file edit"),
@@ -2162,16 +2162,16 @@ edit_load_syntax_file (WDialog * h)
 /**
   * Load menu file to edit.
   *
-  * @return TRUE on success
+  * @return true on success
   */
 
-gboolean
+bool
 edit_load_menu_file (WDialog * h)
 {
     vfs_path_t *buffer_vpath;
     vfs_path_t *menufile_vpath;
     int dir;
-    gboolean ret;
+    bool ret;
 
     query_set_sel (1);
     dir = query_dialog (_("Menu edit"),
@@ -2213,7 +2213,7 @@ edit_load_menu_file (WDialog * h)
 
     default:
         vfs_path_free (menufile_vpath);
-        return FALSE;
+        return false;
     }
 
     ret = edit_load_file_from_filename (h, buffer_vpath);
@@ -2228,13 +2228,13 @@ edit_load_menu_file (WDialog * h)
 /**
   * Close window with opened file.
   *
-  * @return TRUE if file was closed.
+  * @return true if file was closed.
   */
 
-gboolean
+bool
 edit_close_cmd (WEdit * edit)
 {
-    gboolean ret;
+    bool ret;
 
     ret = (edit != nullptr) && edit_ok_to_exit (edit);
 
@@ -2269,10 +2269,10 @@ edit_close_cmd (WEdit * edit)
 /**
    if mark2 is -1 then marking is from mark1 to the cursor.
    Otherwise its between the markers. This handles this.
-   Returns FALSE if no text is marked.
+   Returns false if no text is marked.
  */
 
-gboolean
+bool
 eval_marks (WEdit * edit, off_t * start_mark, off_t * end_mark)
 {
     long end_mark_curs;
@@ -2281,7 +2281,7 @@ eval_marks (WEdit * edit, off_t * start_mark, off_t * end_mark)
     {
         *start_mark = *end_mark = 0;
         edit->column2 = edit->column1 = 0;
-        return FALSE;
+        return false;
     }
 
     if (edit->end_mark_curs < 0)
@@ -2328,7 +2328,7 @@ eval_marks (WEdit * edit, off_t * start_mark, off_t * end_mark)
         *end_mark = MIN (*end_mark, end_eol);
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -2399,7 +2399,7 @@ edit_block_move_cmd (WEdit * edit)
         return;
 
     if (edit->mark2 < 0)
-        edit_mark_cmd (edit, FALSE);
+        edit_mark_cmd (edit, false);
     edit_push_markers (edit);
 
     if (edit->column_highlight)
@@ -2460,7 +2460,7 @@ edit_block_move_cmd (WEdit * edit)
         edit_scroll_screen_over_cursor (edit);
 
         for (count = start_mark; count < end_mark; count++)
-            copy_buf[end_mark - count - 1] = edit_delete (edit, TRUE);
+            copy_buf[end_mark - count - 1] = edit_delete (edit, true);
 
         edit_scroll_screen_over_cursor (edit);
         edit_cursor_move (edit,
@@ -2504,7 +2504,7 @@ edit_block_delete_cmd (WEdit * edit)
 /** call with edit = 0 before shutdown to close memory leaks */
 
 void
-edit_replace_cmd (WEdit * edit, gboolean again)
+edit_replace_cmd (WEdit * edit, bool again)
 {
     /* 1 = search string, 2 = replace with */
     static char *saved1 = nullptr; /* saved default[123] */
@@ -2515,7 +2515,7 @@ edit_replace_cmd (WEdit * edit, gboolean again)
     char *disp1 = nullptr;
     char *disp2 = nullptr;
     long times_replaced = 0;
-    gboolean once_found = FALSE;
+    bool once_found = false;
     edit_search_status_msg_t esm;
 
     if (edit == nullptr)
@@ -2528,7 +2528,7 @@ edit_replace_cmd (WEdit * edit, gboolean again)
     edit->force |= REDRAW_COMPLETELY;
 
     if (again && saved1 == nullptr && saved2 == nullptr)
-        again = FALSE;
+        again = false;
 
     if (again)
     {
@@ -2605,7 +2605,7 @@ edit_replace_cmd (WEdit * edit, gboolean again)
         && !edit_search_options.backwards)
         edit->search_start++;
 
-    esm.first = TRUE;
+    esm.first = true;
     esm.edit = edit;
     esm.offset = edit->search_start;
 
@@ -2624,7 +2624,7 @@ edit_replace_cmd (WEdit * edit, gboolean again)
             break;
         }
 
-        once_found = TRUE;
+        once_found = true;
 
         edit->search_start = edit->search->normal_offset;
         /* returns negative on not found or error in pattern */
@@ -2687,19 +2687,19 @@ edit_replace_cmd (WEdit * edit, gboolean again)
             {
                 edit_show_search_error (edit, _("Replace"));
                 if (repl_str != nullptr)
-                    g_string_free (repl_str, TRUE);
+                    g_string_free (repl_str, true);
                 break;
             }
 
             /* delete then insert new */
             for (i = 0; i < len; i++)
-                edit_delete (edit, TRUE);
+                edit_delete (edit, true);
 
             for (i = 0; i < repl_str->len; i++)
                 edit_insert (edit, repl_str->str[i]);
 
             edit->found_len = repl_str->len;
-            g_string_free (repl_str, TRUE);
+            g_string_free (repl_str, true);
             times_replaced++;
 
             /* so that we don't find the same string again */
@@ -2743,7 +2743,7 @@ edit_replace_cmd (WEdit * edit, gboolean again)
     g_free (input1);
     g_free (input2);
     if (input2_str != nullptr)
-        g_string_free (input2_str, TRUE);
+        g_string_free (input2_str, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -2773,7 +2773,7 @@ edit_search_update_callback (const void *user_data, gsize char_offset)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-edit_search_cmd (WEdit * edit, gboolean again)
+edit_search_cmd (WEdit * edit, bool again)
 {
     if (edit == nullptr)
         return;
@@ -2833,10 +2833,10 @@ edit_search_cmd (WEdit * edit, gboolean again)
 /**
   * Check if it's OK to close the file. If there are unsaved changes, ask user.
   *
-  * @return TRUE if it's OK to exit, FALSE to continue editing.
+  * @return true if it's OK to exit, false to continue editing.
   */
 
-gboolean
+bool
 edit_ok_to_exit (WEdit * edit)
 {
     const char *fname = N_("[NoName]");
@@ -2844,7 +2844,7 @@ edit_ok_to_exit (WEdit * edit)
     int act;
 
     if (!edit->modified)
-        return TRUE;
+        return true;
 
     if (edit->filename_vpath != nullptr)
         fname = vfs_path_as_str (edit->filename_vpath);
@@ -2877,7 +2877,7 @@ edit_ok_to_exit (WEdit * edit)
     {
     case 0:                    /* Yes */
         if (!mc_global.midnight_shutdown && !edit_check_newline (&edit->buffer))
-            return FALSE;
+            return false;
         edit_push_markers (edit);
         edit_set_markers (edit, 0, 0, 0, 0);
         if (!edit_save_cmd (edit) || mc_global.midnight_shutdown)
@@ -2888,16 +2888,16 @@ edit_ok_to_exit (WEdit * edit)
         break;
     case 2:                    /* Cancel quit */
     case -1:                   /* Esc */
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/** save block, returns TRUE on success */
+/** save block, returns true on success */
 
-gboolean
+bool
 edit_save_block (WEdit * edit, const char *filename, off_t start, off_t finish)
 {
     int file;
@@ -2909,7 +2909,7 @@ edit_save_block (WEdit * edit, const char *filename, off_t start, off_t finish)
                     S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH | O_BINARY);
     vfs_path_free (vpath);
     if (file == -1)
-        return FALSE;
+        return false;
 
     if (edit->column_highlight)
     {
@@ -2962,59 +2962,59 @@ edit_paste_from_history (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_copy_to_X_buf_cmd (WEdit * edit)
 {
     off_t start_mark, end_mark;
 
     if (!eval_marks (edit, &start_mark, &end_mark))
-        return TRUE;
+        return true;
 
     if (!edit_save_block_to_clip_file (edit, start_mark, end_mark))
     {
         edit_error_dialog (_("Copy to clipboard"), get_sys_error (_("Unable to save to file")));
-        return FALSE;
+        return false;
     }
     /* try use external clipboard utility */
     mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", nullptr);
 
     if (option_drop_selection_on_copy)
-        edit_mark_cmd (edit, TRUE);
+        edit_mark_cmd (edit, true);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_cut_to_X_buf_cmd (WEdit * edit)
 {
     off_t start_mark, end_mark;
 
     if (!eval_marks (edit, &start_mark, &end_mark))
-        return TRUE;
+        return true;
 
     if (!edit_save_block_to_clip_file (edit, start_mark, end_mark))
     {
         edit_error_dialog (_("Cut to clipboard"), _("Unable to save to file"));
-        return FALSE;
+        return false;
     }
     /* try use external clipboard utility */
     mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", nullptr);
 
     edit_block_delete_cmd (edit);
-    edit_mark_cmd (edit, TRUE);
+    edit_mark_cmd (edit, true);
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_paste_from_X_buf_cmd (WEdit * edit)
 {
     vfs_path_t *tmp;
-    gboolean ret;
+    bool ret;
 
     /* try use external clipboard utility */
     mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_from_ext_clip", nullptr);
@@ -3034,7 +3034,7 @@ edit_paste_from_X_buf_cmd (WEdit * edit)
 void
 edit_goto_cmd (WEdit * edit)
 {
-    static gboolean first_run = TRUE;
+    static bool first_run = true;
 
     char *f;
     long l;
@@ -3063,21 +3063,21 @@ edit_goto_cmd (WEdit * edit)
     edit->force |= REDRAW_COMPLETELY;
 
     g_free (f);
-    first_run = FALSE;
+    first_run = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
-/** Return TRUE on success */
+/** Return true on success */
 
-gboolean
+bool
 edit_save_block_cmd (WEdit * edit)
 {
     off_t start_mark, end_mark;
     char *exp, *tmp;
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (!eval_marks (edit, &start_mark, &end_mark))
-        return TRUE;
+        return true;
 
     tmp = mc_config_get_full_path (EDIT_HOME_CLIP_FILE);
     exp =
@@ -3089,7 +3089,7 @@ edit_save_block_cmd (WEdit * edit)
     if (exp != nullptr && *exp != '\0')
     {
         if (edit_save_block (edit, exp, start_mark, end_mark))
-            ret = TRUE;
+            ret = true;
         else
             edit_error_dialog (_("Save block"), get_sys_error (_("Cannot save file")));
 
@@ -3103,13 +3103,13 @@ edit_save_block_cmd (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-/** returns TRUE on success */
-gboolean
+/** returns true on success */
+bool
 edit_insert_file_cmd (WEdit * edit)
 {
     char *tmp;
     char *exp;
-    gboolean ret = FALSE;
+    bool ret = false;
 
     tmp = mc_config_get_full_path (EDIT_HOME_CLIP_FILE);
     exp = input_expand_dialog (_("Insert file"), _("Enter file name:"),
@@ -3286,13 +3286,13 @@ edit_mail_dialog (WEdit * edit)
         QUICK_LABEL (N_("mail -s <subject> -c <cc> <to>"), nullptr),
         QUICK_LABELED_INPUT (N_("To"), input_label_above,
                              INPUT_LAST_TEXT, "mail-dlg-input-3",
-                             &mail_to, nullptr, FALSE, FALSE, INPUT_COMPLETE_USERNAMES),
+                             &mail_to, nullptr, false, false, INPUT_COMPLETE_USERNAMES),
         QUICK_LABELED_INPUT (N_("Subject"), input_label_above,
                               INPUT_LAST_TEXT, "mail-dlg-input-2",
-                              &mail_subject, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                              &mail_subject, nullptr, false, false, INPUT_COMPLETE_NONE),
         QUICK_LABELED_INPUT (N_("Copies to"), input_label_above,
                              INPUT_LAST_TEXT, "mail-dlg-input",
-                             &mail_cc, nullptr, FALSE, FALSE, INPUT_COMPLETE_USERNAMES),
+                             &mail_cc, nullptr, false, false, INPUT_COMPLETE_USERNAMES),
         QUICK_BUTTONS_OK_CANCEL,
         QUICK_END
         /* *INDENT-ON* */
@@ -3377,10 +3377,10 @@ edit_complete_word_cmd (WEdit * edit)
         }
     }
 
-    g_string_free (match_expr, TRUE);
+    g_string_free (match_expr, true);
     /* release memory before return */
     for (i = 0; i < num_compl; i++)
-        g_string_free (completions[i], TRUE);
+        g_string_free (completions[i], true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -3405,7 +3405,7 @@ edit_insert_literal_cmd (WEdit * edit)
     int char_for_insertion;
 
     char_for_insertion = editcmd_dialog_raw_key_query (_("Insert literal"),
-                                                       _("Press any key:"), FALSE);
+                                                       _("Press any key:"), false);
     edit_execute_key_command (edit, -1, ascii_alpha_to_cntrl (char_for_insertion));
 }
 
@@ -3439,7 +3439,7 @@ edit_begin_end_repeat_cmd (WEdit * edit)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_load_forward_cmd (WEdit * edit)
 {
     if (edit->modified
@@ -3449,26 +3449,26 @@ edit_load_forward_cmd (WEdit * edit)
                                _("&Cancel")) == 1)
     {
         edit->force |= REDRAW_COMPLETELY;
-        return TRUE;
+        return true;
     }
 
     if (edit_stack_iterator + 1 >= MAX_HISTORY_MOVETO)
-        return FALSE;
+        return false;
 
     if (edit_history_moveto[edit_stack_iterator + 1].line < 1)
-        return FALSE;
+        return false;
 
     edit_stack_iterator++;
     if (edit_history_moveto[edit_stack_iterator].filename_vpath != nullptr)
         return edit_reload_line (edit, edit_history_moveto[edit_stack_iterator].filename_vpath,
                                  edit_history_moveto[edit_stack_iterator].line);
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 edit_load_back_cmd (WEdit * edit)
 {
     if (edit->modified
@@ -3478,19 +3478,19 @@ edit_load_back_cmd (WEdit * edit)
                                _("&Cancel")) == 1)
     {
         edit->force |= REDRAW_COMPLETELY;
-        return TRUE;
+        return true;
     }
 
     /* we are in the bottom of the stack, NO WAY! */
     if (edit_stack_iterator == 0)
-        return FALSE;
+        return false;
 
     edit_stack_iterator--;
     if (edit_history_moveto[edit_stack_iterator].filename_vpath != nullptr)
         return edit_reload_line (edit, edit_history_moveto[edit_stack_iterator].filename_vpath,
                                  edit_history_moveto[edit_stack_iterator].line);
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -3551,7 +3551,7 @@ edit_get_match_keyword_cmd (WEdit * edit)
     if (num_def > 0)
         editcmd_dialog_select_definition_show (edit, match_expr->str, max_len, word_len,
                                                (etags_hash_t *) & def_hash, num_def);
-    g_string_free (match_expr, TRUE);
+    g_string_free (match_expr, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -3577,7 +3577,7 @@ edit_suggest_current_word (WEdit * edit)
         GString *tmp_word;
 
         tmp_word = str_convert_to_display (match_word->str);
-        g_string_free (match_word, TRUE);
+        g_string_free (match_word, true);
         match_word = tmp_word;
     }
 #endif
@@ -3587,7 +3587,7 @@ edit_suggest_current_word (WEdit * edit)
         unsigned int res;
         guint i;
 
-        suggest = g_array_new (TRUE, FALSE, sizeof (char *));
+        suggest = g_array_new (true, false, sizeof (char *));
 
         res = aspell_suggest (suggest, match_word->str, (int) word_len);
         if (res != 0)
@@ -3615,12 +3615,12 @@ edit_suggest_current_word (WEdit * edit)
 
                     tmp_word = str_convert_to_input (new_word);
                     g_free (new_word);
-                    new_word = g_string_free (tmp_word, FALSE);
+                    new_word = g_string_free (tmp_word, false);
                 }
 #endif
                 cp_word = new_word;
                 for (i = 0; i < word_len; i++)
-                    edit_backspace (edit, TRUE);
+                    edit_backspace (edit, true);
                 for (; *new_word; new_word++)
                     edit_insert (edit, *new_word);
                 g_free (cp_word);
@@ -3636,12 +3636,12 @@ edit_suggest_current_word (WEdit * edit)
             cur_sugg_word = g_array_index (suggest, char *, i);
             g_free (cur_sugg_word);
         }
-        g_array_free (suggest, TRUE);
+        g_array_free (suggest, true);
         edit->found_start = 0;
         edit->found_len = 0;
     }
 
-    g_string_free (match_word, TRUE);
+    g_string_free (match_word, true);
 
     return retval;
 }
@@ -3685,7 +3685,7 @@ edit_set_spell_lang (void)
 {
     GArray *lang_list;
 
-    lang_list = g_array_new (TRUE, FALSE, sizeof (char *));
+    lang_list = g_array_new (true, false, sizeof (char *));
     if (aspell_get_lang_list (lang_list) != 0)
     {
         char *lang;

@@ -44,7 +44,7 @@ struct status_msg_t
     WDialog *dlg;               /* pointer to status message dialog */
     guint64 start;              /* start time in microseconds */
     guint64 delay;              /* delay before raise the 'dlg' in microseconds */
-    gboolean block;             /* how to get event using tty_get_event() */
+    bool block;             /* how to get event using tty_get_event() */
 
     status_msg_cb init;         /* callback to init derived classes */
     status_msg_update_cb update;        /* callback to update dlg */
@@ -68,7 +68,7 @@ char *input_dialog (const char *header, const char *text,
                     const char *history_name, const char *def_text,
                     input_complete_t completion_flags);
 char *input_dialog_help (const char *header, const char *text, const char *help,
-                         const char *history_name, const char *def_text, gboolean strip_password,
+                         const char *history_name, const char *def_text, bool strip_password,
                          input_complete_t completion_flags);
 char *input_expand_dialog (const char *header, const char *text, const char *history_name,
                            const char *def_text, input_complete_t completion_flags);
@@ -85,7 +85,7 @@ WDialog *create_message (int flags, const char *title, const char *text, ...)
 void message (int flags, const char *title, const char *text, ...) G_GNUC_PRINTF (3, 4);
 /* *INDENT-ON* */
 
-gboolean mc_error_message (GError ** mcerror, int *code);
+bool mc_error_message (GError ** mcerror, int *code);
 
 status_msg_t *status_msg_create (const char *title, double delay, status_msg_cb init_cb,
                                  status_msg_update_cb update_cb, status_msg_cb deinit_cb);

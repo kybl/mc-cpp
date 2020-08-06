@@ -78,7 +78,7 @@ WTree *the_tree = nullptr;
  * automatically reload it's directory with the contents of the currently
  * selected directory.
  */
-gboolean xtree_mode = FALSE;
+bool xtree_mode = false;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -94,8 +94,8 @@ struct WTree
     tree_entry *selected_ptr;   /* The selected directory */
     char search_buffer[MC_MAXFILENAMELEN];      /* Current search string */
     tree_entry **tree_shown;    /* Entries currently on screen */
-    gboolean is_panel;          /* panel or plain widget flag */
-    gboolean searching;         /* Are we on searching mode? */
+    bool is_panel;          /* panel or plain widget flag */
+    bool searching;         /* Are we on searching mode? */
     int topdiff;                /* The difference between the topmost
                                    shown and the selected */
 };
@@ -103,7 +103,7 @@ struct WTree
 /*** file scope variables ************************************************************************/
 
 /* Specifies the display mode: 1d or 2d */
-static gboolean tree_navigation_flag = FALSE;
+static bool tree_navigation_flag = false;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -345,7 +345,7 @@ show_tree (WTree * tree)
 
         if (tree->is_panel)
         {
-            gboolean selected;
+            bool selected;
 
             selected = widget_get_state (w, WST_FOCUSED) && current == tree->selected_ptr;
             tty_setcolor (selected ? SELECTED_COLOR : NORMAL_COLOR);
@@ -366,7 +366,7 @@ show_tree (WTree * tree)
         else
         {
             /* Sub level directory */
-            tty_set_alt_charset (TRUE);
+            tty_set_alt_charset (true);
 
             /* Output branch parts */
             for (j = 0; j < current->sublevel - topsublevel - 1; j++)
@@ -387,7 +387,7 @@ show_tree (WTree * tree)
             else
                 tty_print_char (ACS_LTEE);
             tty_print_char (ACS_HLINE);
-            tty_set_alt_charset (FALSE);
+            tty_set_alt_charset (false);
 
             /* Show sub-name */
             tty_print_char (' ');
@@ -537,14 +537,14 @@ tree_move_to_child (WTree * tree)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 tree_move_to_parent (WTree * tree)
 {
     tree_entry *current;
     tree_entry *old;
 
     if (tree->selected_ptr == nullptr)
-        return FALSE;
+        return false;
 
     old = tree->selected_ptr;
 
@@ -623,8 +623,8 @@ search_tree (WTree * tree, char *text)
 {
     tree_entry *current;
     size_t len;
-    gboolean wrapped = FALSE;
-    gboolean found = FALSE;
+    bool wrapped = false;
+    bool found = false;
 
     len = strlen (text);
     current = tree->selected_ptr;
@@ -633,7 +633,7 @@ search_tree (WTree * tree, char *text)
         if (strncmp (current->subname, text, len) == 0)
         {
             tree->selected_ptr = current;
-            found = TRUE;
+            found = true;
         }
         else
         {
@@ -641,7 +641,7 @@ search_tree (WTree * tree, char *text)
             if (current == nullptr)
             {
                 current = tree->store->tree_first;
-                wrapped = TRUE;
+                wrapped = true;
             }
 
             tree->topdiff++;
@@ -727,10 +727,10 @@ tree_copy (WTree * tree, const char *default_dest)
 
         ctx = file_op_context_new (OP_COPY);
         tctx = file_op_total_context_new ();
-        file_op_context_create_ui (ctx, FALSE, FILEGUI_DIALOG_MULTI_ITEM);
-        tctx->ask_overwrite = FALSE;
-        copy_dir_dir (tctx, ctx, vfs_path_as_str (tree->selected_ptr->name), dest, TRUE, FALSE,
-                      FALSE, nullptr);
+        file_op_context_create_ui (ctx, false, FILEGUI_DIALOG_MULTI_ITEM);
+        tctx->ask_overwrite = false;
+        copy_dir_dir (tctx, ctx, vfs_path_as_str (tree->selected_ptr->name), dest, true, false,
+                      false, nullptr);
         file_op_total_context_destroy (tctx);
         file_op_context_destroy (ctx);
     }
@@ -773,13 +773,13 @@ tree_move (WTree * tree, const char *default_dest)
 
     if (!S_ISDIR (buf.st_mode))
     {
-        file_error (TRUE, _("Destination \"%s\" must be a directory\n%s"), dest);
+        file_error (true, _("Destination \"%s\" must be a directory\n%s"), dest);
         goto ret;
     }
 
     ctx = file_op_context_new (OP_MOVE);
     tctx = file_op_total_context_new ();
-    file_op_context_create_ui (ctx, FALSE, FILEGUI_DIALOG_ONE_ITEM);
+    file_op_context_create_ui (ctx, false, FILEGUI_DIALOG_ONE_ITEM);
     move_dir_dir (tctx, ctx, vfs_path_as_str (tree->selected_ptr->name), dest);
     file_op_total_context_destroy (tctx);
     file_op_context_destroy (ctx);
@@ -834,7 +834,7 @@ tree_rmdir (WTree *tree)
     ctx = file_op_context_new (OP_DELETE);
     tctx = file_op_total_context_new ();
 
-    file_op_context_create_ui (ctx, FALSE, FILEGUI_DIALOG_ONE_ITEM);
+    file_op_context_create_ui (ctx, false, FILEGUI_DIALOG_ONE_ITEM);
     if (erase_dir (tctx, ctx, tree->selected_ptr->name) == FILE_CONT)
         tree_forget (tree);
     file_op_total_context_destroy (tctx);
@@ -903,10 +903,10 @@ tree_move_pgdn (WTree * tree)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 tree_move_left (WTree * tree)
 {
-    gboolean v = FALSE;
+    bool v = false;
 
     if (tree_navigation_flag)
     {
@@ -920,17 +920,17 @@ tree_move_left (WTree * tree)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 tree_move_right (WTree * tree)
 {
-    gboolean v = FALSE;
+    bool v = false;
 
     if (tree_navigation_flag)
     {
         tree_move_to_child (tree);
         show_tree (tree);
         maybe_chdir (tree);
-        v = TRUE;
+        v = true;
     }
 
     return v;
@@ -947,7 +947,7 @@ tree_start_search (WTree * tree)
             tree_move_to_top (tree);
         else
         {
-            gboolean i;
+            bool i;
 
             /* set navigation mode temporarily to 'Static' because in
              * dynamic navigation mode tree_move_forward will not move
@@ -955,7 +955,7 @@ tree_start_search (WTree * tree)
              * start with the directory followed the last found directory)
              */
             i = tree_navigation_flag;
-            tree_navigation_flag = FALSE;
+            tree_navigation_flag = false;
             tree_move_forward (tree, 1);
             tree_navigation_flag = i;
         }
@@ -963,7 +963,7 @@ tree_start_search (WTree * tree)
     }
     else
     {
-        tree->searching = TRUE;
+        tree->searching = true;
         tree->search_buffer[0] = '\0';
     }
 }
@@ -993,7 +993,7 @@ tree_execute_cmd (WTree * tree, long command)
     cb_ret_t res = MSG_HANDLED;
 
     if (command != CK_Search)
-        tree->searching = FALSE;
+        tree->searching = false;
 
     switch (command)
     {
@@ -1069,7 +1069,7 @@ tree_key (WTree * tree, int key)
     {
         if (tree->is_panel)
         {
-            tree->searching = FALSE;
+            tree->searching = false;
             show_tree (tree);
             return MSG_HANDLED; /* eat abort char */
         }
@@ -1126,7 +1126,7 @@ tree_frame (WDialog * h, WTree * tree)
         const char *title = _("Directory tree");
         const int len = str_term_width1 (title);
 
-        tty_draw_box (w->y, w->x, w->lines, w->cols, FALSE);
+        tty_draw_box (w->y, w->x, w->lines, w->cols, false);
 
         widget_gotoyx (w, 0, (w->cols - len - 2) / 2);
         tty_printf (" %s ", title);
@@ -1137,9 +1137,9 @@ tree_frame (WDialog * h, WTree * tree)
 
             y = w->lines - 3;
             widget_gotoyx (w, y, 0);
-            tty_print_alt_char (ACS_LTEE, FALSE);
+            tty_print_alt_char (ACS_LTEE, false);
             widget_gotoyx (w, y, w->cols - 1);
-            tty_print_alt_char (ACS_RTEE, FALSE);
+            tty_print_alt_char (ACS_RTEE, false);
             tty_draw_hline (w->y + y, w->x + 1, ACS_HLINE, w->cols - 2);
         }
     }
@@ -1186,7 +1186,7 @@ tree_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *da
         return MSG_HANDLED;
 
     case MSG_UNFOCUS:
-        tree->searching = FALSE;
+        tree->searching = false;
         return MSG_HANDLED;
 
     case MSG_KEY:
@@ -1227,7 +1227,7 @@ tree_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         if (tree->is_panel && event->y == WIDGET (w->owner)->y)
         {
             /* return MOU_UNHANDLED */
-            event->result.abort = TRUE;
+            event->result.abort = true;
         }
         else if (!widget_get_state (w, WST_FOCUSED))
             change_panel ();
@@ -1277,7 +1277,7 @@ tree_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 /* --------------------------------------------------------------------------------------------- */
 
 WTree *
-tree_new (int y, int x, int lines, int cols, gboolean is_panel)
+tree_new (int y, int x, int lines, int cols, bool is_panel)
 {
     WTree *tree;
     Widget *w;
@@ -1297,7 +1297,7 @@ tree_new (int y, int x, int lines, int cols, gboolean is_panel)
     tree->tree_shown = nullptr;
     tree->search_buffer[0] = '\0';
     tree->topdiff = w->lines / 2;
-    tree->searching = FALSE;
+    tree->searching = false;
 
     load_tree (tree);
     return tree;

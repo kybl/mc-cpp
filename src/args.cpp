@@ -47,15 +47,15 @@
 /*** global variables ****************************************************************************/
 
 /* If true, assume we are running on an xterm terminal */
-gboolean mc_args__force_xterm = FALSE;
+bool mc_args__force_xterm = false;
 
-gboolean mc_args__nomouse = FALSE;
+bool mc_args__nomouse = false;
 
 /* Force colors, only used by Slang */
-gboolean mc_args__force_colors = FALSE;
+bool mc_args__force_colors = false;
 
 /* Don't load keymap from file and use default one */
-gboolean mc_args__nokeymap = FALSE;
+bool mc_args__nokeymap = false;
 
 char *mc_args__last_wd_file = nullptr;
 
@@ -80,23 +80,23 @@ char *mc_run_param1 = nullptr;
 /*** file scope variables ************************************************************************/
 
 /* If true, show version info and exit */
-static gboolean mc_args__show_version = FALSE;
+static bool mc_args__show_version = false;
 
 /* forward declarations */
-static gboolean parse_mc_e_argument (const gchar * option_name, const gchar * value,
+static bool parse_mc_e_argument (const gchar * option_name, const gchar * value,
                                      gpointer data, GError ** mcerror);
-static gboolean parse_mc_v_argument (const gchar * option_name, const gchar * value,
+static bool parse_mc_v_argument (const gchar * option_name, const gchar * value,
                                      gpointer data, GError ** mcerror);
 
 static GOptionContext *context;
 
 #ifdef ENABLE_SUBSHELL
-static gboolean mc_args__nouse_subshell = FALSE;
+static bool mc_args__nouse_subshell = false;
 #endif /* ENABLE_SUBSHELL */
-static gboolean mc_args__show_datadirs = FALSE;
-static gboolean mc_args__show_datadirs_extended = FALSE;
+static bool mc_args__show_datadirs = false;
+static bool mc_args__show_datadirs_extended = false;
 #ifdef ENABLE_CONFIGURE_ARGS
-static gboolean mc_args__show_configure_opts = FALSE;
+static bool mc_args__show_configure_opts = false;
 #endif
 
 static GOptionGroup *main_group;
@@ -452,12 +452,12 @@ mc_args__convert_help_to_syscharset (const gchar * charset, const gchar * error_
     g_free (full_help_str);
     g_iconv_close (conv);
 
-    return g_string_free (buffer, FALSE);
+    return g_string_free (buffer, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 parse_mc_e_argument (const gchar * option_name, const gchar * value, gpointer data,
                      GError ** mcerror)
 {
@@ -465,16 +465,16 @@ parse_mc_e_argument (const gchar * option_name, const gchar * value, gpointer da
     (void) value;
     (void) data;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     mc_global.mc_run_mode = MC_RUN_EDITOR;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 parse_mc_v_argument (const gchar * option_name, const gchar * value, gpointer data,
                      GError ** mcerror)
 {
@@ -482,11 +482,11 @@ parse_mc_v_argument (const gchar * option_name, const gchar * value, gpointer da
     (void) value;
     (void) data;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     mc_global.mc_run_mode = MC_RUN_VIEWER;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -659,13 +659,13 @@ mc_setup_run_mode (char **argv)
 #endif /* USE_DIFF_VIEW */
 }
 
-gboolean
+bool
 mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError ** mcerror)
 {
     const gchar *_system_codepage;
-    gboolean ok = TRUE;
+    bool ok = true;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     _system_codepage = str_detect_termencoding ();
 
@@ -676,7 +676,7 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
 
     context = g_option_context_new (mc_args_add_usage_info ());
 
-    g_option_context_set_ignore_unknown_options (context, FALSE);
+    g_option_context_set_ignore_unknown_options (context, false);
 
     mc_args_add_extended_info_to_help ();
 
@@ -707,7 +707,7 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
         {
             gchar *help_str;
 
-            help_str = g_option_context_get_help (context, TRUE, nullptr);
+            help_str = g_option_context_get_help (context, true, nullptr);
 
             if (str_isutf8 (_system_codepage))
                 mc_replace_error (mcerror, (*mcerror)->code, "%s\n\n%s\n", (*mcerror)->message,
@@ -725,7 +725,7 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
             g_free (help_str);
         }
 
-        ok = FALSE;
+        ok = false;
     }
 
     g_option_context_free (context);
@@ -741,53 +741,53 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_args_show_info (void)
 {
     if (mc_args__show_version)
     {
         show_version ();
-        return FALSE;
+        return false;
     }
 
     if (mc_args__show_datadirs)
     {
         printf ("%s (%s)\n", mc_global.sysconfig_dir, mc_global.share_data_dir);
-        return FALSE;
+        return false;
     }
 
     if (mc_args__show_datadirs_extended)
     {
         show_datadirs_extended ();
-        return FALSE;
+        return false;
     }
 
 #ifdef ENABLE_CONFIGURE_ARGS
     if (mc_args__show_configure_opts)
     {
         show_configure_options ();
-        return FALSE;
+        return false;
     }
 #endif
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_setup_by_args (int argc, char **argv, GError ** mcerror)
 {
     char *tmp;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (mc_args__force_colors)
-        mc_global.tty.disable_colors = FALSE;
+        mc_global.tty.disable_colors = false;
 
 #ifdef ENABLE_SUBSHELL
     if (mc_args__nouse_subshell)
-        mc_global.tty.use_subshell = FALSE;
+        mc_global.tty.use_subshell = false;
 #endif /* ENABLE_SUBSHELL */
 
 #ifdef ENABLE_VFS_SMB
@@ -823,7 +823,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         if (tmp == nullptr)
         {
             mc_propagate_error (mcerror, 0, "%s\n", _("No arguments given to the viewer."));
-            return FALSE;
+            return false;
         }
 
         mc_run_param0 = g_strdup (tmp);
@@ -835,7 +835,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         {
             mc_propagate_error (mcerror, 0, "%s\n",
                                 _("Two files are required to envoke the diffviewer."));
-            return FALSE;
+            return false;
         }
         MC_FALLTHROUGH;
 #endif /* USE_DIFF_VIEW */
@@ -854,7 +854,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         break;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

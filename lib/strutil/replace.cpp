@@ -51,7 +51,7 @@ str_ptr_array_join (const GPtrArray * str_splints)
     for (i = 0; i < str_splints->len; i++)
         g_string_append (return_str, static_cast<const gchar *> (g_ptr_array_index (str_splints, i)));
 
-    return g_string_free (return_str, FALSE);
+    return g_string_free (return_str, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -79,7 +79,7 @@ str_replace_all (const char *haystack, const char *needle, const char *replaceme
 
     str_splints = g_ptr_array_new ();
 
-    while (TRUE)
+    while (true)
     {
         const char *needle_in_str;
 
@@ -110,7 +110,7 @@ str_replace_all (const char *haystack, const char *needle, const char *replaceme
     return_str = str_ptr_array_join (str_splints);
 
     g_ptr_array_foreach (str_splints, (GFunc) g_free, nullptr);
-    g_ptr_array_free (str_splints, TRUE);
+    g_ptr_array_free (str_splints, true);
 
     return return_str;
 }

@@ -37,74 +37,74 @@ static const struct test_regex_process_escape_sequence_ds
 {
     const char *input_from;
     const replace_transform_type_t input_initial_flags;
-    const gboolean input_use_utf;
+    const bool input_use_utf;
     const char *expected_string;
 } test_regex_process_escape_sequence_ds[] =
 {
     { /* 0. */
         "{101}",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "A"
     },
     { /* 1. */
         "x42",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "B"
     },
     { /* 2. */
         "x{444}",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "D"
     },
     { /* 3. */
         "x{444}",
         REPLACE_T_NO_TRANSFORM,
-        TRUE,
+        true,
         "ф"
     },
     { /* 4. */
         "n",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\n"
     },
     { /* 5. */
         "t",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\t"
     },
     { /* 6. */
         "v",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\v"
     },
     { /* 7. */
         "b",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\b"
     },
     { /* 8. */
         "r",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\r"
     },
     { /* 9. */
         "f",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\f"
     },
     { /* 10. */
         "a",
         REPLACE_T_NO_TRANSFORM,
-        FALSE,
+        false,
         "\a"
     },
 };
@@ -129,7 +129,7 @@ START_PARAMETRIZED_TEST (test_regex_process_escape_sequence, test_regex_process_
     /* then */
     mctest_assert_str_eq (actual_string->str, data->expected_string);
 
-    g_string_free (actual_string, TRUE);
+    g_string_free (actual_string, true);
 }
 /* *INDENT-OFF* */
 END_PARAMETRIZED_TEST

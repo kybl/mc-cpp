@@ -101,7 +101,7 @@ file_history_list_write (const GList * file_list)
 {
     char *fn;
     FILE *f;
-    gboolean write_error = FALSE;
+    bool write_error = false;
 
     fn = mc_config_get_full_path (MC_FILEPOS_FILE);
     if (fn == nullptr)
@@ -131,7 +131,7 @@ file_history_list_write (const GList * file_list)
             g_string_truncate (s, 0);
         }
 
-        g_string_free (s, TRUE);
+        g_string_free (s, true);
 
         fclose (f);
     }
@@ -155,7 +155,7 @@ file_history_create_item (history_descriptor_t * hd, void *data)
     width = str_term_width1 (fhd->file_name);
     hd->max_width = MAX (width, hd->max_width);
 
-    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, fhd->file_name, fhd->file_pos, TRUE);
+    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, fhd->file_name, fhd->file_pos, true);
     /* fhd->file_pos is not copied, NULLize it to prevent double free */
     fhd->file_pos = nullptr;
 }

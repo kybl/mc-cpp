@@ -23,8 +23,8 @@
 
 /*** global variables defined in .c file *********************************************************/
 
-/* The mouse is currently: TRUE - enabled, FALSE - disabled */
-extern gboolean mouse_enabled;
+/* The mouse is currently: true - enabled, false - disabled */
+extern bool mouse_enabled;
 
 /* terminal ca capabilities */
 extern char *smcup;
@@ -39,7 +39,7 @@ void tty_create_winch_pipe (void);
 void tty_destroy_winch_pipe (void);
 
 char *mc_tty_normalize_from_utf8 (const char *);
-void tty_init_xterm_support (gboolean is_xterm);
+void tty_init_xterm_support (bool is_xterm);
 int tty_lowlevel_getch (void);
 
 void tty_colorize_area (int y, int x, int rows, int cols, int color);

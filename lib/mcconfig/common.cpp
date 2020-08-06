@@ -45,17 +45,17 @@
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mc_config_new_or_override_file (mc_config_t * mc_config, const gchar * ini_path, GError ** mcerror)
 {
     gchar *data, *written_data;
     gsize len, total_written;
-    gboolean ret;
+    bool ret;
     int fd;
     ssize_t cur_written;
     vfs_path_t *ini_vpath;
 
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     data = g_key_file_to_data (mc_config->handle, &len, nullptr);
     if (!exist_file (ini_path))
@@ -75,7 +75,7 @@ mc_config_new_or_override_file (mc_config_t * mc_config, const gchar * ini_path,
     {
         mc_propagate_error (mcerror, 0, "%s", unix_error_string (errno));
         g_free (data);
-        return FALSE;
+        return false;
     }
 
     for (written_data = data, total_written = len;
@@ -90,11 +90,11 @@ mc_config_new_or_override_file (mc_config_t * mc_config, const gchar * ini_path,
     {
         mc_util_restore_from_backup_if_possible (ini_path, "~");
         mc_propagate_error (mcerror, 0, "%s", unix_error_string (errno));
-        return FALSE;
+        return false;
     }
 
     mc_util_unlink_backup_if_possible (ini_path, "~");
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -102,7 +102,7 @@ mc_config_new_or_override_file (mc_config_t * mc_config, const gchar * ini_path,
 /* --------------------------------------------------------------------------------------------- */
 
 mc_config_t *
-mc_config_init (const gchar * ini_path, gboolean read_only)
+mc_config_init (const gchar * ini_path, bool read_only)
 {
     mc_config_t *mc_config;
     struct stat st;
@@ -158,65 +158,65 @@ mc_config_deinit (mc_config_t * mc_config)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_has_param (const mc_config_t * mc_config, const char *group, const gchar * param)
 {
     if (mc_config == nullptr || group == nullptr || param == nullptr)
-        return FALSE;
+        return false;
 
     return g_key_file_has_key (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_has_group (mc_config_t * mc_config, const char *group)
 {
     if (mc_config == nullptr || group == nullptr)
-        return FALSE;
+        return false;
 
     return g_key_file_has_group (mc_config->handle, group);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_del_key (mc_config_t * mc_config, const char *group, const gchar * param)
 {
     if (mc_config == nullptr || group == nullptr || param == nullptr)
-        return FALSE;
+        return false;
 
     return g_key_file_remove_key (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_del_group (mc_config_t * mc_config, const char *group)
 {
     if (mc_config == nullptr || group == nullptr)
-        return FALSE;
+        return false;
 
     return g_key_file_remove_group (mc_config->handle, group, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
-mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, gboolean read_only,
-                     gboolean remove_empty)
+bool
+mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, bool read_only,
+                     bool remove_empty)
 {
     mc_config_t *tmp_config;
     gchar **groups, **curr_grp;
     gchar *value;
-    gboolean ok;
+    bool ok;
 
     if (mc_config == nullptr)
-        return FALSE;
+        return false;
 
     tmp_config = mc_config_init (ini_path, read_only);
     if (tmp_config == nullptr)
-        return FALSE;
+        return false;
 
     groups = mc_config_get_groups (tmp_config, nullptr);
     ok = (*groups != nullptr);
@@ -252,26 +252,26 @@ mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, gboolean r
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_save_file (mc_config_t * mc_config, GError ** mcerror)
 {
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (mc_config == nullptr || mc_config->ini_path == nullptr)
-        return FALSE;
+        return false;
 
     return mc_config_new_or_override_file (mc_config, mc_config->ini_path, mcerror);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mc_config_save_to_file (mc_config_t * mc_config, const gchar * ini_path, GError ** mcerror)
 {
-    mc_return_val_if_error (mcerror, FALSE);
+    mc_return_val_if_error (mcerror, false);
 
     if (mc_config == nullptr)
-        return FALSE;
+        return false;
 
     return mc_config_new_or_override_file (mc_config, ini_path, mcerror);
 }

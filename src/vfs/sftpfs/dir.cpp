@@ -80,7 +80,7 @@ sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror)
 
     sftpfs_super = SFTP_SUPER (super);
 
-    while (TRUE)
+    while (true)
     {
         const char *fixfname;
         unsigned int fixfname_len = 0;

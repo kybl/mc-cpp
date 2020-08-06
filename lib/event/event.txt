@@ -63,7 +63,7 @@ This scheme allows to group events, and perform several handlers for one event.
 
 The following function prototype is event handler:
 
-gboolean mc_event_callback_func_t (
+bool mc_event_callback_func_t (
     const gchar *event_group,
     const gchar *event_name,
     gpointer init_data,
@@ -87,8 +87,8 @@ where:
  event_data:
     Data provided to the handler when the event occurred.
 
-Handler should return TRUE to allow running all other handlers tied to this event;
-or FALSE if it is necessary to stop further processing of event (the remaining
+Handler should return true to allow running all other handlers tied to this event;
+or false if it is necessary to stop further processing of event (the remaining
 handlers are not called).
 
 If one event will have multiple handlers, the order of execution is "Last added - first
@@ -131,7 +131,7 @@ of certain events (for example, to detect infinite loop).
 
 Here event handler:
 
-gboolean
+bool
 mc_temp_event_logger (const gchar *event_group, const gchar *event_name,
                       gpointer init_data, gpointer data)
 {
@@ -139,7 +139,7 @@ mc_temp_event_logger (const gchar *event_group, const gchar *event_name,
     (void) data;
 
     mc_log("Event: %s:%s",event_group,event_name);
-    return TRUE;
+    return true;
 }
 
 Add the following lines into src/event_init.c before "{NULL, NULL, NULL, NULL}" line

@@ -92,8 +92,8 @@ typedef struct
     off_t offset;               /* The file offset at which this is the state. */
     off_t unwrapped_column;     /* Columns if the paragraph wasn't wrapped, */
     /* used for positioning TABs in wrapped lines */
-    gboolean nroff_underscore_is_underlined;    /* whether _\b_ is underlined rather than bold */
-    gboolean print_lonely_combining;    /* whether lonely combining marks are printed on a dotted circle */
+    bool nroff_underscore_is_underlined;    /* whether _\b_ is underlined rather than bold */
+    bool print_lonely_combining;    /* whether lonely combining marks are printed on a dotted circle */
 } mcview_state_machine_t;
 
 struct mcview_nroff_struct;
@@ -110,7 +110,7 @@ struct WView
 
     /* stdio pipe data source */
     mc_pipe_t *ds_stdio_pipe;   /* Output of a shell command */
-    gboolean pipe_first_err_msg;        /* Show only 1st message from stderr */
+    bool pipe_first_err_msg;        /* Show only 1st message from stderr */
 
     /* vfs pipe data source */
     int ds_vfs_pipe;            /* Non-seekable vfs file descriptor */
@@ -128,25 +128,25 @@ struct WView
     size_t ds_string_len;       /* The length of the string */
 
     /* Growing buffers information */
-    gboolean growbuf_in_use;    /* Use the growing buffers? */
+    bool growbuf_in_use;    /* Use the growing buffers? */
     GPtrArray *growbuf_blockptr;        /* Pointer to the block pointers */
     size_t growbuf_lastindex;   /* Number of bytes in the last page of the
                                    growing buffer */
-    gboolean growbuf_finished;  /* TRUE when all data has been read. */
+    bool growbuf_finished;  /* true when all data has been read. */
 
     mcview_mode_flags_t mode_flags;
 
     /* Hex editor modes */
-    gboolean hexedit_mode;      /* Hexview or Hexedit */
+    bool hexedit_mode;      /* Hexview or Hexedit */
     const global_keymap_t *hex_keymap;
-    gboolean hexview_in_text;   /* Is the hexview cursor in the text area? */
+    bool hexview_in_text;   /* Is the hexview cursor in the text area? */
     int bytes_per_line;         /* Number of bytes per line in hex mode */
     off_t hex_cursor;           /* Hexview cursor position in file */
-    gboolean hexedit_lownibble; /* Are we editing the last significant nibble? */
-    gboolean locked;            /* We hold lock on current file */
+    bool hexedit_lownibble; /* Are we editing the last significant nibble? */
+    bool locked;            /* We hold lock on current file */
 
 #ifdef HAVE_CHARSET
-    gboolean utf8;              /* It's multibyte file codeset */
+    bool utf8;              /* It's multibyte file codeset */
 #endif
 
     coord_cache_t *coord_cache; /* Cache for mapping offsets to cursor positions */
@@ -158,7 +158,7 @@ struct WView
     off_t dpy_paragraph_skip_lines;     /* Extra lines to skip in wrap mode */
     mcview_state_machine_t dpy_state_top;       /* Parser-formatter state at the topmost visible line in wrap mode */
     mcview_state_machine_t dpy_state_bottom;    /* Parser-formatter state after the bottomvisible line in wrap mode */
-    gboolean dpy_wrap_dirty;    /* dpy_state_top needs to be recomputed */
+    bool dpy_wrap_dirty;    /* dpy_state_top needs to be recomputed */
     off_t dpy_text_column;      /* Number of skipped columns in non-wrap
                                  * text mode */
     screen_dimen cursor_col;    /* Cursor column */
@@ -171,7 +171,7 @@ struct WView
     ssize_t force_max;          /* Force a max offset, or -1 */
 
     int dirty;                  /* Number of skipped updates */
-    gboolean dpy_bbar_dirty;    /* Does the button bar need to be updated? */
+    bool dpy_bbar_dirty;    /* Does the button bar need to be updated? */
 
 
     /* handle of search engine */
@@ -214,10 +214,10 @@ typedef struct mcview_nroff_struct
 typedef struct mcview_search_options_t
 {
     mc_search_type_t type;
-    gboolean case_sens;
-    gboolean backwards;
-    gboolean whole_words;
-    gboolean all_codepages;
+    bool case_sens;
+    bool backwards;
+    bool whole_words;
+    bool all_codepages;
 } mcview_search_options_t;
 
 /*** global variables defined in .c file *********************************************************/
@@ -255,20 +255,20 @@ off_t mcview_get_filesize (WView *);
 void mcview_update_filesize (WView * view);
 char *mcview_get_ptr_file (WView *, off_t);
 char *mcview_get_ptr_string (WView *, off_t);
-gboolean mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len);
-gboolean mcview_get_byte_string (WView *, off_t, int *);
-gboolean mcview_get_byte_none (WView *, off_t, int *);
+bool mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len);
+bool mcview_get_byte_string (WView *, off_t, int *);
+bool mcview_get_byte_none (WView *, off_t, int *);
 void mcview_set_byte (WView *, off_t, byte);
 void mcview_file_load_data (WView *, off_t);
 void mcview_close_datasource (WView *);
 void mcview_set_datasource_file (WView *, int, const struct stat *);
-gboolean mcview_load_command_output (WView *, const char *);
+bool mcview_load_command_output (WView *, const char *);
 void mcview_set_datasource_vfs_pipe (WView *, int);
 void mcview_set_datasource_string (WView *, const char *);
 
 /* dialog.c: */
-gboolean mcview_dialog_search (WView * view);
-gboolean mcview_dialog_goto (WView * view, off_t * offset);
+bool mcview_dialog_search (WView * view);
+bool mcview_dialog_goto (WView * view, off_t * offset);
 
 /* display.c: */
 void mcview_update (WView * view);
@@ -285,12 +285,12 @@ void mcview_growbuf_done (WView * view);
 void mcview_growbuf_free (WView * view);
 off_t mcview_growbuf_filesize (WView * view);
 void mcview_growbuf_read_until (WView * view, off_t p);
-gboolean mcview_get_byte_growing_buffer (WView * view, off_t p, int *);
+bool mcview_get_byte_growing_buffer (WView * view, off_t p, int *);
 char *mcview_get_ptr_growing_buffer (WView * view, off_t p);
 
 /* hex.c: */
 void mcview_display_hex (WView * view);
-gboolean mcview_hexedit_save_changes (WView * view);
+bool mcview_hexedit_save_changes (WView * view);
 void mcview_toggle_hexedit_mode (WView * view);
 void mcview_hexedit_free_change_list (WView * view);
 void mcview_enqueue_change (struct hexedit_change_node **, struct hexedit_change_node *);

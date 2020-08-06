@@ -135,17 +135,17 @@ struct Widget
     /* Key-related fields */
     const global_keymap_t *keymap;      /* main keymap */
     const global_keymap_t *ext_keymap;  /* extended keymap */
-    gboolean ext_mode;          /* use keymap or ext_keymap */
+    bool ext_mode;          /* use keymap or ext_keymap */
 
     /* Mouse-related fields. */
     widget_mouse_handle_fn mouse_handler;
     struct
     {
         /* Public members: */
-        gboolean forced_capture;        /* Overrides the 'capture' member. Set explicitly by the programmer. */
+        bool forced_capture;        /* Overrides the 'capture' member. Set explicitly by the programmer. */
 
         /* Implementation details: */
-        gboolean capture;       /* Whether the widget "owns" the mouse. */
+        bool capture;       /* Whether the widget "owns" the mouse. */
         mouse_msg_t last_msg;   /* The previous event type processed. */
         int last_buttons_down;
     } mouse;
@@ -155,7 +155,7 @@ struct Widget
     Widget *(*find_by_id) (const Widget * w, unsigned long id);
 
     /* *INDENT-OFF* */
-    cb_ret_t (*set_state) (Widget * w, widget_state_t state, gboolean enable);
+    cb_ret_t (*set_state) (Widget * w, widget_state_t state, bool enable);
     /* *INDENT-ON* */
 
     const int *(*get_colors) (const Widget * w);
@@ -183,9 +183,9 @@ void hotkey_free (const hotkey_t hotkey);
 /* return width on terminal of hotkey */
 int hotkey_width (const hotkey_t hotkey);
 /* compare two hotkeys */
-gboolean hotkey_equal (const hotkey_t hotkey1, const hotkey_t hotkey2);
+bool hotkey_equal (const hotkey_t hotkey1, const hotkey_t hotkey2);
 /* draw hotkey of widget */
-void hotkey_draw (Widget * w, const hotkey_t hotkey, gboolean focused);
+void hotkey_draw (Widget * w, const hotkey_t hotkey, bool focused);
 /* get text of hotkey */
 char *hotkey_get_text (const hotkey_t hotkey);
 
@@ -196,15 +196,15 @@ void widget_destroy (Widget * w);
 /* Default callback for widgets */
 cb_ret_t widget_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
                                   void *data);
-void widget_set_options (Widget * w, widget_options_t options, gboolean enable);
+void widget_set_options (Widget * w, widget_options_t options, bool enable);
 void widget_adjust_position (widget_pos_flags_t pos_flags, int *y, int *x, int *lines, int *cols);
 void widget_set_size (Widget * w, int y, int x, int lines, int cols);
 /* select color for widget in dependance of state */
-void widget_selectcolor (Widget * w, gboolean focused, gboolean hotkey);
+void widget_selectcolor (Widget * w, bool focused, bool hotkey);
 cb_ret_t widget_draw (Widget * w);
 void widget_erase (Widget * w);
-gboolean widget_is_active (const void *w);
-gboolean widget_overlapped (const Widget * a, const Widget * b);
+bool widget_is_active (const void *w);
+bool widget_overlapped (const Widget * a, const Widget * b);
 void widget_replace (Widget * old_w, Widget * new_w);
 void widget_select (Widget * w);
 void widget_set_bottom (Widget * w);
@@ -215,11 +215,11 @@ GList *widget_default_find (const Widget * w, const Widget * what);
 Widget *widget_default_find_by_type (const Widget * w, widget_cb_fn cb);
 Widget *widget_default_find_by_id (const Widget * w, unsigned long id);
 
-cb_ret_t widget_default_set_state (Widget * w, widget_state_t state, gboolean enable);
+cb_ret_t widget_default_set_state (Widget * w, widget_state_t state, bool enable);
 
 /* get mouse pointer location within widget */
 Gpm_Event mouse_get_local (const Gpm_Event * global, const Widget * w);
-gboolean mouse_global_in_widget (const Gpm_Event * event, const Widget * w);
+bool mouse_global_in_widget (const Gpm_Event * event, const Widget * w);
 
 /* --------------------------------------------------------------------------------------------- */
 /*** inline functions ****************************************************************************/
@@ -244,10 +244,10 @@ send_message (void *w, void *sender, widget_msg_t msg, int parm, void *data)
   * @param w widget
   * @param options widget option flags
   *
-  * @return TRUE if all requested option flags are set, FALSE otherwise.
+  * @return true if all requested option flags are set, false otherwise.
   */
 
-static inline gboolean
+static inline bool
 widget_get_options (const Widget * w, widget_options_t options)
 {
     return ((w->options & options) == options);
@@ -260,10 +260,10 @@ widget_get_options (const Widget * w, widget_options_t options)
   * @param w widget
   * @param state widget state flags
   *
-  * @return TRUE if all requested state flags are set, FALSE otherwise.
+  * @return true if all requested state flags are set, false otherwise.
   */
 
-static inline gboolean
+static inline bool
 widget_get_state (const Widget * w, widget_state_t state)
 {
     return ((w->state & state) == state);
@@ -325,13 +325,13 @@ widget_find_by_id (const Widget * w, unsigned long id)
  *
  * @param w      widget
  * @param state  widget state flag to modify
- * @param enable specifies whether to turn the flag on (TRUE) or off (FALSE).
+ * @param enable specifies whether to turn the flag on (true) or off (false).
  *               Only one flag per call can be modified.
  * @return       MSG_HANDLED if set was handled successfully, MSG_NOT_HANDLED otherwise.
  */
 
 static inline cb_ret_t
-widget_set_state (Widget * w, widget_state_t state, gboolean enable)
+widget_set_state (Widget * w, widget_state_t state, bool enable)
 {
     return w->set_state (w, state, enable);
 }
@@ -356,10 +356,10 @@ widget_get_colors (const Widget * w)
  *
  * @param w widget
  *
- * @return TRUE if cursor was updated successfully, FALSE otherwise
+ * @return true if cursor was updated successfully, false otherwise
  */
 
-static inline gboolean
+static inline bool
 widget_update_cursor (Widget * w)
 {
     return (send_message (w, nullptr, MSG_CURSOR, 0, nullptr) == MSG_HANDLED);

@@ -36,12 +36,12 @@
 /* *INDENT-OFF* */
 #ifdef ENABLE_SUBSHELL
 #  ifdef SUBSHELL_OPTIONAL
-#    define SUBSHELL_USE FALSE
+#    define SUBSHELL_USE false
 #  else /* SUBSHELL_OPTIONAL */
-#    define SUBSHELL_USE TRUE
+#    define SUBSHELL_USE true
 #  endif /* SUBSHELL_OPTIONAL */
 #else /* !ENABLE_SUBSHELL */
-#    define SUBSHELL_USE FALSE
+#    define SUBSHELL_USE false
 #endif /* !ENABLE_SUBSHELL */
 /* *INDENT-ON* */
 
@@ -50,9 +50,9 @@
 /* *INDENT-OFF* */
 mc_global_t mc_global = {
     .mc_run_mode = MC_RUN_FULL,
-    .run_from_parent_mc = FALSE,
+    .run_from_parent_mc = false,
     .timer = nullptr,
-    .midnight_shutdown = FALSE,
+    .midnight_shutdown = false,
 
     .sysconfig_dir = nullptr,
     .share_data_dir = nullptr,
@@ -61,23 +61,23 @@ mc_global_t mc_global = {
     .source_codepage = -1,
     .display_codepage = -1,
 #else
-    .eight_bit_clean = TRUE,
-    .full_eight_bits = FALSE,
+    .eight_bit_clean = true,
+    .full_eight_bits = false,
 #endif /* !HAVE_CHARSET */
-    .utf8_display = FALSE,
+    .utf8_display = false,
 
-    .message_visible = TRUE,
-    .keybar_visible = TRUE,
+    .message_visible = true,
+    .keybar_visible = true,
 
 #ifdef ENABLE_BACKGROUND
-    .we_are_background = FALSE,
+    .we_are_background = false,
 #endif /* ENABLE_BACKGROUND */
 
     .widget =
     {
-        .confirm_history_cleanup = TRUE,
-        .show_all_if_ambiguous = FALSE,
-        .is_right = FALSE
+        .confirm_history_cleanup = true,
+        .show_all_if_ambiguous = false,
+        .is_right = false
     },
 
     .shell = nullptr,
@@ -85,7 +85,7 @@ mc_global_t mc_global = {
     .tty =
     {
         .skin = nullptr,
-        .shadows = TRUE,
+        .shadows = true,
         .setup_color_string = nullptr,
         .term_color_string = nullptr,
         .color_terminal_string = nullptr,
@@ -100,19 +100,19 @@ mc_global_t mc_global = {
         .subshell_pty = 0,
 #endif /* !ENABLE_SUBSHELL */
 
-        .xterm_flag = FALSE,
-        .disable_x11 = FALSE,
-        .slow_terminal = FALSE,
-        .disable_colors = FALSE,
-        .ugly_line_drawing = FALSE,
-        .old_mouse = FALSE,
-        .alternate_plus_minus = FALSE
+        .xterm_flag = false,
+        .disable_x11 = false,
+        .slow_terminal = false,
+        .disable_colors = false,
+        .ugly_line_drawing = false,
+        .old_mouse = false,
+        .alternate_plus_minus = false
     },
 
     .vfs =
     {
-        .cd_symlinks = TRUE,
-        .preallocate_space = FALSE,
+        .cd_symlinks = true,
+        .preallocate_space = false,
     }
 
 };

@@ -42,7 +42,7 @@
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean command_prompt = FALSE;
+bool command_prompt = false;
 #ifdef ENABLE_SUBSHELL
 enum subshell_state_enum subshell_state = INACTIVE;
 #endif /* ENABLE_SUBSHELL */
@@ -55,23 +55,23 @@ get_current_type (void)
     return view_listing;
 }
 
-gboolean
+bool
 do_cd (const vfs_path_t * new_dir_vpath, enum cd_enum cd_type)
 {
     (void) new_dir_vpath;
     (void) cd_type;
 
-    return TRUE;
+    return true;
 }
 
-gboolean
+bool
 quiet_quit_cmd (void)
 {
-    return FALSE;
+    return false;
 }
 
 char *
-expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
+expand_format (const WEdit * edit_widget, char c, bool do_quote)
 {
     (void) edit_widget;
     (void) c;
@@ -86,10 +86,10 @@ init_subshell (void)
 {
 }
 
-gboolean
+bool
 do_load_prompt (void)
 {
-    return TRUE;
+    return true;
 }
 #endif /* ENABLE_SUBSHELL */
 
@@ -133,7 +133,7 @@ START_TEST (test_examine_cd)
 {
     char *result;
 
-    g_setenv ("AAA", "aaa", TRUE);
+    g_setenv ("AAA", "aaa", true);
 
     check_examine_cd ("/test/path", "/test/path");
 

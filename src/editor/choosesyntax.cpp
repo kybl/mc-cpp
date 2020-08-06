@@ -74,15 +74,15 @@ exec_edit_syntax_dialog (const GPtrArray * names, const char *current_syntax)
 
     syntaxlist = create_listbox_window (LIST_LINES, MAX_ENTRY_LEN,
                                         _("Choose syntax highlighting"), nullptr);
-    LISTBOX_APPEND_TEXT (syntaxlist, 'A', _("< Auto >"), nullptr, FALSE);
-    LISTBOX_APPEND_TEXT (syntaxlist, 'R', _("< Reload Current Syntax >"), nullptr, FALSE);
+    LISTBOX_APPEND_TEXT (syntaxlist, 'A', _("< Auto >"), nullptr, false);
+    LISTBOX_APPEND_TEXT (syntaxlist, 'R', _("< Reload Current Syntax >"), nullptr, false);
 
     for (i = 0; i < names->len; i++)
     {
         const char *name;
 
         name = static_cast<const char *> (g_ptr_array_index (names, i));
-        LISTBOX_APPEND_TEXT (syntaxlist, 0, name, nullptr, FALSE);
+        LISTBOX_APPEND_TEXT (syntaxlist, 0, name, nullptr, false);
         if (current_syntax != nullptr && strcmp (name, current_syntax) == 0)
             listbox_select_entry (syntaxlist->list, i + N_DFLT_ENTRIES);
     }
@@ -111,9 +111,9 @@ edit_syntax_dialog (WEdit * edit)
     syntax = exec_edit_syntax_dialog (names, edit->syntax_type);
     if (syntax >= 0)
     {
-        gboolean force_reload = FALSE;
+        bool force_reload = false;
         char *current_syntax;
-        gboolean old_auto_syntax;
+        bool old_auto_syntax;
 
         current_syntax = g_strdup (edit->syntax_type);
         old_auto_syntax = option_auto_syntax;
@@ -121,13 +121,13 @@ edit_syntax_dialog (WEdit * edit)
         switch (syntax)
         {
         case 0:                /* auto syntax */
-            option_auto_syntax = TRUE;
+            option_auto_syntax = true;
             break;
         case 1:                /* reload current syntax */
-            force_reload = TRUE;
+            force_reload = true;
             break;
         default:
-            option_auto_syntax = FALSE;
+            option_auto_syntax = false;
             g_free (edit->syntax_type);
             edit->syntax_type = g_strdup (static_cast<char *> (g_ptr_array_index (names, syntax - N_DFLT_ENTRIES)));
         }
@@ -142,7 +142,7 @@ edit_syntax_dialog (WEdit * edit)
     }
 
     g_ptr_array_foreach (names, (GFunc) g_free, nullptr);
-    g_ptr_array_free (names, TRUE);
+    g_ptr_array_free (names, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */

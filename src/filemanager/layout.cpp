@@ -71,34 +71,34 @@
 
 panels_layout_t panels_layout = {
     /* Set if the panels are split horizontally */
-    .horizontal_split = FALSE,
+    .horizontal_split = false,
 
     /* vertical split */
-    .vertical_equal = TRUE,
+    .vertical_equal = true,
     .left_panel_size = 0,
 
     /* horizontal split */
-    .horizontal_equal = TRUE,
+    .horizontal_equal = true,
     .top_panel_size = 0
 };
 
 /* Controls the display of the rotating dash on the verbose mode */
-gboolean nice_rotating_dash = TRUE;
+bool nice_rotating_dash = true;
 
 /* The number of output lines shown (if available) */
 int output_lines = 0;
 
 /* Set if the command prompt is to be displayed */
-gboolean command_prompt = TRUE;
+bool command_prompt = true;
 
 /* Set if the main menu is visible */
-gboolean menubar_visible = TRUE;
+bool menubar_visible = true;
 
 /* Set to show current working dir in xterm window title */
-gboolean xterm_title = TRUE;
+bool xterm_title = true;
 
 /* Set to show free space on device assigned to current directory */
-gboolean free_space = TRUE;
+bool free_space = true;
 
 /* The starting line for the output of the subprogram */
 int output_start_y = 0;
@@ -127,12 +127,12 @@ int ok_to_refresh = 1;
 
 typedef struct
 {
-    gboolean menubar_visible;
-    gboolean command_prompt;
-    gboolean keybar_visible;
-    gboolean message_visible;
-    gboolean xterm_title;
-    gboolean free_space;
+    bool menubar_visible;
+    bool command_prompt;
+    bool keybar_visible;
+    bool message_visible;
+    bool xterm_title;
+    bool free_space;
     int output_lines;
 } layout_t;
 
@@ -155,7 +155,7 @@ static struct
 static layout_t old_layout;
 static panels_layout_t old_panels_layout;
 
-static gboolean equal_split;
+static bool equal_split;
 static int _output_lines;
 
 static int height;
@@ -165,7 +165,7 @@ static WRadio *radio_widget;
 static struct
 {
     const char *text;
-    gboolean *variable;
+    bool *variable;
     WCheck *widget;
 } check_options[] =
 {
@@ -353,7 +353,7 @@ layout_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
     case MSG_POST_KEY:
         {
             const Widget *mw = CONST_WIDGET (midnight_dlg);
-            gboolean _menubar_visible, _command_prompt, _keybar_visible, _message_visible;
+            bool _menubar_visible, _command_prompt, _keybar_visible, _message_visible;
 
             _menubar_visible = check_options[1].widget->state;
             _command_prompt = check_options[2].widget->state;
@@ -428,7 +428,7 @@ layout_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
 
         if (sender == WIDGET (check_options[0].widget))
         {
-            gboolean eq;
+            bool eq;
 
             if (panels_layout.horizontal_split)
             {
@@ -452,7 +452,7 @@ layout_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
         }
 
         {
-            gboolean ok = TRUE;
+            bool ok = true;
 
             if (sender == WIDGET (check_options[1].widget))
                 menubar_visible = check_options[1].widget->state;
@@ -467,7 +467,7 @@ layout_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
             else if (sender == WIDGET (check_options[6].widget))
                 free_space = check_options[6].widget->state;
             else
-                ok = FALSE;
+                ok = false;
 
             if (ok)
             {
@@ -512,7 +512,7 @@ layout_dlg_create (void)
 
 #ifdef ENABLE_NLS
     {
-        static gboolean i18n = FALSE;
+        static bool i18n = false;
 
         title1 = _(title1);
         title2 = _(title2);
@@ -526,7 +526,7 @@ layout_dlg_create (void)
         {
             for (i = 0; i < (size_t) LAYOUT_OPTIONS_COUNT; i++)
                 check_options[i].text = _(check_options[i].text);
-            i18n = TRUE;
+            i18n = true;
         }
 
         ok_button = _(ok_button);
@@ -556,7 +556,7 @@ layout_dlg_create (void)
     width = max (l1 * 2 + 7, b);
 
     layout_dlg =
-        dlg_create (TRUE, 0, 0, 15, width, WPOS_CENTER, FALSE, dialog_colors, layout_callback, nullptr,
+        dlg_create (true, 0, 0, 15, width, WPOS_CENTER, false, dialog_colors, layout_callback, nullptr,
                     "[Layout]", _("Layout"));
     g = GROUP (layout_dlg);
 
@@ -646,7 +646,7 @@ panel_do_cols (int idx)
 /** Save current list_view widget directory into panel */
 
 static Widget *
-restore_into_right_dir_panel (int idx, gboolean last_was_panel, int y, int x, int lines, int cols)
+restore_into_right_dir_panel (int idx, bool last_was_panel, int y, int x, int lines, int cols)
 {
     WPanel *new_widget;
     const char *p_name;
@@ -713,7 +713,7 @@ layout_change (void)
        how the panel are split (horizontal/vertical),
        and a change of menu visibility. */
     update_menu ();
-    load_hint (TRUE);
+    load_hint (true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -908,9 +908,9 @@ void
 panels_split_equal (void)
 {
     if (panels_layout.horizontal_split)
-        panels_layout.horizontal_equal = TRUE;
+        panels_layout.horizontal_equal = true;
     else
-        panels_layout.vertical_equal = TRUE;
+        panels_layout.vertical_equal = true;
 
     layout_change ();
     do_refresh ();
@@ -923,12 +923,12 @@ panels_split_more (void)
 {
     if (panels_layout.horizontal_split)
     {
-        panels_layout.horizontal_equal = FALSE;
+        panels_layout.horizontal_equal = false;
         panels_layout.top_panel_size++;
     }
     else
     {
-        panels_layout.vertical_equal = FALSE;
+        panels_layout.vertical_equal = false;
         panels_layout.left_panel_size++;
     }
 
@@ -942,12 +942,12 @@ panels_split_less (void)
 {
     if (panels_layout.horizontal_split)
     {
-        panels_layout.horizontal_equal = FALSE;
+        panels_layout.horizontal_equal = false;
         panels_layout.top_panel_size--;
     }
     else
     {
-        panels_layout.vertical_equal = FALSE;
+        panels_layout.vertical_equal = false;
         panels_layout.left_panel_size--;
     }
 
@@ -968,7 +968,7 @@ setup_cmdline (void)
 #ifdef ENABLE_SUBSHELL
     if (mc_global.tty.use_subshell)
     {
-        tmp_prompt = g_string_free (subshell_prompt, FALSE);
+        tmp_prompt = g_string_free (subshell_prompt, false);
         (void) strip_ctrl_codes (tmp_prompt);
     }
 #endif
@@ -1004,7 +1004,7 @@ setup_cmdline (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-use_dash (gboolean flag)
+use_dash (bool flag)
 {
     if (flag)
         ok_to_refresh++;
@@ -1025,7 +1025,7 @@ set_hintbar (const char *str)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-rotate_dash (gboolean show)
+rotate_dash (bool show)
 {
     static guint64 timestamp = 0;
     /* update with 10 FPS rate */
@@ -1043,7 +1043,7 @@ rotate_dash (gboolean show)
     tty_setcolor (NORMAL_COLOR);
 
     if (!show)
-        tty_print_alt_char (ACS_URCORNER, FALSE);
+        tty_print_alt_char (ACS_URCORNER, false);
     else
     {
         static const char rotating_dash[4] = {'|', '/', '-', '\\'};
@@ -1153,7 +1153,7 @@ create_panel (int num, panel_view_mode_t type)
     case view_nothing:
     case view_listing:
         {
-            gboolean last_was_panel;
+            bool last_was_panel;
 
             last_was_panel = old_widget != nullptr && get_panel_type (num) != view_listing;
             new_widget = restore_into_right_dir_panel (num, last_was_panel, y, x, lines, cols);
@@ -1165,11 +1165,11 @@ create_panel (int num, panel_view_mode_t type)
         break;
 
     case view_tree:
-        new_widget = WIDGET (tree_new (y, x, lines, cols, TRUE));
+        new_widget = WIDGET (tree_new (y, x, lines, cols, true));
         break;
 
     case view_quick:
-        new_widget = WIDGET (mcview_new (y, x, lines, cols, TRUE));
+        new_widget = WIDGET (mcview_new (y, x, lines, cols, true));
         the_other_panel = PANEL (panels[the_other].widget);
         if (the_other_panel != nullptr)
             file_name = the_other_panel->dir.list[the_other_panel->selected].fname;
@@ -1258,7 +1258,7 @@ swap_panels (void)
     panel2 = PANEL (panels[1].widget);
 
     if (panels[0].type == view_listing && panels[1].type == view_listing &&
-        !mc_config_get_bool (mc_global.main_config, CONFIG_PANELS_SECTION, "simple_swap", FALSE))
+        !mc_config_get_bool (mc_global.main_config, CONFIG_PANELS_SECTION, "simple_swap", false))
     {
         WPanel panel;
 
@@ -1277,8 +1277,8 @@ swap_panels (void)
         panelswap (dir_stat);
 #undef panelswap
 
-        panel1->searching = FALSE;
-        panel2->searching = FALSE;
+        panel1->searching = false;
+        panel2->searching = false;
 
         if (current_panel == panel1)
             current_panel = panel2;
@@ -1464,10 +1464,10 @@ get_panel_dir_for (const WPanel * widget)
 /* --------------------------------------------------------------------------------------------- */
 
 #ifdef ENABLE_SUBSHELL
-gboolean
+bool
 do_load_prompt (void)
 {
-    gboolean ret = FALSE;
+    bool ret = false;
 
     if (!read_subshell_prompt ())
         return ret;
@@ -1483,9 +1483,9 @@ do_load_prompt (void)
          */
         widget_update_cursor (WIDGET (midnight_dlg));
         mc_refresh ();
-        ret = TRUE;
+        ret = true;
     }
-    update_subshell_prompt = TRUE;
+    update_subshell_prompt = true;
     return ret;
 }
 

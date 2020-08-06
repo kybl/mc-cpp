@@ -77,12 +77,12 @@ static void
 mcview_set_datasource_stdio_pipe (WView * view, mc_pipe_t * p)
 {
     p->out.len = MC_PIPE_BUFSIZE;
-    p->out.null_term = FALSE;
+    p->out.null_term = false;
     p->err.len = MC_PIPE_BUFSIZE;
-    p->err.null_term = TRUE;
+    p->err.null_term = true;
     view->datasource = DS_STDIO_PIPE;
     view->ds_stdio_pipe = p;
-    view->pipe_first_err_msg = TRUE;
+    view->pipe_first_err_msg = true;
 
     mcview_growbuf_init (view);
 }
@@ -146,7 +146,7 @@ mcview_get_ptr_file (WView * view, off_t byte_index)
 
 /* Invalid UTF-8 is reported as negative integers (one for each byte),
  * see ticket 3783. */
-gboolean
+bool
 mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
 {
     gchar *str = nullptr;
@@ -173,7 +173,7 @@ mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
     *ch = 0;
 
     if (str == nullptr)
-        return FALSE;
+        return false;
 
     res = g_utf8_get_char_validated (str, -1);
 
@@ -213,7 +213,7 @@ mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
         *ch_len = next_ch - str;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -230,7 +230,7 @@ mcview_get_ptr_string (WView * view, off_t byte_index)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_get_byte_string (WView * view, off_t byte_index, int *retval)
 {
     char *p;
@@ -240,16 +240,16 @@ mcview_get_byte_string (WView * view, off_t byte_index, int *retval)
 
     p = mcview_get_ptr_string (view, byte_index);
     if (p == nullptr)
-        return FALSE;
+        return false;
 
     if (retval != nullptr)
         *retval = (unsigned char) (*p);
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_get_byte_none (WView * view, off_t byte_index, int *retval)
 {
     (void) &view;
@@ -259,7 +259,7 @@ mcview_get_byte_none (WView * view, off_t byte_index, int *retval)
 
     if (retval != nullptr)
         *retval = -1;
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -376,7 +376,7 @@ mcview_set_datasource_file (WView * view, int fd, const struct stat *st)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 mcview_load_command_output (WView * view, const char *command)
 {
     mc_pipe_t *p;
@@ -390,7 +390,7 @@ mcview_load_command_output (WView * view, const char *command)
         mcview_display (view);
         mcview_show_error (view, error->message);
         g_error_free (error);
-        return FALSE;
+        return false;
     }
 
     /* Check if filter produced any output */
@@ -399,10 +399,10 @@ mcview_load_command_output (WView * view, const char *command)
     {
         mcview_close_datasource (view);
         mcview_display (view);
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

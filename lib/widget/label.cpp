@@ -67,7 +67,7 @@ label_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
         {
             char *p = l->text;
             int y = 0;
-            gboolean disabled;
+            bool disabled;
             align_crt_t align;
 
             if (l->text == nullptr)
@@ -87,7 +87,7 @@ label_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 
             align = (w->pos_flags & WPOS_CENTER_HORZ) != 0 ? J_CENTER_LEFT : J_LEFT;
 
-            while (TRUE)
+            while (true)
             {
                 char *q;
                 char c = '\0';
@@ -142,8 +142,8 @@ label_new (int y, int x, const char *text)
     widget_init (w, y, x, lines, cols, label_callback, nullptr);
 
     l->text = g_strdup (text);
-    l->auto_adjust_cols = TRUE;
-    l->transparent = FALSE;
+    l->auto_adjust_cols = true;
+    l->transparent = false;
 
     return l;
 }

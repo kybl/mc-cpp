@@ -126,11 +126,11 @@ button_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
 
     case MSG_DRAW:
         {
-            gboolean focused;
+            bool focused;
 
             focused = widget_get_state (w, WST_FOCUSED);
 
-            widget_selectcolor (w, focused, FALSE);
+            widget_selectcolor (w, focused, false);
             widget_gotoyx (w, 0, 0);
 
             switch (b->flags)

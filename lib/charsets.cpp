@@ -227,7 +227,7 @@ void
 free_codepages_list (void)
 {
     g_ptr_array_foreach (codepages, free_codepage_desc, nullptr);
-    g_ptr_array_free (codepages, TRUE);
+    g_ptr_array_free (codepages, true);
     /* nullptr-ize pointer to make unit tests happy */
     codepages = nullptr;
 }
@@ -260,13 +260,13 @@ get_codepage_index (const char *id)
 /* --------------------------------------------------------------------------------------------- */
 /** Check if specified encoding can be used in mc.
  * @param encoding name of encoding
- * @return TRUE if encoding is supported by mc, FALSE otherwise
+ * @return true if encoding is supported by mc, false otherwise
  */
 
-gboolean
+bool
 is_supported_encoding (const char *encoding)
 {
-    gboolean result = FALSE;
+    bool result = false;
     guint t;
 
     for (t = 0; t < codepages->len; t++)

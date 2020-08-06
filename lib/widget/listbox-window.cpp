@@ -105,10 +105,10 @@ create_listbox_window_centered (int center_y, int center_x, int lines, int cols,
     listbox = g_new (Listbox, 1);
 
     listbox->dlg =
-        dlg_create (TRUE, ypos, xpos, lines + space, cols + space, pos_flags, FALSE, listbox_colors,
+        dlg_create (true, ypos, xpos, lines + space, cols + space, pos_flags, false, listbox_colors,
                     nullptr, nullptr, help, title);
 
-    listbox->list = listbox_new (2, 2, lines, cols, FALSE, nullptr);
+    listbox->list = listbox_new (2, 2, lines, cols, false, nullptr);
     group_add_widget (GROUP (listbox->dlg), listbox->list);
 
     return listbox;
@@ -161,7 +161,7 @@ run_listbox_with_data (Listbox * l, const void *select)
         if (e != nullptr)
         {
             /* The assert guards against returning a soon-to-be deallocated
-             * pointer (as in listbox_add_item(..., TRUE)). */
+             * pointer (as in listbox_add_item(..., true)). */
             g_assert (!e->free_data);
             val = e->data;
         }

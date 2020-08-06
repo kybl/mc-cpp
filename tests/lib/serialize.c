@@ -226,18 +226,18 @@ START_TEST (test_serialize_config)
         "g6:group3p6:param1v11:::bla-bla::p6:param2v31:bla-:p1:w:v2:12:g3:123:bla-bla\n"
         "g6:group4p6:param1v5:falsep6:param2v6:654321";
 
-    test_data = mc_config_init (NULL, FALSE);
+    test_data = mc_config_init (NULL, false);
 
     mc_config_set_string_raw (test_data, "group1", "param1", "some value");
     mc_config_set_string (test_data, "group1", "param2", "some value ");
 
-    mc_config_set_bool (test_data, "group2", "param1", TRUE);
+    mc_config_set_bool (test_data, "group2", "param1", true);
     mc_config_set_int (test_data, "group2", "param2", 123456);
 
     mc_config_set_string_raw (test_data, "group3", "param1", "::bla-bla::");
     mc_config_set_string (test_data, "group3", "param2", "bla-:p1:w:v2:12:g3:123:bla-bla\n");
 
-    mc_config_set_bool (test_data, "group4", "param1", FALSE);
+    mc_config_set_bool (test_data, "group4", "param1", false);
     mc_config_set_int (test_data, "group4", "param2", 654321);
 
     /* when */
@@ -331,7 +331,7 @@ START_TEST (test_deserialize_config)
     mctest_assert_str_eq (actual_value, "some value ");
     g_free (actual_value);
 
-    mctest_assert_int_eq (mc_config_get_bool (actual, "group2", "param1", FALSE), TRUE);
+    mctest_assert_int_eq (mc_config_get_bool (actual, "group2", "param1", false), true);
 
     mctest_assert_int_eq (mc_config_get_int (actual, "group2", "param2", 0), 123456);
 
@@ -343,7 +343,7 @@ START_TEST (test_deserialize_config)
     mctest_assert_str_eq (actual_value, "bla-:p1:w:v2:12:g3:123:bla-bla\n");
     g_free (actual_value);
 
-    mctest_assert_int_eq (mc_config_get_bool (actual, "group4", "param1", TRUE), FALSE);
+    mctest_assert_int_eq (mc_config_get_bool (actual, "group4", "param1", true), false);
 
     mctest_assert_int_eq (mc_config_get_int (actual, "group4", "param2", 0), 654321);
 

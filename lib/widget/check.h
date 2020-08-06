@@ -17,7 +17,7 @@
 typedef struct WCheck
 {
     Widget widget;
-    gboolean state;             /* check button state */
+    bool state;             /* check button state */
     hotkey_t text;              /* text of check button */
 } WCheck;
 
@@ -25,7 +25,7 @@ typedef struct WCheck
 
 /*** declarations of public functions ************************************************************/
 
-WCheck *check_new (int y, int x, gboolean state, const char *text);
+WCheck *check_new (int y, int x, bool state, const char *text);
 void check_set_text (WCheck * check, const char *text);
 
 /*** inline functions ****************************************************************************/

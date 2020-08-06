@@ -93,8 +93,8 @@ sigintr_handler (int signo)
  * @return true if @param force_xterm is true or value of $TERM is one of term*, konsole*
  *              rxvt*, Eterm or dtterm
  */
-gboolean
-tty_check_term (gboolean force_xterm)
+bool
+tty_check_term (bool force_xterm)
 {
     const char *termvalue;
     const char *xdisplay;
@@ -163,10 +163,10 @@ tty_disable_interrupt_key (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-extern gboolean
+extern bool
 tty_got_interrupt (void)
 {
-    gboolean rv;
+    bool rv;
 
     rv = (got_interrupt != 0);
     got_interrupt = 0;
@@ -175,7 +175,7 @@ tty_got_interrupt (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 tty_got_winch (void)
 {
     fd_set fdset;
@@ -219,7 +219,7 @@ tty_flush_winch (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_print_one_hline (gboolean single)
+tty_print_one_hline (bool single)
 {
     tty_print_alt_char (ACS_HLINE, single);
 }
@@ -227,7 +227,7 @@ tty_print_one_hline (gboolean single)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_print_one_vline (gboolean single)
+tty_print_one_vline (bool single)
 {
     tty_print_alt_char (ACS_VLINE, single);
 }
@@ -235,7 +235,7 @@ tty_print_one_vline (gboolean single)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_draw_box (int y, int x, int ys, int xs, gboolean single)
+tty_draw_box (int y, int x, int ys, int xs, bool single)
 {
     int y2, x2;
 
@@ -293,13 +293,13 @@ mc_tty_normalize_from_utf8 (const char *str)
 
     if (str_convert (conv, str, buffer) == ESTR_FAILURE)
     {
-        g_string_free (buffer, TRUE);
+        g_string_free (buffer, true);
         str_close_conv (conv);
         return g_strdup (str);
     }
     str_close_conv (conv);
 
-    return g_string_free (buffer, FALSE);
+    return g_string_free (buffer, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -324,7 +324,7 @@ tty_resize (int fd)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_init_xterm_support (gboolean is_xterm)
+tty_init_xterm_support (bool is_xterm)
 {
     const char *termvalue;
 
@@ -346,7 +346,7 @@ tty_init_xterm_support (gboolean is_xterm)
 
     if (strcmp (termvalue, "cygwin") == 0)
     {
-        is_xterm = TRUE;
+        is_xterm = true;
         use_mouse_p = MOUSE_DISABLED;
     }
 

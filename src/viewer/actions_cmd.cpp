@@ -98,7 +98,7 @@ mcview_remove_ext_script (WView * view)
 
 /* Both views */
 static void
-mcview_search (WView * view, gboolean start_search)
+mcview_search (WView * view, bool start_search)
 {
     off_t want_search_start = view->search_start;
 
@@ -134,7 +134,7 @@ static void
 mcview_continue_search_cmd (WView * view)
 {
     if (view->last_search_string != nullptr)
-        mcview_search (view, FALSE);
+        mcview_search (view, false);
     else
     {
         /* find last search string in history */
@@ -158,7 +158,7 @@ mcview_continue_search_cmd (WView * view)
             {
                 /* if not... then ask for an expression */
                 MC_PTR_FREE (view->last_search_string);
-                mcview_search (view, TRUE);
+                mcview_search (view, true);
             }
             else
             {
@@ -171,14 +171,14 @@ mcview_continue_search_cmd (WView * view)
                 view->search->search_fn = mcview_search_cmd_callback;
                 view->search->update_fn = mcview_search_update_cmd_callback;
 
-                mcview_search (view, FALSE);
+                mcview_search (view, false);
             }
         }
         else
         {
             /* if not... then ask for an expression */
             MC_PTR_FREE (view->last_search_string);
-            mcview_search (view, TRUE);
+            mcview_search (view, true);
         }
     }
 }
@@ -300,7 +300,7 @@ mcview_load_next_prev_init (WView * view)
 
         /* TODO: check mtime of directory to reload it */
 
-        dir_sort_options_t sort_op = { FALSE, TRUE, FALSE };
+        dir_sort_options_t sort_op = { false, true, false };
 
         /* load directory where requested file is */
         view->dir = g_new0 (dir_list, 1);
@@ -385,7 +385,7 @@ mcview_load_next_prev (WView * view, int direction)
     view->dir_idx = dir_idx;
     view->ext_script = ext_script;
 
-    view->dpy_bbar_dirty = FALSE;       /* FIXME */
+    view->dpy_bbar_dirty = false;       /* FIXME */
     view->dirty++;
 }
 
@@ -406,7 +406,7 @@ mcview_load_file_from_history (WView * view)
 
         mcview_load (view, nullptr, filename, 0, 0, 0);
 
-        view->dpy_bbar_dirty = FALSE;   /* FIXME */
+        view->dpy_bbar_dirty = false;   /* FIXME */
         view->dirty++;
     }
 
@@ -468,30 +468,30 @@ mcview_execute_cmd (WView * view, long command)
         mcview_hexedit_save_changes (view);
         break;
     case CK_Search:
-        mcview_search (view, TRUE);
+        mcview_search (view, true);
         break;
     case CK_SearchContinue:
         mcview_continue_search_cmd (view);
         break;
     case CK_SearchForward:
-        mcview_search_options.backwards = FALSE;
-        mcview_search (view, TRUE);
+        mcview_search_options.backwards = false;
+        mcview_search (view, true);
         break;
     case CK_SearchForwardContinue:
-        mcview_search_options.backwards = FALSE;
+        mcview_search_options.backwards = false;
         mcview_continue_search_cmd (view);
         break;
     case CK_SearchBackward:
-        mcview_search_options.backwards = TRUE;
-        mcview_search (view, TRUE);
+        mcview_search_options.backwards = true;
+        mcview_search (view, true);
         break;
     case CK_SearchBackwardContinue:
-        mcview_search_options.backwards = TRUE;
+        mcview_search_options.backwards = true;
         mcview_continue_search_cmd (view);
         break;
     case CK_SearchOppositeContinue:
         {
-            gboolean direction;
+            bool direction;
 
             direction = mcview_search_options.backwards;
             mcview_search_options.backwards = !direction;
@@ -554,7 +554,7 @@ mcview_execute_cmd (WView * view, long command)
     case CK_Bookmark:
         view->dpy_start = view->marks[view->marker];
         view->dpy_paragraph_skip_lines = 0;     /* TODO: remember this value in the marker? */
-        view->dpy_wrap_dirty = TRUE;
+        view->dpy_wrap_dirty = true;
         view->dirty++;
         break;
     case CK_BookmarkGoto:
@@ -638,20 +638,20 @@ mcview_handle_key (WView * view, int key)
 static inline void
 mcview_resize (WView * view)
 {
-    view->dpy_wrap_dirty = TRUE;
+    view->dpy_wrap_dirty = true;
     mcview_compute_areas (view);
     mcview_update_bytes_per_line (view);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 mcview_ok_to_quit (WView * view)
 {
     int r;
 
     if (view->change_list == nullptr)
-        return TRUE;
+        return true;
 
     if (!mc_global.midnight_shutdown)
     {
@@ -676,9 +676,9 @@ mcview_ok_to_quit (WView * view)
         return mcview_hexedit_save_changes (view) || mc_global.midnight_shutdown;
     case 1:                    /* No */
         mcview_hexedit_free_change_list (view);
-        return TRUE;
+        return true;
     default:
-        return FALSE;
+        return false;
     }
 }
 
@@ -701,7 +701,7 @@ mcview_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
         if (mcview_is_in_panel (view))
             add_hook (&select_file_hook, mcview_hook, view);
         else
-            view->dpy_bbar_dirty = TRUE;
+            view->dpy_bbar_dirty = true;
         return MSG_HANDLED;
 
     case MSG_DRAW:
@@ -724,7 +724,7 @@ mcview_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
         return i;
 
     case MSG_FOCUS:
-        view->dpy_bbar_dirty = TRUE;
+        view->dpy_bbar_dirty = true;
         /* TODO: get rid of draw here before MSG_DRAW */
         mcview_update (view);
         return MSG_HANDLED;
@@ -792,7 +792,7 @@ mcview_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
     case MSG_VALIDATE:
         view = (WView *) widget_find_by_type (w, mcview_callback);
         /* don't stop the dialog before final decision */
-        widget_set_state (w, WST_ACTIVE, TRUE);
+        widget_set_state (w, WST_ACTIVE, true);
         if (mcview_ok_to_quit (view))
             dlg_stop (h);
         else

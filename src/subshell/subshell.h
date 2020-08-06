@@ -34,16 +34,16 @@ extern enum subshell_state_enum subshell_state;
 /* Holds the latest prompt captured from the subshell */
 extern GString *subshell_prompt;
 
-extern gboolean update_subshell_prompt;
+extern bool update_subshell_prompt;
 
 /*** declarations of public functions ************************************************************/
 
 void init_subshell (void);
 int invoke_subshell (const char *command, int how, vfs_path_t ** new_dir);
-gboolean read_subshell_prompt (void);
+bool read_subshell_prompt (void);
 void do_update_prompt (void);
-gboolean exit_subshell (void);
-void do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt);
+bool exit_subshell (void);
+void do_subshell_chdir (const vfs_path_t * vpath, bool update_prompt);
 void subshell_get_console_attributes (void);
 void sigchld_handler (int sig);
 

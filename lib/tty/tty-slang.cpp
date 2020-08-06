@@ -81,9 +81,9 @@ static struct termios boot_mode;
 static struct termios new_mode;
 
 /* Controls whether we should wait for input in tty_lowlevel_getch */
-static gboolean no_slang_delay;
+static bool no_slang_delay;
 
-static gboolean slsmg_active = FALSE;
+static bool slsmg_active = false;
 
 /* This table describes which capabilities we want and which values we
  * assign to them.
@@ -271,7 +271,7 @@ mc_tty_normalize_lines_char (const char *str)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_init (gboolean mouse_enable, gboolean is_xterm)
+tty_init (bool mouse_enable, bool is_xterm)
 {
     SLtt_Ignore_Beep = 1;
 
@@ -322,16 +322,16 @@ tty_init (gboolean mouse_enable, gboolean is_xterm)
      * detected - but checking TERM would fail under screen, OR running xterm
      * with allowC1Printable).
      */
-    tty_display_8bit (FALSE);
+    tty_display_8bit (false);
 
     SLsmg_init_smg ();
-    slsmg_active = TRUE;
+    slsmg_active = true;
     if (!mouse_enable)
         use_mouse_p = MOUSE_DISABLED;
     tty_init_xterm_support (is_xterm);  /* do it before tty_enter_ca_mode() call */
     tty_enter_ca_mode ();
-    tty_keypad (TRUE);
-    tty_nodelay (FALSE);
+    tty_keypad (true);
+    tty_nodelay (false);
 
     tty_setup_sigwinch (sigwinch_handler);
 }
@@ -346,11 +346,11 @@ tty_shutdown (void)
     tty_destroy_winch_pipe ();
     tty_reset_shell_mode ();
     tty_noraw_mode ();
-    tty_keypad (FALSE);
+    tty_keypad (false);
     tty_reset_screen ();
     tty_exit_ca_mode ();
     SLang_reset_tty ();
-    slsmg_active = FALSE;
+    slsmg_active = false;
 
     /* Load the op capability to reset the colors to those that were 
      * active when the program was started up 
@@ -402,7 +402,7 @@ tty_reset_prog_mode (void)
 {
     tcsetattr (SLang_TT_Read_FD, TCSANOW, &new_mode);
     SLsmg_init_smg ();
-    slsmg_active = TRUE;
+    slsmg_active = true;
     SLsmg_touch_lines (0, LINES);
 }
 
@@ -448,7 +448,7 @@ tty_flush_input (void)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_keypad (gboolean set)
+tty_keypad (bool set)
 {
     char *keypad_string;
 
@@ -462,7 +462,7 @@ tty_keypad (gboolean set)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_nodelay (gboolean set)
+tty_nodelay (bool set)
 {
     no_slang_delay = set;
 }
@@ -503,7 +503,7 @@ int
 tty_reset_screen (void)
 {
     SLsmg_reset_smg ();
-    slsmg_active = FALSE;
+    slsmg_active = false;
     return 0;                   /* OK */
 }
 
@@ -632,7 +632,7 @@ tty_colorize_area (int y, int x, int rows, int cols, int color)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_set_alt_charset (gboolean alt_charset)
+tty_set_alt_charset (bool alt_charset)
 {
     SLsmg_set_char_set ((int) alt_charset);
 }
@@ -640,7 +640,7 @@ tty_set_alt_charset (gboolean alt_charset)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_display_8bit (gboolean what)
+tty_display_8bit (bool what)
 {
     SLsmg_Display_Eight_Bit = what ? 128 : 160;
 }
@@ -656,7 +656,7 @@ tty_print_char (int c)
 /* --------------------------------------------------------------------------------------------- */
 
 void
-tty_print_alt_char (int c, gboolean single)
+tty_print_alt_char (int c, bool single)
 {
 #define DRAW(x, y) (x == y) \
        ? SLsmg_draw_object (SLsmg_get_row(), SLsmg_get_column(), x) \

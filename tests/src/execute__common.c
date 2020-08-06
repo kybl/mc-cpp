@@ -37,10 +37,10 @@
 static GPtrArray *vfs_file_is_local__vpath__captured;
 
 /* @ThenReturnValue */
-static gboolean vfs_file_is_local__return_value;
+static bool vfs_file_is_local__return_value;
 
 /* @Mock */
-gboolean
+bool
 vfs_file_is_local (const vfs_path_t * vpath)
 {
     g_ptr_array_add (vfs_file_is_local__vpath__captured, vfs_path_clone (vpath));
@@ -57,7 +57,7 @@ static void
 vfs_file_is_local__deinit (void)
 {
     g_ptr_array_foreach (vfs_file_is_local__vpath__captured, (GFunc) vfs_path_free, NULL);
-    g_ptr_array_free (vfs_file_is_local__vpath__captured, TRUE);
+    g_ptr_array_free (vfs_file_is_local__vpath__captured, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -193,7 +193,7 @@ static void
 mc_stat__deinit (void)
 {
     g_ptr_array_foreach (mc_stat__vpath__captured, (GFunc) vfs_path_free, NULL);
-    g_ptr_array_free (mc_stat__vpath__captured, TRUE);
+    g_ptr_array_free (mc_stat__vpath__captured, true);
     mc_stat__vpath__captured = NULL;
 }
 
@@ -209,7 +209,7 @@ static int mc_ungetlocalcopy__return_value = 0;
 /* @Mock */
 int
 mc_ungetlocalcopy (const vfs_path_t * pathname_vpath, const vfs_path_t * local_vpath,
-                   gboolean has_changed_ignored)
+                   bool has_changed_ignored)
 {
     (void) has_changed_ignored;
 

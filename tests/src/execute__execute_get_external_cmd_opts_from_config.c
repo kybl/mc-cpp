@@ -77,16 +77,16 @@ static void
 mc_config_get_string__deinit (void)
 {
     g_ptr_array_foreach (mc_config_get_string__group__captured, (GFunc) g_free, NULL);
-    g_ptr_array_free (mc_config_get_string__group__captured, TRUE);
+    g_ptr_array_free (mc_config_get_string__group__captured, true);
 
     g_ptr_array_foreach (mc_config_get_string__param__captured, (GFunc) g_free, NULL);
-    g_ptr_array_free (mc_config_get_string__param__captured, TRUE);
+    g_ptr_array_free (mc_config_get_string__param__captured, true);
 
     g_ptr_array_foreach (mc_config_get_string__default_value__captured, (GFunc) g_free, NULL);
-    g_ptr_array_free (mc_config_get_string__default_value__captured, TRUE);
+    g_ptr_array_free (mc_config_get_string__default_value__captured, true);
 
     g_ptr_array_foreach (mc_config_get_string__return_value, (GFunc) g_free, NULL);
-    g_ptr_array_free (mc_config_get_string__return_value, TRUE);
+    g_ptr_array_free (mc_config_get_string__return_value, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */

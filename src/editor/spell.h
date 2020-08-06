@@ -15,13 +15,13 @@
 
 void aspell_init (void);
 void aspell_clean (void);
-gboolean aspell_check (const char *word, const int word_size);
+bool aspell_check (const char *word, const int word_size);
 unsigned int aspell_suggest (GArray * suggest, const char *word, const int word_size);
 void aspell_array_clean (GArray * array);
 unsigned int aspell_get_lang_list (GArray * lang_list);
 const char *aspell_get_lang (void);
-gboolean aspell_set_lang (const char *lang);
-gboolean aspell_add_to_dict (const char *word, const int word_size);
+bool aspell_set_lang (const char *lang);
+bool aspell_add_to_dict (const char *word, const int word_size);
 
 /*** inline functions ****************************************************************************/
 

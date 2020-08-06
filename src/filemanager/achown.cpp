@@ -91,7 +91,7 @@ static struct
 };
 
 static int current_file;
-static gboolean ignore_all;
+static bool ignore_all;
 
 static WButton *b_att[3];       /* permission */
 static WButton *b_user, *b_group;       /* owner */
@@ -112,13 +112,13 @@ static struct stat sf_stat;
 static void
 advanced_chown_init (void)
 {
-    static gboolean i18n = FALSE;
+    static bool i18n = false;
     int i;
 
     if (i18n)
         return;
 
-    i18n = TRUE;
+    i18n = true;
 
     for (i = BUTTONS_PERM; i < BUTTONS; i++)
     {
@@ -319,7 +319,7 @@ update_mode (WGroup * g)
 {
     print_flags (DIALOG (g));
     advanced_chown_info_update ();
-    widget_set_state (WIDGET (g->current->data), WST_FOCUSED, TRUE);
+    widget_set_state (WIDGET (g->current->data), WST_FOCUSED, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -468,7 +468,7 @@ perm_button_new (int y, int x, int action, button_flags_t flags, const char *tex
     w = WIDGET (b);
 
     /* we don't want HOTKEY */
-    widget_want_hotkey (w, FALSE);
+    widget_want_hotkey (w, false);
 
     w->callback = perm_button_callback;
     w->mouse_callback = perm_button_mouse_callback;
@@ -511,7 +511,7 @@ user_group_button_cb (WButton * button, int action)
 {
     Widget *w = WIDGET (button);
     int f_pos;
-    gboolean chl_end;
+    bool chl_end;
 
     (void) action;
 
@@ -528,7 +528,7 @@ user_group_button_cb (WButton * button, int action)
         WDialog *h = DIALOG (g);
         Widget *wh = WIDGET (h);
 
-        gboolean is_owner = (f_pos == BUTTONS_PERM - 2);
+        bool is_owner = (f_pos == BUTTONS_PERM - 2);
         const char *title;
         int lxx, b_pos;
         WDialog *chl_dlg;
@@ -538,7 +538,7 @@ user_group_button_cb (WButton * button, int action)
         struct passwd *chl_pass;
         struct group *chl_grp;
 
-        chl_end = FALSE;
+        chl_end = false;
 
         if (is_owner)
         {
@@ -552,21 +552,21 @@ user_group_button_cb (WButton * button, int action)
         }
 
         chl_dlg =
-            dlg_create (TRUE, wh->y - 1, lxx, wh->lines + 2, 17, WPOS_KEEP_DEFAULT, TRUE,
+            dlg_create (true, wh->y - 1, lxx, wh->lines + 2, 17, WPOS_KEEP_DEFAULT, true,
                         dialog_colors, chl_callback, nullptr, "[Advanced Chown]", title);
 
         /* get new listboxes */
         chl_list =
-            listbox_new (1, 1, WIDGET (chl_dlg)->lines - 2, WIDGET (chl_dlg)->cols - 2, FALSE,
+            listbox_new (1, 1, WIDGET (chl_dlg)->lines - 2, WIDGET (chl_dlg)->cols - 2, false,
                          nullptr);
-        listbox_add_item (chl_list, LISTBOX_APPEND_AT_END, 0, "<Unknown>", nullptr, FALSE);
+        listbox_add_item (chl_list, LISTBOX_APPEND_AT_END, 0, "<Unknown>", nullptr, false);
         if (is_owner)
         {
             /* get and put user names in the listbox */
             setpwent ();
             while ((chl_pass = getpwent ()) != nullptr)
                 listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_pass->pw_name, nullptr,
-                                  FALSE);
+                                  false);
             endpwent ();
             fe = listbox_search_text (chl_list, get_owner (sf_stat.st_uid));
         }
@@ -576,7 +576,7 @@ user_group_button_cb (WButton * button, int action)
             setgrent ();
             while ((chl_grp = getgrent ()) != nullptr)
                 listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_grp->gr_name, nullptr,
-                                  FALSE);
+                                  false);
             endgrent ();
             fe = listbox_search_text (chl_list, get_group (sf_stat.st_gid));
         }
@@ -592,7 +592,7 @@ user_group_button_cb (WButton * button, int action)
         {
             if (b_pos != chl_list->pos)
             {
-                gboolean ok = FALSE;
+                bool ok = false;
                 char *text;
 
                 listbox_get_current (chl_list, &text, nullptr);
@@ -602,7 +602,7 @@ user_group_button_cb (WButton * button, int action)
                     if (chl_pass != nullptr)
                     {
                         sf_stat.st_uid = chl_pass->pw_uid;
-                        ok = TRUE;
+                        ok = true;
                     }
                 }
                 else
@@ -611,7 +611,7 @@ user_group_button_cb (WButton * button, int action)
                     if (chl_grp != nullptr)
                     {
                         sf_stat.st_gid = chl_grp->gr_gid;
-                        ok = TRUE;
+                        ok = true;
                     }
                 }
 
@@ -629,14 +629,14 @@ user_group_button_cb (WButton * button, int action)
             if (result == KEY_LEFT)
             {
                 if (!is_owner)
-                    chl_end = TRUE;
+                    chl_end = true;
                 group_select_prev_widget (g);
                 f_pos--;
             }
             else if (result == KEY_RIGHT)
             {
                 if (is_owner)
-                    chl_end = TRUE;
+                    chl_end = true;
                 group_select_next_widget (g);
                 f_pos++;
             }
@@ -730,7 +730,7 @@ advanced_chown_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
 static WDialog *
 advanced_chown_dlg_create (void)
 {
-    gboolean single_set;
+    bool single_set;
     WDialog *ch_dlg;
     WGroup *ch_grp;
     int lines = 12;
@@ -747,7 +747,7 @@ advanced_chown_dlg_create (void)
         lines += 2;
 
     ch_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors,
+        dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors,
                     advanced_chown_callback, nullptr, "[Advanced Chown]", _("Chown advanced command"));
     ch_grp = GROUP (ch_dlg);
 
@@ -821,7 +821,7 @@ advanced_chown_dlg_create (void)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-advanced_chown_done (gboolean need_update)
+advanced_chown_done (bool need_update)
 {
     if (need_update)
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
@@ -841,7 +841,7 @@ next_file (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 try_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
 {
     int chmod_result;
@@ -865,12 +865,12 @@ try_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
         {
         case 0:
             /* call mc_chown() only, if mc_chmod() didn't fail */
-            return TRUE;
+            return true;
 
         case 1:
-            ignore_all = TRUE;
+            ignore_all = true;
             /* call mc_chown() only, if mc_chmod() didn't fail */
-            return TRUE;
+            return true;
 
         case 2:
             /* retry chmod of this file */
@@ -879,7 +879,7 @@ try_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
         case 3:
         default:
             /* stop remain files processing */
-            return FALSE;
+            return false;
         }
     }
 
@@ -900,12 +900,12 @@ try_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
         {
         case 0:
             /* try next file */
-            return TRUE;
+            return true;
 
         case 1:
-            ignore_all = TRUE;
+            ignore_all = true;
             /* try next file */
-            return TRUE;
+            return true;
 
         case 2:
             /* retry chown of this file */
@@ -914,20 +914,20 @@ try_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
         case 3:
         default:
             /* stop remain files processing */
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 do_advanced_chown (const vfs_path_t * p, mode_t m, uid_t u, gid_t g)
 {
-    gboolean ret;
+    bool ret;
 
     ret = try_advanced_chown (p, m, u, g);
 
@@ -943,7 +943,7 @@ apply_advanced_chowns (vfs_path_t * vpath, struct stat *sf)
 {
     gid_t a_gid = sf->st_gid;
     uid_t a_uid = sf->st_uid;
-    gboolean ok;
+    bool ok;
 
     if (!do_advanced_chown
         (vpath, get_mode (), (ch_flags[9] == '+') ? a_uid : (uid_t) (-1),
@@ -965,7 +965,7 @@ apply_advanced_chowns (vfs_path_t * vpath, struct stat *sf)
             do_file_mark (current_panel, current_file, 0);
 
             /* try next file */
-            ok = TRUE;
+            ok = true;
         }
         else
         {
@@ -988,8 +988,8 @@ apply_advanced_chowns (vfs_path_t * vpath, struct stat *sf)
 void
 advanced_chown_cmd (void)
 {
-    gboolean need_update;
-    gboolean end_chown;
+    bool need_update;
+    bool end_chown;
 
     /* Number of files at startup */
     int files_on_begin;
@@ -999,7 +999,7 @@ advanced_chown_cmd (void)
     advanced_chown_init ();
 
     current_file = 0;
-    ignore_all = FALSE;
+    ignore_all = false;
 
     do
     {                           /* do while any files remaining */
@@ -1011,8 +1011,8 @@ advanced_chown_cmd (void)
 
         do_refresh ();
 
-        need_update = FALSE;
-        end_chown = FALSE;
+        need_update = false;
+        end_chown = false;
 
         if (current_panel->marked != 0)
             fname = next_file ();       /* next marked file */
@@ -1042,7 +1042,7 @@ advanced_chown_cmd (void)
         switch (result)
         {
         case B_CANCEL:
-            end_chown = TRUE;
+            end_chown = true;
             break;
 
         case B_ENTER:
@@ -1059,7 +1059,7 @@ advanced_chown_cmd (void)
                     message (D_ERROR, MSG_ERROR, _("Cannot chown \"%s\"\n%s"), fname,
                              unix_error_string (errno));
 
-                end_chown = TRUE;
+                end_chown = true;
             }
             else if (!try_advanced_chown
                      (vpath, get_mode (), (ch_flags[9] == '+') ? sf_stat.st_uid : (uid_t) (-1),
@@ -1067,16 +1067,16 @@ advanced_chown_cmd (void)
             {
                 /* stop multiple files processing */
                 result = B_CANCEL;
-                end_chown = TRUE;
+                end_chown = true;
             }
 
-            need_update = TRUE;
+            need_update = true;
             break;
 
         case B_SETALL:
             apply_advanced_chowns (vpath, &sf_stat);
-            need_update = TRUE;
-            end_chown = TRUE;
+            need_update = true;
+            end_chown = true;
             break;
 
         case B_SKIP:
@@ -1087,7 +1087,7 @@ advanced_chown_cmd (void)
         if (current_panel->marked != 0 && result != B_CANCEL)
         {
             do_file_mark (current_panel, current_file, 0);
-            need_update = TRUE;
+            need_update = true;
         }
 
         vfs_path_free (vpath);

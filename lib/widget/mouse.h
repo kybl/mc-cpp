@@ -46,8 +46,8 @@ typedef struct
     /* A mechanism for the callback to report back: */
     struct
     {
-        gboolean abort;
-        gboolean repeat;
+        bool abort;
+        bool repeat;
     } result;
 } mouse_event_t;
 

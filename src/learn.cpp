@@ -61,7 +61,7 @@ typedef struct
 {
     Widget *button;
     Widget *label;
-    gboolean ok;
+    bool ok;
     char *sequence;
 } learnkey_t;
 
@@ -73,7 +73,7 @@ static const char *learn_title = N_("Learn keys");
 static learnkey_t *learnkeys = nullptr;
 static int learn_total;
 static int learnok;
-static gboolean learnchanged = FALSE;
+static bool learnchanged = false;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -103,13 +103,13 @@ learn_button (WButton * button, int action)
         /* Esc hides the dialog and do not allow definitions of
          * regular characters
          */
-        gboolean seq_ok = FALSE;
+        bool seq_ok = false;
 
         if (*seq != '\0' && strcmp (seq, "\\e") != 0 && strcmp (seq, "\\e\\e") != 0
             && strcmp (seq, "^m") != 0 && strcmp (seq, "^i") != 0
             && (seq[1] != '\0' || *seq < ' ' || *seq > '~'))
         {
-            learnchanged = TRUE;
+            learnchanged = true;
             learnkeys[action - B_USER].sequence = seq;
             seq = convert_controls (seq);
             seq_ok = define_sequence (key_name_conv_tab[action - B_USER].code, seq, MCKEY_NOACTION);
@@ -131,8 +131,8 @@ learn_button (WButton * button, int action)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
-learn_move (gboolean right)
+static bool
+learn_move (bool right)
 {
     int i, totalcols;
 
@@ -157,15 +157,15 @@ learn_move (gboolean right)
                     i += (totalcols - 1) * ROWS;
             }
             widget_select (learnkeys[i].button);
-            return TRUE;
+            return true;
         }
 
-    return FALSE;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 learn_check_key (int c)
 {
     int i;
@@ -178,7 +178,7 @@ learn_check_key (int c)
         widget_select (learnkeys[i].button);
         /* TRANSLATORS: This label appears near learned keys.  Keep it short.  */
         label_set_text (LABEL (learnkeys[i].label), _("OK"));
-        learnkeys[i].ok = TRUE;
+        learnkeys[i].ok = true;
         learnok++;
         if (learnok >= learn_total)
         {
@@ -201,23 +201,23 @@ learn_check_key (int c)
             }
             dlg_stop (learn_dlg);
         }
-        return TRUE;
+        return true;
     }
 
     switch (c)
     {
     case KEY_LEFT:
     case 'h':
-        return learn_move (FALSE);
+        return learn_move (false);
     case KEY_RIGHT:
     case 'l':
-        return learn_move (TRUE);
+        return learn_move (true);
     case 'j':
         group_select_next_widget (GROUP (learn_dlg));
-        return TRUE;
+        return true;
     case 'k':
         group_select_prev_widget (GROUP (learn_dlg));
-        return TRUE;
+        return true;
     default:
         break;
     }
@@ -262,11 +262,11 @@ init_learn (void)
     const key_code_name_t *key;
 
 #ifdef ENABLE_NLS
-    static gboolean i18n_flag = FALSE;
+    static bool i18n_flag = false;
     if (!i18n_flag)
     {
         learn_title = _(learn_title);
-        i18n_flag = TRUE;
+        i18n_flag = true;
     }
 
     b0 = _(b0);
@@ -276,7 +276,7 @@ init_learn (void)
     do_refresh ();
 
     learn_dlg =
-        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, dialog_colors,
+        dlg_create (true, 0, 0, dlg_height, dlg_width, WPOS_CENTER, false, dialog_colors,
                     learn_callback, nullptr, "[Learn keys]", learn_title);
     g = GROUP (learn_dlg);
 
@@ -286,7 +286,7 @@ init_learn (void)
         ;
 
     learnok = 0;
-    learnchanged = FALSE;
+    learnchanged = false;
 
     learnkeys = g_new (learnkey_t, learn_total);
 
@@ -300,7 +300,7 @@ init_learn (void)
         const char *label;
         int padding;
 
-        learnkeys[i].ok = FALSE;
+        learnkeys[i].ok = false;
         learnkeys[i].sequence = nullptr;
 
         label = _(key_name_conv_tab[i].longname);
@@ -354,7 +354,7 @@ learn_save (void)
 {
     int i;
     char *section;
-    gboolean profile_changed = FALSE;
+    bool profile_changed = false;
 
     section = g_strconcat ("terminal:", getenv ("TERM"), (char *) nullptr);
 
@@ -363,12 +363,12 @@ learn_save (void)
         {
             char *esc_str;
 
-            esc_str = strutils_escape (learnkeys[i].sequence, -1, ";\\", TRUE);
+            esc_str = strutils_escape (learnkeys[i].sequence, -1, ";\\", true);
             mc_config_set_string_raw_value (mc_global.main_config, section,
                                             key_name_conv_tab[i].name, esc_str);
             g_free (esc_str);
 
-            profile_changed = TRUE;
+            profile_changed = true;
         }
 
     /* On the one hand no good idea to save the complete setup but 
@@ -390,8 +390,8 @@ learn_save (void)
 void
 learn_keys (void)
 {
-    gboolean save_old_esc_mode = old_esc_mode;
-    gboolean save_alternate_plus_minus = mc_global.tty.alternate_plus_minus;
+    bool save_old_esc_mode = old_esc_mode;
+    bool save_alternate_plus_minus = mc_global.tty.alternate_plus_minus;
     int result;
 
     /* old_esc_mode cannot work in learn keys dialog */
@@ -400,7 +400,7 @@ learn_keys (void)
     /* don't translate KP_ADD, KP_SUBTRACT and
        KP_MULTIPLY to '+', '-' and '*' in
        correct_key_code */
-    mc_global.tty.alternate_plus_minus = TRUE;
+    mc_global.tty.alternate_plus_minus = true;
     application_keypad_mode ();
 
     init_learn ();

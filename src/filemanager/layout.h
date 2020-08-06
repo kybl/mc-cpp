@@ -27,26 +27,26 @@ typedef enum
 
 typedef struct
 {
-    gboolean horizontal_split;
+    bool horizontal_split;
 
     /* vertical split */
-    gboolean vertical_equal;
+    bool vertical_equal;
     int left_panel_size;
 
     /* horizontal split */
-    gboolean horizontal_equal;
+    bool horizontal_equal;
     int top_panel_size;
 } panels_layout_t;
 
 /*** global variables defined in .c file *********************************************************/
 
 extern int output_lines;
-extern gboolean command_prompt;
-extern gboolean menubar_visible;
+extern bool command_prompt;
+extern bool menubar_visible;
 extern int output_start_y;
-extern gboolean xterm_title;
-extern gboolean free_space;
-extern gboolean nice_rotating_dash;
+extern bool xterm_title;
+extern bool free_space;
+extern bool nice_rotating_dash;
 
 extern int ok_to_refresh;
 
@@ -81,11 +81,11 @@ char *get_panel_dir_for (const WPanel * widget);
 void set_hintbar (const char *str);
 
 /* Rotating dash routines */
-void use_dash (gboolean flag);  /* Disable/Enable rotate_dash routines */
-void rotate_dash (gboolean show);
+void use_dash (bool flag);  /* Disable/Enable rotate_dash routines */
+void rotate_dash (bool show);
 
 #ifdef ENABLE_SUBSHELL
-gboolean do_load_prompt (void);
+bool do_load_prompt (void);
 int load_prompt (int fd, void *unused);
 #endif
 

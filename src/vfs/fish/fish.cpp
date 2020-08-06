@@ -153,7 +153,7 @@ typedef struct
 
     off_t got;
     off_t total;
-    gboolean append;
+    bool append;
 } fish_file_handler_t;
 
 /*** file scope variables ************************************************************************/
@@ -223,7 +223,7 @@ fish_load_script_from_file (const char *hostname, const char *script_name, const
 /* --------------------------------------------------------------------------------------------- */
 
 static int
-fish_decode_reply (char *s, gboolean was_garbage)
+fish_decode_reply (char *s, bool was_garbage)
 {
     int code;
 
@@ -245,9 +245,9 @@ static int
 fish_get_reply (struct vfs_class *me, int sock, char *string_buf, int string_len)
 {
     char answer[BUF_1K];
-    gboolean was_garbage = FALSE;
+    bool was_garbage = false;
 
-    while (TRUE)
+    while (true)
     {
         if (!vfs_s_get_line (me, sock, answer, sizeof (answer), '\n'))
         {
@@ -259,7 +259,7 @@ fish_get_reply (struct vfs_class *me, int sock, char *string_buf, int string_len
         if (strncmp (answer, "### ", 4) == 0)
             return fish_decode_reply (answer + 4, was_garbage ? 1 : 0);
 
-        was_garbage = TRUE;
+        was_garbage = true;
         if (string_buf != nullptr)
             g_strlcpy (string_buf, answer, string_len);
     }
@@ -314,7 +314,7 @@ fish_command_va (struct vfs_class *me, struct vfs_s_super *super, int wait_reply
     g_string_append_vprintf (command, vars, ap);
     g_string_append (command, scr);
     r = fish_command (me, super, wait_reply, command->str, command->len);
-    g_string_free (command, TRUE);
+    g_string_free (command, true);
 
     return r;
 }
@@ -474,33 +474,33 @@ fish_set_env (int flags)
     if ((flags & FISH_HAVE_TAIL) != 0)
         g_string_append (tmp, "FISH_HAVE_TAIL=1 export FISH_HAVE_TAIL; ");
 
-    return g_string_free (tmp, FALSE);
+    return g_string_free (tmp, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 fish_info (struct vfs_class *me, struct vfs_s_super *super)
 {
     fish_super_t *fish_super = FISH_SUPER (super);
 
     if (fish_command (me, super, NONE, fish_super->scr_info, -1) == COMPLETE)
     {
-        while (TRUE)
+        while (true)
         {
             int res;
             char buffer[BUF_8K];
 
             res = vfs_s_get_line_interruptible (me, buffer, sizeof (buffer), fish_super->sockr);
             if ((res == 0) || (res == EINTR))
-                ERRNOR (ECONNRESET, FALSE);
+                ERRNOR (ECONNRESET, false);
             if (strncmp (buffer, "### ", 4) == 0)
                 break;
             fish_super->host_flags = atol (buffer);
         }
-        return TRUE;
+        return true;
     }
-    ERRNOR (E_PROTO, FALSE);
+    ERRNOR (E_PROTO, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -551,7 +551,7 @@ fish_open_archive_pipeopen (struct vfs_s_super *super)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
 {
     fish_super_t *fish_super = FISH_SUPER (super);
@@ -560,7 +560,7 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
     printf ("\n%s\n", _("fish: Waiting for initial line..."));
 
     if (vfs_s_get_line (me, fish_super->sockr, answer, sizeof (answer), ':') == 0)
-        return FALSE;
+        return false;
 
     if (strstr (answer, "assword") != nullptr)
     {
@@ -569,7 +569,7 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
 
         printf ("\n%s\n", _("Sorry, we cannot do password authenticated connections for now."));
 
-        return FALSE;
+        return false;
 #if 0
         if (super->path_element->password == nullptr)
         {
@@ -579,7 +579,7 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
             op = vfs_get_password (p);
             g_free (p);
             if (op == nullptr)
-                return FALSE;
+                return false;
             super->path_element->password = op;
         }
 
@@ -591,11 +591,11 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
             str_len = strlen (super->path_element->password);
             if ((write (fish_super.sockw, super->path_element->password, str_len) !=
                  (ssize_t) str_len) || (write (fish_super->sockw, "\n", 1) != 1))
-                return FALSE;
+                return false;
         }
 #endif
     }
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -603,7 +603,7 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
 static int
 fish_open_archive_int (struct vfs_class *me, struct vfs_s_super *super)
 {
-    gboolean ftalk;
+    bool ftalk;
 
     /* hide panels */
     pre_exec ();
@@ -775,7 +775,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
 
     ent = vfs_s_generate_entry (me, nullptr, dir, 0);
 
-    while (TRUE)
+    while (true)
     {
         int res;
 
@@ -1029,7 +1029,7 @@ fish_file_store (struct vfs_class *me, vfs_file_handler_t * fh, char *name, char
         ERRNOR (E_REMOTE, -1);
     }
 
-    while (TRUE)
+    while (true)
     {
         ssize_t n, t;
 
@@ -1086,7 +1086,7 @@ fish_linear_start (struct vfs_class *me, vfs_file_handler_t * fh, off_t offset)
         return 0;
     quoted_name = strutils_shell_escape (name);
     g_free (name);
-    fish->append = FALSE;
+    fish->append = false;
 
     /*
      * Check whether the remote file is readable by using 'dd' to copy 
@@ -1633,7 +1633,7 @@ fish_rmdir (const vfs_path_t * vpath)
 /* --------------------------------------------------------------------------------------------- */
 
 static vfs_file_handler_t *
-fish_fh_new (struct vfs_s_inode *ino, gboolean changed)
+fish_fh_new (struct vfs_s_inode *ino, bool changed)
 {
     fish_file_handler_t *fh;
 
@@ -1657,7 +1657,7 @@ fish_fh_open (struct vfs_class *me, vfs_file_handler_t * fh, int flags, mode_t m
     {
         /* user pressed the button [ Append ] in the "Copy" dialog */
         if ((flags & O_APPEND) != 0)
-            fish->append = TRUE;
+            fish->append = true;
 
         if (fh->ino->localname == nullptr)
         {

@@ -29,20 +29,20 @@ extern int num_history_items_recorded;
 
 /* mcconfig/common.c: */
 
-mc_config_t *mc_config_init (const gchar * ini_path, gboolean read_only);
+mc_config_t *mc_config_init (const gchar * ini_path, bool read_only);
 void mc_config_deinit (mc_config_t * mc_config);
 
-gboolean mc_config_has_param (const mc_config_t * mc_config, const char *group,
+bool mc_config_has_param (const mc_config_t * mc_config, const char *group,
                               const gchar * param);
-gboolean mc_config_has_group (mc_config_t * mc_config, const char *group);
+bool mc_config_has_group (mc_config_t * mc_config, const char *group);
 
-gboolean mc_config_del_key (mc_config_t * mc_config, const char *group, const gchar * param);
-gboolean mc_config_del_group (mc_config_t * mc_config, const char *group);
+bool mc_config_del_key (mc_config_t * mc_config, const char *group, const gchar * param);
+bool mc_config_del_group (mc_config_t * mc_config, const char *group);
 
-gboolean mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, gboolean read_only,
-                              gboolean remove_empty);
-gboolean mc_config_save_file (mc_config_t * config, GError ** mcerror);
-gboolean mc_config_save_to_file (mc_config_t * mc_config, const gchar * ini_path,
+bool mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, bool read_only,
+                              bool remove_empty);
+bool mc_config_save_file (mc_config_t * config, GError ** mcerror);
+bool mc_config_save_to_file (mc_config_t * mc_config, const gchar * ini_path,
                                  GError ** mcerror);
 
 
@@ -55,8 +55,8 @@ gchar *mc_config_get_string (mc_config_t * mc_config, const gchar * group, const
                              const gchar * def);
 gchar *mc_config_get_string_raw (mc_config_t * mc_config, const gchar * group, const gchar * param,
                                  const gchar * def);
-gboolean mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * param,
-                             gboolean def);
+bool mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * param,
+                             bool def);
 int mc_config_get_int (mc_config_t * mc_config, const gchar * group, const gchar * param, int def);
 
 gchar **mc_config_get_string_list (mc_config_t * mc_config, const gchar * group,
@@ -76,7 +76,7 @@ void mc_config_set_string_raw_value (mc_config_t * mc_config, const gchar * grou
 void mc_config_set_string (mc_config_t * mc_config, const gchar * group, const gchar * param,
                            const gchar * value);
 void mc_config_set_bool (mc_config_t * mc_config, const gchar * group, const gchar * param,
-                         gboolean value);
+                         bool value);
 void mc_config_set_int (mc_config_t * mc_config, const gchar * group, const gchar * param,
                         int value);
 
@@ -84,7 +84,7 @@ void
 mc_config_set_string_list (mc_config_t * mc_config, const gchar * group, const gchar * param,
                            const gchar * const value[], gsize length);
 void mc_config_set_bool_list (mc_config_t * mc_config, const gchar * group, const gchar * param,
-                              gboolean value[], gsize length);
+                              bool value[], gsize length);
 void mc_config_set_int_list (mc_config_t * mc_config, const gchar * group, const gchar * param,
                              int value[], gsize length);
 
@@ -101,7 +101,7 @@ const char *mc_config_get_path (void);
 char *mc_config_get_full_path (const char *config_name);
 vfs_path_t *mc_config_get_full_vpath (const char *config_name);
 
-gboolean mc_config_migrate_from_old_place (GError ** mcerror, char **msg);
+bool mc_config_migrate_from_old_place (GError ** mcerror, char **msg);
 
 /* mcconfig/history.h */
 

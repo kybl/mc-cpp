@@ -260,7 +260,7 @@ START_PARAMETRIZED_TEST (test_vfs_parse_ls_lga, test_vfs_parse_ls_lga_ds)
     static struct stat test_stat;
     char *filename = NULL;
     char *linkname = NULL;
-    gboolean actual_result;
+    bool actual_result;
 
     vfs_parse_ls_lga_init ();
 

@@ -44,7 +44,7 @@ mc_config_normalize_before_save (const gchar * value)
 {
     GIConv conv;
     GString *buffer;
-    gboolean ok;
+    bool ok;
 
     if (mc_global.utf8_display)
         return g_strdup (value);
@@ -60,11 +60,11 @@ mc_config_normalize_before_save (const gchar * value)
 
     if (!ok)
     {
-        g_string_free (buffer, TRUE);
+        g_string_free (buffer, true);
         return g_strdup (value);
     }
 
-    return g_string_free (buffer, FALSE);
+    return g_string_free (buffer, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -109,7 +109,7 @@ mc_config_set_string (mc_config_t * mc_config, const gchar * group,
 
 void
 mc_config_set_bool (mc_config_t * mc_config, const gchar * group,
-                    const gchar * param, gboolean value)
+                    const gchar * param, bool value)
 {
     if (mc_config != nullptr && group != nullptr && param != nullptr)
         g_key_file_set_boolean (mc_config->handle, group, param, value);

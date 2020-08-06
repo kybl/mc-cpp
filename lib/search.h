@@ -64,20 +64,20 @@ typedef struct mc_search_struct
 
 #ifdef HAVE_CHARSET
     /* search in all charsets */
-    gboolean is_all_charsets;
+    bool is_all_charsets;
 #endif
 
     /* case sensitive search */
-    gboolean is_case_sensitive;
+    bool is_case_sensitive;
 
     /* search only once.  Is this for replace? */
-    gboolean is_once_only;
+    bool is_once_only;
 
     /* search only whole words (from begin to end). Used only with NORMAL search type */
-    gboolean whole_words;
+    bool whole_words;
 
     /* search entire string (from begin to end). Used only with GLOB search type */
-    gboolean is_entire_line;
+    bool is_entire_line;
 
     /* function, used for getting data. nullptr if not used */
     mc_search_fn search_fn;
@@ -96,7 +96,7 @@ typedef struct mc_search_struct
     off_t start_buffer;
     /* some data for regexp */
     int num_results;
-    gboolean is_utf8;
+    bool is_utf8;
     mc_search_matchinfo_t *regex_match_info;
     GString *regex_buffer;
 #ifdef SEARCH_TYPE_PCRE
@@ -143,23 +143,23 @@ mc_search_t *mc_search_new_len (const gchar * original, gsize original_len,
 
 void mc_search_free (mc_search_t * lc_mc_search);
 
-gboolean mc_search_prepare (mc_search_t * mc_search);
+bool mc_search_prepare (mc_search_t * mc_search);
 
-gboolean mc_search_run (mc_search_t * mc_search, const void *user_data, gsize start_search,
+bool mc_search_run (mc_search_t * mc_search, const void *user_data, gsize start_search,
                         gsize end_search, gsize * found_len);
 
-gboolean mc_search_is_type_avail (mc_search_type_t);
+bool mc_search_is_type_avail (mc_search_type_t);
 
 const mc_search_type_str_t *mc_search_types_list_get (size_t * num);
 
 GString *mc_search_prepare_replace_str (mc_search_t * mc_search, GString * replace_str);
 char *mc_search_prepare_replace_str2 (mc_search_t * lc_mc_search, const char *replace_str);
 
-gboolean mc_search_is_fixed_search_str (mc_search_t *);
+bool mc_search_is_fixed_search_str (mc_search_t *);
 
 gchar **mc_search_get_types_strings_array (int * num);
 
-gboolean mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * str,
+bool mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * str,
                     mc_search_type_t type);
 
 int mc_search_getstart_result_by_num (mc_search_t *, int);

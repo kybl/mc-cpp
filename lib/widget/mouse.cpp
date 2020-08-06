@@ -65,8 +65,8 @@ init_mouse_event (mouse_event_t * event, mouse_msg_t msg, const Gpm_Event * glob
     event->y = global_gpm->y - w->y - 1;
     event->count = global_gpm->type & (GPM_SINGLE | GPM_DOUBLE | GPM_TRIPLE);
     event->buttons = global_gpm->buttons;
-    event->result.abort = FALSE;
-    event->result.repeat = FALSE;
+    event->result.abort = false;
+    event->result.repeat = false;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -82,7 +82,7 @@ init_mouse_event (mouse_event_t * event, mouse_msg_t msg, const Gpm_Event * glob
 static mouse_event_t
 mouse_translate_event (Widget * w, Gpm_Event * event)
 {
-    gboolean in_widget;
+    bool in_widget;
     mouse_msg_t msg = MSG_MOUSE_NONE;
     mouse_event_t local;
 
@@ -90,7 +90,7 @@ mouse_translate_event (Widget * w, Gpm_Event * event)
      * Very special widgets may want to control area outside their bounds.
      * For such widgets you will have to turn on the 'forced_capture' flag.
      * You'll also need, in your mouse handler, to inform the system of
-     * events you want to pass on by setting 'event->result.abort' to TRUE.
+     * events you want to pass on by setting 'event->result.abort' to true.
      */
     in_widget = w->mouse.forced_capture || mouse_global_in_widget (event, w);
 
@@ -110,7 +110,7 @@ mouse_translate_event (Widget * w, Gpm_Event * event)
                  * buttons doesn't make sense as they don't generate a
                  * mouse_up event, which means we'd never get uncaptured.)
                  */
-                w->mouse.capture = TRUE;
+                w->mouse.capture = true;
                 msg = MSG_MOUSE_DOWN;
 
                 w->mouse.last_buttons_down = event->buttons;
@@ -124,7 +124,7 @@ mouse_translate_event (Widget * w, Gpm_Event * event)
          * lines when the button is released even outside the canvas. */
         if (w->mouse.capture)
         {
-            w->mouse.capture = FALSE;
+            w->mouse.capture = false;
             msg = MSG_MOUSE_UP;
 
             /*
@@ -182,7 +182,7 @@ mouse_process_event (Widget * w, mouse_event_t * event)
         /* If a widget aborts a MSG_MOUSE_DOWN, we uncapture it so it
          * doesn't steal events from other widgets. */
         if (event->msg == MSG_MOUSE_DOWN && event->result.abort)
-            w->mouse.capture = FALSE;
+            w->mouse.capture = false;
 
         /* Upon releasing the mouse button: if the mouse hasn't been dragged
          * since the MSG_MOUSE_DOWN, we also trigger a click. */

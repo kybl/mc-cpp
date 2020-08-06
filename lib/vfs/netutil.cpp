@@ -62,7 +62,7 @@ sig_pipe (int unused)
 void
 tcp_init (void)
 {
-    static gboolean initialized = FALSE;
+    static bool initialized = false;
     struct sigaction sa;
 
     if (initialized)
@@ -74,7 +74,7 @@ tcp_init (void)
     sigemptyset (&sa.sa_mask);
     sigaction (SIGPIPE, &sa, nullptr);
 
-    initialized = TRUE;
+    initialized = true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

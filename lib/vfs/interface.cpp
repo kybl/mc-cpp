@@ -129,7 +129,7 @@ mc_def_getlocalcopy (const vfs_path_t * filename_vpath)
 
 static int
 mc_def_ungetlocalcopy (const vfs_path_t * filename_vpath,
-                       const vfs_path_t * local_vpath, gboolean has_changed)
+                       const vfs_path_t * local_vpath, bool has_changed)
 {
     int fdin = -1, fdout = -1;
     const char *local;
@@ -650,7 +650,7 @@ mc_getlocalcopy (const vfs_path_t * pathname_vpath)
 
 int
 mc_ungetlocalcopy (const vfs_path_t * pathname_vpath, const vfs_path_t * local_vpath,
-                   gboolean has_changed)
+                   bool has_changed)
 {
     int result = -1;
     const vfs_path_element_t *path_element;
@@ -879,7 +879,7 @@ mc_tmpdir (void)
     {
         int test_fd;
         char *fallback_prefix;
-        gboolean fallback_ok = FALSE;
+        bool fallback_ok = false;
         vfs_path_t *test_vpath;
 
         if (*error != '\0')
@@ -897,7 +897,7 @@ mc_tmpdir (void)
             {
                 close (test_fd);
                 unlink (vfs_path_as_str (test_vpath));
-                fallback_ok = TRUE;
+                fallback_ok = true;
             }
         }
 
@@ -921,7 +921,7 @@ mc_tmpdir (void)
     tmpdir = buffer;
 
     if (error == nullptr)
-        g_setenv ("MC_TMPDIR", tmpdir, TRUE);
+        g_setenv ("MC_TMPDIR", tmpdir, true);
 
     return tmpdir;
 }

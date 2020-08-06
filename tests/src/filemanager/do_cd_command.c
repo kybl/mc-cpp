@@ -51,10 +51,10 @@ static vfs_path_t *do_cd__new_dir_vpath__captured;
 /* @CapturedValue */
 static enum cd_enum do_cd__cd_type__captured;
 /* @ThenReturnValue */
-static gboolean do_cd__return_value;
+static bool do_cd__return_value;
 
 /* @Mock */
-gboolean
+bool
 do_cd (const vfs_path_t * new_dir_vpath, enum cd_enum cd_type)
 {
     do_cd__new_dir_vpath__captured = vfs_path_clone (new_dir_vpath);
@@ -132,7 +132,7 @@ START_PARAMETRIZED_TEST (test_empty_mean_home, test_empty_mean_home_ds)
 {
     /* given */
     get_current_type__return_value = view_listing;
-    do_cd__return_value = TRUE;
+    do_cd__return_value = true;
     mc_config_get_home_dir__return_value = "/home/test";
 
     /* when */

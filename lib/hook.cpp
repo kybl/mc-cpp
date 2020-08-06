@@ -119,15 +119,15 @@ delete_hook (hook_t ** hook_list, void (*hook_fn) (void *))
 
 /* --------------------------------------------------------------------------------------------- */
 
-gboolean
+bool
 hook_present (hook_t * hook_list, void (*hook_fn) (void *))
 {
     hook_t *p;
 
     for (p = hook_list; p != nullptr; p = p->next)
         if (p->hook_fn == hook_fn)
-            return TRUE;
-    return FALSE;
+            return true;
+    return false;
 }
 
 /* --------------------------------------------------------------------------------------------- */

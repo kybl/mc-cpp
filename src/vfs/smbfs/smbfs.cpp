@@ -114,7 +114,7 @@ typedef struct dir_entry
 
 typedef struct
 {
-    gboolean server_list;
+    bool server_list;
     char *dirname;
     char *path;                 /* the dir originally passed to smbfs_opendir */
     smbfs_connection *conn;
@@ -134,8 +134,8 @@ static uint32 err;
 
 static mode_t myumask = 0755;
 static int smbfs_open_connections = 0;
-static gboolean got_user = FALSE;
-static gboolean got_pass = FALSE;
+static bool got_user = false;
+static bool got_pass = false;
 static pstring password;
 static pstring username;
 
@@ -165,7 +165,7 @@ static GSList *auth_list;
 
 static opendir_info *previous_info, *current_info, *current_share_info, *current_server_info;
 
-static gboolean first_direntry;
+static bool first_direntry;
 
 /* stat a single file, smbfs_get_remote_stat callback  */
 static dir_entry *single_entry;
@@ -404,13 +404,13 @@ smbfs_init (struct vfs_class *me)
         char *p;
 
         pstrcpy (username, getenv ("USER"));
-        got_user = TRUE;
+        got_user = true;
         DEBUG (3, ("smbfs_init(): $USER:%s\n", username));
         if ((p = strchr (username, '%')))
         {
             *p = 0;
             pstrcpy (password, p + 1);
-            got_pass = TRUE;
+            got_pass = true;
             memset (strchr (getenv ("USER"), '%') + 1, 'X', strlen (password));
             DEBUG (3, ("smbfs_init(): $USER%%pass: %s%%%s\n", username, password));
         }
@@ -419,7 +419,7 @@ smbfs_init (struct vfs_class *me)
     if (getenv ("PASSWD"))
     {
         pstrcpy (password, getenv ("PASSWD"));
-        got_pass = TRUE;
+        got_pass = true;
     }
     return 1;
 }
@@ -531,7 +531,7 @@ smbfs_new_dir_entry (const char *name)
     if (first_direntry)
     {
         current_info->entries = new_entry;
-        first_direntry = FALSE;
+        first_direntry = false;
     }
     else
     {
@@ -627,7 +627,7 @@ smbfs_loaddir_helper (file_info * finfo, const char *mask, void *entry)
 /* takes "/foo/bar/file" and gives malloced "\\foo\\bar\\file" */
 
 static char *
-smbfs_convert_path (const char *remote_file, gboolean trailing_asterik)
+smbfs_convert_path (const char *remote_file, bool trailing_asterik)
 {
     const char *p, *my_remote;
     char *result;
@@ -821,7 +821,7 @@ smbfs_loaddir (opendir_info * smbfs_info)
     char *my_dirname;
 
     DEBUG (3, ("smbfs_loaddir: dirname:%s\n", info_dirname));
-    first_direntry = TRUE;
+    first_direntry = true;
 
     if (current_info)
     {
@@ -848,7 +848,7 @@ smbfs_loaddir (opendir_info * smbfs_info)
                 return 0;
             else
                 current_server_info = smbfs_info;
-            smbfs_info->server_list = TRUE;
+            smbfs_info->server_list = true;
         }
         else
         {
@@ -867,10 +867,10 @@ smbfs_loaddir (opendir_info * smbfs_info)
         /* strip share name from dir */
         my_dirname = g_strdup (info_dirname + servlen);
         *my_dirname = '/';
-        my_dirname = free_after (smbfs_convert_path (my_dirname, TRUE), my_dirname);
+        my_dirname = free_after (smbfs_convert_path (my_dirname, true), my_dirname);
     }
     else
-        my_dirname = smbfs_convert_path (info_dirname, TRUE);
+        my_dirname = smbfs_convert_path (info_dirname, true);
 
     DEBUG (6, ("smbfs_loaddir: service: %s\n", smbfs_info->conn->service));
     DEBUG (6, ("smbfs_loaddir: cli->share: %s\n", smbfs_info->conn->cli->share));
@@ -1417,7 +1417,7 @@ smbfs_opendir (const vfs_path_t * vpath)
 
     /* FIXME: where freed? */
     smbfs_info = g_new (opendir_info, 1);
-    smbfs_info->server_list = FALSE;
+    smbfs_info->server_list = false;
     smbfs_info->path = g_strdup (path_element->path);   /* keep original */
     smbfs_info->dirname = remote_dir;
     smbfs_info->conn = sc;
@@ -1537,7 +1537,7 @@ smbfs_get_remote_stat (smbfs_connection * sc, const char *path, struct stat *buf
 
     DEBUG (3, ("smbfs_get_remote_stat(): mypath:%s\n", path));
 
-    mypath = smbfs_convert_path (path, FALSE);
+    mypath = smbfs_convert_path (path, false);
 
 #if 0                           /* single_entry is never free()d now.  And only my_stat is used */
     single_entry = g_new (dir_entry, 1);
@@ -1901,7 +1901,7 @@ smbfs_mkdir (const vfs_path_t * vpath, mode_t mode)
     if ((remote_file = smbfs_get_path (&sc, vpath)) == 0)
         return -1;
     g_free (remote_file);
-    cpath = smbfs_convert_path (path_element->path, FALSE);
+    cpath = smbfs_convert_path (path_element->path, false);
 
     if (!cli_mkdir (sc->cli, cpath))
     {
@@ -1930,7 +1930,7 @@ smbfs_rmdir (const vfs_path_t * vpath)
     if ((remote_file = smbfs_get_path (&sc, vpath)) == 0)
         return -1;
     g_free (remote_file);
-    cpath = smbfs_convert_path (path_element->path, FALSE);
+    cpath = smbfs_convert_path (path_element->path, false);
 
     if (!cli_rmdir (sc->cli, cpath))
     {
@@ -2115,7 +2115,7 @@ smbfs_open (const vfs_path_t * vpath, int flags, mode_t mode)
     if (!(remote_file = smbfs_get_path (&sc, vpath)))
         return 0;
 
-    remote_file = free_after (smbfs_convert_path (remote_file, FALSE), remote_file);
+    remote_file = free_after (smbfs_convert_path (remote_file, false), remote_file);
 
     remote_handle = g_new (smbfs_handle, 2);
     remote_handle->cli = sc->cli;
@@ -2141,7 +2141,7 @@ smbfs_unlink (const vfs_path_t * vpath)
     if ((remote_file = smbfs_get_path (&sc, vpath)) == 0)
         return -1;
 
-    remote_file = free_after (smbfs_convert_path (remote_file, FALSE), remote_file);
+    remote_file = free_after (smbfs_convert_path (remote_file, false), remote_file);
 
     if (!cli_unlink (sc->cli, remote_file))
     {
@@ -2172,8 +2172,8 @@ smbfs_rename (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
         return -1;
     }
 
-    ra = free_after (smbfs_convert_path (ra, FALSE), ra);
-    rb = free_after (smbfs_convert_path (rb, FALSE), rb);
+    ra = free_after (smbfs_convert_path (ra, false), ra);
+    rb = free_after (smbfs_convert_path (rb, false), rb);
 
     retval = cli_rename (sc->cli, ra, rb);
 
@@ -2210,13 +2210,13 @@ smbfs_fstat (void *data, struct stat *buf)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 smbfs_nothingisopen (vfsid id)
 {
     /* FIXME */
     (void) id;
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */

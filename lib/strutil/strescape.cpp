@@ -47,7 +47,7 @@ static const char ESCAPE_GLOB_CHARS[] = "$*\\?";
 
 char *
 strutils_escape (const char *src, gsize src_len, const char *escaped_chars,
-                 gboolean escape_non_printable)
+                 bool escape_non_printable)
 {
     GString *ret;
     gsize curr_index;
@@ -91,13 +91,13 @@ strutils_escape (const char *src, gsize src_len, const char *escaped_chars,
 
         g_string_append_c (ret, src[curr_index]);
     }
-    return g_string_free (ret, FALSE);
+    return g_string_free (ret, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 char *
 strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
-                   gboolean unescape_non_printable)
+                   bool unescape_non_printable)
 {
     GString *ret;
     gsize curr_index;
@@ -160,7 +160,7 @@ strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
     }
     g_string_append_c (ret, src[curr_index]);
 
-    return g_string_free (ret, FALSE);
+    return g_string_free (ret, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -177,7 +177,7 @@ strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
 char *
 strutils_shell_escape (const char *src)
 {
-    return strutils_escape (src, -1, ESCAPE_SHELL_CHARS, FALSE);
+    return strutils_escape (src, -1, ESCAPE_SHELL_CHARS, false);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -185,7 +185,7 @@ strutils_shell_escape (const char *src)
 char *
 strutils_glob_escape (const char *src)
 {
-    return strutils_escape (src, -1, ESCAPE_GLOB_CHARS, TRUE);
+    return strutils_escape (src, -1, ESCAPE_GLOB_CHARS, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -193,7 +193,7 @@ strutils_glob_escape (const char *src)
 char *
 strutils_regex_escape (const char *src)
 {
-    return strutils_escape (src, -1, ESCAPE_REGEX_CHARS, TRUE);
+    return strutils_escape (src, -1, ESCAPE_REGEX_CHARS, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -210,7 +210,7 @@ strutils_regex_escape (const char *src)
 char *
 strutils_shell_unescape (const char *text)
 {
-    return strutils_unescape (text, -1, ESCAPE_SHELL_CHARS, TRUE);
+    return strutils_unescape (text, -1, ESCAPE_SHELL_CHARS, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -218,14 +218,14 @@ strutils_shell_unescape (const char *text)
 char *
 strutils_glob_unescape (const char *text)
 {
-    return strutils_unescape (text, -1, ESCAPE_GLOB_CHARS, TRUE);
+    return strutils_unescape (text, -1, ESCAPE_GLOB_CHARS, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
 char *
 strutils_regex_unescape (const char *text)
 {
-    return strutils_unescape (text, -1, ESCAPE_REGEX_CHARS, TRUE);
+    return strutils_unescape (text, -1, ESCAPE_REGEX_CHARS, true);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -236,16 +236,16 @@ strutils_regex_unescape (const char *text)
  * @param start string for checking
  * @param current pointer to checked character
  *
- * @return TRUE if string contain escaped chars otherwise return FALSE
+ * @return true if string contain escaped chars otherwise return false
  */
 
-gboolean
+bool
 strutils_is_char_escaped (const char *start, const char *current)
 {
     int num_esc = 0;
 
     if (start == nullptr || current == nullptr || current <= start)
-        return FALSE;
+        return false;
 
     current--;
     while (current >= start && *current == '\\')
@@ -253,7 +253,7 @@ strutils_is_char_escaped (const char *start, const char *current)
         num_esc++;
         current--;
     }
-    return (gboolean) num_esc % 2;
+    return (bool) num_esc % 2;
 }
 
 /* --------------------------------------------------------------------------------------------- */

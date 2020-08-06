@@ -45,7 +45,7 @@
 /*** global variables ****************************************************************************/
 
 Mouse_Type use_mouse_p = MOUSE_NONE;
-gboolean mouse_enabled = FALSE;
+bool mouse_enabled = false;
 int mouse_fd = -1;              /* for when gpm_fd changes to < 0 and the old one must be cleared from select_set */
 const char *xmouse_seq;
 const char *xmouse_extended_seq;
@@ -129,7 +129,7 @@ enable_mouse (void)
                 use_mouse_p = MOUSE_NONE;
                 return;
             }
-            mouse_enabled = TRUE;
+            mouse_enabled = true;
         }
         break;
 #endif /* HAVE_LIBGPM */
@@ -145,7 +145,7 @@ enable_mouse (void)
         printf (ESC_STR "[?1006h");
 
         fflush (stdout);
-        mouse_enabled = TRUE;
+        mouse_enabled = true;
         break;
 
     case MOUSE_XTERM_BUTTON_EVENT_TRACKING:
@@ -159,7 +159,7 @@ enable_mouse (void)
         printf (ESC_STR "[?1006h");
 
         fflush (stdout);
-        mouse_enabled = TRUE;
+        mouse_enabled = true;
         break;
 
     default:
@@ -175,7 +175,7 @@ disable_mouse (void)
     if (!mouse_enabled)
         return;
 
-    mouse_enabled = FALSE;
+    mouse_enabled = false;
 
     switch (use_mouse_p)
     {

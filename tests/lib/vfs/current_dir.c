@@ -196,7 +196,7 @@ main (void)
 
     /* writable directory where check creates temporary files */
     cwd = g_get_current_dir ();
-    g_setenv ("TEMP", cwd, TRUE);
+    g_setenv ("TEMP", cwd, true);
     g_free (cwd);
 
     tcase_add_checked_fixture (tc_core, setup, teardown);

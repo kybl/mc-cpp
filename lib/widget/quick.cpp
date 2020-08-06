@@ -168,9 +168,9 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
     int y2 = -1;                /* start of two columns */
     int width1 = 0;             /* width of single column */
     int width2 = 0;             /* width of each of two columns */
-    gboolean have_groupbox = FALSE;
-    gboolean two_columns = FALSE;
-    gboolean put_buttons = FALSE;
+    bool have_groupbox = false;
+    bool two_columns = false;
+    bool put_buttons = false;
 
     /* x position of 1st column is 3 */
     const int x1 = 3;
@@ -192,7 +192,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
     x = x1;
 
     /* create widgets */
-    widgets = g_array_sized_new (FALSE, FALSE, sizeof (quick_widget_item_t), 8);
+    widgets = g_array_sized_new (false, false, sizeof (quick_widget_item_t), 8);
 
     for (quick_widget = quick_dlg->widgets; quick_widget->widget_type != quick_end; quick_widget++)
     {
@@ -301,7 +301,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             g = groupbox_new (++y, x, 1, len + 4, quick_widget->u.groupbox.title);
             item.widget = WIDGET (g);
             g_array_append_val (widgets, item);
-            have_groupbox = TRUE;
+            have_groupbox = true;
             break;
 
         case quick_stop_groupbox:
@@ -329,7 +329,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
         case quick_start_columns:
             y2 = y;
             g_array_append_val (widgets, item);
-            two_columns = TRUE;
+            two_columns = true;
             break;
 
         case quick_next_column:
@@ -342,7 +342,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             x = x1;
             y = MAX (y1, y);
             g_array_append_val (widgets, item);
-            two_columns = FALSE;
+            two_columns = false;
             break;
 
         case quick_buttons:
@@ -406,18 +406,18 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
     width2 = (quick_dlg->cols - 7) / 2;
 
     if (quick_dlg->x == -1 || quick_dlg->y == -1)
-        dd = dlg_create (TRUE, 0, 0, y + 3, quick_dlg->cols, WPOS_CENTER | WPOS_TRYUP, FALSE,
+        dd = dlg_create (true, 0, 0, y + 3, quick_dlg->cols, WPOS_CENTER | WPOS_TRYUP, false,
                          dialog_colors, quick_dlg->callback, quick_dlg->mouse_callback,
                          quick_dlg->help, quick_dlg->title);
     else
-        dd = dlg_create (TRUE, quick_dlg->y, quick_dlg->x, y + 3, quick_dlg->cols,
-                         WPOS_KEEP_DEFAULT, FALSE, dialog_colors, quick_dlg->callback,
+        dd = dlg_create (true, quick_dlg->y, quick_dlg->x, y + 3, quick_dlg->cols,
+                         WPOS_KEEP_DEFAULT, false, dialog_colors, quick_dlg->callback,
                          quick_dlg->mouse_callback, quick_dlg->help, quick_dlg->title);
 
     /* add widgets into the dialog */
     x2 = x1 + width2 + 1;
     g = nullptr;
-    two_columns = FALSE;
+    two_columns = false;
     x = (WIDGET (dd)->cols - blen) / 2;
 
     for (i = 0; i < widgets->len; i++)
@@ -523,34 +523,34 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 {
                     Widget *wg = WIDGET (g);
 
-                    HLINE (item->widget)->auto_adjust_cols = FALSE;
+                    HLINE (item->widget)->auto_adjust_cols = false;
                     item->widget->x = wg->x + 1 - WIDGET (wg->owner)->x;
                     item->widget->cols = wg->cols;
                 }
                 else if (two_columns)
                 {
-                    HLINE (item->widget)->auto_adjust_cols = FALSE;
+                    HLINE (item->widget)->auto_adjust_cols = false;
                     if (item->widget->x != x1)
                         item->widget->x = x2;
                     item->widget->x--;
                     item->widget->cols = column_width + 2;
                 }
                 else
-                    HLINE (item->widget)->auto_adjust_cols = TRUE;
+                    HLINE (item->widget)->auto_adjust_cols = true;
             }
             break;
 
         case quick_start_columns:
-            two_columns = TRUE;
+            two_columns = true;
             break;
 
         case quick_stop_columns:
-            two_columns = FALSE;
+            two_columns = false;
             break;
 
         case quick_buttons:
             /* several buttons in bottom line */
-            put_buttons = TRUE;
+            put_buttons = true;
             break;
 
         default:
@@ -614,7 +614,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
     dlg_destroy (dd);
 
     g_list_free_full (input_labels, g_free);    /* destroy input labels created before */
-    g_array_free (widgets, TRUE);
+    g_array_free (widgets, true);
 
     return return_val;
 }

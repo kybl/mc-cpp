@@ -68,23 +68,23 @@ static struct
 {
     mode_t mode;
     const char *text;
-    gboolean selected;
+    bool selected;
     WCheck *check;
 } check_perm[BUTTONS_PERM] =
 {
     /* *INDENT-OFF* */
-    { S_ISUID, N_("set &user ID on execution"),  FALSE, nullptr },
-    { S_ISGID, N_("set &group ID on execution"), FALSE, nullptr },
-    { S_ISVTX, N_("stick&y bit"),                FALSE, nullptr },
-    { S_IRUSR, N_("&read by owner"),             FALSE, nullptr },
-    { S_IWUSR, N_("&write by owner"),            FALSE, nullptr },
-    { S_IXUSR, N_("e&xecute/search by owner"),   FALSE, nullptr },
-    { S_IRGRP, N_("rea&d by group"),             FALSE, nullptr },
-    { S_IWGRP, N_("write by grou&p"),            FALSE, nullptr },
-    { S_IXGRP, N_("execu&te/search by group"),   FALSE, nullptr },
-    { S_IROTH, N_("read &by others"),            FALSE, nullptr },
-    { S_IWOTH, N_("wr&ite by others"),           FALSE, nullptr },
-    { S_IXOTH, N_("execute/searc&h by others"),  FALSE, nullptr }
+    { S_ISUID, N_("set &user ID on execution"),  false, nullptr },
+    { S_ISGID, N_("set &group ID on execution"), false, nullptr },
+    { S_ISVTX, N_("stick&y bit"),                false, nullptr },
+    { S_IRUSR, N_("&read by owner"),             false, nullptr },
+    { S_IWUSR, N_("&write by owner"),            false, nullptr },
+    { S_IXUSR, N_("e&xecute/search by owner"),   false, nullptr },
+    { S_IRGRP, N_("rea&d by group"),             false, nullptr },
+    { S_IWGRP, N_("write by grou&p"),            false, nullptr },
+    { S_IXGRP, N_("execu&te/search by group"),   false, nullptr },
+    { S_IROTH, N_("read &by others"),            false, nullptr },
+    { S_IWOTH, N_("wr&ite by others"),           false, nullptr },
+    { S_IXOTH, N_("execute/searc&h by others"),  false, nullptr }
     /* *INDENT-ON* */
 };
 
@@ -118,9 +118,9 @@ static struct
     /* *INDENT-ON* */
 };
 
-static gboolean mode_change;
+static bool mode_change;
 static int current_file;
-static gboolean ignore_all;
+static bool ignore_all;
 
 static mode_t and_mask, or_mask, ch_mode;
 
@@ -134,16 +134,16 @@ static WGroupbox *file_gb;
 static void
 chmod_init (void)
 {
-    static gboolean i18n = FALSE;
+    static bool i18n = false;
     int i, len;
 
     for (i = 0; i < BUTTONS_PERM; i++)
-        check_perm[i].selected = FALSE;
+        check_perm[i].selected = false;
 
     if (i18n)
         return;
 
-    i18n = TRUE;
+    i18n = true;
 
 #ifdef ENABLE_NLS
     for (i = 0; i < BUTTONS_PERM; i++)
@@ -266,7 +266,7 @@ chmod_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
                 ch_mode ^= check_perm[i].mode;
                 label_set_textv (statl, "%o", (unsigned int) ch_mode);
                 chmod_toggle_select (h, i);
-                mode_change = TRUE;
+                mode_change = true;
                 return MSG_HANDLED;
             }
         }
@@ -304,7 +304,7 @@ chmod_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 static WDialog *
 chmod_dlg_create (const char *fname, const struct stat *sf_stat)
 {
-    gboolean single_set;
+    bool single_set;
     WDialog *ch_dlg;
     WGroup *g;
     int lines, cols;
@@ -314,7 +314,7 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
     const char *c_fname, *c_fown, *c_fgrp;
     char buffer[BUF_TINY];
 
-    mode_change = FALSE;
+    mode_change = false;
 
     single_set = (current_panel->marked < 2);
     perm_gb_len = check_perm_len + 2;
@@ -333,7 +333,7 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
     }
 
     ch_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors,
+        dlg_create (true, 0, 0, lines, cols, WPOS_CENTER, false, dialog_colors,
                     chmod_callback, nullptr, "[Chmod]", _("Chmod command"));
     g = GROUP (ch_dlg);
 
@@ -403,7 +403,7 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-chmod_done (gboolean need_update)
+chmod_done (bool need_update)
 {
     if (need_update)
         update_panels (UP_OPTIMIZE, UP_KEEPSEL);
@@ -423,7 +423,7 @@ next_file (void)
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 try_chmod (const vfs_path_t * p, mode_t m)
 {
     while (mc_chmod (p, m) == -1 && !ignore_all)
@@ -444,12 +444,12 @@ try_chmod (const vfs_path_t * p, mode_t m)
         {
         case 0:
             /* try next file */
-            return TRUE;
+            return true;
 
         case 1:
-            ignore_all = TRUE;
+            ignore_all = true;
             /* try next file */
-            return TRUE;
+            return true;
 
         case 2:
             /* retry this file */
@@ -458,19 +458,19 @@ try_chmod (const vfs_path_t * p, mode_t m)
         case 3:
         default:
             /* stop remain files processing */
-            return FALSE;
+            return false;
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 /* --------------------------------------------------------------------------------------------- */
 
-static gboolean
+static bool
 do_chmod (const vfs_path_t * p, struct stat *sf)
 {
-    gboolean ret;
+    bool ret;
 
     sf->st_mode &= and_mask;
     sf->st_mode |= or_mask;
@@ -487,7 +487,7 @@ do_chmod (const vfs_path_t * p, struct stat *sf)
 static void
 apply_mask (vfs_path_t * vpath, struct stat *sf)
 {
-    gboolean ok;
+    bool ok;
 
     if (!do_chmod (vpath, sf))
         return;
@@ -507,7 +507,7 @@ apply_mask (vfs_path_t * vpath, struct stat *sf)
             do_file_mark (current_panel, current_file, 0);
 
             /* try next file */
-            ok = TRUE;
+            ok = true;
         }
         else
         {
@@ -528,13 +528,13 @@ apply_mask (vfs_path_t * vpath, struct stat *sf)
 void
 chmod_cmd (void)
 {
-    gboolean need_update;
-    gboolean end_chmod;
+    bool need_update;
+    bool end_chmod;
 
     chmod_init ();
 
     current_file = 0;
-    ignore_all = FALSE;
+    ignore_all = false;
 
     do
     {                           /* do while any files remaining */
@@ -546,8 +546,8 @@ chmod_cmd (void)
 
         do_refresh ();
 
-        need_update = FALSE;
-        end_chmod = FALSE;
+        need_update = false;
+        end_chmod = false;
 
         if (current_panel->marked != 0)
             fname = next_file ();       /* next marked file */
@@ -570,7 +570,7 @@ chmod_cmd (void)
         switch (result)
         {
         case B_CANCEL:
-            end_chmod = TRUE;
+            end_chmod = true;
             break;
 
         case B_ENTER:
@@ -582,17 +582,17 @@ chmod_cmd (void)
                     if (mc_chmod (vpath, ch_mode) == -1 && !ignore_all)
                         message (D_ERROR, MSG_ERROR, _("Cannot chmod \"%s\"\n%s"), fname,
                                  unix_error_string (errno));
-                    end_chmod = TRUE;
+                    end_chmod = true;
                 }
                 else if (!try_chmod (vpath, ch_mode))
                 {
                     /* stop multiple files processing */
                     result = B_CANCEL;
-                    end_chmod = TRUE;
+                    end_chmod = true;
                 }
             }
 
-            need_update = TRUE;
+            need_update = true;
             break;
 
         case B_SETALL:
@@ -610,8 +610,8 @@ chmod_cmd (void)
                 }
 
             apply_mask (vpath, &sf_stat);
-            need_update = TRUE;
-            end_chmod = TRUE;
+            need_update = true;
+            end_chmod = true;
             break;
 
         case B_SETMRK:
@@ -623,8 +623,8 @@ chmod_cmd (void)
                     or_mask |= check_perm[i].mode;
 
             apply_mask (vpath, &sf_stat);
-            need_update = TRUE;
-            end_chmod = TRUE;
+            need_update = true;
+            end_chmod = true;
             break;
 
         case B_CLRMRK:
@@ -636,8 +636,8 @@ chmod_cmd (void)
                     and_mask &= ~check_perm[i].mode;
 
             apply_mask (vpath, &sf_stat);
-            need_update = TRUE;
-            end_chmod = TRUE;
+            need_update = true;
+            end_chmod = true;
             break;
 
         default:
@@ -647,7 +647,7 @@ chmod_cmd (void)
         if (current_panel->marked != 0 && result != B_CANCEL)
         {
             do_file_mark (current_panel, current_file, 0);
-            need_update = TRUE;
+            need_update = true;
         }
 
         vfs_path_free (vpath);

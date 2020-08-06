@@ -76,7 +76,7 @@ typedef struct
      */
     ssize_t len;
     /* whether buf is null-terminated or not */
-    gboolean null_term;
+    bool null_term;
     /* error code in case of len == MC_PIPE_ERROR_READ */
     int error;
 } mc_pipe_stream_t;
@@ -127,10 +127,10 @@ int is_printable (int c);
 /* Quote the filename for the purpose of inserting it into the command
  * line.  If quote_percent is 1, replace "%" with "%%" - the percent is
  * processed by the mc command line. */
-char *name_quote (const char *c, gboolean quote_percent);
+char *name_quote (const char *c, bool quote_percent);
 
 /* returns a duplicate of c. */
-char *fake_name_quote (const char *c, gboolean quote_percent);
+char *fake_name_quote (const char *c, bool quote_percent);
 
 /* path_trunc() is the same as str_trunc() but
  * it deletes possible password from path for security
@@ -140,18 +140,18 @@ const char *path_trunc (const char *path, size_t trunc_len);
 /* return a static string representing size, appending "K" or "M" for
  * big sizes.
  * NOTE: uses the same static buffer as size_trunc_sep. */
-const char *size_trunc (uintmax_t size, gboolean use_si);
+const char *size_trunc (uintmax_t size, bool use_si);
 
 /* return a static string representing size, appending "K" or "M" for
  * big sizes. Separates every three digits by ",".
  * NOTE: uses the same static buffer as size_trunc. */
-const char *size_trunc_sep (uintmax_t size, gboolean use_si);
+const char *size_trunc_sep (uintmax_t size, bool use_si);
 
 /* Print file SIZE to BUFFER, but don't exceed LEN characters,
  * not including trailing 0. BUFFER should be at least LEN+1 long.
  *
  * Units: size units (0=bytes, 1=Kbytes, 2=Mbytes, etc.) */
-void size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, gboolean use_si);
+void size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, bool use_si);
 const char *string_perm (mode_t mode_bits);
 
 const char *extension (const char *);
@@ -237,9 +237,9 @@ extern int ascii_alpha_to_cntrl (int ch);
 #undef Q_
 const char *Q_ (const char *s);
 
-gboolean mc_util_make_backup_if_possible (const char *, const char *);
-gboolean mc_util_restore_from_backup_if_possible (const char *, const char *);
-gboolean mc_util_unlink_backup_if_possible (const char *, const char *);
+bool mc_util_make_backup_if_possible (const char *, const char *);
+bool mc_util_restore_from_backup_if_possible (const char *, const char *);
+bool mc_util_unlink_backup_if_possible (const char *, const char *);
 
 char *guess_message_value (void);
 
@@ -253,20 +253,20 @@ void mc_propagate_error (GError ** dest, int code, const char *format, ...) G_GN
 void mc_replace_error (GError ** dest, int code, const char *format, ...) G_GNUC_PRINTF (3, 4);
 /* *INDENT-ON* */
 
-gboolean mc_time_elapsed (guint64 * timestamp, guint64 delay);
+bool mc_time_elapsed (guint64 * timestamp, guint64 delay);
 
 /*** inline functions **************************************************/
 
-static inline gboolean
+static inline bool
 exist_file (const char *name)
 {
     return (access (name, R_OK) == 0);
 }
 
-static inline gboolean
+static inline bool
 is_exe (mode_t mode)
 {
-    return (gboolean) ((S_IXUSR & mode) || (S_IXGRP & mode) || (S_IXOTH & mode));
+    return (bool) ((S_IXUSR & mode) || (S_IXGRP & mode) || (S_IXOTH & mode));
 }
 
 #endif /* MC_UTIL_H */

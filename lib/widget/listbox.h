@@ -38,7 +38,7 @@ typedef struct WLEntry
     char *text;                 /* Text to display */
     int hotkey;
     void *data;                 /* Client information */
-    gboolean free_data;         /* Whether to free the data on entry's removal */
+    bool free_data;         /* Whether to free the data on entry's removal */
 } WLEntry;
 
 typedef struct WListbox
@@ -47,9 +47,9 @@ typedef struct WListbox
     GQueue *list;               /* Pointer to the list of WLEntry */
     int pos;                    /* The current element displayed */
     int top;                    /* The first element displayed */
-    gboolean allow_duplicates;  /* Do we allow duplicates on the list? */
-    gboolean scrollbar;         /* Draw a scrollbar? */
-    gboolean deletable;         /* Can list entries be deleted? */
+    bool allow_duplicates;  /* Do we allow duplicates on the list? */
+    bool scrollbar;         /* Draw a scrollbar? */
+    bool deletable;         /* Can list entries be deleted? */
     lcback_fn callback;         /* The callback function */
     int cursor_x, cursor_y;     /* Cache the values */
 } WListbox;
@@ -60,7 +60,7 @@ extern const global_keymap_t *listbox_map;
 
 /*** declarations of public functions ************************************************************/
 
-WListbox *listbox_new (int y, int x, int height, int width, gboolean deletable, lcback_fn callback);
+WListbox *listbox_new (int y, int x, int height, int width, bool deletable, lcback_fn callback);
 int listbox_search_text (WListbox * l, const char *text);
 int listbox_search_data (WListbox * l, const void *data);
 void listbox_select_first (WListbox * l);
@@ -71,11 +71,11 @@ void listbox_get_current (WListbox * l, char **string, void **extra);
 WLEntry *listbox_get_nth_item (const WListbox * l, int pos);
 GList *listbox_get_first_link (const WListbox * l);
 void listbox_remove_current (WListbox * l);
-gboolean listbox_is_empty (const WListbox * l);
+bool listbox_is_empty (const WListbox * l);
 void listbox_set_list (WListbox * l, GQueue * list);
 void listbox_remove_list (WListbox * l);
 char *listbox_add_item (WListbox * l, listbox_append_t pos, int hotkey, const char *text,
-                        void *data, gboolean free_data);
+                        void *data, bool free_data);
 
 /*** inline functions ****************************************************************************/
 
