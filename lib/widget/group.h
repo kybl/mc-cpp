@@ -80,7 +80,7 @@ static inline unsigned long
 group_add_widget (WGroup * g, void *w)
 {
     return group_add_widget_autopos (g, w, WPOS_KEEP_DEFAULT,
-                                     g->current != NULL ? g->current->data : NULL);
+                                     g->current != nullptr ? g->current->data : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -110,7 +110,7 @@ group_add_widget_before (WGroup * g, void *w, void *before)
 static inline void
 group_select_current_widget (WGroup * g)
 {
-    if (g->current != NULL)
+    if (g->current != nullptr)
         widget_select (WIDGET (g->current->data));
 }
 

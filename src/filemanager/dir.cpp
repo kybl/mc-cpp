@@ -71,7 +71,7 @@ static gboolean case_sensitive = OS_SORT_CASE_SENSITIVE_DEFAULT;
 /* Are the exec_bit files top in list */
 static gboolean exec_first = TRUE;
 
-static dir_list dir_copy = { NULL, 0, 0, NULL };
+static dir_list dir_copy = { nullptr, 0, 0, nullptr };
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -132,9 +132,9 @@ clean_sort_keys (dir_list * list, int start, int count)
 
         fentry = &list->list[i + start];
         str_release_key (fentry->sort_key, case_sensitive);
-        fentry->sort_key = NULL;
+        fentry->sort_key = nullptr;
         str_release_key (fentry->second_sort_key, case_sensitive);
-        fentry->second_sort_key = NULL;
+        fentry->second_sort_key = nullptr;
     }
 }
 
@@ -176,8 +176,8 @@ handle_dirent (struct dirent *dp, const char *fltr, struct stat *buf1, gboolean 
 
     vfs_path_free (vpath);
 
-    return (S_ISDIR (buf1->st_mode) || *link_to_dir || fltr == NULL
-            || mc_search (fltr, NULL, dp->d_name, MC_SEARCH_T_GLOB));
+    return (S_ISDIR (buf1->st_mode) || *link_to_dir || fltr == nullptr
+            || mc_search (fltr, nullptr, dp->d_name, MC_SEARCH_T_GLOB));
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -188,16 +188,16 @@ dir_get_dotdot_stat (const vfs_path_t * vpath, struct stat *st)
 {
     gboolean ret = FALSE;
 
-    if ((vpath != NULL) && (st != NULL))
+    if ((vpath != nullptr) && (st != nullptr))
     {
         const char *path;
 
         path = vfs_path_get_by_index (vpath, 0)->path;
-        if (path != NULL && *path != '\0')
+        if (path != nullptr && *path != '\0')
         {
             vfs_path_t *tmp_vpath;
 
-            tmp_vpath = vfs_path_append_new (vpath, "..", (char *) NULL);
+            tmp_vpath = vfs_path_append_new (vpath, "..", (char *) nullptr);
             ret = mc_stat (tmp_vpath, st) == 0;
             vfs_path_free (tmp_vpath);
         }
@@ -213,7 +213,7 @@ alloc_dir_copy (int size)
 {
     if (dir_copy.size < size)
     {
-        if (dir_copy.list != NULL)
+        if (dir_copy.list != nullptr)
             dir_list_free_list (&dir_copy);
 
         dir_copy.list = g_new0 (file_entry_t, size);
@@ -240,7 +240,7 @@ dir_list_grow (dir_list * list, int delta)
     int size;
     gboolean clear_flag = FALSE;
 
-    if (list == NULL)
+    if (list == nullptr)
         return FALSE;
 
     if (delta == 0)
@@ -258,7 +258,7 @@ dir_list_grow (dir_list * list, int delta)
         file_entry_t *fe;
 
         fe = g_try_renew (file_entry_t, list->list, size);
-        if (fe == NULL)
+        if (fe == nullptr)
             return FALSE;
 
         list->list = fe;
@@ -301,8 +301,8 @@ dir_list_append (dir_list * list, const char *fname, const struct stat * st,
     fentry->f.stale_link = stale_link ? 1 : 0;
     fentry->f.dir_size_computed = 0;
     fentry->st = *st;
-    fentry->sort_key = NULL;
-    fentry->second_sort_key = NULL;
+    fentry->sort_key = nullptr;
+    fentry->second_sort_key = nullptr;
 
     list->len++;
 
@@ -331,9 +331,9 @@ sort_name (file_entry_t * a, file_entry_t * b)
     if (ad == bd || panels_options.mix_all_files)
     {
         /* create key if does not exist, key will be freed after sorting */
-        if (a->sort_key == NULL)
+        if (a->sort_key == nullptr)
             a->sort_key = str_create_key_for_filename (a->fname, case_sensitive);
-        if (b->sort_key == NULL)
+        if (b->sort_key == nullptr)
             b->sort_key = str_create_key_for_filename (b->fname, case_sensitive);
 
         return key_collate (a->sort_key, b->sort_key);
@@ -368,9 +368,9 @@ sort_ext (file_entry_t * a, file_entry_t * b)
     {
         int r;
 
-        if (a->second_sort_key == NULL)
+        if (a->second_sort_key == nullptr)
             a->second_sort_key = str_create_key (extension (a->fname), case_sensitive);
-        if (b->second_sort_key == NULL)
+        if (b->second_sort_key == nullptr)
             b->second_sort_key = str_create_key (extension (b->fname), case_sensitive);
 
         r = str_key_collate (a->second_sort_key, b->second_sort_key, case_sensitive);
@@ -638,10 +638,10 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     if (dir_get_dotdot_stat (vpath, &st))
         fentry->st = st;
 
-    if (list->callback != NULL)
+    if (list->callback != nullptr)
         list->callback (DIR_OPEN, (void *) vpath);
     dirp = mc_opendir (vpath);
-    if (dirp == NULL)
+    if (dirp == nullptr)
         return FALSE;
 
     tree_store_start_check (vpath);
@@ -651,11 +651,11 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     if (IS_PATH_SEP (vpath_str[0]) && vpath_str[1] == '\0')
         dir_list_clean (list);
 
-    while (ret && (dp = mc_readdir (dirp)) != NULL)
+    while (ret && (dp = mc_readdir (dirp)) != nullptr)
     {
         gboolean link_to_dir, stale_link;
 
-        if (list->callback != NULL)
+        if (list->callback != nullptr)
             list->callback (DIR_READ, dp);
 
         if (!handle_dirent (dp, fltr, &st, &link_to_dir, &stale_link))
@@ -668,8 +668,8 @@ dir_list_load (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     if (ret)
         dir_list_sort (list, sort, sort_op);
 
-    if (list->callback != NULL)
-        list->callback (DIR_CLOSE, NULL);
+    if (list->callback != nullptr)
+        list->callback (DIR_CLOSE, nullptr);
     mc_closedir (dirp);
     tree_store_end_check ();
 
@@ -705,10 +705,10 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     const char *tmp_path;
     gboolean ret = TRUE;
 
-    if (list->callback != NULL)
+    if (list->callback != nullptr)
         list->callback (DIR_OPEN, (void *) vpath);
     dirp = mc_opendir (vpath);
-    if (dirp == NULL)
+    if (dirp == nullptr)
     {
         dir_list_clean (list);
         dir_list_init (list);
@@ -732,8 +732,8 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
         dfentry->f.dir_size_computed = fentry->f.dir_size_computed;
         dfentry->f.link_to_dir = fentry->f.link_to_dir;
         dfentry->f.stale_link = fentry->f.stale_link;
-        dfentry->sort_key = NULL;
-        dfentry->second_sort_key = NULL;
+        dfentry->sort_key = nullptr;
+        dfentry->second_sort_key = nullptr;
         if (fentry->f.marked)
         {
             g_hash_table_insert (marked_files, dfentry->fname, dfentry);
@@ -770,11 +770,11 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
         }
     }
 
-    while (ret && (dp = mc_readdir (dirp)) != NULL)
+    while (ret && (dp = mc_readdir (dirp)) != nullptr)
     {
         gboolean link_to_dir, stale_link;
 
-        if (list->callback != NULL)
+        if (list->callback != nullptr)
             list->callback (DIR_READ, dp);
 
         if (!handle_dirent (dp, fltr, &st, &link_to_dir, &stale_link))
@@ -794,7 +794,7 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
              * we copied one.
              */
             fentry->f.marked = (marked_cnt > 0
-                                && g_hash_table_lookup (marked_files, dp->d_name) != NULL);
+                                && g_hash_table_lookup (marked_files, dp->d_name) != nullptr);
             if (fentry->f.marked)
                 marked_cnt--;
         }
@@ -803,8 +803,8 @@ dir_list_reload (dir_list * list, const vfs_path_t * vpath, GCompareFunc sort,
     if (ret)
         dir_list_sort (list, sort, sort_op);
 
-    if (list->callback != NULL)
-        list->callback (DIR_CLOSE, NULL);
+    if (list->callback != nullptr)
+        list->callback (DIR_CLOSE, nullptr);
     mc_closedir (dirp);
     tree_store_end_check ();
 

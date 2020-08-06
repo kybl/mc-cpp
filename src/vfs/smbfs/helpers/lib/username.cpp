@@ -44,7 +44,7 @@ get_home_dir (char *user)
     pass = Get_Pwnam (user);
 
     if (!pass)
-        return (NULL);
+        return (nullptr);
     return (pass->pw_dir);
 }
 
@@ -102,7 +102,7 @@ map_username (const char *user)
 
     DEBUG (4, ("Scanning username map %s\n", mapfile));
 
-    while ((s = fgets_slash (buf, sizeof (buf), f)) != NULL)
+    while ((s = fgets_slash (buf, sizeof (buf), f)) != nullptr)
     {
         char *unixname = s;
         char *dosname = strchr (unixname, '=');
@@ -204,7 +204,7 @@ Get_Pwnam (const char *a_user)
     struct passwd *ret;
 
     if (!a_user || !(*a_user))
-        return (NULL);
+        return (nullptr);
 
     StrnCpy (user, a_user, sizeof (user) - 1);
 
@@ -243,7 +243,7 @@ Get_Pwnam (const char *a_user)
     if (ret)
         return (ret);
 
-    return (NULL);
+    return (nullptr);
 }
 
 #if 0
@@ -254,20 +254,20 @@ static BOOL
 user_in_netgroup_list (char *user, char *ngname)
 {
 #ifdef HAVE_NETGROUP
-    static char *mydomain = NULL;
-    if (mydomain == NULL)
+    static char *mydomain = nullptr;
+    if (mydomain == nullptr)
         yp_get_default_domain (&mydomain);
 
-    if (mydomain == NULL)
+    if (mydomain == nullptr)
     {
         DEBUG (5, ("Unable to get default yp domain\n"));
     }
     else
     {
         DEBUG (5, ("looking for user %s of domain %s in netgroup %s\n", user, mydomain, ngname));
-        DEBUG (5, ("innetgr is %s\n", innetgr (ngname, NULL, user, mydomain) ? "TRUE" : "FALSE"));
+        DEBUG (5, ("innetgr is %s\n", innetgr (ngname, nullptr, user, mydomain) ? "TRUE" : "FALSE"));
 
-        if (innetgr (ngname, NULL, user, mydomain))
+        if (innetgr (ngname, nullptr, user, mydomain))
             return (True);
     }
 #endif /* HAVE_NETGROUP */
@@ -424,7 +424,7 @@ uname_string_combinations2 (char *s, int offset, struct passwd *(*fn) (const cha
             return (ret);
         s[i] = c;
     }
-    return (NULL);
+    return (nullptr);
 }
 
 /****************************************************************************
@@ -446,5 +446,5 @@ uname_string_combinations (char *s, struct passwd *(*fn) (const char *), int N)
         if (ret)
             return (ret);
     }
-    return (NULL);
+    return (nullptr);
 }

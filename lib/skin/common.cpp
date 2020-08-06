@@ -67,12 +67,12 @@ mc_skin_get_default_name (void)
     char *tmp_str;
 
     /* from command line */
-    if (mc_global.tty.skin != NULL)
+    if (mc_global.tty.skin != nullptr)
         return g_strdup (mc_global.tty.skin);
 
     /* from envirovement variable */
     tmp_str = getenv ("MC_SKIN");
-    if (tmp_str != NULL)
+    if (tmp_str != nullptr)
         return g_strdup (tmp_str);
 
     /*  from config. Or 'default' if no present in config */
@@ -114,7 +114,7 @@ gboolean
 mc_skin_init (const gchar * skin_override, GError ** mcerror)
 {
     gboolean is_good_init = TRUE;
-    GError *error = NULL;
+    GError *error = nullptr;
 
     mc_return_val_if_error (mcerror, FALSE);
 
@@ -122,7 +122,7 @@ mc_skin_init (const gchar * skin_override, GError ** mcerror)
     mc_skin__default.have_true_colors = FALSE;
 
     mc_skin__default.name =
-        skin_override != NULL ? g_strdup (skin_override) : mc_skin_get_default_name ();
+        skin_override != nullptr ? g_strdup (skin_override) : mc_skin_get_default_name ();
 
     mc_skin__default.colors = g_hash_table_new_full (g_str_hash, g_str_equal,
                                                      g_free, mc_skin_hash_destroy_value);
@@ -184,12 +184,12 @@ mc_skin_deinit (void)
 
     MC_PTR_FREE (mc_skin__default.name);
     g_hash_table_destroy (mc_skin__default.colors);
-    mc_skin__default.colors = NULL;
+    mc_skin__default.colors = nullptr;
 
     MC_PTR_FREE (mc_skin__default.description);
 
     mc_config_deinit (mc_skin__default.config);
-    mc_skin__default.config = NULL;
+    mc_skin__default.config = nullptr;
 
     mc_skin_is_init = FALSE;
 }

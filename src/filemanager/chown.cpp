@@ -99,11 +99,11 @@ static struct
 } chown_label[LABELS] =
 {
     /* *INDENT-OFF* */
-    {  4, NULL },
-    {  6, NULL },
-    {  8, NULL },
-    { 10, NULL },
-    { 12, NULL }
+    {  4, nullptr },
+    {  6, nullptr },
+    {  8, nullptr },
+    { 10, nullptr },
+    { 12, nullptr }
     /* *INDENT-ON* */
 };
 
@@ -175,7 +175,7 @@ chown_bg_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
     switch (msg)
     {
     case MSG_DRAW:
-        frame_callback (w, NULL, MSG_DRAW, 0, NULL);
+        frame_callback (w, nullptr, MSG_DRAW, 0, nullptr);
         chown_refresh (WIDGET (w->owner));
         return MSG_HANDLED;
 
@@ -202,7 +202,7 @@ chown_dlg_create (void)
     cols = GW * 3 + 2 + 6;
 
     ch_dlg =
-        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, NULL, NULL,
+        dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors, nullptr, nullptr,
                     "[Chown]", _("Chown command"));
     g = GROUP (ch_dlg);
 
@@ -210,25 +210,25 @@ chown_dlg_create (void)
     ch_dlg->bg->callback = chown_bg_callback;
 
     group_add_widget (g, groupbox_new (2, 3, GH, GW, _("User name")));
-    l_user = listbox_new (3, 4, GH - 2, GW - 2, FALSE, NULL);
+    l_user = listbox_new (3, 4, GH - 2, GW - 2, FALSE, nullptr);
     group_add_widget (g, l_user);
     /* add field for unknown names (numbers) */
-    listbox_add_item (l_user, LISTBOX_APPEND_AT_END, 0, _("<Unknown user>"), NULL, FALSE);
+    listbox_add_item (l_user, LISTBOX_APPEND_AT_END, 0, _("<Unknown user>"), nullptr, FALSE);
     /* get and put user names in the listbox */
     setpwent ();
-    while ((l_pass = getpwent ()) != NULL)
-        listbox_add_item (l_user, LISTBOX_APPEND_SORTED, 0, l_pass->pw_name, NULL, FALSE);
+    while ((l_pass = getpwent ()) != nullptr)
+        listbox_add_item (l_user, LISTBOX_APPEND_SORTED, 0, l_pass->pw_name, nullptr, FALSE);
     endpwent ();
 
     group_add_widget (g, groupbox_new (2, 4 + GW, GH, GW, _("Group name")));
-    l_group = listbox_new (3, 5 + GW, GH - 2, GW - 2, FALSE, NULL);
+    l_group = listbox_new (3, 5 + GW, GH - 2, GW - 2, FALSE, nullptr);
     group_add_widget (g, l_group);
     /* add field for unknown names (numbers) */
-    listbox_add_item (l_group, LISTBOX_APPEND_AT_END, 0, _("<Unknown group>"), NULL, FALSE);
+    listbox_add_item (l_group, LISTBOX_APPEND_AT_END, 0, _("<Unknown group>"), nullptr, FALSE);
     /* get and put group names in the listbox */
     setgrent ();
-    while ((l_grp = getgrent ()) != NULL)
-        listbox_add_item (l_group, LISTBOX_APPEND_SORTED, 0, l_grp->gr_name, NULL, FALSE);
+    while ((l_grp = getgrent ()) != nullptr)
+        listbox_add_item (l_group, LISTBOX_APPEND_SORTED, 0, l_grp->gr_name, nullptr, FALSE);
     endgrent ();
 
     group_add_widget (g, groupbox_new (2, 5 + GW * 2, GH, GW, _("File")));
@@ -251,7 +251,7 @@ chown_dlg_create (void)
         for (i = 0; i < BUTTONS - 2; i++)
         {
             group_add_widget (g, button_new (y, x, chown_but[i].ret_cmd, chown_but[i].flags,
-                                             chown_but[i].text, NULL));
+                                             chown_but[i].text, nullptr));
             x += chown_but[i].len + 1;
         }
     }
@@ -261,10 +261,10 @@ chown_dlg_create (void)
     group_add_widget (g, hline_new (y - 1, -1, -1));
     group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 - chown_but[i].len,
                                      chown_but[i].ret_cmd, chown_but[i].flags, chown_but[i].text,
-                                     NULL));
+                                     nullptr));
     i++;
     group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 + 1, chown_but[i].ret_cmd,
-                                     chown_but[i].flags, chown_but[i].text, NULL));
+                                     chown_but[i].flags, chown_but[i].text, nullptr));
 
     /* select first listbox */
     widget_select (WIDGET (l_user));
@@ -459,13 +459,13 @@ chown_cmd (void)
                 struct passwd *user;
                 char *text;
 
-                listbox_get_current (l_group, &text, NULL);
+                listbox_get_current (l_group, &text, nullptr);
                 grp = getgrnam (text);
-                if (grp != NULL)
+                if (grp != nullptr)
                     new_group = grp->gr_gid;
-                listbox_get_current (l_user, &text, NULL);
+                listbox_get_current (l_user, &text, nullptr);
                 user = getpwnam (text);
-                if (user != NULL)
+                if (user != nullptr)
                     new_user = user->pw_uid;
                 if (result == B_ENTER)
                 {
@@ -499,9 +499,9 @@ chown_cmd (void)
                 struct passwd *user;
                 char *text;
 
-                listbox_get_current (l_user, &text, NULL);
+                listbox_get_current (l_user, &text, nullptr);
                 user = getpwnam (text);
-                if (user != NULL)
+                if (user != nullptr)
                 {
                     new_user = user->pw_uid;
                     apply_chowns (vpath, new_user, new_group);
@@ -516,9 +516,9 @@ chown_cmd (void)
                 struct group *grp;
                 char *text;
 
-                listbox_get_current (l_group, &text, NULL);
+                listbox_get_current (l_group, &text, nullptr);
                 grp = getgrnam (text);
-                if (grp != NULL)
+                if (grp != nullptr)
                 {
                     new_group = grp->gr_gid;
                     apply_chowns (vpath, new_user, new_group);

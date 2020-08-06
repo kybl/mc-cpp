@@ -73,7 +73,7 @@ history_dlg_reposition (WDialog * dlg_head)
     WRect r;
 
     /* guard checks */
-    if ((dlg_head == NULL) || (dlg_head->data == NULL))
+    if ((dlg_head == nullptr) || (dlg_head->data == nullptr))
         return MSG_NOT_HANDLED;
 
     data = (history_dlg_data *) dlg_head->data;
@@ -105,7 +105,7 @@ history_dlg_reposition (WDialog * dlg_head)
 
     rect_init (&r, y, x, he, wi);
 
-    return dlg_default_callback (WIDGET (dlg_head), NULL, MSG_RESIZE, 0, &r);
+    return dlg_default_callback (WIDGET (dlg_head), nullptr, MSG_RESIZE, 0, &r);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -158,7 +158,7 @@ history_create_item (history_descriptor_t * hd, void *data)
     width = str_term_width1 (text);
     hd->max_width = MAX (width, hd->max_width);
 
-    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, text, NULL, TRUE);
+    listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, text, nullptr, TRUE);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -171,7 +171,7 @@ history_release_item (history_descriptor_t * hd, WLEntry * le)
     (void) hd;
 
     text = le->text;
-    le->text = NULL;
+    le->text = nullptr;
 
     return text;
 }
@@ -188,9 +188,9 @@ history_descriptor_init (history_descriptor_t * hd, int y, int x, GList * histor
     hd->x = x;
     hd->current = current;
     hd->action = CK_IgnoreKey;
-    hd->text = NULL;
+    hd->text = nullptr;
     hd->max_width = 0;
-    hd->listbox = listbox_new (1, 1, 2, 2, TRUE, NULL);
+    hd->listbox = listbox_new (1, 1, 2, 2, TRUE, nullptr);
     /* in most cases history list contains string only and no any other data */
     hd->create = history_create_item;
     hd->release = history_release_item;
@@ -208,12 +208,12 @@ history_show (history_descriptor_t * hd)
     history_dlg_data hist_data;
     int dlg_ret;
 
-    if (hd == NULL || hd->list == NULL)
+    if (hd == nullptr || hd->list == nullptr)
         return;
 
     hd->max_width = str_term_width1 (_("History")) + 2;
 
-    for (z = hd->list; z != NULL; z = g_list_previous (z))
+    for (z = hd->list; z != nullptr; z = g_list_previous (z))
         hd->create (hd, z->data);
     /* after this, the order of history items is following: recent at begin, oldest at end */
 
@@ -226,19 +226,19 @@ history_show (history_descriptor_t * hd)
 
     query_dlg =
         dlg_create (TRUE, 0, 0, 4, 4, WPOS_KEEP_DEFAULT, TRUE, dialog_colors, history_dlg_callback,
-                    NULL, "[History-query]", _("History"));
+                    nullptr, "[History-query]", _("History"));
     query_dlg->data = &hist_data;
 
     /* this call makes list stick to all sides of dialog, effectively make
        it be resized with dialog */
-    group_add_widget_autopos (GROUP (query_dlg), hd->listbox, WPOS_KEEP_ALL, NULL);
+    group_add_widget_autopos (GROUP (query_dlg), hd->listbox, WPOS_KEEP_ALL, nullptr);
 
     /* to avoid diplicating of (calculating sizes in two places)
        code, call history_dlg_callback function here, to set dialog and
        controls positions.
        The main idea - create 4x4 dialog and add 2x2 list in
        center of it, and let dialog function resize it to needed size. */
-    send_message (query_dlg, NULL, MSG_RESIZE, 0, NULL);
+    send_message (query_dlg, nullptr, MSG_RESIZE, 0, nullptr);
 
     if (WIDGET (query_dlg)->y < hd->y)
     {
@@ -274,13 +274,13 @@ history_show (history_descriptor_t * hd)
             hd->action = CK_Enter;
         }
 
-        listbox_get_current (hd->listbox, &q, NULL);
+        listbox_get_current (hd->listbox, &q, nullptr);
         hd->text = g_strdup (q);
     }
 
     /* get modified history from dialog */
-    z = NULL;
-    for (hi = listbox_get_first_link (hd->listbox); hi != NULL; hi = g_list_next (hi))
+    z = nullptr;
+    for (hi = listbox_get_first_link (hd->listbox); hi != nullptr; hi = g_list_next (hi))
         /* history is being reverted here again */
         z = g_list_prepend (z, hd->release (hd, LENTRY (hi->data)));
 

@@ -72,7 +72,7 @@
 /*** global variables ****************************************************************************/
 
 /* The pointer to the tree */
-WTree *the_tree = NULL;
+WTree *the_tree = nullptr;
 
 /* If this is true, then when browsing the tree the other window will
  * automatically reload it's directory with the contents of the currently
@@ -118,7 +118,7 @@ back_ptr (tree_entry * ptr, int *count)
 {
     int i;
 
-    for (i = 0; ptr != NULL && ptr->prev != NULL && i < *count; ptr = ptr->prev, i++)
+    for (i = 0; ptr != nullptr && ptr->prev != nullptr && i < *count; ptr = ptr->prev, i++)
         ;
 
     *count = i;
@@ -132,7 +132,7 @@ forw_ptr (tree_entry * ptr, int *count)
 {
     int i;
 
-    for (i = 0; ptr != NULL && ptr->next != NULL && i < *count; ptr = ptr->next, i++)
+    for (i = 0; ptr != nullptr && ptr->next != nullptr && i < *count; ptr = ptr->next, i++)
         ;
 
     *count = i;
@@ -148,7 +148,7 @@ remove_callback (tree_entry * entry, void *data)
 
     if (tree->selected_ptr == entry)
     {
-        if (tree->selected_ptr->next != NULL)
+        if (tree->selected_ptr->next != nullptr)
             tree->selected_ptr = tree->selected_ptr->next;
         else
             tree->selected_ptr = tree->selected_ptr->prev;
@@ -195,7 +195,7 @@ tree_destroy (WTree * tree)
     save_tree (tree);
 
     MC_PTR_FREE (tree->tree_shown);
-    tree->selected_ptr = NULL;
+    tree->selected_ptr = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -283,10 +283,10 @@ show_tree (WTree * tree)
     g_free (tree->tree_shown);
     tree->tree_shown = g_new0 (tree_entry *, tree_lines);
 
-    if (tree->store->tree_first != NULL)
+    if (tree->store->tree_first != nullptr)
         topsublevel = tree->store->tree_first->sublevel;
 
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
     {
         tree->selected_ptr = tree->store->tree_first;
         tree->topdiff = 0;
@@ -300,7 +300,7 @@ show_tree (WTree * tree)
     {
         i = 0;
 
-        while (current->prev != NULL && i < tree->topdiff)
+        while (current->prev != nullptr && i < tree->topdiff)
         {
             current = current->prev;
 
@@ -340,7 +340,7 @@ show_tree (WTree * tree)
         /* Move to the beginning of the line */
         tty_draw_hline (w->y + y + i, w->x + x, ' ', tree_cols);
 
-        if (current == NULL)
+        if (current == nullptr)
             continue;
 
         if (tree->is_panel)
@@ -382,7 +382,7 @@ show_tree (WTree * tree)
             }
             tty_print_char (' ');
             j++;
-            if (current->next == NULL || (current->next->submask & (1 << current->sublevel)) == 0)
+            if (current->next == nullptr || (current->next->submask & (1 << current->sublevel)) == 0)
                 tty_print_char (ACS_LLCORNER);
             else
                 tty_print_char (ACS_LTEE);
@@ -398,7 +398,7 @@ show_tree (WTree * tree)
         /* Calculate the next value for current */
         current = current->next;
         if (tree_navigation_flag)
-            for (; current != NULL; current = current->next)
+            for (; current != nullptr; current = current->next)
             {
                 if (current->sublevel < tree->selected_ptr->sublevel)
                 {
@@ -453,7 +453,7 @@ tree_move_backward (WTree * tree, int i)
         int j = 0;
 
         current = tree->selected_ptr;
-        while (j < i && current->prev != NULL
+        while (j < i && current->prev != nullptr
                && current->prev->sublevel >= tree->selected_ptr->sublevel)
         {
             current = current->prev;
@@ -483,7 +483,7 @@ tree_move_forward (WTree * tree, int i)
         int j = 0;
 
         current = tree->selected_ptr;
-        while (j < i && current->next != NULL
+        while (j < i && current->next != nullptr
                && current->next->sublevel >= tree->selected_ptr->sublevel)
         {
             current = current->next;
@@ -508,13 +508,13 @@ tree_move_to_child (WTree * tree)
     tree_entry *current;
 
     /* Do we have a starting point? */
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
         return;
 
     /* Take the next entry */
     current = tree->selected_ptr->next;
     /* Is it the child of the selected entry */
-    if (current != NULL && current->sublevel > tree->selected_ptr->sublevel)
+    if (current != nullptr && current->sublevel > tree->selected_ptr->sublevel)
     {
         /* Yes -> select this entry */
         tree->selected_ptr = current;
@@ -526,7 +526,7 @@ tree_move_to_child (WTree * tree)
         /* No -> rescan and try again */
         tree_rescan (tree);
         current = tree->selected_ptr->next;
-        if (current != NULL && current->sublevel > tree->selected_ptr->sublevel)
+        if (current != nullptr && current->sublevel > tree->selected_ptr->sublevel)
         {
             tree->selected_ptr = current;
             tree->topdiff++;
@@ -543,17 +543,17 @@ tree_move_to_parent (WTree * tree)
     tree_entry *current;
     tree_entry *old;
 
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
         return FALSE;
 
     old = tree->selected_ptr;
 
     for (current = tree->selected_ptr->prev;
-         current != NULL && current->sublevel >= tree->selected_ptr->sublevel;
+         current != nullptr && current->sublevel >= tree->selected_ptr->sublevel;
          current = current->prev)
         tree->topdiff--;
 
-    if (current == NULL)
+    if (current == nullptr)
         current = tree->store->tree_first;
     tree->selected_ptr = current;
     tree_check_focus (tree);
@@ -638,7 +638,7 @@ search_tree (WTree * tree, char *text)
         else
         {
             current = current->next;
-            if (current == NULL)
+            if (current == nullptr)
             {
                 current = tree->store->tree_first;
                 wrapped = TRUE;
@@ -680,10 +680,10 @@ static void
 tree_rescan (WTree *tree)
 {
     vfs_path_t *old_vpath = vfs_path_clone (vfs_get_raw_current_dir ());
-    if (old_vpath == NULL)
+    if (old_vpath == nullptr)
         return;
 
-    if (tree->selected_ptr != NULL && mc_chdir (tree->selected_ptr->name) == 0)
+    if (tree->selected_ptr != nullptr && mc_chdir (tree->selected_ptr->name) == 0)
     {
         int ret;
 
@@ -699,7 +699,7 @@ tree_rescan (WTree *tree)
 static void
 tree_forget (WTree *tree)
 {
-    if (tree->selected_ptr != NULL)
+    if (tree->selected_ptr != nullptr)
         tree_remove_entry (tree, tree->selected_ptr->name);
 }
 
@@ -711,7 +711,7 @@ tree_copy (WTree * tree, const char *default_dest)
     char msg[BUF_MEDIUM];
     char *dest;
 
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
         return;
 
     g_snprintf (msg, sizeof (msg), _("Copy \"%s\" directory to:"),
@@ -720,7 +720,7 @@ tree_copy (WTree * tree, const char *default_dest)
                                 msg, MC_HISTORY_FM_TREE_COPY, default_dest,
                                 INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD);
 
-    if (dest != NULL && *dest != '\0')
+    if (dest != nullptr && *dest != '\0')
     {
         file_op_context_t *ctx;
         file_op_total_context_t *tctx;
@@ -730,7 +730,7 @@ tree_copy (WTree * tree, const char *default_dest)
         file_op_context_create_ui (ctx, FALSE, FILEGUI_DIALOG_MULTI_ITEM);
         tctx->ask_overwrite = FALSE;
         copy_dir_dir (tctx, ctx, vfs_path_as_str (tree->selected_ptr->name), dest, TRUE, FALSE,
-                      FALSE, NULL);
+                      FALSE, nullptr);
         file_op_total_context_destroy (tctx);
         file_op_context_destroy (ctx);
     }
@@ -748,9 +748,9 @@ tree_move (WTree * tree, const char *default_dest)
     struct stat buf;
     file_op_context_t *ctx;
     file_op_total_context_t *tctx;
-    vfs_path_t *dest_vpath = NULL;
+    vfs_path_t *dest_vpath = nullptr;
 
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
         return;
 
     g_snprintf (msg, sizeof (msg), _("Move \"%s\" directory to:"),
@@ -759,7 +759,7 @@ tree_move (WTree * tree, const char *default_dest)
         input_expand_dialog (Q_ ("DialogTitle|Move"), msg, MC_HISTORY_FM_TREE_MOVE, default_dest,
                              INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD);
 
-    if (dest == NULL || *dest == '\0')
+    if (dest == nullptr || *dest == '\0')
         goto ret;
 
     dest_vpath = vfs_path_from_str (dest);
@@ -797,7 +797,7 @@ tree_mkdir (WTree * tree)
 {
     char old_dir[MC_MAXPATHLEN];
 
-    if (tree->selected_ptr == NULL || chdir (tree->selected_ptr->name) != 0)
+    if (tree->selected_ptr == nullptr || chdir (tree->selected_ptr->name) != 0)
         return;
     /* FIXME
        mkdir_cmd (tree);
@@ -815,7 +815,7 @@ tree_rmdir (WTree *tree)
     file_op_context_t *ctx;
     file_op_total_context_t *tctx;
 
-    if (tree->selected_ptr == NULL)
+    if (tree->selected_ptr == nullptr)
         return;
 
     if (confirm_delete)
@@ -999,7 +999,7 @@ tree_execute_cmd (WTree * tree, long command)
     {
     case CK_Help:
         {
-            ev_help_t event_data = { NULL, "[Directory Tree]" };
+            ev_help_t event_data = { nullptr, "[Directory Tree]" };
             mc_event_raise (MCEVENT_GROUP_CORE, "help", &event_data);
         }
         break;
@@ -1251,7 +1251,7 @@ tree_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             }
             else if ((event->count & GPM_DOUBLE) != 0)
             {
-                if (tree->tree_shown[y] != NULL)
+                if (tree->tree_shown[y] != nullptr)
                 {
                     tree->selected_ptr = tree->tree_shown[y];
                     tree->topdiff = y;
@@ -1290,11 +1290,11 @@ tree_new (int y, int x, int lines, int cols, gboolean is_panel)
     w->keymap = tree_map;
 
     tree->is_panel = is_panel;
-    tree->selected_ptr = NULL;
+    tree->selected_ptr = nullptr;
 
     tree->store = tree_store_get ();
     tree_store_add_entry_remove_hook (remove_callback, tree);
-    tree->tree_shown = NULL;
+    tree->tree_shown = nullptr;
     tree->search_buffer[0] = '\0';
     tree->topdiff = w->lines / 2;
     tree->searching = FALSE;
@@ -1311,7 +1311,7 @@ tree_chdir (WTree * tree, const vfs_path_t * dir)
     tree_entry *current;
 
     current = tree_store_whereis (dir);
-    if (current != NULL)
+    if (current != nullptr)
     {
         tree->selected_ptr = current;
         tree_check_focus (tree);

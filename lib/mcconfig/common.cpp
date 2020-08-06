@@ -57,7 +57,7 @@ mc_config_new_or_override_file (mc_config_t * mc_config, const gchar * ini_path,
 
     mc_return_val_if_error (mcerror, FALSE);
 
-    data = g_key_file_to_data (mc_config->handle, &len, NULL);
+    data = g_key_file_to_data (mc_config->handle, &len, nullptr);
     if (!exist_file (ini_path))
     {
         ret = g_file_set_contents (ini_path, data, len, mcerror);
@@ -108,17 +108,17 @@ mc_config_init (const gchar * ini_path, gboolean read_only)
     struct stat st;
 
     mc_config = static_cast<mc_config_t *> (g_try_malloc0 (sizeof (mc_config_t)));
-    if (mc_config == NULL)
-        return NULL;
+    if (mc_config == nullptr)
+        return nullptr;
 
     mc_config->handle = g_key_file_new ();
-    if (mc_config->handle == NULL)
+    if (mc_config->handle == nullptr)
     {
         g_free (mc_config);
-        return NULL;
+        return nullptr;
     }
 
-    if (ini_path == NULL)
+    if (ini_path == nullptr)
         return mc_config;
 
     if (exist_file (ini_path))
@@ -134,7 +134,7 @@ mc_config_init (const gchar * ini_path, gboolean read_only)
                 flags = static_cast<GKeyFileFlags> (((unsigned int) flags) | G_KEY_FILE_KEEP_COMMENTS);
 
             /* file exists and not empty */
-            g_key_file_load_from_file (mc_config->handle, ini_path, flags, NULL);
+            g_key_file_load_from_file (mc_config->handle, ini_path, flags, nullptr);
         }
         vfs_path_free (vpath);
     }
@@ -148,7 +148,7 @@ mc_config_init (const gchar * ini_path, gboolean read_only)
 void
 mc_config_deinit (mc_config_t * mc_config)
 {
-    if (mc_config != NULL)
+    if (mc_config != nullptr)
     {
         g_free (mc_config->ini_path);
         g_key_file_free (mc_config->handle);
@@ -161,10 +161,10 @@ mc_config_deinit (mc_config_t * mc_config)
 gboolean
 mc_config_has_param (const mc_config_t * mc_config, const char *group, const gchar * param)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return FALSE;
 
-    return g_key_file_has_key (mc_config->handle, group, param, NULL);
+    return g_key_file_has_key (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -172,7 +172,7 @@ mc_config_has_param (const mc_config_t * mc_config, const char *group, const gch
 gboolean
 mc_config_has_group (mc_config_t * mc_config, const char *group)
 {
-    if (mc_config == NULL || group == NULL)
+    if (mc_config == nullptr || group == nullptr)
         return FALSE;
 
     return g_key_file_has_group (mc_config->handle, group);
@@ -183,10 +183,10 @@ mc_config_has_group (mc_config_t * mc_config, const char *group)
 gboolean
 mc_config_del_key (mc_config_t * mc_config, const char *group, const gchar * param)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return FALSE;
 
-    return g_key_file_remove_key (mc_config->handle, group, param, NULL);
+    return g_key_file_remove_key (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -194,10 +194,10 @@ mc_config_del_key (mc_config_t * mc_config, const char *group, const gchar * par
 gboolean
 mc_config_del_group (mc_config_t * mc_config, const char *group)
 {
-    if (mc_config == NULL || group == NULL)
+    if (mc_config == nullptr || group == nullptr)
         return FALSE;
 
-    return g_key_file_remove_group (mc_config->handle, group, NULL);
+    return g_key_file_remove_group (mc_config->handle, group, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -211,35 +211,35 @@ mc_config_read_file (mc_config_t * mc_config, const gchar * ini_path, gboolean r
     gchar *value;
     gboolean ok;
 
-    if (mc_config == NULL)
+    if (mc_config == nullptr)
         return FALSE;
 
     tmp_config = mc_config_init (ini_path, read_only);
-    if (tmp_config == NULL)
+    if (tmp_config == nullptr)
         return FALSE;
 
-    groups = mc_config_get_groups (tmp_config, NULL);
-    ok = (*groups != NULL);
+    groups = mc_config_get_groups (tmp_config, nullptr);
+    ok = (*groups != nullptr);
 
-    for (curr_grp = groups; *curr_grp != NULL; curr_grp++)
+    for (curr_grp = groups; *curr_grp != nullptr; curr_grp++)
     {
         gchar **keys, **curr_key;
 
-        keys = mc_config_get_keys (tmp_config, *curr_grp, NULL);
+        keys = mc_config_get_keys (tmp_config, *curr_grp, nullptr);
 
-        for (curr_key = keys; *curr_key != NULL; curr_key++)
+        for (curr_key = keys; *curr_key != nullptr; curr_key++)
         {
-            value = g_key_file_get_value (tmp_config->handle, *curr_grp, *curr_key, NULL);
-            if (value != NULL)
+            value = g_key_file_get_value (tmp_config->handle, *curr_grp, *curr_key, nullptr);
+            if (value != nullptr)
             {
                 if (*value == '\0' && remove_empty)
-                    g_key_file_remove_key (mc_config->handle, *curr_grp, *curr_key, NULL);
+                    g_key_file_remove_key (mc_config->handle, *curr_grp, *curr_key, nullptr);
                 else
                     g_key_file_set_value (mc_config->handle, *curr_grp, *curr_key, value);
                 g_free (value);
             }
             else if (remove_empty)
-                g_key_file_remove_key (mc_config->handle, *curr_grp, *curr_key, NULL);
+                g_key_file_remove_key (mc_config->handle, *curr_grp, *curr_key, nullptr);
         }
         g_strfreev (keys);
     }
@@ -257,7 +257,7 @@ mc_config_save_file (mc_config_t * mc_config, GError ** mcerror)
 {
     mc_return_val_if_error (mcerror, FALSE);
 
-    if (mc_config == NULL || mc_config->ini_path == NULL)
+    if (mc_config == nullptr || mc_config->ini_path == nullptr)
         return FALSE;
 
     return mc_config_new_or_override_file (mc_config, mc_config->ini_path, mcerror);
@@ -270,7 +270,7 @@ mc_config_save_to_file (mc_config_t * mc_config, const gchar * ini_path, GError 
 {
     mc_return_val_if_error (mcerror, FALSE);
 
-    if (mc_config == NULL)
+    if (mc_config == nullptr)
         return FALSE;
 
     return mc_config_new_or_override_file (mc_config, ini_path, mcerror);

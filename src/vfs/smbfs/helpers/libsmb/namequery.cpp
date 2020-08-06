@@ -36,7 +36,7 @@ const BOOL global_in_nmbd = False;
 
 /****************************************************************************
   do a netbios name query to find someones IP
-  returns an array of IP addresses or NULL if none
+  returns an array of IP addresses or nullptr if none
   *count will be set to the number of addresses returned
   ****************************************************************************/
 struct in_addr *
@@ -51,13 +51,13 @@ name_query (int fd, const char *name, int name_type, BOOL bcast, BOOL recurse,
     struct packet_struct *p2;
     struct nmb_packet *nmb = &p.packet.nmb;
     static int name_trn_id = 0;
-    struct in_addr *ip_list = NULL;
+    struct in_addr *ip_list = nullptr;
 
     memset ((char *) &p, '\0', sizeof (p));
     (*count) = 0;
 
     if (!name_trn_id)
-        name_trn_id = ((unsigned) time (NULL) % (unsigned) 0x7FFF) +
+        name_trn_id = ((unsigned) time (nullptr) % (unsigned) 0x7FFF) +
             ((unsigned) getpid () % (unsigned) 100);
     name_trn_id = (name_trn_id + 1) % (unsigned) 0x7FFF;
 
@@ -83,13 +83,13 @@ name_query (int fd, const char *name, int name_type, BOOL bcast, BOOL recurse,
     p.ip = to_ip;
     p.port = NMB_PORT;
     p.fd = fd;
-    p.timestamp = time (NULL);
+    p.timestamp = time (nullptr);
     p.packet_type = NMB_PACKET;
 
     GetTimeOfDay (&tval);
 
     if (!send_packet (&p))
-        return NULL;
+        return nullptr;
 
     retries--;
 
@@ -102,7 +102,7 @@ name_query (int fd, const char *name, int name_type, BOOL bcast, BOOL recurse,
             if (!retries)
                 break;
             if (!found && !send_packet (&p))
-                return NULL;
+                return nullptr;
             GetTimeOfDay (&tval);
             retries--;
         }
@@ -182,7 +182,7 @@ startlmhosts (const char *fname)
     {
         DEBUG (4, ("startlmhosts: Cannot open lmhosts file %s. Error was %s\n",
                    fname, unix_error_string (errno)));
-        return NULL;
+        return nullptr;
     }
     return fp;
 }
@@ -215,13 +215,13 @@ getlmhostsent (FILE * fp, pstring name, int *name_type, struct in_addr * ipaddr)
 
         ptr = line;
 
-        if (next_token (&ptr, ip, NULL, sizeof (ip)))
+        if (next_token (&ptr, ip, nullptr, sizeof (ip)))
             ++count;
-        if (next_token (&ptr, name, NULL, sizeof (pstring)))
+        if (next_token (&ptr, name, nullptr, sizeof (pstring)))
             ++count;
-        if (next_token (&ptr, flags, NULL, sizeof (flags)))
+        if (next_token (&ptr, flags, nullptr, sizeof (flags)))
             ++count;
-        if (next_token (&ptr, extra, NULL, sizeof (extra)))
+        if (next_token (&ptr, extra, nullptr, sizeof (extra)))
             ++count;
 
         if (count <= 0)
@@ -251,7 +251,7 @@ getlmhostsent (FILE * fp, pstring name, int *name_type, struct in_addr * ipaddr)
 
         /* Extra feature. If the name ends in '#XX', where XX is a hex number,
            then only add that name type. */
-        if ((ptr = strchr (name, '#')) != NULL)
+        if ((ptr = strchr (name, '#')) != nullptr)
         {
             char *endptr;
 
@@ -301,7 +301,7 @@ resolve_bcast (const char *name, struct in_addr *return_ip, int name_type)
 
     if (sock != -1)
     {
-        struct in_addr *iplist = NULL;
+        struct in_addr *iplist = nullptr;
         int count;
         int num_interfaces = iface_count ();
         char *options = strdup ("SO_BROADCAST");
@@ -316,8 +316,8 @@ resolve_bcast (const char *name, struct in_addr *return_ip, int name_type)
             struct in_addr sendto_ip;
             /* Done this way to fix compiler error on IRIX 5.x */
             sendto_ip = *iface_bcast (*iface_n_ip (i));
-            iplist = name_query (sock, name, name_type, True, True, sendto_ip, &count, NULL);
-            if (iplist != NULL)
+            iplist = name_query (sock, name, name_type, True, True, sendto_ip, &count, nullptr);
+            if (iplist != nullptr)
             {
                 *return_ip = iplist[0];
                 free ((char *) iplist);
@@ -368,10 +368,10 @@ resolve_wins (const char *name, struct in_addr *return_ip, int name_type)
 
         if (sock != -1)
         {
-            struct in_addr *iplist = NULL;
+            struct in_addr *iplist = nullptr;
             int count;
-            iplist = name_query (sock, name, name_type, False, True, wins_ip, &count, NULL);
-            if (iplist != NULL)
+            iplist = name_query (sock, name, name_type, False, True, wins_ip, &count, nullptr);
+            if (iplist != nullptr)
             {
                 *return_ip = iplist[0];
                 free ((char *) iplist);
@@ -432,7 +432,7 @@ resolve_hosts (const char *name, struct in_addr *return_ip)
 
     DEBUG (3, ("resolve_name: Attempting host lookup for name %s<0x20>\n", name));
 
-    if (((hp = Get_Hostbyname (name)) != NULL) && (hp->h_addr != NULL))
+    if (((hp = Get_Hostbyname (name)) != nullptr) && (hp->h_addr != nullptr))
     {
         putip ((char *) return_ip, (char *) hp->h_addr);
         return True;
@@ -479,7 +479,7 @@ resolve_name (const char *name, struct in_addr * return_ip, int name_type)
     }
 
     pstrcpy (name_resolve_list, lp_name_resolve_order ());
-    if (name_resolve_list == NULL || *name_resolve_list == '\0')
+    if (name_resolve_list == nullptr || *name_resolve_list == '\0')
         pstrcpy (name_resolve_list, "host");
     ptr = name_resolve_list;
 

@@ -295,7 +295,7 @@ mcview_moveto_eol (WView * view)
         off_t filesize;
 
         bol = mcview_offset_rounddown (view->hex_cursor, view->bytes_per_line);
-        if (mcview_get_byte_indexed (view, bol, view->bytes_per_line - 1, NULL) == TRUE)
+        if (mcview_get_byte_indexed (view, bol, view->bytes_per_line - 1, nullptr) == TRUE)
         {
             view->hex_cursor = bol + view->bytes_per_line - 1;
         }

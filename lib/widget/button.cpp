@@ -87,7 +87,7 @@ button_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
             return MSG_HANDLED;
         }
 
-        if (b->text.hotkey != NULL && g_ascii_tolower ((gchar) b->text.hotkey[0]) == parm)
+        if (b->text.hotkey != nullptr && g_ascii_tolower ((gchar) b->text.hotkey[0]) == parm)
         {
             send_message (w, sender, MSG_KEY, ' ', data);
             return MSG_HANDLED;
@@ -99,7 +99,7 @@ button_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm
             return MSG_NOT_HANDLED;
 
         h->ret_value = b->action;
-        if (b->callback == NULL || b->callback (b, b->action) != 0)
+        if (b->callback == nullptr || b->callback (b, b->action) != 0)
             dlg_stop (h);
 
         return MSG_HANDLED;
@@ -192,8 +192,8 @@ button_mouse_default_callback (Widget * w, mouse_msg_t msg, mouse_event_t * even
         break;
 
     case MSG_MOUSE_CLICK:
-        send_message (w, NULL, MSG_KEY, ' ', NULL);
-        send_message (w->owner, w, MSG_POST_KEY, ' ', NULL);
+        send_message (w, nullptr, MSG_KEY, ' ', nullptr);
+        send_message (w->owner, w, MSG_POST_KEY, ' ', nullptr);
         break;
 
     default:
@@ -219,7 +219,7 @@ button_new (int y, int x, int action, button_flags_t flags, const char *text, bc
                  button_mouse_default_callback);
     w->options |= WOP_SELECTABLE | WOP_WANT_CURSOR | WOP_WANT_HOTKEY;
     b->callback = callback;
-    b->hotpos = (b->text.hotkey != NULL) ? str_term_width1 (b->text.start) : -1;
+    b->hotpos = (b->text.hotkey != nullptr) ? str_term_width1 (b->text.start) : -1;
 
     return b;
 }
@@ -249,7 +249,7 @@ button_set_text (WButton * b, const char *text)
 
     hotkey_free (b->text);
     b->text = hk;
-    b->hotpos = (b->text.hotkey != NULL) ? str_term_width1 (b->text.start) : -1;
+    b->hotpos = (b->text.hotkey != nullptr) ? str_term_width1 (b->text.start) : -1;
     w->cols = button_get_len (b);
     widget_draw (w);
 }

@@ -89,8 +89,8 @@ typedef struct
 
 /*** file scope variables ************************************************************************/
 
-static char **hosts = NULL;
-static char **hosts_p = NULL;
+static char **hosts = nullptr;
+static char **hosts_p = nullptr;
 static int hosts_alloclen = 0;
 
 static int complete_height, complete_width;
@@ -131,19 +131,19 @@ show_c_flags (input_complete_t flags)
 static char *
 filename_completion_function (const char *text, int state, input_complete_t flags)
 {
-    static DIR *directory = NULL;
-    static char *filename = NULL;
-    static char *dirname = NULL;
-    static char *users_dirname = NULL;
+    static DIR *directory = nullptr;
+    static char *filename = nullptr;
+    static char *dirname = nullptr;
+    static char *users_dirname = nullptr;
     static size_t filename_len = 0;
-    static vfs_path_t *dirname_vpath = NULL;
+    static vfs_path_t *dirname_vpath = nullptr;
 
     gboolean isdir = TRUE, isexec = FALSE;
-    struct dirent *entry = NULL;
+    struct dirent *entry = nullptr;
 
     SHOW_C_CTX ("filename_completion_function");
 
-    if (text != NULL && (flags & INPUT_COMPLETE_SHELL_ESC) != 0)
+    if (text != nullptr && (flags & INPUT_COMPLETE_SHELL_ESC) != 0)
     {
         char *u_text;
         char *result;
@@ -170,7 +170,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
         g_free (users_dirname);
         vfs_path_free (dirname_vpath);
 
-        if ((*text != '\0') && (temp = strrchr (text, PATH_SEP)) != NULL)
+        if ((*text != '\0') && (temp = strrchr (text, PATH_SEP)) != nullptr)
         {
             filename = g_strdup (++temp);
             dirname = g_strndup (text, temp - text);
@@ -199,7 +199,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
 
     /* Now that we have some state, we can read the directory. */
 
-    while (directory != NULL && (entry = mc_readdir (directory)) != NULL)
+    while (directory != nullptr && (entry = mc_readdir (directory)) != nullptr)
     {
         if (!str_is_valid_string (entry->d_name))
             continue;
@@ -228,7 +228,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
             struct stat tempstat;
             vfs_path_t *tmp_vpath;
 
-            tmp_vpath = vfs_path_build_filename (dirname, entry->d_name, (char *) NULL);
+            tmp_vpath = vfs_path_build_filename (dirname, entry->d_name, (char *) nullptr);
 
             /* Unix version */
             if (mc_stat (tmp_vpath, &tempstat) == 0)
@@ -266,19 +266,19 @@ filename_completion_function (const char *text, int state, input_complete_t flag
             break;
     }
 
-    if (entry == NULL)
+    if (entry == nullptr)
     {
-        if (directory != NULL)
+        if (directory != nullptr)
         {
             mc_closedir (directory);
-            directory = NULL;
+            directory = nullptr;
         }
         MC_PTR_FREE (dirname);
         vfs_path_free (dirname_vpath);
-        dirname_vpath = NULL;
+        dirname_vpath = nullptr;
         MC_PTR_FREE (filename);
         MC_PTR_FREE (users_dirname);
-        return NULL;
+        return nullptr;
     }
 
     {
@@ -286,7 +286,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
 
         temp = g_string_sized_new (16);
 
-        if (users_dirname != NULL && (users_dirname[0] != '.' || users_dirname[1] != '\0'))
+        if (users_dirname != nullptr && (users_dirname[0] != '.' || users_dirname[1] != '\0'))
         {
             g_string_append (temp, users_dirname);
 
@@ -309,7 +309,7 @@ filename_completion_function (const char *text, int state, input_complete_t flag
 static char *
 username_completion_function (const char *text, int state, input_complete_t flags)
 {
-    static struct passwd *entry = NULL;
+    static struct passwd *entry = nullptr;
     static size_t userlen = 0;
 
     (void) flags;
@@ -323,7 +323,7 @@ username_completion_function (const char *text, int state, input_complete_t flag
         userlen = strlen (text + 1);
     }
 
-    while ((entry = getpwent ()) != NULL)
+    while ((entry = getpwent ()) != nullptr)
     {
         /* Null usernames should result in all users as possible completions. */
         if (userlen == 0)
@@ -332,11 +332,11 @@ username_completion_function (const char *text, int state, input_complete_t flag
             break;
     }
 
-    if (entry != NULL)
-        return g_strconcat ("~", entry->pw_name, PATH_SEP_STR, (char *) NULL);
+    if (entry != nullptr)
+        return g_strconcat ("~", entry->pw_name, PATH_SEP_STR, (char *) nullptr);
 
     endpwent ();
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -346,10 +346,10 @@ username_completion_function (const char *text, int state, input_complete_t flag
 static char *
 variable_completion_function (const char *text, int state, input_complete_t flags)
 {
-    static char **env_p = NULL;
+    static char **env_p = nullptr;
     static gboolean isbrace = FALSE;
     static size_t varlen = 0;
-    const char *p = NULL;
+    const char *p = nullptr;
 
     (void) flags;
     SHOW_C_CTX ("variable_completion_function");
@@ -361,17 +361,17 @@ variable_completion_function (const char *text, int state, input_complete_t flag
         env_p = environ;
     }
 
-    while (*env_p != NULL)
+    while (*env_p != nullptr)
     {
         p = strchr (*env_p, '=');
-        if (p != NULL && ((size_t) (p - *env_p) >= varlen)
+        if (p != nullptr && ((size_t) (p - *env_p) >= varlen)
             && strncmp (text + 1 + isbrace, *env_p, varlen) == 0)
             break;
         env_p++;
     }
 
-    if (*env_p == NULL)
-        return NULL;
+    if (*env_p == nullptr)
+        return nullptr;
 
     {
         GString *temp;
@@ -403,10 +403,10 @@ fetch_hosts (const char *filename)
     char *bi;
 
     file = fopen (filename, "r");
-    if (file == NULL)
+    if (file == nullptr)
         return;
 
-    while (fgets (buffer, sizeof (buffer) - 1, file) != NULL)
+    while (fgets (buffer, sizeof (buffer) - 1, file) != nullptr)
     {
         /* Skip to first character. */
         for (bi = buffer; bi[0] != '\0' && str_isspace (bi); str_next_char (&bi))
@@ -475,7 +475,7 @@ fetch_hosts (const char *filename)
                 if (host_p == hosts_p)
                 {
                     *(hosts_p++) = name;
-                    *hosts_p = NULL;
+                    *hosts_p = nullptr;
                 }
                 else
                     g_free (name);
@@ -491,7 +491,7 @@ fetch_hosts (const char *filename)
 static char *
 hostname_completion_function (const char *text, int state, input_complete_t flags)
 {
-    static char **host_p = NULL;
+    static char **host_p = nullptr;
     static size_t textstart = 0;
     static size_t textlen = 0;
 
@@ -505,16 +505,16 @@ hostname_completion_function (const char *text, int state, input_complete_t flag
         g_strfreev (hosts);
         hosts_alloclen = 30;
         hosts = g_new (char *, hosts_alloclen + 1);
-        *hosts = NULL;
+        *hosts = nullptr;
         hosts_p = hosts;
         p = getenv ("HOSTFILE");
-        fetch_hosts (p != NULL ? p : "/etc/hosts");
+        fetch_hosts (p != nullptr ? p : "/etc/hosts");
         host_p = hosts;
         textstart = (*text == '@') ? 1 : 0;
         textlen = strlen (text + textstart);
     }
 
-    for (; *host_p != NULL; host_p++)
+    for (; *host_p != nullptr; host_p++)
     {
         if (textlen == 0)
             break;              /* Match all of them */
@@ -522,11 +522,11 @@ hostname_completion_function (const char *text, int state, input_complete_t flag
             break;
     }
 
-    if (*host_p == NULL)
+    if (*host_p == nullptr)
     {
         g_strfreev (hosts);
-        hosts = NULL;
-        return NULL;
+        hosts = nullptr;
+        return nullptr;
     }
 
     {
@@ -554,14 +554,14 @@ hostname_completion_function (const char *text, int state, input_complete_t flag
 static char *
 command_completion_function (const char *text, int state, input_complete_t flags)
 {
-    static const char *path_end = NULL;
+    static const char *path_end = nullptr;
     static gboolean isabsolute = FALSE;
     static int phase = 0;
     static size_t text_len = 0;
-    static const char *const *words = NULL;
-    static char *path = NULL;
-    static char *cur_path = NULL;
-    static char *cur_word = NULL;
+    static const char *const *words = nullptr;
+    static char *path = nullptr;
+    static char *cur_path = nullptr;
+    static char *cur_word = nullptr;
     static int init_state = 0;
     static const char *const bash_reserved[] = {
         "if", "then", "else", "elif", "fi", "case", "esac", "for",
@@ -583,28 +583,28 @@ command_completion_function (const char *text, int state, input_complete_t flags
     SHOW_C_CTX ("command_completion_function");
 
     if ((flags & INPUT_COMPLETE_COMMANDS) == 0)
-        return NULL;
+        return nullptr;
 
     u_text = strutils_shell_unescape (text);
     flags &= ~INPUT_COMPLETE_SHELL_ESC;
 
     if (state == 0)
     {                           /* Initialize us a little bit */
-        isabsolute = strchr (u_text, PATH_SEP) != NULL;
+        isabsolute = strchr (u_text, PATH_SEP) != nullptr;
         if (!isabsolute)
         {
             words = bash_reserved;
             phase = 0;
             text_len = strlen (u_text);
 
-            if (path == NULL)
+            if (path == nullptr)
             {
                 path = g_strdup (getenv ("PATH"));
-                if (path != NULL)
+                if (path != nullptr)
                 {
                     p = path;
                     path_end = strchr (p, '\0');
-                    while ((p = strchr (p, PATH_ENV_SEP)) != NULL)
+                    while ((p = strchr (p, PATH_ENV_SEP)) != nullptr)
                         *p++ = '\0';
                 }
             }
@@ -615,7 +615,7 @@ command_completion_function (const char *text, int state, input_complete_t flags
     {
         p = filename_completion_function (u_text, state, flags);
 
-        if (p != NULL)
+        if (p != nullptr)
         {
             char *temp_p = p;
 
@@ -627,11 +627,11 @@ command_completion_function (const char *text, int state, input_complete_t flags
         return p;
     }
 
-    found = NULL;
+    found = nullptr;
     switch (phase)
     {
     case 0:                    /* Reserved words */
-        for (; *words != NULL; words++)
+        for (; *words != nullptr; words++)
             if (strncmp (*words, u_text, text_len) == 0)
             {
                 g_free (u_text);
@@ -641,36 +641,36 @@ command_completion_function (const char *text, int state, input_complete_t flags
         words = bash_builtins;
         MC_FALLTHROUGH;
     case 1:                    /* Builtin commands */
-        for (; *words != NULL; words++)
+        for (; *words != nullptr; words++)
             if (strncmp (*words, u_text, text_len) == 0)
             {
                 g_free (u_text);
                 return g_strdup (*(words++));
             }
         phase++;
-        if (path == NULL)
+        if (path == nullptr)
             break;
         cur_path = path;
-        cur_word = NULL;
+        cur_word = nullptr;
         MC_FALLTHROUGH;
     case 2:                    /* And looking through the $PATH */
-        while (found == NULL)
+        while (found == nullptr)
         {
-            if (cur_word == NULL)
+            if (cur_word == nullptr)
             {
                 char *expanded;
 
                 if (cur_path >= path_end)
                     break;
                 expanded = tilde_expand (*cur_path != '\0' ? cur_path : ".");
-                cur_word = mc_build_filename (expanded, u_text, (char *) NULL);
+                cur_word = mc_build_filename (expanded, u_text, (char *) nullptr);
                 g_free (expanded);
                 canonicalize_pathname (cur_word);
                 cur_path = strchr (cur_path, '\0') + 1;
                 init_state = state;
             }
             found = filename_completion_function (cur_word, state - init_state, flags);
-            if (found == NULL)
+            if (found == nullptr)
                 MC_PTR_FREE (cur_word);
         }
         MC_FALLTHROUGH;
@@ -678,12 +678,12 @@ command_completion_function (const char *text, int state, input_complete_t flags
         break;
     }
 
-    if (found == NULL)
+    if (found == nullptr)
         MC_PTR_FREE (path);
     else
     {
         p = strrchr (found, PATH_SEP);
-        if (p != NULL)
+        if (p != nullptr)
         {
             char *tmp = found;
 
@@ -706,12 +706,12 @@ match_compare (const void *a, const void *b)
 
 /* --------------------------------------------------------------------------------------------- */
 /** Returns an array of char * matches with the longest common denominator
-   in the 1st entry. Then a NULL terminated list of different possible
+   in the 1st entry. Then a nullptr terminated list of different possible
    completions follows.
    You have to supply your own CompletionFunction with the word you
    want to complete as the first argument and an count of previous matches
    as the second. 
-   In case no matches were found we return NULL. */
+   In case no matches were found we return nullptr. */
 
 static char **
 completion_matches (const char *text, CompletionFunction entry_function, input_complete_t flags)
@@ -727,9 +727,9 @@ completion_matches (const char *text, CompletionFunction entry_function, input_c
     char *string;
 
     match_list = g_new (char *, match_list_size + 1);
-    match_list[1] = NULL;
+    match_list[1] = nullptr;
 
-    while ((string = (*entry_function) (text, matches, flags)) != NULL)
+    while ((string = (*entry_function) (text, matches, flags)) != nullptr)
     {
         if (matches + 1 == match_list_size)
         {
@@ -737,7 +737,7 @@ completion_matches (const char *text, CompletionFunction entry_function, input_c
             match_list = (char **) g_renew (char *, match_list, match_list_size + 1);
         }
         match_list[++matches] = string;
-        match_list[matches + 1] = NULL;
+        match_list[matches + 1] = nullptr;
     }
 
     /* If there were any matches, then look through them finding out the
@@ -750,7 +750,7 @@ completion_matches (const char *text, CompletionFunction entry_function, input_c
         if (matches == 1)
         {
             match_list[0] = match_list[1];
-            match_list[1] = NULL;
+            match_list[1] = nullptr;
         }
         else
         {
@@ -801,7 +801,7 @@ completion_matches (const char *text, CompletionFunction entry_function, input_c
                 j++;
             }
             matches = i;
-            match_list[matches + 1] = NULL;
+            match_list[matches + 1] = nullptr;
             match_list[0] = g_strndup (match_list[1], low);
         }
     }
@@ -850,7 +850,7 @@ try_complete_commands_prepare (try_complete_automation_state_t * state, char *te
 
     if (ti == text)
         state->in_command_position++;
-    else if (strchr (command_separator_chars, ti[0]) != NULL)
+    else if (strchr (command_separator_chars, ti[0]) != nullptr)
     {
         state->in_command_position++;
         if (ti != text)
@@ -889,16 +889,16 @@ try_complete_find_start_sign (try_complete_automation_state_t * state)
             str_move (state->q - 1, state->q);
             /* adjust flags */
             state->flags &= ~INPUT_COMPLETE_VARIABLES;
-            state->q = NULL;
+            state->q = nullptr;
         }
     }
     if ((state->flags & INPUT_COMPLETE_HOSTNAMES) != 0)
         state->r = strrchr (state->word, '@');
-    if (state->q != NULL && state->q[1] == '(' && (state->flags & INPUT_COMPLETE_COMMANDS) != 0)
+    if (state->q != nullptr && state->q[1] == '(' && (state->flags & INPUT_COMPLETE_COMMANDS) != 0)
     {
         if (state->q > state->p)
             state->p = str_get_next_char (state->q);
-        state->q = NULL;
+        state->q = nullptr;
     }
 }
 
@@ -907,7 +907,7 @@ try_complete_find_start_sign (try_complete_automation_state_t * state)
 static char **
 try_complete_all_possible (try_complete_automation_state_t * state, char *text, int *lc_start)
 {
-    char **matches = NULL;
+    char **matches = nullptr;
 
     if (state->in_command_position != 0)
     {
@@ -923,7 +923,7 @@ try_complete_all_possible (try_complete_automation_state_t * state, char *text, 
         SHOW_C_CTX ("try_complete:filename_subst_1");
         matches = completion_matches (state->word, filename_completion_function, state->flags);
 
-        if (matches == NULL && state->is_cd && !IS_PATH_SEP (*state->word) && *state->word != '~')
+        if (matches == nullptr && state->is_cd && !IS_PATH_SEP (*state->word) && *state->word != '~')
         {
             state->q = text + *lc_start;
             for (state->p = text;
@@ -942,21 +942,21 @@ try_complete_all_possible (try_complete_automation_state_t * state, char *text, 
 
                 cdpath_ref = g_strdup (getenv ("CDPATH"));
                 cdpath = cdpath_ref;
-                c = (cdpath == NULL) ? '\0' : ':';
+                c = (cdpath == nullptr) ? '\0' : ':';
 
-                while (matches == NULL && c == ':')
+                while (matches == nullptr && c == ':')
                 {
                     char *s;
 
                     s = strchr (cdpath, ':');
                     /* cppcheck-suppress nullPointer */
-                    if (s == NULL)
+                    if (s == nullptr)
                         s = strchr (cdpath, '\0');
                     c = *s;
                     *s = '\0';
                     if (*cdpath != '\0')
                     {
-                        state->r = mc_build_filename (cdpath, state->word, (char *) NULL);
+                        state->r = mc_build_filename (cdpath, state->word, (char *) nullptr);
                         SHOW_C_CTX ("try_complete:filename_subst_2");
                         matches =
                             completion_matches (state->r, filename_completion_function,
@@ -991,7 +991,7 @@ insert_text (WInput * in, char *text, ssize_t size)
         Widget *w = WIDGET (in);
 
         narea = static_cast<char *> (g_try_realloc (in->buffer, in->current_max_size + size + w->cols));
-        if (narea != NULL)
+        if (narea != nullptr)
         {
             in->buffer = narea;
             in->current_max_size += size + w->cols;
@@ -1057,7 +1057,7 @@ complete_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
                 new_end = str_get_prev_char (&input->buffer[end]) - input->buffer;
 
                 for (i = 0, e = listbox_get_first_link (LISTBOX (g->current->data));
-                     e != NULL; i++, e = g_list_next (e))
+                     e != nullptr; i++, e = g_list_next (e))
                 {
                     WLEntry *le = LENTRY (e->data);
 
@@ -1094,7 +1094,7 @@ complete_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
                 int i;
                 int need_redraw = 0;
                 int low = 4096;
-                char *last_text = NULL;
+                char *last_text = nullptr;
 
                 buff[bl++] = (char) parm;
                 buff[bl] = '\0';
@@ -1111,7 +1111,7 @@ complete_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
                 }
 
                 for (i = 0, e = listbox_get_first_link (LISTBOX (g->current->data));
-                     e != NULL; i++, e = g_list_next (e))
+                     e != nullptr; i++, e = g_list_next (e))
                 {
                     WLEntry *le = LENTRY (e->data);
 
@@ -1195,28 +1195,28 @@ complete_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
 static gboolean
 complete_engine (WInput * in, int what_to_do)
 {
-    if (in->completions != NULL && str_offset_to_pos (in->buffer, in->point) != end)
+    if (in->completions != nullptr && str_offset_to_pos (in->buffer, in->point) != end)
         input_complete_free (in);
 
-    if (in->completions == NULL)
+    if (in->completions == nullptr)
         complete_engine_fill_completions (in);
 
-    if (in->completions == NULL)
+    if (in->completions == nullptr)
         tty_beep ();
     else
     {
         if ((what_to_do & DO_INSERTION) != 0
-            || ((what_to_do & DO_QUERY) != 0 && in->completions[1] == NULL))
+            || ((what_to_do & DO_QUERY) != 0 && in->completions[1] == nullptr))
         {
             char *lc_complete = in->completions[0];
 
-            if (!insert_text (in, lc_complete, strlen (lc_complete)) || in->completions[1] != NULL)
+            if (!insert_text (in, lc_complete, strlen (lc_complete)) || in->completions[1] != nullptr)
                 tty_beep ();
             else
                 input_complete_free (in);
         }
 
-        if ((what_to_do & DO_QUERY) != 0 && in->completions != NULL && in->completions[1] != NULL)
+        if ((what_to_do & DO_QUERY) != 0 && in->completions != nullptr && in->completions[1] != nullptr)
         {
             int maxlen = 0, count = 0, i;
             int x, y, w, h;
@@ -1225,7 +1225,7 @@ complete_engine (WInput * in, int what_to_do)
             WDialog *complete_dlg;
             WListbox *complete_list;
 
-            for (p = in->completions + 1; *p != NULL; count++, p++)
+            for (p = in->completions + 1; *p != nullptr; count++, p++)
             {
                 i = str_term_width1 (*p);
                 if (i > maxlen)
@@ -1265,22 +1265,22 @@ complete_engine (WInput * in, int what_to_do)
 
             complete_dlg =
                 dlg_create (TRUE, y, x, complete_height, complete_width, WPOS_KEEP_DEFAULT, TRUE,
-                            dialog_colors, complete_callback, NULL, "[Completion]", NULL);
-            complete_list = listbox_new (1, 1, h - 2, w - 2, FALSE, NULL);
+                            dialog_colors, complete_callback, nullptr, "[Completion]", nullptr);
+            complete_list = listbox_new (1, 1, h - 2, w - 2, FALSE, nullptr);
             group_add_widget (GROUP (complete_dlg), complete_list);
 
-            for (p = in->completions + 1; *p != NULL; p++)
-                listbox_add_item (complete_list, LISTBOX_APPEND_AT_END, 0, *p, NULL, FALSE);
+            for (p = in->completions + 1; *p != nullptr; p++)
+                listbox_add_item (complete_list, LISTBOX_APPEND_AT_END, 0, *p, nullptr, FALSE);
 
             i = dlg_run (complete_dlg);
-            q = NULL;
+            q = nullptr;
             if (i == B_ENTER)
             {
-                listbox_get_current (complete_list, &q, NULL);
-                if (q != NULL)
+                listbox_get_current (complete_list, &q, nullptr);
+                if (q != nullptr)
                     insert_text (in, q, strlen (q));
             }
-            if (q != NULL || end != min_end)
+            if (q != nullptr || end != min_end)
                 input_complete_free (in);
             dlg_destroy (complete_dlg);
 
@@ -1296,12 +1296,12 @@ complete_engine (WInput * in, int what_to_do)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-/** Returns an array of matches, or NULL if none. */
+/** Returns an array of matches, or nullptr if none. */
 char **
 try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
 {
     try_complete_automation_state_t state;
-    char **matches = NULL;
+    char **matches = nullptr;
 
     memset (&state, 0, sizeof (state));
     state.flags = flags;
@@ -1327,7 +1327,7 @@ try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
         matches = completion_matches (str_cget_next_char (state.p),
                                       command_completion_function,
                                       state.flags & (~INPUT_COMPLETE_FILENAMES));
-        if (matches != NULL)
+        if (matches != nullptr)
             *lc_start += str_get_next_char (state.p) - state.word;
     }
 
@@ -1336,7 +1336,7 @@ try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
     {
         SHOW_C_CTX ("try_complete:var_subst");
         matches = completion_matches (state.q, variable_completion_function, state.flags);
-        if (matches != NULL)
+        if (matches != nullptr)
             *lc_start += state.q - state.word;
     }
 
@@ -1346,14 +1346,14 @@ try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
     {
         SHOW_C_CTX ("try_complete:host_subst");
         matches = completion_matches (state.r, hostname_completion_function, state.flags);
-        if (matches != NULL)
+        if (matches != nullptr)
             *lc_start += state.r - state.word;
     }
 
     /* Starts with '~' and there is no slash in the word, then
        try completing this word as a username. */
-    if (matches == NULL && *state.word == '~' && (state.flags & INPUT_COMPLETE_USERNAMES) != 0
-        && strchr (state.word, PATH_SEP) == NULL)
+    if (matches == nullptr && *state.word == '~' && (state.flags & INPUT_COMPLETE_USERNAMES) != 0
+        && strchr (state.word, PATH_SEP) == nullptr)
     {
         SHOW_C_CTX ("try_complete:user_subst");
         matches = completion_matches (state.word, username_completion_function, state.flags);
@@ -1362,11 +1362,11 @@ try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
     /* If this word is in a command position, then
        complete over possible command names, including aliases, functions,
        and command names. */
-    if (matches == NULL)
+    if (matches == nullptr)
         matches = try_complete_all_possible (&state, text, lc_start);
 
     /* And finally if nothing found, try complete directory name */
-    if (matches == NULL)
+    if (matches == nullptr)
     {
         state.in_command_position = 0;
         matches = try_complete_all_possible (&state, text, lc_start);
@@ -1374,14 +1374,14 @@ try_complete (char *text, int *lc_start, int *lc_end, input_complete_t flags)
 
     g_free (state.word);
 
-    if (matches != NULL &&
+    if (matches != nullptr &&
         (flags & (INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_SHELL_ESC)) !=
         (INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_SHELL_ESC))
     {
         /* FIXME: HACK? INPUT_COMPLETE_SHELL_ESC is used only in command line. */
         char **m;
 
-        for (m = matches; *m != NULL; m++)
+        for (m = matches; *m != nullptr; m++)
         {
             char *p;
 
@@ -1419,7 +1419,7 @@ complete_engine_fill_completions (WInput * in)
     for (; s >= in->buffer; str_prev_char (&s))
     {
         start = s - in->buffer;
-        if (strchr (word_separators, *s) != NULL && !strutils_is_char_escaped (in->buffer, s))
+        if (strchr (word_separators, *s) != nullptr && !strutils_is_char_escaped (in->buffer, s))
             break;
     }
 
@@ -1443,7 +1443,7 @@ input_complete (WInput * in)
     if (!str_is_valid_string (in->buffer))
         return;
 
-    if (in->completions != NULL)
+    if (in->completions != nullptr)
         engine_flags = DO_QUERY;
     else
     {
@@ -1463,7 +1463,7 @@ void
 input_complete_free (WInput * in)
 {
     g_strfreev (in->completions);
-    in->completions = NULL;
+    in->completions = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */

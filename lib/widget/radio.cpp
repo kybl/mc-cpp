@@ -43,7 +43,7 @@
 
 /*** global variables ****************************************************************************/
 
-const global_keymap_t *radio_map = NULL;
+const global_keymap_t *radio_map = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -90,7 +90,7 @@ radio_execute_cmd (WRadio * r, long command)
     case CK_Select:
         r->sel = r->pos;
         widget_set_state (w, WST_FOCUSED, TRUE);        /* Also draws the widget */
-        send_message (w->owner, w, MSG_NOTIFY, 0, NULL);
+        send_message (w->owner, w, MSG_NOTIFY, 0, nullptr);
         return MSG_HANDLED;
 
     default:
@@ -128,7 +128,7 @@ radio_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
     case MSG_HOTKEY:
         for (i = 0; i < r->count; i++)
         {
-            if (r->texts[i].hotkey != NULL)
+            if (r->texts[i].hotkey != nullptr)
             {
                 int c;
 
@@ -197,8 +197,8 @@ radio_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
 
     case MSG_MOUSE_CLICK:
         RADIO (w)->pos = event->y;
-        send_message (w, NULL, MSG_ACTION, CK_Select, NULL);
-        send_message (w->owner, w, MSG_POST_KEY, ' ', NULL);
+        send_message (w, nullptr, MSG_ACTION, CK_Select, nullptr);
+        send_message (w->owner, w, MSG_POST_KEY, ' ', nullptr);
         break;
 
     default:

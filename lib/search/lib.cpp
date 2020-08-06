@@ -61,9 +61,9 @@ gchar *
 mc_search__recode_str (const char *str, gsize str_len,
                        const char *charset_from, const char *charset_to, gsize * bytes_written)
 {
-    gchar *ret = NULL;
+    gchar *ret = nullptr;
 
-    if (charset_from != NULL && charset_to != NULL
+    if (charset_from != nullptr && charset_to != nullptr
         && g_ascii_strcasecmp (charset_to, charset_from) != 0)
     {
         GIConv conv;
@@ -73,12 +73,12 @@ mc_search__recode_str (const char *str, gsize str_len,
         {
             gsize bytes_read;
 
-            ret = g_convert_with_iconv (str, str_len, conv, &bytes_read, bytes_written, NULL);
+            ret = g_convert_with_iconv (str, str_len, conv, &bytes_read, bytes_written, nullptr);
             g_iconv_close (conv);
         }
     }
 
-    if (ret == NULL)
+    if (ret == nullptr)
     {
         *bytes_written = str_len;
         ret = g_strndup (str, str_len);
@@ -101,7 +101,7 @@ mc_search__get_one_symbol (const char *charset, const char *str, gsize str_len,
     gsize converted_str_len;
     gchar *converted_str2;
 
-    if (charset == NULL)
+    if (charset == nullptr)
         charset = cp_source;
 
     converted_str = mc_search__recode_str (str, str_len, charset, cp_display, &converted_str_len);
@@ -121,7 +121,7 @@ mc_search__get_one_symbol (const char *charset, const char *str, gsize str_len,
     converted_str2 =
         mc_search__recode_str (converted_str, tmp_len, cp_display, charset, &converted_str_len);
 #endif
-    if (just_letters != NULL)
+    if (just_letters != nullptr)
         *just_letters = str_isalnum (converted_str) && !str_isdigit (converted_str);
 #ifdef HAVE_CHARSET
     g_free (converted_str);
@@ -142,7 +142,7 @@ mc_search__tolower_case_str (const char *charset, const char *str, gsize str_len
     gsize converted_str_len;
     gsize tmp_len;
 
-    if (charset == NULL)
+    if (charset == nullptr)
         charset = cp_source;
 
     tmp_str2 = converted_str =
@@ -192,7 +192,7 @@ mc_search__toupper_case_str (const char *charset, const char *str, gsize str_len
     gsize converted_str_len;
     gsize tmp_len;
 
-    if (charset == NULL)
+    if (charset == nullptr)
         charset = cp_source;
 
     tmp_str2 = converted_str =
@@ -246,14 +246,14 @@ mc_search_get_types_strings_array (int * num)
     const mc_search_type_str_t *types_str = mc_search_types_list_get (&n);
 
     ret = g_try_new0 (char *, n + 1);
-    if (ret == NULL)
-        return NULL;
+    if (ret == nullptr)
+        return nullptr;
 
-    for (lc_index = 0, type_str = types_str; type_str->str != NULL; type_str++, lc_index++)
+    for (lc_index = 0, type_str = types_str; type_str->str != nullptr; type_str++, lc_index++)
         ret[lc_index] = g_strdup (type_str->str);
 
-    /* don't count last NULL item */
-    if (num != NULL)
+    /* don't count last nullptr item */
+    if (num != nullptr)
         *num = lc_index;
 
     return ret;

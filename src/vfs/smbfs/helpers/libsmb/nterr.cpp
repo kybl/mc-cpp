@@ -532,7 +532,7 @@ nt_err_code_struct const nt_errs[] = {
     {"NT_STATUS_TOO_MANY_LINKS", NT_STATUS_TOO_MANY_LINKS},
     {"NT_STATUS_QUOTA_LIST_INCONSISTENT", NT_STATUS_QUOTA_LIST_INCONSISTENT},
     {"NT_STATUS_FILE_IS_OFFLINE", NT_STATUS_FILE_IS_OFFLINE},
-    {NULL, 0}
+    {nullptr, 0}
 };
 
 /*****************************************************************************
@@ -545,7 +545,7 @@ get_nt_error_msg (uint32 nt_code)
 
     nt_code &= 0xFFFF;
 
-    while (nt_errs[idx].nt_errstr != NULL)
+    while (nt_errs[idx].nt_errstr != nullptr)
     {
         if (nt_errs[idx].nt_errcode == nt_code)
         {
@@ -553,5 +553,5 @@ get_nt_error_msg (uint32 nt_code)
         }
         idx++;
     }
-    return NULL;
+    return nullptr;
 }

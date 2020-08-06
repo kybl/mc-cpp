@@ -71,7 +71,7 @@ group_widget_init (void *data, void *user_data)
 {
     (void) user_data;
 
-    send_message (WIDGET (data), NULL, MSG_INIT, 0, NULL);
+    send_message (WIDGET (data), nullptr, MSG_INIT, 0, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -79,24 +79,24 @@ group_widget_init (void *data, void *user_data)
 static GList *
 group_get_next_or_prev_of (GList * list, gboolean next)
 {
-    GList *l = NULL;
+    GList *l = nullptr;
 
-    if (list != NULL)
+    if (list != nullptr)
     {
         WGroup *owner = WIDGET (list->data)->owner;
 
-        if (owner != NULL)
+        if (owner != nullptr)
         {
             if (next)
             {
                 l = g_list_next (list);
-                if (l == NULL)
+                if (l == nullptr)
                     l = owner->widgets;
             }
             else
             {
                 l = g_list_previous (list);
-                if (l == NULL)
+                if (l == nullptr)
                     l = g_list_last (owner->widgets);
             }
         }
@@ -110,7 +110,7 @@ group_get_next_or_prev_of (GList * list, gboolean next)
 static void
 group_select_next_or_prev (WGroup * g, gboolean next)
 {
-    if (g->widgets != NULL && g->current != NULL)
+    if (g->widgets != nullptr && g->current != nullptr)
     {
         GList *l = g->current;
         Widget *w;
@@ -154,10 +154,10 @@ group_send_broadcast_msg_custom (WGroup * g, widget_msg_t msg, gboolean reverse,
 {
     GList *p, *first;
 
-    if (g->widgets == NULL)
+    if (g->widgets == nullptr)
         return;
 
-    if (g->current == NULL)
+    if (g->current == nullptr)
         g->current = g->widgets;
 
     p = group_get_next_or_prev_of (g->current, !reverse);
@@ -170,7 +170,7 @@ group_send_broadcast_msg_custom (WGroup * g, widget_msg_t msg, gboolean reverse,
         p = group_get_next_or_prev_of (p, !reverse);
 
         if (options == WOP_DEFAULT || (options & w->options) != 0)
-            send_message (w, NULL, msg, 0, NULL);
+            send_message (w, nullptr, msg, 0, nullptr);
     }
     while (first != p);
 }
@@ -183,7 +183,7 @@ group_send_broadcast_msg_custom (WGroup * g, widget_msg_t msg, gboolean reverse,
  * @param w WGroup object
  * @param what widget to find
  *
- * @return holder of @what if found, NULL otherwise
+ * @return holder of @what if found, nullptr otherwise
  */
 
 static GList *
@@ -192,14 +192,14 @@ group_default_find (const Widget * w, const Widget * what)
     GList *w0;
 
     w0 = widget_default_find (w, what);
-    if (w0 == NULL)
+    if (w0 == nullptr)
     {
         GList *iter;
 
-        for (iter = GROUP (w)->widgets; iter != NULL; iter = g_list_next (iter))
+        for (iter = GROUP (w)->widgets; iter != nullptr; iter = g_list_next (iter))
         {
             w0 = widget_find (WIDGET (iter->data), what);
-            if (w0 != NULL)
+            if (w0 != nullptr)
                 break;
         }
     }
@@ -215,7 +215,7 @@ group_default_find (const Widget * w, const Widget * what)
  * @param w WGroup object
  * @param cb widget callback
  *
- * @return widget object if found, NULL otherwise
+ * @return widget object if found, nullptr otherwise
  */
 
 static Widget *
@@ -224,14 +224,14 @@ group_default_find_by_type (const Widget * w, widget_cb_fn cb)
     Widget *w0;
 
     w0 = widget_default_find_by_type (w, cb);
-    if (w0 == NULL)
+    if (w0 == nullptr)
     {
         GList *iter;
 
-        for (iter = GROUP (w)->widgets; iter != NULL; iter = g_list_next (iter))
+        for (iter = GROUP (w)->widgets; iter != nullptr; iter = g_list_next (iter))
         {
             w0 = widget_find_by_type (WIDGET (iter->data), cb);
-            if (w0 != NULL)
+            if (w0 != nullptr)
                 break;
         }
     }
@@ -247,7 +247,7 @@ group_default_find_by_type (const Widget * w, widget_cb_fn cb)
  * @param w WGroup object
  * @param id widget ID
  *
- * @return widget object if widget with specified id is found in group, NULL otherwise
+ * @return widget object if widget with specified id is found in group, nullptr otherwise
  */
 
 static Widget *
@@ -256,14 +256,14 @@ group_default_find_by_id (const Widget * w, unsigned long id)
     Widget *w0;
 
     w0 = widget_default_find_by_id (w, id);
-    if (w0 == NULL)
+    if (w0 == nullptr)
     {
         GList *iter;
 
-        for (iter = GROUP (w)->widgets; iter != NULL; iter = g_list_next (iter))
+        for (iter = GROUP (w)->widgets; iter != nullptr; iter = g_list_next (iter))
         {
             w0 = widget_find_by_id (WIDGET (iter->data), id);
-            if (w0 != NULL)
+            if (w0 != nullptr)
                 break;
         }
     }
@@ -285,7 +285,7 @@ group_update_cursor (WGroup * g)
 {
     GList *p = g->current;
 
-    if (p != NULL && widget_get_state (WIDGET (g), WST_ACTIVE))
+    if (p != nullptr && widget_get_state (WIDGET (g), WST_ACTIVE))
         do
         {
             Widget *w = WIDGET (p->data);
@@ -340,7 +340,7 @@ group_widget_set_position (gpointer data, gpointer user_data)
     else if ((c->pos_flags & WPOS_KEEP_BOTTOM) != 0)
         r.y += wss->shift_y + wss->scale_y;
 
-    send_message (c, NULL, MSG_RESIZE, 0, &r);
+    send_message (c, nullptr, MSG_RESIZE, 0, &r);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -359,10 +359,10 @@ group_set_position (WGroup * g, const WRect * r)
     w->cols = r->cols;
 
     /* dialog is empty */
-    if (g->widgets == NULL)
+    if (g->widgets == nullptr)
         return;
 
-    if (g->current == NULL)
+    if (g->current == nullptr)
         g->current = g->widgets;
 
     /* values by which controls should be moved */
@@ -389,7 +389,7 @@ group_default_resize (WGroup * g, WRect * r)
     Widget *w = WIDGET (g);
     WRect r0;
 
-    if (r == NULL)
+    if (r == nullptr)
         rect_init (&r0, w->y, w->x, w->lines, w->cols);
     else
         r0 = *r;
@@ -413,10 +413,10 @@ group_draw (WGroup * g)
         if (g->winch_pending)
         {
             g->winch_pending = FALSE;
-            send_message (wg, NULL, MSG_RESIZE, 0, NULL);
+            send_message (wg, nullptr, MSG_RESIZE, 0, nullptr);
         }
 
-        for (p = g->widgets; p != NULL; p = g_list_next (p))
+        for (p = g->widgets; p != nullptr; p = g_list_next (p))
             widget_draw (WIDGET (p->data));
 
         widget_update_cursor (wg);
@@ -431,15 +431,15 @@ group_handle_key (WGroup * g, int key)
     cb_ret_t handled;
 
     /* first try the hotkey */
-    handled = send_message (g, NULL, MSG_HOTKEY, key, NULL);
+    handled = send_message (g, nullptr, MSG_HOTKEY, key, nullptr);
 
     /* not used - then try widget_callback */
     if (handled == MSG_NOT_HANDLED)
-        handled = send_message (g->current->data, NULL, MSG_KEY, key, NULL);
+        handled = send_message (g->current->data, nullptr, MSG_KEY, key, nullptr);
 
     /* not used - try to use the unhandled case */
     if (handled == MSG_NOT_HANDLED)
-        handled = send_message (g, g->current->data, MSG_UNHANDLED_KEY, key, NULL);
+        handled = send_message (g, g->current->data, MSG_UNHANDLED_KEY, key, nullptr);
 
     return handled;
 }
@@ -454,10 +454,10 @@ group_handle_hotkey (WGroup * g, int key)
     cb_ret_t handled = MSG_NOT_HANDLED;
     int c;
 
-    if (g->widgets == NULL)
+    if (g->widgets == nullptr)
         return MSG_NOT_HANDLED;
 
-    if (g->current == NULL)
+    if (g->current == nullptr)
         g->current = g->widgets;
 
     w = WIDGET (g->current->data);
@@ -480,7 +480,7 @@ group_handle_hotkey (WGroup * g, int key)
         key = g_ascii_tolower (c);
 
     if (widget_get_options (w, WOP_WANT_HOTKEY))
-        handled = send_message (w, NULL, MSG_HOTKEY, key, NULL);
+        handled = send_message (w, nullptr, MSG_HOTKEY, key, nullptr);
 
     /* If not used, send hotkey to other widgets */
     if (handled == MSG_HANDLED)
@@ -494,7 +494,7 @@ group_handle_hotkey (WGroup * g, int key)
         w = WIDGET (current->data);
 
         if (widget_get_options (w, WOP_WANT_HOTKEY) && !widget_get_state (w, WST_DISABLED))
-            handled = send_message (w, NULL, MSG_HOTKEY, key, NULL);
+            handled = send_message (w, nullptr, MSG_HOTKEY, key, nullptr);
 
         if (handled == MSG_NOT_HANDLED)
             current = group_get_widget_next_of (current);
@@ -504,7 +504,7 @@ group_handle_hotkey (WGroup * g, int key)
     {
         w = WIDGET (current->data);
         widget_select (w);
-        send_message (g, w, MSG_HOTKEY_HANDLED, 0, NULL);
+        send_message (g, w, MSG_HOTKEY_HANDLED, 0, nullptr);
     }
 
     return handled;
@@ -532,7 +532,7 @@ group_init (WGroup * g, int y1, int x1, int lines, int cols, widget_cb_fn callba
 {
     Widget *w = WIDGET (g);
 
-    widget_init (w, y1, x1, lines, cols, callback != NULL ? callback : group_default_callback,
+    widget_init (w, y1, x1, lines, cols, callback != nullptr ? callback : group_default_callback,
                  mouse_callback);
 
     w->mouse_handler = group_handle_mouse_event;
@@ -556,7 +556,7 @@ group_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
     switch (msg)
     {
     case MSG_INIT:
-        g_list_foreach (g->widgets, group_widget_init, NULL);
+        g_list_foreach (g->widgets, group_widget_init, nullptr);
         return MSG_HANDLED;
 
     case MSG_DRAW:
@@ -577,7 +577,7 @@ group_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
         return MSG_HANDLED;
 
     case MSG_DESTROY:
-        g_list_foreach (g->widgets, (GFunc) widget_destroy, NULL);
+        g_list_foreach (g->widgets, (GFunc) widget_destroy, nullptr);
         g_list_free (g->widgets);
         return MSG_HANDLED;
 
@@ -618,7 +618,7 @@ group_default_set_state (Widget * w, widget_state_t state, gboolean enable)
         if ((w->state & WST_FOCUSED) != 0)
         {
             /* update current widget */
-            if (g->current != NULL)
+            if (g->current != nullptr)
                 widget_set_state (WIDGET (g->current->data), WST_FOCUSED, enable);
         }
         else
@@ -644,7 +644,7 @@ group_handle_mouse_event (Widget * w, Gpm_Event * event)
 {
     WGroup *g = GROUP (w);
 
-    if (g->widgets != NULL)
+    if (g->widgets != nullptr)
     {
         GList *p;
 
@@ -666,7 +666,7 @@ group_handle_mouse_event (Widget * w, Gpm_Event * event)
 
             p = g_list_previous (p);
         }
-        while (p != NULL);
+        while (p != nullptr);
     }
 
     return MOU_UNHANDLED;
@@ -693,8 +693,8 @@ group_add_widget_autopos (WGroup * g, void *w, widget_pos_flags_t pos_flags, con
     Widget *ww = WIDGET (w);
     GList *new_current;
 
-    /* Don't accept NULL widget. This shouldn't happen */
-    assert (ww != NULL);
+    /* Don't accept nullptr widget. This shouldn't happen */
+    assert (ww != nullptr);
 
     if ((pos_flags & WPOS_CENTER_HORZ) != 0)
         ww->x = (wg->cols - ww->cols) / 2;
@@ -707,7 +707,7 @@ group_add_widget_autopos (WGroup * g, void *w, widget_pos_flags_t pos_flags, con
     ww->owner = g;
     ww->pos_flags = pos_flags;
 
-    if (g->widgets == NULL || before == NULL)
+    if (g->widgets == nullptr || before == nullptr)
     {
         g->widgets = g_list_append (g->widgets, ww);
         new_current = g_list_last (g->widgets);
@@ -719,11 +719,11 @@ group_add_widget_autopos (WGroup * g, void *w, widget_pos_flags_t pos_flags, con
         b = g_list_find (g->widgets, before);
 
         /* don't accept widget not from group. This shouldn't happen */
-        assert (b != NULL);
+        assert (b != nullptr);
 
         b = g_list_next (b);
         g->widgets = g_list_insert_before (g->widgets, b, ww);
-        if (b != NULL)
+        if (b != nullptr)
             new_current = g_list_previous (b);
         else
             new_current = g_list_last (g->widgets);
@@ -732,7 +732,7 @@ group_add_widget_autopos (WGroup * g, void *w, widget_pos_flags_t pos_flags, con
     /* widget has been added at runtime */
     if (widget_get_state (wg, WST_ACTIVE))
     {
-        group_widget_init (ww, NULL);
+        group_widget_init (ww, nullptr);
         widget_select (ww);
     }
     else
@@ -754,8 +754,8 @@ group_remove_widget (void *w)
     WGroup *g;
     GList *d;
 
-    /* Don't accept NULL widget. This shouldn't happen */
-    assert (w != NULL);
+    /* Don't accept nullptr widget. This shouldn't happen */
+    assert (w != nullptr);
 
     g = WIDGET (w)->owner;
 
@@ -764,8 +764,8 @@ group_remove_widget (void *w)
         group_set_current_widget_next (g);
 
     g->widgets = g_list_delete_link (g->widgets, d);
-    if (g->widgets == NULL)
-        g->current = NULL;
+    if (g->widgets == nullptr)
+        g->current = nullptr;
 
     /* widget has been deleted at runtime */
     if (widget_get_state (WIDGET (g), WST_ACTIVE))
@@ -774,7 +774,7 @@ group_remove_widget (void *w)
         group_select_current_widget (g);
     }
 
-    WIDGET (w)->owner = NULL;
+    WIDGET (w)->owner = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -810,7 +810,7 @@ group_set_current_widget_prev (WGroup * g)
  *
  * @param w widget holder
  *
- * @return widget that is after "w" or NULL if "w" is NULL or widget doesn't have owner
+ * @return widget that is after "w" or nullptr if "w" is nullptr or widget doesn't have owner
  */
 
 GList *
@@ -825,7 +825,7 @@ group_get_widget_next_of (GList * w)
  *
  * @param w widget holder
  *
- * @return widget that is before "w" or NULL if "w" is NULL or widget doesn't have owner
+ * @return widget that is before "w" or nullptr if "w" is nullptr or widget doesn't have owner
  */
 
 GList *
@@ -874,7 +874,7 @@ group_select_widget_by_id (const WGroup * g, unsigned long id)
     Widget *w;
 
     w = widget_find_by_id (CONST_WIDGET (g), id);
-    if (w != NULL)
+    if (w != nullptr)
         widget_select (w);
 }
 

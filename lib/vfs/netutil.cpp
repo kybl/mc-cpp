@@ -72,7 +72,7 @@ tcp_init (void)
     memset (&sa, 0, sizeof (sa));
     sa.sa_handler = sig_pipe;
     sigemptyset (&sa.sa_mask);
-    sigaction (SIGPIPE, &sa, NULL);
+    sigaction (SIGPIPE, &sa, nullptr);
 
     initialized = TRUE;
 }

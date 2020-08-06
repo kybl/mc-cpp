@@ -40,7 +40,7 @@
 
 /*** global variables ****************************************************************************/
 
-WDialog *midnight_dlg = NULL;
+WDialog *midnight_dlg = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -49,9 +49,9 @@ WDialog *midnight_dlg = NULL;
 /*** file scope variables ************************************************************************/
 
 /* List of dialogs: filemanagers, editors, viewers */
-static GList *mc_dialogs = NULL;
+static GList *mc_dialogs = nullptr;
 /* Currently active dialog */
-static GList *mc_current = NULL;
+static GList *mc_current = nullptr;
 /* Is there any dialogs that we have to run after returning to the manager from another dialog */
 static gboolean dialog_switch_pending = FALSE;
 
@@ -117,7 +117,7 @@ static void
 dialog_switch_resize (WDialog * d)
 {
     if (widget_get_state (WIDGET (d), WST_ACTIVE))
-        send_message (d, NULL, MSG_RESIZE, 0, NULL);
+        send_message (d, nullptr, MSG_RESIZE, 0, nullptr);
     else
         GROUP (d)->winch_pending = TRUE;
 }
@@ -133,7 +133,7 @@ dialog_switch_add (WDialog * h)
 
     dlg = g_list_find (mc_dialogs, h);
 
-    if (dlg != NULL)
+    if (dlg != nullptr)
         mc_current = dlg;
     else
     {
@@ -142,7 +142,7 @@ dialog_switch_add (WDialog * h)
     }
 
     /* suspend forced all other screens */
-    g_list_foreach (mc_dialogs, dialog_switch_suspend, NULL);
+    g_list_foreach (mc_dialogs, dialog_switch_suspend, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -160,13 +160,13 @@ dialog_switch_remove (WDialog * h)
     mc_dialogs = g_list_delete_link (mc_dialogs, this_);
 
     /* adjust current dialog */
-    if (top_dlg != NULL)
+    if (top_dlg != nullptr)
         mc_current = g_list_find (mc_dialogs, DIALOG (top_dlg->data));
     else
         mc_current = mc_dialogs;
 
     /* resume forced the current screen */
-    if (mc_current != NULL)
+    if (mc_current != nullptr)
         widget_set_state (WIDGET (mc_current->data), WST_ACTIVE, TRUE);
 }
 
@@ -185,11 +185,11 @@ dialog_switch_next (void)
 {
     GList *next;
 
-    if (mc_global.midnight_shutdown || mc_current == NULL)
+    if (mc_global.midnight_shutdown || mc_current == nullptr)
         return;
 
     next = g_list_next (mc_current);
-    if (next == NULL)
+    if (next == nullptr)
         next = mc_dialogs;
 
     dialog_switch_goto (next);
@@ -202,11 +202,11 @@ dialog_switch_prev (void)
 {
     GList *prev;
 
-    if (mc_global.midnight_shutdown || mc_current == NULL)
+    if (mc_global.midnight_shutdown || mc_current == nullptr)
         return;
 
     prev = g_list_previous (mc_current);
-    if (prev == NULL)
+    if (prev == nullptr)
         prev = g_list_last (mc_dialogs);
 
     dialog_switch_goto (prev);
@@ -223,7 +223,7 @@ dialog_switch_list (void)
     GList *h, *selected;
     int i = 0;
 
-    if (mc_global.midnight_shutdown || mc_current == NULL)
+    if (mc_global.midnight_shutdown || mc_current == nullptr)
         return;
 
     lines = MIN ((size_t) (LINES * 2 / 3), dlg_num);
@@ -231,12 +231,12 @@ dialog_switch_list (void)
 
     listbox = create_listbox_window (lines, cols, _("Screens"), "[Screen selector]");
 
-    for (h = mc_dialogs; h != NULL; h = g_list_next (h))
+    for (h = mc_dialogs; h != nullptr; h = g_list_next (h))
     {
         WDialog *dlg = DIALOG (h->data);
         char *title;
 
-        if (dlg->get_title != NULL)
+        if (dlg->get_title != nullptr)
             title = dlg->get_title (dlg, WIDGET (listbox->list)->cols - 2);
         else
             title = g_strdup ("");
@@ -247,7 +247,7 @@ dialog_switch_list (void)
     }
 
     selected = static_cast<GList *> (run_listbox_with_data (listbox, mc_current));
-    if (selected != NULL)
+    if (selected != nullptr)
         dialog_switch_goto (selected);
 }
 
@@ -274,7 +274,7 @@ dialog_switch_process_pending (void)
             if (mc_global.mc_run_mode == MC_RUN_FULL)
             {
                 mc_current = g_list_find (mc_dialogs, midnight_dlg);
-                mc_event_raise (MCEVENT_GROUP_FILEMANAGER, "update_panels", NULL);
+                mc_event_raise (MCEVENT_GROUP_FILEMANAGER, "update_panels", nullptr);
             }
         }
     }
@@ -291,7 +291,7 @@ dialog_switch_got_winch (void)
 {
     GList *dlg;
 
-    for (dlg = mc_dialogs; dlg != NULL; dlg = g_list_next (dlg))
+    for (dlg = mc_dialogs; dlg != nullptr; dlg = g_list_next (dlg))
         if (dlg != mc_current)
             GROUP (dlg->data)->winch_pending = TRUE;
 }
@@ -301,7 +301,7 @@ dialog_switch_got_winch (void)
 void
 dialog_switch_shutdown (void)
 {
-    while (mc_dialogs != NULL)
+    while (mc_dialogs != nullptr)
     {
         WDialog *dlg = DIALOG (mc_dialogs->data);
 
@@ -368,7 +368,7 @@ dialog_change_screen_size (void)
     dialog_switch_got_winch ();
 
     /* Inform all running dialogs from first to last */
-    for (d = g_list_last (top_dlg); d != NULL; d = g_list_previous (d))
+    for (d = g_list_last (top_dlg); d != nullptr; d = g_list_previous (d))
         dialog_switch_resize (DIALOG (d->data));
 
     /* Now, force the redraw */

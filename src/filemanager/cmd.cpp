@@ -173,8 +173,8 @@ set_panel_filter_to (WPanel * p, char *filter)
 {
     MC_PTR_FREE (p->filter);
 
-    /* Three ways to clear filter: NULL, "", "*" */
-    if (filter == NULL || filter[0] == '\0' || (filter[0] == '*' && filter[1] == '\0'))
+    /* Three ways to clear filter: nullptr, "", "*" */
+    if (filter == nullptr || filter[0] == '\0' || (filter[0] == '*' && filter[1] == '\0'))
         g_free (filter);
     else
         p->filter = filter;
@@ -190,13 +190,13 @@ set_panel_filter (WPanel * p)
     char *reg_exp;
     const char *x;
 
-    x = p->filter != NULL ? p->filter : easy_patterns ? "*" : ".";
+    x = p->filter != nullptr ? p->filter : easy_patterns ? "*" : ".";
 
     reg_exp = input_dialog_help (_("Filter"),
                                  _("Set expression for filtering filenames"),
                                  "[Filter...]", MC_HISTORY_FM_PANEL_FILTER, x, FALSE,
                                  INPUT_COMPLETE_FILENAMES);
-    if (reg_exp != NULL)
+    if (reg_exp != nullptr)
         set_panel_filter_to (p, reg_exp);
 }
 
@@ -328,8 +328,8 @@ compare_dir (WPanel * panel, WPanel * other, enum CompareMode mode)
             {
                 vfs_path_t *src_name, *dst_name;
 
-                src_name = vfs_path_append_new (panel->cwd_vpath, source->fname, (char *) NULL);
-                dst_name = vfs_path_append_new (other->cwd_vpath, target->fname, (char *) NULL);
+                src_name = vfs_path_append_new (panel->cwd_vpath, source->fname, (char *) nullptr);
+                dst_name = vfs_path_append_new (other->cwd_vpath, target->fname, (char *) nullptr);
                 if (compare_files (src_name, dst_name, source->st.st_size))
                     do_file_mark (panel, i, 1);
                 vfs_path_free (src_name);
@@ -344,8 +344,8 @@ compare_dir (WPanel * panel, WPanel * other, enum CompareMode mode)
 static void
 do_link (link_type_t link_type, const char *fname)
 {
-    char *dest = NULL, *src = NULL;
-    vfs_path_t *dest_vpath = NULL;
+    char *dest = nullptr, *src = nullptr;
+    vfs_path_t *dest_vpath = nullptr;
 
     if (link_type == LINK_HARDLINK)
     {
@@ -354,7 +354,7 @@ do_link (link_type_t link_type, const char *fname)
         src = g_strdup_printf (_("Link %s to:"), str_trunc (fname, 46));
         dest =
             input_expand_dialog (_("Link"), src, MC_HISTORY_FM_LINK, "", INPUT_COMPLETE_FILENAMES);
-        if (dest == NULL || *dest == '\0')
+        if (dest == nullptr || *dest == '\0')
             goto cleanup;
 
         save_cwds_stat ();
@@ -371,10 +371,10 @@ do_link (link_type_t link_type, const char *fname)
 
         /* suggest the full path for symlink, and either the full or
            relative path to the file it points to  */
-        s = vfs_path_append_new (current_panel->cwd_vpath, fname, (char *) NULL);
+        s = vfs_path_append_new (current_panel->cwd_vpath, fname, (char *) nullptr);
 
         if (get_other_type () == view_listing)
-            d = vfs_path_append_new (other_panel->cwd_vpath, fname, (char *) NULL);
+            d = vfs_path_append_new (other_panel->cwd_vpath, fname, (char *) nullptr);
         else
             d = vfs_path_from_str (fname);
 
@@ -392,7 +392,7 @@ do_link (link_type_t link_type, const char *fname)
         vfs_path_free (d);
         vfs_path_free (s);
 
-        if (dest == NULL || *dest == '\0' || src == NULL || *src == '\0')
+        if (dest == nullptr || *dest == '\0' || src == nullptr || *src == '\0')
             goto cleanup;
 
         save_cwds_stat ();
@@ -428,16 +428,16 @@ nice_cd (const char *text, const char *xtext, const char *help,
         input_dialog_help (text, xtext, help, history_name, INPUT_LAST_TEXT, strip_password,
                            INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD | INPUT_COMPLETE_HOSTNAMES |
                            INPUT_COMPLETE_USERNAMES);
-    if (machine == NULL)
+    if (machine == nullptr)
         return;
 
     to_home = 0;                /* FIXME: how to solve going to home nicely? /~/ is
                                    ugly as hell and leads to problems in vfs layer */
 
     if (strncmp (prefix, machine, strlen (prefix)) == 0)
-        cd_path = g_strconcat (machine, to_home ? "/~/" : (char *) NULL, (char *) NULL);
+        cd_path = g_strconcat (machine, to_home ? "/~/" : (char *) nullptr, (char *) nullptr);
     else
-        cd_path = g_strconcat (prefix, machine, to_home ? "/~/" : (char *) NULL, (char *) NULL);
+        cd_path = g_strconcat (prefix, machine, to_home ? "/~/" : (char *) nullptr, (char *) nullptr);
 
     g_free (machine);
 
@@ -445,7 +445,7 @@ nice_cd (const char *text, const char *xtext, const char *help,
     {
         char *tmp = cd_path;
 
-        cd_path = g_strconcat (PATH_SEP_STR, tmp, (char *) NULL);
+        cd_path = g_strconcat (PATH_SEP_STR, tmp, (char *) nullptr);
         g_free (tmp);
     }
 
@@ -492,11 +492,11 @@ configure_panel_listing (WPanel * p, list_format_t list_format, int brief_cols, 
     {
         g_free (p->user_format);
         p->user_format = *user;
-        *user = NULL;
+        *user = nullptr;
 
         g_free (p->user_status_format[list_format]);
         p->user_status_format[list_format] = *status;
-        *status = NULL;
+        *status = nullptr;
 
         set_panel_formats (p);
     }
@@ -542,7 +542,7 @@ view_file_at_line (const vfs_path_t * filename_vpath, gboolean plain_view, gbool
         mcview_global_flags.magic = FALSE;
         mcview_global_flags.nroff = FALSE;
 
-        ret = mcview_viewer (NULL, filename_vpath, start_line, search_start, search_end);
+        ret = mcview_viewer (nullptr, filename_vpath, start_line, search_start, search_end);
 
         if (changed_flags.hex && !mcview_altered_flags.hex)
             mcview_global_flags.hex = TRUE;
@@ -565,20 +565,20 @@ view_file_at_line (const vfs_path_t * filename_vpath, gboolean plain_view, gbool
         ret = (regex_command (filename_vpath, view_entry) == 0);
         if (ret)
         {
-            ret = mcview_viewer (NULL, filename_vpath, start_line, search_start, search_end);
+            ret = mcview_viewer (nullptr, filename_vpath, start_line, search_start, search_end);
             dialog_switch_process_pending ();
         }
     }
     else
     {
-        static const char *viewer = NULL;
+        static const char *viewer = nullptr;
 
-        if (viewer == NULL)
+        if (viewer == nullptr)
         {
             viewer = getenv ("VIEWER");
-            if (viewer == NULL)
+            if (viewer == nullptr)
                 viewer = getenv ("PAGER");
-            if (viewer == NULL)
+            if (viewer == nullptr)
                 viewer = "view";
         }
 
@@ -627,7 +627,7 @@ view_file_cmd (void)
         input_expand_dialog (_("View file"), _("Filename:"),
                              MC_HISTORY_FM_VIEW_FILE, selection (current_panel)->fname,
                              INPUT_COMPLETE_FILENAMES);
-    if (filename == NULL)
+    if (filename == nullptr)
         return;
 
     vpath = vfs_path_from_str (filename);
@@ -663,9 +663,9 @@ view_filtered_cmd (void)
                       MC_HISTORY_FM_FILTERED_VIEW, initial_command,
                       INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_COMMANDS);
 
-    if (command != NULL)
+    if (command != nullptr)
     {
-        mcview_viewer (command, NULL, 0, 0, 0);
+        mcview_viewer (command, nullptr, 0, 0, 0);
         g_free (command);
         dialog_switch_process_pending ();
     }
@@ -683,14 +683,14 @@ edit_file_at_line (const vfs_path_t * what_vpath, gboolean internal, long start_
     else
 #endif /* USE_INTERNAL_EDIT */
     {
-        static const char *editor = NULL;
+        static const char *editor = nullptr;
 
         (void) internal;
 
-        if (editor == NULL)
+        if (editor == nullptr)
         {
             editor = getenv ("EDITOR");
-            if (editor == NULL)
+            if (editor == nullptr)
                 editor = get_default_editor ();
         }
 
@@ -741,7 +741,7 @@ edit_cmd_force_internal (void)
 void
 edit_cmd_new (void)
 {
-    vfs_path_t *fname_vpath = NULL;
+    vfs_path_t *fname_vpath = nullptr;
 
     if (editor_ask_filename_before_edit)
     {
@@ -749,7 +749,7 @@ edit_cmd_new (void)
 
         fname = input_expand_dialog (_("Edit file"), _("Enter file name:"),
                                      MC_HISTORY_EDIT_LOAD, "", INPUT_COMPLETE_FILENAMES);
-        if (fname == NULL)
+        if (fname == nullptr)
             return;
 
         if (*fname != '\0')
@@ -843,7 +843,7 @@ mkdir_cmd (void)
                              _("Enter directory name:"), MC_HISTORY_FM_MKDIR, name,
                              INPUT_COMPLETE_FILENAMES);
 
-    if (dir != NULL && *dir != '\0')
+    if (dir != nullptr && *dir != '\0')
     {
         vfs_path_t *absdir;
 
@@ -858,7 +858,7 @@ mkdir_cmd (void)
             if (dir[0] == '\\' && dir[1] == '~')
                 tmpdir = dir + 1;
 
-            absdir = vfs_path_append_new (current_panel->cwd_vpath, tmpdir, (char *) NULL);
+            absdir = vfs_path_append_new (current_panel->cwd_vpath, tmpdir, (char *) nullptr);
         }
 
         save_cwds_stat ();
@@ -949,7 +949,7 @@ ext_cmd (void)
                             _("Which extension file you want to edit?"), D_NORMAL, 2,
                             _("&User"), _("&System Wide"));
 
-    extdir_vpath = vfs_path_build_filename (mc_global.sysconfig_dir, MC_LIB_EXT, (char *) NULL);
+    extdir_vpath = vfs_path_build_filename (mc_global.sysconfig_dir, MC_LIB_EXT, (char *) nullptr);
 
     if (dir == 0)
     {
@@ -966,7 +966,7 @@ ext_cmd (void)
         {
             vfs_path_free (extdir_vpath);
             extdir_vpath =
-                vfs_path_build_filename (mc_global.share_data_dir, MC_LIB_EXT, (char *) NULL);
+                vfs_path_build_filename (mc_global.share_data_dir, MC_LIB_EXT, (char *) nullptr);
         }
         do_edit (extdir_vpath);
     }
@@ -991,13 +991,13 @@ edit_mc_menu_cmd (void)
                         D_NORMAL, geteuid ()? 2 : 3, _("&Local"), _("&User"), _("&System Wide"));
 
     menufile_vpath =
-        vfs_path_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_MENU, (char *) NULL);
+        vfs_path_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_MENU, (char *) nullptr);
 
     if (!exist_file (vfs_path_get_last_path_str (menufile_vpath)))
     {
         vfs_path_free (menufile_vpath);
         menufile_vpath =
-            vfs_path_build_filename (mc_global.share_data_dir, MC_GLOBAL_MENU, (char *) NULL);
+            vfs_path_build_filename (mc_global.share_data_dir, MC_GLOBAL_MENU, (char *) nullptr);
     }
 
     switch (dir)
@@ -1015,12 +1015,12 @@ edit_mc_menu_cmd (void)
 
     case 2:
         buffer_vpath =
-            vfs_path_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_MENU, (char *) NULL);
+            vfs_path_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_MENU, (char *) nullptr);
         if (!exist_file (vfs_path_get_last_path_str (buffer_vpath)))
         {
             vfs_path_free (buffer_vpath);
             buffer_vpath =
-                vfs_path_build_filename (mc_global.share_data_dir, MC_GLOBAL_MENU, (char *) NULL);
+                vfs_path_build_filename (mc_global.share_data_dir, MC_GLOBAL_MENU, (char *) nullptr);
         }
         break;
 
@@ -1040,7 +1040,7 @@ edit_mc_menu_cmd (void)
 void
 edit_fhl_cmd (void)
 {
-    vfs_path_t *fhlfile_vpath = NULL;
+    vfs_path_t *fhlfile_vpath = nullptr;
     int dir = 0;
 
     if (geteuid () == 0)
@@ -1049,7 +1049,7 @@ edit_fhl_cmd (void)
                             _("&User"), _("&System Wide"));
 
     fhlfile_vpath =
-        vfs_path_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) NULL);
+        vfs_path_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) nullptr);
 
     if (dir == 0)
     {
@@ -1066,7 +1066,7 @@ edit_fhl_cmd (void)
         {
             vfs_path_free (fhlfile_vpath);
             fhlfile_vpath =
-                vfs_path_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) NULL);
+                vfs_path_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) nullptr);
         }
         do_edit (fhlfile_vpath);
     }
@@ -1085,7 +1085,7 @@ hotlist_cmd (void)
     char *target;
 
     target = hotlist_show (LIST_HOTLIST);
-    if (target == NULL)
+    if (target == nullptr)
         return;
 
     if (get_current_type () == view_tree)
@@ -1102,7 +1102,7 @@ hotlist_cmd (void)
         char *cmd;
 
         deprecated_vpath = vfs_path_from_str_flags (target, VPF_USE_DEPRECATED_PARSER);
-        cmd = g_strconcat ("cd ", vfs_path_as_str (deprecated_vpath), (char *) NULL);
+        cmd = g_strconcat ("cd ", vfs_path_as_str (deprecated_vpath), (char *) nullptr);
         vfs_path_free (deprecated_vpath);
 
         do_cd_command (cmd);
@@ -1122,7 +1122,7 @@ vfs_list (void)
     vfs_path_t *target_vpath;
 
     target = hotlist_show (LIST_VFSLIST);
-    if (target == NULL)
+    if (target == nullptr)
         return;
 
     target_vpath = vfs_path_from_str (target);
@@ -1197,7 +1197,7 @@ link_cmd (link_type_t link_type)
 {
     char *filename = selection (current_panel)->fname;
 
-    if (filename != NULL)
+    if (filename != nullptr)
         do_link (link_type, filename);
 }
 
@@ -1232,7 +1232,7 @@ edit_symlink_cmd (void)
                                      INPUT_COMPLETE_FILENAMES);
             g_free (q);
 
-            if (dest != NULL && *dest != '\0' && strcmp (buffer, dest) != 0)
+            if (dest != nullptr && *dest != '\0' && strcmp (buffer, dest) != 0)
             {
                 vfs_path_t *p_vpath;
 
@@ -1270,7 +1270,7 @@ edit_symlink_cmd (void)
 void
 help_cmd (void)
 {
-    ev_help_t event_data = { NULL, NULL };
+    ev_help_t event_data = { nullptr, nullptr };
 
     if (current_panel->searching)
         event_data.node = "[Quick search]";
@@ -1285,7 +1285,7 @@ help_cmd (void)
 void
 user_file_menu_cmd (void)
 {
-    (void) user_menu_cmd (NULL, NULL, -1);
+    (void) user_menu_cmd (nullptr, nullptr, -1);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1354,11 +1354,11 @@ quick_cd_cmd (void)
     char *p;
 
     p = cd_box ();
-    if (p != NULL && *p != '\0')
+    if (p != nullptr && *p != '\0')
     {
         char *q;
 
-        q = g_strconcat ("cd ", p, (char *) NULL);
+        q = g_strconcat ("cd ", p, (char *) nullptr);
         do_cd_command (q);
         g_free (q);
     }
@@ -1424,7 +1424,7 @@ single_dirsize_cmd (void)
     }
 
     if (panels_options.mark_moves_down)
-        send_message (panel, NULL, MSG_ACTION, CK_Down, NULL);
+        send_message (panel, nullptr, MSG_ACTION, CK_Down, nullptr);
 
     recalculate_panel_summary (panel);
 
@@ -1535,7 +1535,7 @@ listing_cmd (void)
     p = PANEL (get_panel_widget (MENU_PANEL_IDX));
 
     p->is_panelized = FALSE;
-    set_panel_filter_to (p, NULL);      /* including panel reload */
+    set_panel_filter_to (p, nullptr);      /* including panel reload */
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1546,7 +1546,7 @@ setup_listing_format_cmd (void)
     gboolean use_msformat;
     int brief_cols;
     char *user, *status;
-    WPanel *p = NULL;
+    WPanel *p = nullptr;
 
     if (SELECTED_IS_PANEL)
         p = MENU_PANEL_IDX == 0 ? left_panel : right_panel;

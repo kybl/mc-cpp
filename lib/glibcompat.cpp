@@ -54,7 +54,7 @@
 /**
  * g_clear_slist: (skip)
  * @slist_ptr: (not nullable): a #GSList return location
- * @destroy: (nullable): the function to pass to g_slist_free_full() or NULL to not free elements
+ * @destroy: (nullable): the function to pass to g_slist_free_full() or nullptr to not free elements
  *
  * Clears a pointer to a #GSList, freeing it and, optionally, freeing its elements using @destroy.
  *
@@ -69,11 +69,11 @@ g_clear_slist (GSList ** slist_ptr, GDestroyNotify destroy)
 
     slist = *slist_ptr;
 
-    if (slist != NULL)
+    if (slist != nullptr)
     {
-        *slist_ptr = NULL;
+        *slist_ptr = nullptr;
 
-        if (destroy != NULL)
+        if (destroy != nullptr)
             g_slist_free_full (slist, destroy);
         else
             g_slist_free (slist);
@@ -85,7 +85,7 @@ g_clear_slist (GSList ** slist_ptr, GDestroyNotify destroy)
 /**
  * g_clear_list:
  * @list_ptr: (not nullable): a #GList return location
- * @destroy: (nullable): the function to pass to g_list_free_full() or NULL to not free elements
+ * @destroy: (nullable): the function to pass to g_list_free_full() or nullptr to not free elements
  *
  * Clears a pointer to a #GList, freeing it and, optionally, freeing its elements using @destroy.
  *
@@ -100,11 +100,11 @@ g_clear_list (GList ** list_ptr, GDestroyNotify destroy)
 
     list = *list_ptr;
 
-    if (list != NULL)
+    if (list != nullptr)
     {
-        *list_ptr = NULL;
+        *list_ptr = nullptr;
 
-        if (destroy != NULL)
+        if (destroy != nullptr)
             g_list_free_full (list, destroy);
         else
             g_list_free (list);
@@ -129,7 +129,7 @@ g_clear_list (GList ** list_ptr, GDestroyNotify destroy)
 void
 g_queue_free_full (GQueue * queue, GDestroyNotify free_func)
 {
-    g_queue_foreach (queue, (GFunc) free_func, NULL);
+    g_queue_foreach (queue, (GFunc) free_func, nullptr);
     g_queue_free (queue);
 }
 #endif /* ! GLIB_CHECK_VERSION (2, 32, 0) */
@@ -150,10 +150,10 @@ g_queue_free_full (GQueue * queue, GDestroyNotify free_func)
 void
 g_queue_clear_full (GQueue * queue, GDestroyNotify free_func)
 {
-    g_return_if_fail (queue != NULL);
+    g_return_if_fail (queue != nullptr);
 
-    if (free_func != NULL)
-        g_queue_foreach (queue, (GFunc) free_func, NULL);
+    if (free_func != nullptr)
+        g_queue_foreach (queue, (GFunc) free_func, nullptr);
 
     g_queue_clear (queue);
 }

@@ -362,7 +362,7 @@ perm_button_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
             flag_pos = f_pos * 3 + b->hotpos;
             ch_flags[flag_pos] = parm;
             update_mode (g);
-            send_message (w, NULL, MSG_KEY, KEY_RIGHT, NULL);
+            send_message (w, nullptr, MSG_KEY, KEY_RIGHT, nullptr);
             if (b->hotpos == 2)
                 group_select_next_widget (g);
             break;
@@ -553,19 +553,19 @@ user_group_button_cb (WButton * button, int action)
 
         chl_dlg =
             dlg_create (TRUE, wh->y - 1, lxx, wh->lines + 2, 17, WPOS_KEEP_DEFAULT, TRUE,
-                        dialog_colors, chl_callback, NULL, "[Advanced Chown]", title);
+                        dialog_colors, chl_callback, nullptr, "[Advanced Chown]", title);
 
         /* get new listboxes */
         chl_list =
             listbox_new (1, 1, WIDGET (chl_dlg)->lines - 2, WIDGET (chl_dlg)->cols - 2, FALSE,
-                         NULL);
-        listbox_add_item (chl_list, LISTBOX_APPEND_AT_END, 0, "<Unknown>", NULL, FALSE);
+                         nullptr);
+        listbox_add_item (chl_list, LISTBOX_APPEND_AT_END, 0, "<Unknown>", nullptr, FALSE);
         if (is_owner)
         {
             /* get and put user names in the listbox */
             setpwent ();
-            while ((chl_pass = getpwent ()) != NULL)
-                listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_pass->pw_name, NULL,
+            while ((chl_pass = getpwent ()) != nullptr)
+                listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_pass->pw_name, nullptr,
                                   FALSE);
             endpwent ();
             fe = listbox_search_text (chl_list, get_owner (sf_stat.st_uid));
@@ -574,8 +574,8 @@ user_group_button_cb (WButton * button, int action)
         {
             /* get and put group names in the listbox */
             setgrent ();
-            while ((chl_grp = getgrent ()) != NULL)
-                listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_grp->gr_name, NULL,
+            while ((chl_grp = getgrent ()) != nullptr)
+                listbox_add_item (chl_list, LISTBOX_APPEND_SORTED, 0, chl_grp->gr_name, nullptr,
                                   FALSE);
             endgrent ();
             fe = listbox_search_text (chl_list, get_group (sf_stat.st_gid));
@@ -595,11 +595,11 @@ user_group_button_cb (WButton * button, int action)
                 gboolean ok = FALSE;
                 char *text;
 
-                listbox_get_current (chl_list, &text, NULL);
+                listbox_get_current (chl_list, &text, nullptr);
                 if (is_owner)
                 {
                     chl_pass = getpwnam (text);
-                    if (chl_pass != NULL)
+                    if (chl_pass != nullptr)
                     {
                         sf_stat.st_uid = chl_pass->pw_uid;
                         ok = TRUE;
@@ -608,7 +608,7 @@ user_group_button_cb (WButton * button, int action)
                 else
                 {
                     chl_grp = getgrnam (text);
-                    if (chl_grp != NULL)
+                    if (chl_grp != nullptr)
                     {
                         sf_stat.st_gid = chl_grp->gr_gid;
                         ok = TRUE;
@@ -658,7 +658,7 @@ advanced_chown_bg_callback (Widget * w, Widget * sender, widget_msg_t msg, int p
     switch (msg)
     {
     case MSG_DRAW:
-        frame_callback (w, NULL, MSG_DRAW, 0, NULL);
+        frame_callback (w, nullptr, MSG_DRAW, 0, nullptr);
         advanced_chown_refresh (DIALOG (w->owner));
         advanced_chown_info_update ();
         return MSG_HANDLED;
@@ -748,7 +748,7 @@ advanced_chown_dlg_create (void)
 
     ch_dlg =
         dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors,
-                    advanced_chown_callback, NULL, "[Advanced Chown]", _("Chown advanced command"));
+                    advanced_chown_callback, nullptr, "[Advanced Chown]", _("Chown advanced command"));
     ch_grp = GROUP (ch_dlg);
 
     /* draw background */
@@ -762,11 +762,11 @@ advanced_chown_dlg_create (void)
 #define XTRACT(i,y,cb) y, BX+advanced_chown_but[i].x, \
         advanced_chown_but[i].ret_cmd, advanced_chown_but[i].flags, \
         (advanced_chown_but[i].text), cb
-    b_att[0] = perm_button_new (XTRACT (0, BY, NULL));
+    b_att[0] = perm_button_new (XTRACT (0, BY, nullptr));
     advanced_chown_but[0].id = group_add_widget (ch_grp, b_att[0]);
-    b_att[1] = perm_button_new (XTRACT (1, BY, NULL));
+    b_att[1] = perm_button_new (XTRACT (1, BY, nullptr));
     advanced_chown_but[1].id = group_add_widget (ch_grp, b_att[1]);
-    b_att[2] = perm_button_new (XTRACT (2, BY, NULL));
+    b_att[2] = perm_button_new (XTRACT (2, BY, nullptr));
     advanced_chown_but[2].id = group_add_widget (ch_grp, b_att[2]);
     b_user = button_new (XTRACT (3, BY, user_group_button_cb));
     advanced_chown_but[3].id = group_add_widget (ch_grp, b_user);
@@ -787,13 +787,13 @@ advanced_chown_dlg_create (void)
                                                                  advanced_chown_but[i].len,
                                                                  advanced_chown_but[i].ret_cmd,
                                                                  advanced_chown_but[i].flags,
-                                                                 advanced_chown_but[i].text, NULL));
+                                                                 advanced_chown_but[i].text, nullptr));
         i++;
         advanced_chown_but[i].id = group_add_widget (ch_grp,
                                                      button_new (y, WIDGET (ch_dlg)->cols / 2 + 1,
                                                                  advanced_chown_but[i].ret_cmd,
                                                                  advanced_chown_but[i].flags,
-                                                                 advanced_chown_but[i].text, NULL));
+                                                                 advanced_chown_but[i].text, nullptr));
         y++;
     }
 
@@ -805,13 +805,13 @@ advanced_chown_dlg_create (void)
                                                              advanced_chown_but[i].len,
                                                              advanced_chown_but[i].ret_cmd,
                                                              advanced_chown_but[i].flags,
-                                                             advanced_chown_but[i].text, NULL));
+                                                             advanced_chown_but[i].text, nullptr));
     i++;
     advanced_chown_but[i].id = group_add_widget (ch_grp,
                                                  button_new (y, WIDGET (ch_dlg)->cols / 2 + 1,
                                                              advanced_chown_but[i].ret_cmd,
                                                              advanced_chown_but[i].flags,
-                                                             advanced_chown_but[i].text, NULL));
+                                                             advanced_chown_but[i].text, nullptr));
 
     widget_select (WIDGET (b_att[0]));
 

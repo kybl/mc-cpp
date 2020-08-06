@@ -72,7 +72,7 @@ mc_timer_new (void)
     struct timeval tv;
 
     timer = g_new (mc_timer_t, 1);
-    gettimeofday (&tv, NULL);
+    gettimeofday (&tv, nullptr);
     timer->start = (guint64) tv.tv_sec * G_USEC_PER_SEC + (guint64) tv.tv_usec;
 
     return timer;
@@ -106,7 +106,7 @@ mc_timer_elapsed (const mc_timer_t * timer)
 {
     struct timeval tv;
 
-    gettimeofday (&tv, NULL);
+    gettimeofday (&tv, nullptr);
 
     return ((guint64) tv.tv_sec * G_USEC_PER_SEC + (guint64) tv.tv_usec - timer->start);
 }

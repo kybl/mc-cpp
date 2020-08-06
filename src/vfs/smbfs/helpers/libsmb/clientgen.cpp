@@ -108,7 +108,7 @@ struct
     {2244, "This password cannot be used now (password history conflict)."},
     {2245, "The password is shorter than required."},
     {2246, "The password of this user is too recent to change."},
-    {0, NULL}
+    {0, nullptr}
 };
 
 /****************************************************************************
@@ -156,7 +156,7 @@ cli_errstr (struct cli_state *cli)
     {
         const char *nt_msg = get_nt_error_msg (nt_rpc_error);
 
-        if (nt_msg == NULL)
+        if (nt_msg == nullptr)
         {
             slprintf (error_message, sizeof (fstring) - 1, "NT code %d", nt_rpc_error);
         }
@@ -174,7 +174,7 @@ cli_errstr (struct cli_state *cli)
 
     slprintf (error_message, sizeof (error_message) - 1, "code %d", cli->rap_error);
 
-    for (i = 0; rap_errmap[i].message != NULL; i++)
+    for (i = 0; rap_errmap[i].message != nullptr; i++)
     {
         if (rap_errmap[i].err == cli->rap_error)
         {
@@ -214,7 +214,7 @@ static char *
 fix_char_ptr (unsigned int datap, unsigned int converter, char *rdata, int rdrcnt)
 {
     if (datap == 0)
-    {                           /* turn NULL pointers into zero length strings */
+    {                           /* turn nullptr pointers into zero length strings */
         return "";
     }
     else
@@ -384,7 +384,7 @@ cli_receive_trans (struct cli_state *cli, int trans,
      * be treated as such.
      */
 
-    if (cli_error (cli, &eclass, &ecode, NULL))
+    if (cli_error (cli, &eclass, &ecode, nullptr))
     {
         if (cli->nt_pipe_fnum == 0 || !(eclass == ERRDOS && ecode == ERRmoredata))
             return (False);
@@ -437,7 +437,7 @@ cli_receive_trans (struct cli_state *cli, int trans,
                        trans == SMBtrans ? "SMBtrans" : "SMBtrans2", CVAL (cli->inbuf, smb_com)));
             return (False);
         }
-        if (cli_error (cli, &eclass, &ecode, NULL))
+        if (cli_error (cli, &eclass, &ecode, nullptr))
         {
             if (cli->nt_pipe_fnum == 0 || !(eclass == ERRDOS && ecode == ERRmoredata))
                 return (False);
@@ -480,7 +480,7 @@ cli_api (struct cli_state *cli,
 {
     cli_send_trans (cli, SMBtrans, PIPE_LANMAN, strlen (PIPE_LANMAN),   /* Name, length */
                     0, 0,       /* fid, flags */
-                    NULL, 0, 0, /* Setup, length, max */
+                    nullptr, 0, 0, /* Setup, length, max */
                     param, prcnt, mprcnt,       /* Params, length, max */
                     data, drcnt, mdrcnt /* Data, length, max */
         );
@@ -495,8 +495,8 @@ perform a NetWkstaUserLogon
 BOOL
 cli_NetWkstaUserLogon (struct cli_state * cli, char *user, char *workstation)
 {
-    char *rparam = NULL;
-    char *rdata = NULL;
+    char *rparam = nullptr;
+    char *rdata = nullptr;
     char *p;
     int rdrcnt, rprcnt;
     pstring param;
@@ -528,7 +528,7 @@ cli_NetWkstaUserLogon (struct cli_state * cli, char *user, char *workstation)
     p += 2;
 
     if (cli_api (cli, param, PTR_DIFF (p, param), 1024, /* param, length, max */
-                 NULL, 0, CLI_BUFFER_SIZE,      /* data, length, max */
+                 nullptr, 0, CLI_BUFFER_SIZE,      /* data, length, max */
                  &rparam, &rprcnt,      /* return params, return size */
                  &rdata, &rdrcnt        /* return data, return size */
         ))
@@ -563,8 +563,8 @@ int
 cli_RNetShareEnum (struct cli_state *cli, void (*fn) (const char *, uint32, const char *, void *),
                    void *state)
 {
-    char *rparam = NULL;
-    char *rdata = NULL;
+    char *rparam = nullptr;
+    char *rdata = nullptr;
     char *p;
     int rdrcnt, rprcnt;
     pstring param;
@@ -587,7 +587,7 @@ cli_RNetShareEnum (struct cli_state *cli, void (*fn) (const char *, uint32, cons
     p += 4;
 
     if (cli_api (cli, param, PTR_DIFF (p, param), 1024, /* Param, length, maxlen */
-                 NULL, 0, 0xFFE0,       /* data, length, maxlen - Win2k needs a small buffer here too ! */
+                 nullptr, 0, 0xFFE0,       /* data, length, maxlen - Win2k needs a small buffer here too ! */
                  &rparam, &rprcnt,      /* return params, length */
                  &rdata, &rdrcnt))      /* return data, length */
     {
@@ -639,8 +639,8 @@ BOOL
 cli_NetServerEnum (struct cli_state * cli, char *workgroup, uint32 stype,
                    void (*fn) (const char *, uint32, const char *, void *), void *state)
 {
-    char *rparam = NULL;
-    char *rdata = NULL;
+    char *rparam = nullptr;
+    char *rdata = nullptr;
     int rdrcnt, rprcnt;
     char *p;
     pstring param;
@@ -667,7 +667,7 @@ cli_NetServerEnum (struct cli_state * cli, char *workgroup, uint32 stype,
     p = skip_string (p, 1);
 
     if (cli_api (cli, param, PTR_DIFF (p, param), 8,    /* params, length, max */
-                 NULL, 0, CLI_BUFFER_SIZE,      /* data, length, max */
+                 nullptr, 0, CLI_BUFFER_SIZE,      /* data, length, max */
                  &rparam, &rprcnt,      /* return params, return size */
                  &rdata, &rdrcnt        /* return data, return size */
         ))
@@ -721,7 +721,7 @@ const prots[] = {
     {PROTOCOL_LANMAN2, "Samba"},
     {PROTOCOL_NT1, "NT LANMAN 1.0"},
     {PROTOCOL_NT1, "NT LM 0.12"},
-    {-1, NULL}
+    {-1, nullptr}
 };
 
 
@@ -1795,7 +1795,7 @@ cli_qpathinfo (struct cli_state * cli, const char *fname,
     int param_len = 0;
     uint16 setup = TRANSACT2_QPATHINFO;
     pstring param;
-    char *rparam = NULL, *rdata = NULL;
+    char *rparam = nullptr, *rdata = nullptr;
     int count = 8;
     BOOL ret;
     time_t (*date_fn) (void *);
@@ -1808,11 +1808,11 @@ cli_qpathinfo (struct cli_state * cli, const char *fname,
 
     do
     {
-        ret = (cli_send_trans (cli, SMBtrans2, NULL, 0, /* Name, length */
+        ret = (cli_send_trans (cli, SMBtrans2, nullptr, 0, /* Name, length */
                                -1, 0,   /* fid, flags */
                                &setup, 1, 0,    /* setup, length, max */
                                param, param_len, 10,    /* param, length, max */
-                               NULL, data_len, cli->max_xmit    /* data, length, max */
+                               nullptr, data_len, cli->max_xmit    /* data, length, max */
                ) && cli_receive_trans (cli, SMBtrans2, &rparam, &param_len, &rdata, &data_len));
         if (!ret)
         {
@@ -1820,7 +1820,7 @@ cli_qpathinfo (struct cli_state * cli, const char *fname,
                it gives ERRSRV/ERRerror temprarily */
             uint8 eclass;
             uint32 ecode;
-            cli_error (cli, &eclass, &ecode, NULL);
+            cli_error (cli, &eclass, &ecode, nullptr);
             if (eclass != ERRSRV || ecode != ERRerror)
                 break;
             msleep (100);
@@ -1882,7 +1882,7 @@ cli_qpathinfo2 (struct cli_state * cli, const char *fname,
     int param_len = 0;
     uint16 setup = TRANSACT2_QPATHINFO;
     pstring param;
-    char *rparam = NULL, *rdata = NULL;
+    char *rparam = nullptr, *rdata = nullptr;
 
     param_len = strlen (fname) + 7;
 
@@ -1890,11 +1890,11 @@ cli_qpathinfo2 (struct cli_state * cli, const char *fname,
     SSVAL (param, 0, SMB_QUERY_FILE_ALL_INFO);
     pstrcpy (&param[6], fname);
 
-    if (!cli_send_trans (cli, SMBtrans2, NULL, 0,       /* name, length */
+    if (!cli_send_trans (cli, SMBtrans2, nullptr, 0,       /* name, length */
                          -1, 0, /* fid, flags */
                          &setup, 1, 0,  /* setup, length, max */
                          param, param_len, 10,  /* param, length, max */
-                         NULL, data_len, cli->max_xmit  /* data, length, max */
+                         nullptr, data_len, cli->max_xmit  /* data, length, max */
         ))
     {
         return False;
@@ -1959,7 +1959,7 @@ cli_qfileinfo (struct cli_state * cli, int fnum,
     int param_len = 0;
     uint16 setup = TRANSACT2_QFILEINFO;
     pstring param;
-    char *rparam = NULL, *rdata = NULL;
+    char *rparam = nullptr, *rdata = nullptr;
 
     /* if its a win95 server then fail this - win95 totally screws it
        up */
@@ -1972,11 +1972,11 @@ cli_qfileinfo (struct cli_state * cli, int fnum,
     SSVAL (param, 0, fnum);
     SSVAL (param, 2, SMB_QUERY_FILE_ALL_INFO);
 
-    if (!cli_send_trans (cli, SMBtrans2, NULL, 0,       /* name, length */
+    if (!cli_send_trans (cli, SMBtrans2, nullptr, 0,       /* name, length */
                          -1, 0, /* fid, flags */
                          &setup, 1, 0,  /* setup, length, max */
                          param, param_len, 2,   /* param, length, max */
-                         NULL, data_len, cli->max_xmit  /* data, length, max */
+                         nullptr, data_len, cli->max_xmit  /* data, length, max */
         ))
     {
         return False;
@@ -2163,7 +2163,7 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
     pstring mask;
     file_info finfo;
     int i;
-    char *dirlist = NULL;
+    char *dirlist = nullptr;
     int dirlist_len = 0;
     int total_received = -1;
     BOOL First = True;
@@ -2173,7 +2173,7 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
     int ff_lastname = 0;
     int ff_dir_handle = 0;
     int loop_count = 0;
-    char *rparam = NULL, *rdata = NULL;
+    char *rparam = nullptr, *rdata = nullptr;
     int param_len, data_len;
 
     uint16 setup;
@@ -2216,11 +2216,11 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
                        ff_dir_handle, ff_resume_key, ff_lastname, mask));
         }
 
-        if (!cli_send_trans (cli, SMBtrans2, NULL, 0,   /* Name, length */
+        if (!cli_send_trans (cli, SMBtrans2, nullptr, 0,   /* Name, length */
                              -1, 0,     /* fid, flags */
                              &setup, 1, 0,      /* setup, length, max */
                              param, param_len, 10,      /* param, length, max */
-                             NULL, 0, cli->max_xmit     /* data, length, max */
+                             nullptr, 0, cli->max_xmit     /* data, length, max */
             ))
         {
             break;
@@ -2232,7 +2232,7 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
                it gives ERRSRV/ERRerror temprarily */
             uint8 eclass;
             uint32 ecode;
-            cli_error (cli, &eclass, &ecode, NULL);
+            cli_error (cli, &eclass, &ecode, nullptr);
             if (eclass != ERRSRV || ecode != ERRerror)
                 break;
             msleep (100);
@@ -2296,7 +2296,7 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
         /* put in a length for the last entry, to ensure we can chain entries 
            into the next packet */
         for (p2 = p, i = 0; i < (ff_searchcount - 1); i++)
-            p2 += interpret_long_filename (info_level, p2, NULL);
+            p2 += interpret_long_filename (info_level, p2, nullptr);
         SSVAL (p2, 0, data_len - PTR_DIFF (p2, p));
 
         /* grab the data for later use */
@@ -2307,10 +2307,10 @@ cli_list (struct cli_state *cli, const char *Mask, uint16 attribute,
 
         if (rdata)
             free (rdata);
-        rdata = NULL;
+        rdata = nullptr;
         if (rparam)
             free (rparam);
-        rparam = NULL;
+        rparam = nullptr;
 
         DEBUG (3, ("received %d entries (eos=%d resume=%d)\n",
                    ff_searchcount, ff_eos, ff_resume_key));
@@ -2411,7 +2411,7 @@ cli_negprot (struct cli_state * cli)
     {
         /* the old core protocol */
         cli->sec_mode = 0;
-        cli->serverzone = TimeDiff (time (NULL));
+        cli->serverzone = TimeDiff (time (nullptr));
     }
 
     cli->max_xmit = MIN (cli->max_xmit, CLI_BUFFER_SIZE);
@@ -2553,7 +2553,7 @@ cli_initialise (struct cli_state *cli)
     {
         cli = (struct cli_state *) malloc (sizeof (*cli));
         if (!cli)
-            return NULL;
+            return nullptr;
         ZERO_STRUCTP (cli);
     }
 
@@ -2862,7 +2862,7 @@ cli_establish_connection (struct cli_state * cli,
         }
 
         /* attempt clear-text session */
-        if (!cli_session_setup (cli, cli->user_name, passwd, pass_len, NULL, 0, cli->domain))
+        if (!cli_session_setup (cli, cli->user_name, passwd, pass_len, nullptr, 0, cli->domain))
         {
             DEBUG (1, ("failed session setup\n"));
             if (do_shutdown)
@@ -2935,7 +2935,7 @@ cli_chkpath (struct cli_state * cli, char *path)
     char *p;
 
     safe_strcpy (path2, path, sizeof (pstring) - 1);
-    trim_string (path2, NULL, "\\");
+    trim_string (path2, nullptr, "\\");
     if (!*path2)
         *path2 = '\\';
 
@@ -2954,7 +2954,7 @@ cli_chkpath (struct cli_state * cli, char *path)
         return False;
     }
 
-    if (cli_error (cli, NULL, NULL, NULL))
+    if (cli_error (cli, nullptr, nullptr, nullptr))
         return False;
 
     return True;
@@ -2993,7 +2993,7 @@ cli_message_start (struct cli_state * cli, char *host, char *username, int *grp)
         return False;
     }
 
-    if (cli_error (cli, NULL, NULL, NULL))
+    if (cli_error (cli, nullptr, nullptr, nullptr))
         return False;
 
     *grp = SVAL (cli->inbuf, smb_vwv0);
@@ -3029,7 +3029,7 @@ cli_message_text (struct cli_state * cli, char *msg, int len, int grp)
         return False;
     }
 
-    if (cli_error (cli, NULL, NULL, NULL))
+    if (cli_error (cli, nullptr, nullptr, nullptr))
         return False;
 
     return True;
@@ -3057,7 +3057,7 @@ cli_message_end (struct cli_state * cli, int grp)
         return False;
     }
 
-    if (cli_error (cli, NULL, NULL, NULL))
+    if (cli_error (cli, nullptr, nullptr, nullptr))
         return False;
 
     return True;

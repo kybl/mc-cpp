@@ -348,7 +348,7 @@ mcview_do_search (WView * view, off_t want_search_start)
     vsm.offset = search_start;
 
     status_msg_init (STATUS_MSG (&vsm), _("Search"), 1.0, simple_status_msg_init_cb,
-                     mcview_search_status_update_cb, NULL);
+                     mcview_search_status_update_cb, nullptr);
 
     do
     {
@@ -408,7 +408,7 @@ mcview_do_search (WView * view, off_t want_search_start)
             vsm.offset = 0;
 
             status_msg_init (STATUS_MSG (&vsm), _("Search"), 1.0, simple_status_msg_init_cb,
-                             mcview_search_status_update_cb, NULL);
+                             mcview_search_status_update_cb, nullptr);
 
             /* search from file begin up to initial search start position */
             if (mcview_find (&vsm, 0, orig_search_start, &match_len))
@@ -428,7 +428,7 @@ mcview_do_search (WView * view, off_t want_search_start)
 
         if (view->search->error == MC_SEARCH_E_NOTFOUND)
             query_dialog (_("Search"), _(STR_E_NOTFOUND), D_NORMAL, 1, _("&Dismiss"));
-        else if (view->search->error_str != NULL)
+        else if (view->search->error_str != nullptr)
             query_dialog (_("Search"), view->search->error_str, D_NORMAL, 1, _("&Dismiss"));
     }
     view->dirty++;

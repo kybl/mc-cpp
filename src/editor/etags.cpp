@@ -159,8 +159,8 @@ parse_define (const char *buf, char **long_name, char **short_name, long *line)
         buf++;
         c = *buf;
     }
-    *long_name = NULL;
-    *short_name = NULL;
+    *long_name = nullptr;
+    *short_name = nullptr;
     *line = 0;
     return FALSE;
 }
@@ -185,17 +185,17 @@ etags_set_definition_hash (const char *tagfile, const char *start_path,
     FILE *f;
     char buf[BUF_LARGE];
 
-    char *chekedstr = NULL;
+    char *chekedstr = nullptr;
 
     int num = 0;                /* returned value */
-    char *filename = NULL;
+    char *filename = nullptr;
 
     if (!match_func || !tagfile)
         return 0;
 
     /* open file with positions */
     f = fopen (tagfile, "r");
-    if (f == NULL)
+    if (f == nullptr)
         return 0;
 
     while (fgets (buf, sizeof (buf), f))
@@ -228,8 +228,8 @@ etags_set_definition_hash (const char *tagfile, const char *start_path,
             chekedstr = strstr (buf, match_func);
             if (chekedstr)
             {
-                char *longname = NULL;
-                char *shortname = NULL;
+                char *longname = nullptr;
+                char *shortname = nullptr;
                 long line = 0;
 
                 parse_define (chekedstr, &longname, &shortname, &line);
@@ -237,7 +237,7 @@ etags_set_definition_hash (const char *tagfile, const char *start_path,
                 {
                     def_hash[num].filename_len = strlen (filename);
                     def_hash[num].fullpath =
-                        mc_build_filename (start_path, filename, (char *) NULL);
+                        mc_build_filename (start_path, filename, (char *) nullptr);
 
                     canonicalize_pathname (def_hash[num].fullpath);
                     def_hash[num].filename = g_strdup (filename);

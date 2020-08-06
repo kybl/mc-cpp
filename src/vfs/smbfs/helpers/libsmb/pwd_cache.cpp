@@ -89,7 +89,7 @@ pwd_read (struct pwd_info *pwd, char *passwd_report, BOOL do_encrypt)
 
     user_pass = (char *) getpass (passwd_report);
 
-    if (user_pass == NULL || user_pass[0] == 0)
+    if (user_pass == nullptr || user_pass[0] == 0)
     {
         pwd_set_nullpwd (pwd);
     }
@@ -191,11 +191,11 @@ void
 pwd_get_lm_nt_16 (struct pwd_info *pwd, uchar lm_pwd[16], uchar nt_pwd[16])
 {
     pwd_deobfuscate (pwd);
-    if (lm_pwd != NULL)
+    if (lm_pwd != nullptr)
     {
         memcpy (lm_pwd, pwd->smb_lm_pwd, 16);
     }
-    if (nt_pwd != NULL)
+    if (nt_pwd != nullptr)
     {
         memcpy (nt_pwd, pwd->smb_nt_pwd, 16);
     }
@@ -261,11 +261,11 @@ void
 pwd_get_lm_nt_owf (struct pwd_info *pwd, uchar lm_owf[24], uchar nt_owf[24])
 {
     pwd_deobfuscate (pwd);
-    if (lm_owf != NULL)
+    if (lm_owf != nullptr)
     {
         memcpy (lm_owf, pwd->smb_lm_owf, 24);
     }
-    if (nt_owf != NULL)
+    if (nt_owf != nullptr)
     {
         memcpy (nt_owf, pwd->smb_nt_owf, 24);
     }

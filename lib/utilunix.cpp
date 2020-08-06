@@ -200,9 +200,9 @@ my_system__save_sigaction_handlers (my_system_sigactions_t * sigactions)
 static void
 my_system__restore_sigaction_handlers (my_system_sigactions_t * sigactions)
 {
-    sigaction (SIGINT, &sigactions->intr, NULL);
-    sigaction (SIGQUIT, &sigactions->quit, NULL);
-    sigaction (SIGTSTP, &sigactions->stop, NULL);
+    sigaction (SIGINT, &sigactions->intr, nullptr);
+    sigaction (SIGQUIT, &sigactions->quit, nullptr);
+    sigaction (SIGTSTP, &sigactions->stop, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -224,8 +224,8 @@ my_system_make_arg_array (int flags, const char *shell, char **execute_name)
     {
         const char *shell_token;
 
-        shell_token = shell != NULL ? strchr (shell, ' ') : NULL;
-        if (shell_token == NULL)
+        shell_token = shell != nullptr ? strchr (shell, ' ') : nullptr;
+        if (shell_token == nullptr)
             *execute_name = g_strdup (shell);
         else
             *execute_name = g_strndup (shell, (gsize) (shell_token - shell));
@@ -291,11 +291,11 @@ get_owner (uid_t uid)
     static uid_t uid_last;
 
     name = i_cache_match ((int) uid, uid_cache, UID_CACHE_SIZE);
-    if (name != NULL)
+    if (name != nullptr)
         return name;
 
     pwd = getpwuid (uid);
-    if (pwd != NULL)
+    if (pwd != nullptr)
     {
         i_cache_add ((int) uid, uid_cache, UID_CACHE_SIZE, pwd->pw_name, (int *) &uid_last);
         return pwd->pw_name;
@@ -319,11 +319,11 @@ get_group (gid_t gid)
     static gid_t gid_last;
 
     name = i_cache_match ((int) gid, gid_cache, GID_CACHE_SIZE);
-    if (name != NULL)
+    if (name != nullptr)
         return name;
 
     grp = getgrgid (gid);
-    if (grp != NULL)
+    if (grp != nullptr)
     {
         i_cache_add ((int) gid, gid_cache, GID_CACHE_SIZE, grp->gr_name, (int *) &gid_last);
         return grp->gr_name;
@@ -345,7 +345,7 @@ get_group (gid_t gid)
 void
 save_stop_handler (void)
 {
-    sigaction (SIGTSTP, NULL, &startup_handler);
+    sigaction (SIGTSTP, nullptr, &startup_handler);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -379,7 +379,7 @@ my_exit (int status)
 int
 my_system (int flags, const char *shell, const char *command)
 {
-    return my_systeml (flags, shell, command, NULL);
+    return my_systeml (flags, shell, command, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -392,7 +392,7 @@ my_system (int flags, const char *shell, const char *command)
  *                  (if shell parameter doesn't begin from path delimiter)
  * @parameter ...   Command for shell with addition parameters for shell
  *                  (or parameters for command, if flags contain EXECUTE_AS_SHELL).
- *                  Should be NULL terminated.
+ *                  Should be nullptr terminated.
  * @return 0 if successfull, -1 otherwise
  */
 
@@ -407,11 +407,11 @@ my_systeml (int flags, const char *shell, ...)
     args_array = g_ptr_array_new ();
 
     va_start (vargs, shell);
-    while ((one_arg = va_arg (vargs, char *)) != NULL)
+    while ((one_arg = va_arg (vargs, char *)) != nullptr)
           g_ptr_array_add (args_array, one_arg);
     va_end (vargs);
 
-    g_ptr_array_add (args_array, NULL);
+    g_ptr_array_add (args_array, nullptr);
     status = my_systemv_flags (flags, shell, (char *const *) args_array->pdata);
 
     g_ptr_array_free (args_array, TRUE);
@@ -425,7 +425,7 @@ my_systeml (int flags, const char *shell, ...)
  *
  * @parameter command command to run. Command will be found in paths described in PATH variable
  *                    (if command parameter doesn't begin from path delimiter)
- * @parameter argv    Array of strings (NULL-terminated) with parameters for command
+ * @parameter argv    Array of strings (nullptr-terminated) with parameters for command
  * @return 0 if successfull, -1 otherwise
  */
 
@@ -473,23 +473,23 @@ my_systemv (const char *command, char *const argv[])
  * @parameter command shell (if flags contain EXECUTE_AS_SHELL), command to run otherwise.
  *                    Shell (or command) will be found in paths described in PATH variable
  *                    (if shell parameter doesn't begin from path delimiter)
- * @parameter argv    Array of strings (NULL-terminated) with parameters for command
+ * @parameter argv    Array of strings (nullptr-terminated) with parameters for command
  * @return 0 if successfull, -1 otherwise
  */
 
 int
 my_systemv_flags (int flags, const char *command, char *const argv[])
 {
-    char *execute_name = NULL;
+    char *execute_name = nullptr;
     GPtrArray *args_array;
     int status = 0;
 
     args_array = my_system_make_arg_array (flags, command, &execute_name);
 
-    for (; argv != NULL && *argv != NULL; argv++)
+    for (; argv != nullptr && *argv != nullptr; argv++)
         g_ptr_array_add (args_array, *argv);
 
-    g_ptr_array_add (args_array, NULL);
+    g_ptr_array_add (args_array, nullptr);
     status = my_systemv (execute_name, (char *const *) args_array->pdata);
 
     g_free (execute_name);
@@ -505,17 +505,17 @@ my_systemv_flags (int flags, const char *command, char *const argv[])
  * @parameter command command line of child process
  * @paremeter error contains pointer to object to handle error code and message
  *
- * @return newly created object of mc_pipe_t class in success, NULL otherwise
+ * @return newly created object of mc_pipe_t class in success, nullptr otherwise
  */
 
 mc_pipe_t *
 mc_popen (const char *command, GError ** error)
 {
     mc_pipe_t *p;
-    const char *const argv[] = { "/bin/sh", "sh", "-c", command, NULL };
+    const char *const argv[] = { "/bin/sh", "sh", "-c", command, nullptr };
 
     p = g_try_new (mc_pipe_t, 1);
-    if (p == NULL)
+    if (p == nullptr)
     {
         mc_replace_error (error, MC_PIPE_ERROR_CREATE_PIPE, "%s",
                           _("Cannot create pipe descriptor"));
@@ -523,8 +523,8 @@ mc_popen (const char *command, GError ** error)
     }
 
     if (!g_spawn_async_with_pipes
-        (NULL, (gchar **) argv, NULL, static_cast<GSpawnFlags>(G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_FILE_AND_ARGV_ZERO),
-         NULL, NULL, &p->child_pid, NULL, &p->out.fd, &p->err.fd, error))
+        (nullptr, (gchar **) argv, nullptr, static_cast<GSpawnFlags>(G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_FILE_AND_ARGV_ZERO),
+         nullptr, nullptr, &p->child_pid, nullptr, &p->out.fd, &p->err.fd, error))
     {
         mc_replace_error (error, MC_PIPE_ERROR_CREATE_PIPE_STREAM, "%s",
                           _("Cannot create pipe streams"));
@@ -543,7 +543,7 @@ mc_popen (const char *command, GError ** error)
 
   ret_err:
     g_free (p);
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -574,8 +574,8 @@ mc_pread (mc_pipe_t * p, GError ** error)
     int maxfd = 0;
     int res;
 
-    if (error != NULL)
-        *error = NULL;
+    if (error != nullptr)
+        *error = nullptr;
 
     read_out = p->out.fd >= 0 && p->out.len > 0;
     read_err = p->err.fd >= 0 && p->err.len > 0;
@@ -601,7 +601,7 @@ mc_pread (mc_pipe_t * p, GError ** error)
     }
 
     /* no timeout */
-    res = select (maxfd + 1, &fds, NULL, NULL, NULL);
+    res = select (maxfd + 1, &fds, nullptr, nullptr, nullptr);
     if (res < 0 && errno != EINTR)
     {
         mc_propagate_error (error, MC_PIPE_ERROR_READ,
@@ -685,7 +685,7 @@ tilde_expand (const char *directory)
     else
     {
         q = strchr (p, PATH_SEP);
-        if (q == NULL)
+        if (q == nullptr)
             passwd = getpwnam (p);
         else
         {
@@ -699,10 +699,10 @@ tilde_expand (const char *directory)
     }
 
     /* If we can't figure the user name, leave tilde unexpanded */
-    if (passwd == NULL)
+    if (passwd == nullptr)
         return g_strdup (directory);
 
-    return g_strconcat (passwd->pw_dir, PATH_SEP_STR, q, (char *) NULL);
+    return g_strconcat (passwd->pw_dir, PATH_SEP_STR, q, (char *) nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -738,7 +738,7 @@ open_error_pipe (void)
          */
         int fd_flags;
 
-        fd_flags = fcntl (error_pipe[0], F_GETFL, NULL);
+        fd_flags = fcntl (error_pipe[0], F_GETFL, nullptr);
         if (fd_flags != -1)
         {
             fd_flags |= O_NONBLOCK;
@@ -799,7 +799,7 @@ close_error_pipe (int error, const char *text)
     }
     if (error < 0)
         return 0;               /* Just ignore error message */
-    if (text == NULL)
+    if (text == nullptr)
     {
         if (len <= 0)
             return 0;           /* Nothing to show */
@@ -956,7 +956,7 @@ custom_canonicalize_pathname (char *path, CANON_PATH_FLAGS flags)
                     vclass = vfs_prefix_to_class (vfs_prefix);
                     *(s - url_delim_len) = *VFS_PATH_URL_DELIMITER;
 
-                    if (vclass != NULL && (vclass->flags & VFSF_REMOTE) != 0)
+                    if (vclass != nullptr && (vclass->flags & VFSF_REMOTE) != 0)
                     {
                         s = vfs_prefix;
                         continue;
@@ -1088,7 +1088,7 @@ mc_realpath (const char *path, char *resolved_path)
     {
         p += strlen (VFS_ENCODING_PREFIX);
         p = strchr (p, PATH_SEP);
-        if (p != NULL)
+        if (p != nullptr)
         {
             if (!absolute_path && p[1] != '\0')
                 p++;
@@ -1116,7 +1116,7 @@ mc_realpath (const char *path, char *resolved_path)
         if (strlen (path) >= PATH_MAX - 2)
         {
             errno = ENAMETOOLONG;
-            return NULL;
+            return nullptr;
         }
 
         strcpy (copy_path, path);
@@ -1126,7 +1126,7 @@ mc_realpath (const char *path, char *resolved_path)
         if (!IS_PATH_SEP (*path))
         {
             new_path = g_get_current_dir ();
-            if (new_path == NULL)
+            if (new_path == nullptr)
                 strcpy (got_path, "");
             else
             {
@@ -1182,7 +1182,7 @@ mc_realpath (const char *path, char *resolved_path)
                 if (path > max_path)
                 {
                     errno = ENAMETOOLONG;
-                    return NULL;
+                    return nullptr;
                 }
                 *new_path++ = *path++;
             }
@@ -1191,7 +1191,7 @@ mc_realpath (const char *path, char *resolved_path)
             if (readlinks++ > MAXSYMLINKS)
             {
                 errno = ELOOP;
-                return NULL;
+                return nullptr;
             }
             /* See if latest pathname component is a symlink. */
             *new_path = '\0';
@@ -1204,7 +1204,7 @@ mc_realpath (const char *path, char *resolved_path)
                     /* Make sure it's null terminated. */
                     *new_path = '\0';
                     strcpy (resolved_path, got_path);
-                    return NULL;
+                    return nullptr;
                 }
             }
             else
@@ -1222,7 +1222,7 @@ mc_realpath (const char *path, char *resolved_path)
                 if (strlen (path) + n >= PATH_MAX - 2)
                 {
                     errno = ENAMETOOLONG;
-                    return NULL;
+                    return nullptr;
                 }
                 /* Insert symlink contents into path. */
                 strcat (link_path, path);
@@ -1262,7 +1262,7 @@ get_user_permissions (struct stat *st)
     {
         uid = geteuid ();
 
-        ngroups = getgroups (0, NULL);
+        ngroups = getgroups (0, nullptr);
         if (ngroups == -1)
             ngroups = 0;        /* ignore errors */
 
@@ -1308,8 +1308,8 @@ mc_build_filenamev (const char *first_element, va_list args)
     GString *path;
     char *ret;
 
-    if (element == NULL)
-        return NULL;
+    if (element == nullptr)
+        return nullptr;
 
     path = g_string_new ("");
 
@@ -1334,13 +1334,13 @@ mc_build_filenamev (const char *first_element, va_list args)
             start = IS_PATH_SEP (tmp_element[0]) ? tmp_element + 1 : tmp_element;
 
             g_string_append (path, start);
-            if (!IS_PATH_SEP (tmp_element[len - 1]) && element != NULL)
+            if (!IS_PATH_SEP (tmp_element[len - 1]) && element != nullptr)
                 g_string_append_c (path, PATH_SEP);
 
             g_free (tmp_element);
         }
     }
-    while (element != NULL);
+    while (element != nullptr);
 
     if (absolute)
         g_string_prepend_c (path, PATH_SEP);
@@ -1363,8 +1363,8 @@ mc_build_filename (const char *first_element, ...)
     va_list args;
     char *ret;
 
-    if (first_element == NULL)
-        return NULL;
+    if (first_element == nullptr)
+        return nullptr;
 
     va_start (args, first_element);
     ret = mc_build_filenamev (first_element, args);

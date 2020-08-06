@@ -101,7 +101,7 @@ mcview__get_nroff_real_len (WView * view, off_t start, off_t length)
         return 0;
 
     nroff = mcview_nroff_seq_new_num (view, start);
-    if (nroff == NULL)
+    if (nroff == nullptr)
         return 0;
     while (i < length)
     {
@@ -130,7 +130,7 @@ mcview_nroff_t *
 mcview_nroff_seq_new_num (WView * view, off_t lc_index)
 {
     mcview_nroff_t *nroff = static_cast<mcview_nroff_t *> (g_try_malloc0 (sizeof (mcview_nroff_t)));
-    if (nroff != NULL)
+    if (nroff != nullptr)
     {
         nroff->index = lc_index;
         nroff->view = view;
@@ -153,7 +153,7 @@ mcview_nroff_seq_new (WView * view)
 void
 mcview_nroff_seq_free (mcview_nroff_t ** nroff)
 {
-    if (nroff == NULL || *nroff == NULL)
+    if (nroff == nullptr || *nroff == nullptr)
         return;
     MC_PTR_FREE (*nroff);
 }
@@ -165,7 +165,7 @@ mcview_nroff_seq_info (mcview_nroff_t * nroff)
 {
     int next, next2;
 
-    if (nroff == NULL)
+    if (nroff == nullptr)
         return NROFF_TYPE_NONE;
     nroff->type = NROFF_TYPE_NONE;
 
@@ -205,7 +205,7 @@ mcview_nroff_seq_info (mcview_nroff_t * nroff)
 int
 mcview_nroff_seq_next (mcview_nroff_t * nroff)
 {
-    if (nroff == NULL)
+    if (nroff == nullptr)
         return -1;
 
     nroff->prev_type = nroff->type;
@@ -236,7 +236,7 @@ mcview_nroff_seq_prev (mcview_nroff_t * nroff)
     int prev;
     off_t prev_index, prev_index2;
 
-    if (nroff == NULL)
+    if (nroff == nullptr)
         return -1;
 
     nroff->prev_type = NROFF_TYPE_NONE;

@@ -82,7 +82,7 @@ widget_set_id (void)
 static cb_ret_t
 widget_default_resize (Widget * w, const WRect * r)
 {
-    if (r == NULL)
+    if (r == nullptr)
         return MSG_NOT_HANDLED;
 
     w->y = r->y;
@@ -98,7 +98,7 @@ widget_default_resize (Widget * w, const WRect * r)
 static void
 widget_do_focus (Widget * w, gboolean enable)
 {
-    if (w != NULL && widget_get_state (WIDGET (w->owner), WST_FOCUSED))
+    if (w != nullptr && widget_get_state (WIDGET (w->owner), WST_FOCUSED))
         widget_set_state (w, WST_FOCUSED, enable);
 }
 
@@ -114,14 +114,14 @@ widget_focus (Widget * w)
 {
     WGroup *g = w->owner;
 
-    if (g == NULL)
+    if (g == nullptr)
         return;
 
     if (WIDGET (g->current->data) != w)
     {
         widget_do_focus (WIDGET (g->current->data), FALSE);
         /* Test if focus lost was allowed and focus has really been loose */
-        if (g->current == NULL || !widget_get_state (WIDGET (g->current->data), WST_FOCUSED))
+        if (g->current == nullptr || !widget_get_state (WIDGET (g->current->data), WST_FOCUSED))
         {
             widget_do_focus (w, TRUE);
             g->current = widget_find (WIDGET (g), w);
@@ -155,8 +155,8 @@ hotkey_cmp (const char *s1, const char *s2)
 {
     gboolean n1, n2;
 
-    n1 = s1 != NULL;
-    n2 = s2 != NULL;
+    n1 = s1 != nullptr;
+    n2 = s2 != nullptr;
 
     if (n1 != n2)
         return FALSE;
@@ -185,7 +185,7 @@ widget_default_get_colors (const Widget * w)
 {
     const Widget *owner = CONST_WIDGET (w->owner);
 
-    return (owner == NULL ? NULL : widget_get_colors (owner));
+    return (owner == nullptr ? nullptr : widget_get_colors (owner));
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -198,12 +198,12 @@ hotkey_new (const char *text)
     hotkey_t result;
     const char *cp, *p;
 
-    if (text == NULL)
+    if (text == nullptr)
         text = "";
 
     /* search for '&', that is not on the of text */
     cp = strchr (text, '&');
-    if (cp != NULL && cp[1] != '\0')
+    if (cp != nullptr && cp[1] != '\0')
     {
         result.start = g_strndup (text, cp - text);
 
@@ -218,8 +218,8 @@ hotkey_new (const char *text)
     else
     {
         result.start = g_strdup (text);
-        result.hotkey = NULL;
-        result.end = NULL;
+        result.hotkey = nullptr;
+        result.end = nullptr;
     }
 
     return result;
@@ -243,8 +243,8 @@ hotkey_width (const hotkey_t hotkey)
     int result;
 
     result = str_term_width1 (hotkey.start);
-    result += (hotkey.hotkey != NULL) ? str_term_width1 (hotkey.hotkey) : 0;
-    result += (hotkey.end != NULL) ? str_term_width1 (hotkey.end) : 0;
+    result += (hotkey.hotkey != nullptr) ? str_term_width1 (hotkey.hotkey) : 0;
+    result += (hotkey.end != nullptr) ? str_term_width1 (hotkey.end) : 0;
     return result;
 }
 
@@ -271,13 +271,13 @@ hotkey_draw (Widget * w, const hotkey_t hotkey, gboolean focused)
         tty_print_string (hotkey.start);
     }
 
-    if (hotkey.hotkey != NULL)
+    if (hotkey.hotkey != nullptr)
     {
         widget_selectcolor (w, focused, TRUE);
         tty_print_string (hotkey.hotkey);
     }
 
-    if (hotkey.end != NULL)
+    if (hotkey.end != nullptr)
     {
         widget_selectcolor (w, focused, FALSE);
         tty_print_string (hotkey.end);
@@ -293,13 +293,13 @@ hotkey_get_text (const hotkey_t hotkey)
 
     text = g_string_new (hotkey.start);
 
-    if (hotkey.hotkey != NULL)
+    if (hotkey.hotkey != nullptr)
     {
         g_string_append_c (text, '&');
         g_string_append (text, hotkey.hotkey);
     }
 
-    if (hotkey.end != NULL)
+    if (hotkey.end != nullptr)
         g_string_append (text, hotkey.end);
 
     return g_string_free (text, FALSE);
@@ -319,12 +319,12 @@ widget_init (Widget * w, int y, int x, int lines, int cols,
     w->pos_flags = WPOS_KEEP_DEFAULT;
     w->callback = callback;
 
-    w->keymap = NULL;
-    w->ext_keymap = NULL;
+    w->keymap = nullptr;
+    w->ext_keymap = nullptr;
     w->ext_mode = FALSE;
 
-    w->mouse_callback = mouse_callback != NULL ? mouse_callback : widget_default_mouse_callback;
-    w->owner = NULL;
+    w->mouse_callback = mouse_callback != nullptr ? mouse_callback : widget_default_mouse_callback;
+    w->owner = nullptr;
     w->mouse_handler = mouse_handle_event;
     w->mouse.forced_capture = FALSE;
     w->mouse.capture = FALSE;
@@ -347,7 +347,7 @@ widget_init (Widget * w, int y, int x, int lines, int cols,
 void
 widget_destroy (Widget * w)
 {
-    send_message (w, NULL, MSG_DESTROY, 0, NULL);
+    send_message (w, nullptr, MSG_DESTROY, 0, nullptr);
     g_free (w);
 }
 
@@ -445,9 +445,9 @@ widget_set_size (Widget * w, int y, int x, int lines, int cols)
 {
     WRect r = { y, x, lines, cols };
 
-    send_message (w, NULL, MSG_RESIZE, 0, &r);
+    send_message (w, nullptr, MSG_RESIZE, 0, &r);
 
-    if (w->owner != NULL && widget_get_state (WIDGET (w->owner), WST_ACTIVE))
+    if (w->owner != nullptr && widget_get_state (WIDGET (w->owner), WST_ACTIVE))
         widget_draw (w);
 }
 
@@ -476,7 +476,7 @@ widget_selectcolor (Widget * w, gboolean focused, gboolean hotkey)
 void
 widget_erase (Widget * w)
 {
-    if (w != NULL)
+    if (w != nullptr)
         tty_fill_region (w->y, w->x, w->lines, w->cols, ' ');
 }
 
@@ -502,7 +502,7 @@ widget_is_active (const void *w)
     owner = CONST_WIDGET (w)->owner;
 
     /* Is widget in any group? */
-    if (owner == NULL)
+    if (owner == nullptr)
         return FALSE;
 
     if (w != owner->current->data)
@@ -518,12 +518,12 @@ widget_draw (Widget * w)
 {
     cb_ret_t ret = MSG_NOT_HANDLED;
 
-    if (w != NULL)
+    if (w != nullptr)
     {
         WGroup *g = w->owner;
 
-        if (g != NULL && widget_get_state (WIDGET (g), WST_ACTIVE))
-            ret = w->callback (w, NULL, MSG_DRAW, 0, NULL);
+        if (g != nullptr && widget_get_state (WIDGET (g), WST_ACTIVE))
+            ret = w->callback (w, nullptr, MSG_DRAW, 0, nullptr);
     }
 
     return ret;
@@ -544,10 +544,10 @@ widget_replace (Widget * old_w, Widget * new_w)
     gboolean should_focus = FALSE;
     GList *holder;
 
-    if (g->widgets == NULL)
+    if (g->widgets == nullptr)
         return;
 
-    if (g->current == NULL)
+    if (g->current == nullptr)
         g->current = g->widgets;
 
     /* locate widget position in the list */
@@ -582,8 +582,8 @@ widget_replace (Widget * old_w, Widget * new_w)
     new_w->id = old_w->id;
     holder->data = new_w;
 
-    send_message (old_w, NULL, MSG_DESTROY, 0, NULL);
-    send_message (new_w, NULL, MSG_INIT, 0, NULL);
+    send_message (old_w, nullptr, MSG_DESTROY, 0, nullptr);
+    send_message (new_w, nullptr, MSG_INIT, 0, nullptr);
 
     if (should_focus)
         widget_select (new_w);
@@ -610,7 +610,7 @@ widget_select (Widget * w)
         return;
 
     g = GROUP (w->owner);
-    if (g != NULL)
+    if (g != nullptr)
     {
         if (widget_get_options (w, WOP_TOP_SELECT))
         {
@@ -679,14 +679,14 @@ widget_lookup_key (Widget * w, int key)
  * @param w widget
  * @param what widget to find
  *
- * @return holder of @what if widget is @what, NULL otherwise
+ * @return holder of @what if widget is @what, nullptr otherwise
  */
 
 GList *
 widget_default_find (const Widget * w, const Widget * what)
 {
     return (w != what
-            || w->owner == NULL) ? NULL : g_list_find (CONST_GROUP (w->owner)->widgets, what);
+            || w->owner == nullptr) ? nullptr : g_list_find (CONST_GROUP (w->owner)->widgets, what);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -697,13 +697,13 @@ widget_default_find (const Widget * w, const Widget * what)
  * @param w widget
  * @param cb widget callback
  *
- * @return @w if widget callback is @cb, NULL otherwise
+ * @return @w if widget callback is @cb, nullptr otherwise
  */
 
 Widget *
 widget_default_find_by_type (const Widget * w, widget_cb_fn cb)
 {
-    return (w->callback == cb ? WIDGET (w) : NULL);
+    return (w->callback == cb ? WIDGET (w) : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -713,13 +713,13 @@ widget_default_find_by_type (const Widget * w, widget_cb_fn cb)
  * @param w widget
  * @param id widget ID
  *
- * @return @w if widget id is equal to @id, NULL otherwise
+ * @return @w if widget id is equal to @id, nullptr otherwise
  */
 
 Widget *
 widget_default_find_by_id (const Widget * w, unsigned long id)
 {
-    return (w->id == id ? WIDGET (w) : NULL);
+    return (w->id == id ? WIDGET (w) : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -757,13 +757,13 @@ widget_default_set_state (Widget * w, widget_state_t state, gboolean enable)
             w->state &= ~(WST_CONSTRUCT | WST_ACTIVE | WST_SUSPENDED);
     }
 
-    if (w->owner == NULL)
+    if (w->owner == nullptr)
         return MSG_NOT_HANDLED;
 
     switch (state)
     {
     case WST_DISABLED:
-        ret = send_message (w, NULL, enable ? MSG_DISABLE : MSG_ENABLE, 0, NULL);
+        ret = send_message (w, nullptr, enable ? MSG_DISABLE : MSG_ENABLE, 0, nullptr);
         if (ret == MSG_HANDLED && widget_get_state (WIDGET (w->owner), WST_ACTIVE))
             ret = widget_draw (w);
         break;
@@ -773,12 +773,12 @@ widget_default_set_state (Widget * w, widget_state_t state, gboolean enable)
             widget_msg_t msg;
 
             msg = enable ? MSG_FOCUS : MSG_UNFOCUS;
-            ret = send_message (w, NULL, msg, 0, NULL);
+            ret = send_message (w, nullptr, msg, 0, nullptr);
             if (ret == MSG_HANDLED && widget_get_state (WIDGET (w->owner), WST_ACTIVE))
             {
                 widget_draw (w);
                 /* Notify owner that focus was moved from one widget to another */
-                send_message (w->owner, w, MSG_CHANGED_FOCUS, 0, NULL);
+                send_message (w->owner, w, MSG_CHANGED_FOCUS, 0, nullptr);
             }
         }
         break;

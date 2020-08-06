@@ -76,7 +76,7 @@ static int parent_fd;
 /* File descriptor for messages from our parent */
 static int from_parent_fd;
 
-TaskList *task_list = NULL;
+TaskList *task_list = nullptr;
 
 static int background_attention (int fd, void *closure);
 
@@ -104,15 +104,15 @@ static int
 destroy_task (pid_t pid)
 {
     TaskList *p = task_list;
-    TaskList *prev = NULL;
+    TaskList *prev = nullptr;
 
-    while (p != NULL)
+    while (p != nullptr)
     {
         if (p->pid == pid)
         {
             int fd = p->fd;
 
-            if (prev != NULL)
+            if (prev != nullptr)
                 prev->next = p->next;
             else
                 task_list = p->next;
@@ -159,7 +159,7 @@ destroy_task (pid_t pid)
  * If the return type is a string:
  *
  *     the parent writes the resulting string length
- *     if the result string was NULL or the empty string,
+ *     if the result string was nullptr or the empty string,
  *     then the length is zero.
  *     The parent then writes the string length and frees
  *     the result string.
@@ -265,16 +265,16 @@ background_attention (int fd, void *closure)
         if (read (fd, data[i], size) != size)
             return reading_failed (i, data);
 
-        data[i][size] = '\0';   /* NULL terminate the blocks (they could be strings) */
+        data[i][size] = '\0';   /* nullptr terminate the blocks (they could be strings) */
     }
 
     /* Find child task info by descriptor */
     /* Find before call, because process can destroy self after */
-    for (p = task_list; p != NULL; p = p->next)
+    for (p = task_list; p != nullptr; p = p->next)
         if (p->fd == fd)
             break;
 
-    if (p != NULL)
+    if (p != nullptr)
         to_child_fd = p->to_child_fd;
 
     if (to_child_fd == -1)
@@ -337,7 +337,7 @@ background_attention (int fd, void *closure)
     else if (type == Return_String)
     {
         int len;
-        char *resstr = NULL;
+        char *resstr = nullptr;
 
         /* FIXME: string routines should also use the Foreground/Background
          * parameter.  Currently, this is not used here
@@ -363,7 +363,7 @@ background_attention (int fd, void *closure)
             g_assert_not_reached ();
         }
 
-        if (resstr != NULL)
+        if (resstr != nullptr)
         {
             len = strlen (resstr);
             ret = write (to_child_fd, &len, sizeof (len));
@@ -394,7 +394,7 @@ background_attention (int fd, void *closure)
 /* {{{ client RPC routines */
 
 /* Sends the header for a call to a routine in the parent process.  If the file
- * operation context is not NULL, then it requests that the first parameter of
+ * operation context is not nullptr, then it requests that the first parameter of
  * the call be a file operation context.
  */
 
@@ -404,7 +404,7 @@ parent_call_header (void *routine, int argc, enum ReturnType type, file_op_conte
     int have_ctx;
     ssize_t ret;
 
-    have_ctx = ctx != NULL ? 1 : 0;
+    have_ctx = ctx != nullptr ? 1 : 0;
 
     ret = write (parent_fd, &routine, sizeof (routine));
     ret = write (parent_fd, &argc, sizeof (argc));
@@ -438,7 +438,7 @@ parent_va_call (void *routine, gpointer data, int argc, va_list ap)
     }
 
     ret = read (from_parent_fd, &i, sizeof (i));
-    if (ctx != NULL)
+    if (ctx != nullptr)
         ret = read (from_parent_fd, ctx, sizeof (*ctx));
 
     (void) ret;
@@ -454,7 +454,7 @@ parent_va_call_string (void *routine, int argc, va_list ap)
     char *str;
     int i;
 
-    parent_call_header (routine, argc, Return_String, NULL);
+    parent_call_header (routine, argc, Return_String, nullptr);
     for (i = 0; i < argc; i++)
     {
         int len;
@@ -464,17 +464,17 @@ parent_va_call_string (void *routine, int argc, va_list ap)
         value = va_arg (ap, void *);
         if (write (parent_fd, &len, sizeof (len)) != sizeof (len) ||
             write (parent_fd, value, len) != len)
-            return NULL;
+            return nullptr;
     }
 
     if (read (from_parent_fd, &i, sizeof (i)) != sizeof (i) || i == 0)
-        return NULL;
+        return nullptr;
 
     str = static_cast<char *> (g_malloc (i + 1));
     if (read (from_parent_fd, str, i) != i)
     {
         g_free (str);
-        return NULL;
+        return nullptr;
     }
     str[i] = '\0';
     return str;
@@ -547,7 +547,7 @@ do_background (file_op_context_t * ctx, char *info)
         from_parent_fd = back_comm[0];
 
         mc_global.we_are_background = TRUE;
-        top_dlg = NULL;
+        top_dlg = nullptr;
 
         /* Make stdin/stdout/stderr point somewhere */
         close (STDIN_FILENO);

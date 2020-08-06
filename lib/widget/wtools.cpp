@@ -72,12 +72,12 @@ query_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
     case MSG_RESIZE:
         if ((w->pos_flags & WPOS_CENTER) == 0)
         {
-            WDialog *prev_dlg = NULL;
+            WDialog *prev_dlg = nullptr;
             int ypos, xpos;
             WRect r;
 
             /* get dialog under h */
-            if (top_dlg != NULL)
+            if (top_dlg != nullptr)
             {
                 if (top_dlg->data != (void *) h)
                     prev_dlg = DIALOG (top_dlg->data);
@@ -88,13 +88,13 @@ query_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
                     /* Top dialog is current if it is visible.
                        Get previous dialog in stack */
                     p = g_list_next (top_dlg);
-                    if (p != NULL)
+                    if (p != nullptr)
                         prev_dlg = DIALOG (p->data);
                 }
             }
 
             /* if previous dialog is not fullscreen'd -- overlap it */
-            if (prev_dlg == NULL || (WIDGET (prev_dlg)->pos_flags & WPOS_FULLSCREEN) != 0)
+            if (prev_dlg == nullptr || (WIDGET (prev_dlg)->pos_flags & WPOS_FULLSCREEN) != 0)
                 ypos = LINES / 3 - (w->lines - 3) / 2;
             else
                 ypos = WIDGET (prev_dlg)->y + 2;
@@ -104,7 +104,7 @@ query_default_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
             /* set position */
             rect_init (&r, ypos, xpos, w->lines, w->cols);
 
-            return dlg_default_callback (w, NULL, MSG_RESIZE, 0, &r);
+            return dlg_default_callback (w, nullptr, MSG_RESIZE, 0, &r);
         }
         MC_FALLTHROUGH;
 
@@ -123,12 +123,12 @@ do_create_message (int flags, const char *title, const char *text)
     WDialog *d;
 
     /* Add empty lines before and after the message */
-    p = g_strconcat ("\n", text, "\n", (char *) NULL);
+    p = g_strconcat ("\n", text, "\n", (char *) nullptr);
     query_dialog (title, p, flags, 0);
     d = last_query_dlg;
 
     /* do resize before initing and running */
-    send_message (d, NULL, MSG_RESIZE, 0, NULL);
+    send_message (d, nullptr, MSG_RESIZE, 0, nullptr);
 
     dlg_init (d);
     g_free (p);
@@ -162,7 +162,7 @@ static void
 bg_message (int dummy, int *flags, char *title, const char *text)
 {
     (void) dummy;
-    title = g_strconcat (_("Background process:"), " ", title, (char *) NULL);
+    title = g_strconcat (_("Background process:"), " ", title, (char *) nullptr);
     fg_message (*flags, title, text);
     g_free (title);
 }
@@ -196,7 +196,7 @@ fg_input_dialog_help (const char *header, const char *text, const char *help,
     p_text = g_strstrip (g_strdup (text));
 
     /* input history */
-    if (history_name != NULL && *history_name != '\0')
+    if (history_name != nullptr && *history_name != '\0')
         g_strlcpy (histname + 3, history_name, sizeof (histname) - 3);
 
     /* The special value of def_text is used to identify password boxes
@@ -212,7 +212,7 @@ fg_input_dialog_help (const char *header, const char *text, const char *help,
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (p_text, input_label_above, def_text, histname, &my_str,
-                                 NULL, is_passwd, strip_password, completion_flags),
+                                 nullptr, is_passwd, strip_password, completion_flags),
             QUICK_BUTTONS_OK_CANCEL,
             QUICK_END
             /* *INDENT-ON* */
@@ -220,7 +220,7 @@ fg_input_dialog_help (const char *header, const char *text, const char *help,
 
         quick_dialog_t qdlg = {
             -1, -1, COLS / 2, header,
-            help, quick_widgets, NULL, NULL
+            help, quick_widgets, nullptr, nullptr
         };
 
         ret = quick_dialog (&qdlg);
@@ -228,7 +228,7 @@ fg_input_dialog_help (const char *header, const char *text, const char *help,
 
     g_free (p_text);
 
-    return (ret != B_CANCEL) ? my_str : NULL;
+    return (ret != B_CANCEL) ? my_str : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -295,7 +295,7 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
             char *cp = va_arg (ap, char *);
 
             win_len += str_term_width1 (cp) + 6;
-            if (strchr (cp, '&') != NULL)
+            if (strchr (cp, '&') != nullptr)
                 win_len--;
         }
         va_end (ap);
@@ -309,15 +309,15 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
     /* prepare dialog */
     query_dlg =
         dlg_create (TRUE, 0, 0, lines, cols, pos_flags, FALSE, query_colors, query_default_callback,
-                    NULL, "[QueryBox]", header);
+                    nullptr, "[QueryBox]", header);
     g = GROUP (query_dlg);
 
     if (count > 0)
     {
-        WButton *defbutton = NULL;
+        WButton *defbutton = nullptr;
 
         group_add_widget_autopos (g, label_new (2, 3, text), WPOS_KEEP_TOP | WPOS_CENTER_HORZ,
-                                  NULL);
+                                  nullptr);
         group_add_widget (g, hline_new (lines - 4, -1, -1));
 
         cols = (cols - win_len - 2) / 2 + 2;
@@ -329,10 +329,10 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
 
             cur_name = va_arg (ap, char *);
             xpos = str_term_width1 (cur_name) + 6;
-            if (strchr (cur_name, '&') != NULL)
+            if (strchr (cur_name, '&') != nullptr)
                 xpos--;
 
-            button = button_new (lines - 3, cols, B_USER + i, NORMAL_BUTTON, cur_name, NULL);
+            button = button_new (lines - 3, cols, B_USER + i, NORMAL_BUTTON, cur_name, nullptr);
             group_add_widget (g, button);
             cols += xpos;
             if (i == sel_pos)
@@ -341,9 +341,9 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
         va_end (ap);
 
         /* do resize before running and selecting any widget */
-        send_message (query_dlg, NULL, MSG_RESIZE, 0, NULL);
+        send_message (query_dlg, nullptr, MSG_RESIZE, 0, nullptr);
 
-        if (defbutton != NULL)
+        if (defbutton != nullptr)
             widget_select (WIDGET (defbutton));
 
         /* run dialog and make result */
@@ -361,8 +361,8 @@ query_dialog (const char *header, const char *text, int flags, int count, ...)
     else
     {
         group_add_widget_autopos (g, label_new (2, 3, text), WPOS_KEEP_TOP | WPOS_CENTER_HORZ,
-                                  NULL);
-        group_add_widget (g, button_new (0, 0, 0, HIDDEN_BUTTON, "-", NULL));
+                                  nullptr);
+        group_add_widget (g, button_new (0, 0, 0, HIDDEN_BUTTON, "-", nullptr));
         last_query_dlg = query_dlg;
     }
     sel_pos = 0;
@@ -426,7 +426,7 @@ message (int flags, const char *title, const char *text, ...)
         } func;
         func.f = bg_message;
 
-        wtools_parent_call (func.p, NULL, 3, sizeof (flags), &flags, strlen (title), title,
+        wtools_parent_call (func.p, nullptr, 3, sizeof (flags), &flags, strlen (title), title,
                             strlen (p), p);
     }
     else
@@ -442,7 +442,7 @@ message (int flags, const char *title, const char *text, ...)
 gboolean
 mc_error_message (GError ** mcerror, int *code)
 {
-    if (mcerror == NULL || *mcerror == NULL)
+    if (mcerror == nullptr || *mcerror == nullptr)
         return FALSE;
 
     if ((*mcerror)->code == 0)
@@ -450,11 +450,11 @@ mc_error_message (GError ** mcerror, int *code)
     else
         message (D_ERROR, MSG_ERROR, _("%s (%d)"), (*mcerror)->message, (*mcerror)->code);
 
-    if (code != NULL)
+    if (code != nullptr)
         *code = (*mcerror)->code;
 
     g_error_free (*mcerror);
-    *mcerror = NULL;
+    *mcerror = nullptr;
 
     return TRUE;
 }
@@ -591,7 +591,7 @@ status_msg_init (status_msg_t * sm, const char *title, double delay, status_msg_
     start = mc_timer_elapsed (mc_global.timer);
 
     sm->dlg = dlg_create (TRUE, 0, 0, 7, MIN (MAX (40, COLS / 2), COLS), WPOS_CENTER, FALSE,
-                          dialog_colors, NULL, NULL, NULL, title);
+                          dialog_colors, nullptr, nullptr, nullptr, title);
     sm->start = start;
     sm->delay = (guint64) (delay * G_USEC_PER_SEC);
     sm->block = FALSE;
@@ -600,7 +600,7 @@ status_msg_init (status_msg_t * sm, const char *title, double delay, status_msg_
     sm->update = update_cb;
     sm->deinit = deinit_cb;
 
-    if (sm->init != NULL)
+    if (sm->init != nullptr)
         sm->init (sm);
 
     if (mc_time_elapsed (&start, sm->delay))
@@ -620,10 +620,10 @@ status_msg_init (status_msg_t * sm, const char *title, double delay, status_msg_
 void
 status_msg_deinit (status_msg_t * sm)
 {
-    if (sm == NULL)
+    if (sm == nullptr)
         return;
 
-    if (sm->deinit != NULL)
+    if (sm->deinit != nullptr)
         sm->deinit (sm);
 
     /* close and destroy dialog */
@@ -646,11 +646,11 @@ status_msg_common_update (status_msg_t * sm)
     int c;
     Gpm_Event event;
 
-    if (sm == NULL)
+    if (sm == nullptr)
         return B_ENTER;
 
     /* This should not happen, but... */
-    if (sm->dlg == NULL)
+    if (sm->dlg == nullptr)
         return B_ENTER;
 
     if (widget_get_state (WIDGET (sm->dlg), WST_CONSTRUCT))
@@ -707,10 +707,10 @@ simple_status_msg_init_cb (status_msg_t * sm)
 
     y = 2;
     ssm->label = label_new (y++, 3, "");
-    group_add_widget_autopos (wg, ssm->label, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, NULL);
+    group_add_widget_autopos (wg, ssm->label, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, nullptr);
     group_add_widget (wg, hline_new (y++, -1, -1));
-    b = WIDGET (button_new (y++, 3, B_CANCEL, NORMAL_BUTTON, b_name, NULL));
-    group_add_widget_autopos (wg, b, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, NULL);
+    b = WIDGET (button_new (y++, 3, B_CANCEL, NORMAL_BUTTON, b_name, nullptr));
+    group_add_widget_autopos (wg, b, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, nullptr);
 
     widget_set_size (wd, wd->y, wd->x, y + 2, wd_width);
 }

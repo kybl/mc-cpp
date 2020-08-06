@@ -72,7 +72,7 @@
 
 static gboolean debug_flag = FALSE;
 static gboolean debug_error = FALSE;
-static char *menu = NULL;
+static char *menu = nullptr;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -82,17 +82,17 @@ static char *
 strip_ext (char *ss)
 {
     char *s = ss;
-    char *e = NULL;
+    char *e = nullptr;
 
     while (*s != '\0')
     {
         if (*s == '.')
             e = s;
-        if (IS_PATH_SEP (*s) && e != NULL)
-            e = NULL;           /* '.' in *directory* name */
+        if (IS_PATH_SEP (*s) && e != nullptr)
+            e = nullptr;           /* '.' in *directory* name */
         s++;
     }
-    if (e != NULL)
+    if (e != nullptr)
         *e = '\0';
     return ss;
 }
@@ -223,7 +223,7 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
     /* Handle one condition */
     for (; *p != '\n' && *p != '&' && *p != '|'; p++)
     {
-        WPanel *panel = NULL;
+        WPanel *panel = nullptr;
 
         /* support quote space .mnu */
         if ((*p == ' ' && *(p - 1) != '\\') || *p == '\t')
@@ -245,7 +245,7 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
         case 'f':              /* file name pattern */
             p = extract_arg (p, arg, sizeof (arg));
 #ifdef USE_INTERNAL_EDIT
-            if (edit_widget != NULL)
+            if (edit_widget != nullptr)
             {
                 const char *edit_filename;
 
@@ -254,18 +254,18 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
             }
             else
 #endif
-                *condition = panel != NULL &&
+                *condition = panel != nullptr &&
                     mc_search (arg, DEFAULT_CHARSET, panel->dir.list[panel->selected].fname,
                                search_type);
             break;
         case 'y':              /* syntax pattern */
 #ifdef USE_INTERNAL_EDIT
-            if (edit_widget != NULL)
+            if (edit_widget != nullptr)
             {
                 const char *syntax_type;
 
                 syntax_type = edit_get_syntax_type (edit_widget);
-                if (syntax_type != NULL)
+                if (syntax_type != nullptr)
                 {
                     p = extract_arg (p, arg, sizeof (arg));
                     *condition = mc_search (arg, DEFAULT_CHARSET, syntax_type, MC_SEARCH_T_NORMAL);
@@ -275,13 +275,13 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
             break;
         case 'd':
             p = extract_arg (p, arg, sizeof (arg));
-            *condition = panel != NULL
+            *condition = panel != nullptr
                 && mc_search (arg, DEFAULT_CHARSET, vfs_path_as_str (panel->cwd_vpath),
                               search_type);
             break;
         case 't':
             p = extract_arg (p, arg, sizeof (arg));
-            *condition = panel != NULL && test_type (panel, arg);
+            *condition = panel != nullptr && test_type (panel, arg);
             break;
         case 'x':              /* executable */
             {
@@ -305,12 +305,12 @@ test_condition (const WEdit * edit_widget, char *p, gboolean * condition)
 static void
 debug_out (char *start, char *end, gboolean condition)
 {
-    static char *msg = NULL;
+    static char *msg = nullptr;
 
-    if (start == NULL && end == NULL)
+    if (start == nullptr && end == nullptr)
     {
         /* Show output */
-        if (debug_flag && msg != NULL)
+        if (debug_flag && msg != nullptr)
         {
             size_t len;
 
@@ -342,7 +342,7 @@ debug_out (char *start, char *end, gboolean condition)
         else
             type = _("False:");
         /* This is for debugging, don't need to be super efficient.  */
-        if (end == NULL)
+        if (end == nullptr)
             p = g_strdup_printf ("%s %s %c \n", msg ? msg : "", type, *start);
         else
             p = g_strdup_printf ("%s %s %.*s \n", msg ? msg : "", type, (int) (end - start), start);
@@ -407,11 +407,11 @@ test_line (const WEdit * edit_widget, char *p, gboolean * result)
             break;
         }                       /* switch */
         /* Add one debug statement */
-        debug_out (&operator_, NULL, *result);
+        debug_out (&operator_, nullptr, *result);
 
     }                           /* while (*p != '\n') */
     /* Report debug message */
-    debug_out (NULL, NULL, TRUE);
+    debug_out (nullptr, nullptr, TRUE);
 
     if (*p == '\0' || *p == '\n')
         str_prev_char (&p);
@@ -427,7 +427,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
     FILE *cmd_file;
     int cmd_file_fd;
     gboolean expand_prefix_found = FALSE;
-    char *parameter = NULL;
+    char *parameter = nullptr;
     gboolean do_quote = FALSE;
     char lc_prompt[80];
     int col;
@@ -436,7 +436,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
 
     /* Skip menu entry title line */
     commands = strchr (commands, '\n');
-    if (commands == NULL)
+    if (commands == nullptr)
         return;
 
     cmd_file_fd = mc_mkstemps (&file_name_vpath, "mcusr", SCRIPT_SUFFIX);
@@ -467,7 +467,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
         col++;
         if (*commands == '\n')
             col = 0;
-        if (parameter != NULL)
+        if (parameter != nullptr)
         {
             if (*commands == '}')
             {
@@ -477,7 +477,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
                                   INPUT_COMPLETE_FILENAMES | INPUT_COMPLETE_CD |
                                   INPUT_COMPLETE_HOSTNAMES | INPUT_COMPLETE_VARIABLES |
                                   INPUT_COMPLETE_USERNAMES);
-                if (parameter == NULL || *parameter == '\0')
+                if (parameter == nullptr || *parameter == '\0')
                 {
                     /* User canceled */
                     fclose (cmd_file);
@@ -546,7 +546,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
 
     if (run_view)
     {
-        mcview_viewer (vfs_path_as_str (file_name_vpath), NULL, 0, 0, 0);
+        mcview_viewer (vfs_path_as_str (file_name_vpath), nullptr, 0, 0, 0);
         dialog_switch_process_pending ();
     }
     else
@@ -555,7 +555,7 @@ execute_menu_command (const WEdit * edit_widget, const char *commands, gboolean 
          * on no-exec filesystems. */
         char *cmd;
 
-        cmd = g_strconcat ("/bin/sh ", vfs_path_as_str (file_name_vpath), (char *) NULL);
+        cmd = g_strconcat ("/bin/sh ", vfs_path_as_str (file_name_vpath), (char *) nullptr);
 
         if (show_prompt)
             shell_execute (cmd, EXECUTE_HIDE);
@@ -680,12 +680,12 @@ check_format_cd (const char *p)
 int
 check_format_var (const char *p, char **v)
 {
-    *v = NULL;
+    *v = nullptr;
 
     if (strncmp (p, "var{", 4) == 0)
     {
         const char *q = p;
-        const char *dots = NULL;
+        const char *dots = nullptr;
         const char *value;
         char *var_name;
 
@@ -697,7 +697,7 @@ check_format_var (const char *p, char **v)
         if (*q == '\0')
             return 0;
 
-        if (dots == NULL || dots == q + 5)
+        if (dots == nullptr || dots == q + 5)
         {
             message (D_ERROR,
                      _("Format error on file Extensions File"),
@@ -711,7 +711,7 @@ check_format_var (const char *p, char **v)
         value = getenv (var_name);
         g_free (var_name);
 
-        if (value != NULL)
+        if (value != nullptr)
             *v = g_strdup (value);
         else
             *v = g_strndup (dots, q - dots);
@@ -726,9 +726,9 @@ check_format_var (const char *p, char **v)
 char *
 expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
 {
-    WPanel *panel = NULL;
+    WPanel *panel = nullptr;
     char *(*quote_func) (const char *, gboolean);
-    const char *fname = NULL;
+    const char *fname = nullptr;
     char *result;
     char c_lc;
 
@@ -743,7 +743,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
     {
     case MC_RUN_FULL:
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
             fname = edit_get_file_name (edit_widget);
         else
 #endif
@@ -793,7 +793,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
             const char *cwd;
             char *qstr;
 
-            if (panel != NULL)
+            if (panel != nullptr)
                 cwd = vfs_path_as_str (panel->cwd_vpath);
             else
                 cwd = vfs_get_current_dir ();
@@ -805,7 +805,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
         }
     case 'c':
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
         {
             result = g_strdup_printf ("%u", (unsigned int) edit_get_cursor_offset (edit_widget));
             goto ret;
@@ -814,7 +814,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
         break;
     case 'i':                  /* indent equal number cursor position in line */
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
         {
             result = g_strnfill (edit_get_curs_col (edit_widget), ' ');
             goto ret;
@@ -823,12 +823,12 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
         break;
     case 'y':                  /* syntax type */
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
         {
             const char *syntax_type;
 
             syntax_type = edit_get_syntax_type (edit_widget);
-            if (syntax_type != NULL)
+            if (syntax_type != nullptr)
             {
                 result = g_strdup (syntax_type);
                 goto ret;
@@ -839,7 +839,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
     case 'k':                  /* block file name */
     case 'b':                  /* block file name / strip extension */
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
         {
             char *file;
 
@@ -857,7 +857,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
         break;
     case 'n':                  /* strip extension in editor */
 #ifdef USE_INTERNAL_EDIT
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
         {
             result = strip_ext (quote_func (fname, FALSE));
             goto ret;
@@ -865,14 +865,14 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
 #endif
         break;
     case 'm':                  /* menu file name */
-        if (menu != NULL)
+        if (menu != nullptr)
         {
             result = quote_func (menu, FALSE);
             goto ret;
         }
         break;
     case 's':
-        if (panel == NULL || panel->marked == 0)
+        if (panel == nullptr || panel->marked == 0)
         {
             result = quote_func (fname, FALSE);
             goto ret;
@@ -886,7 +886,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
             GString *block;
             int i;
 
-            if (panel == NULL)
+            if (panel == nullptr)
             {
                 result = g_strdup ("");
                 goto ret;
@@ -922,7 +922,7 @@ expand_format (const WEdit * edit_widget, char c, gboolean do_quote)
 
 /* --------------------------------------------------------------------------------------------- */
 /**
- * If edit_widget is NULL then we are called from the mc menu,
+ * If edit_widget is nullptr then we are called from the mc menu,
  * otherwise we are called from the mcedit menu.
  */
 
@@ -944,13 +944,13 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
         message (D_ERROR, MSG_ERROR, "%s", _("Cannot execute commands on non-local filesystems"));
         return FALSE;
     }
-    if (menu_file != NULL)
+    if (menu_file != nullptr)
         menu = g_strdup (menu_file);
     else
-        menu = g_strdup (edit_widget != NULL ? EDIT_LOCAL_MENU : MC_LOCAL_MENU);
+        menu = g_strdup (edit_widget != nullptr ? EDIT_LOCAL_MENU : MC_LOCAL_MENU);
     if (!exist_file (menu) || !menu_file_own (menu))
     {
-        if (menu_file != NULL)
+        if (menu_file != nullptr)
         {
             message (D_ERROR, MSG_ERROR, _("Cannot open file %s\n%s"), menu,
                      unix_error_string (errno));
@@ -959,7 +959,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
         }
 
         g_free (menu);
-        if (edit_widget != NULL)
+        if (edit_widget != nullptr)
             menu = mc_config_get_full_path (EDIT_HOME_MENU);
         else
             menu = mc_config_get_full_path (MC_USERMENU_FILE);
@@ -969,28 +969,28 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
             g_free (menu);
             menu =
                 mc_build_filename (mc_config_get_home_dir (),
-                                   edit_widget != NULL ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
-                                   (char *) NULL);
+                                   edit_widget != nullptr ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
+                                   (char *) nullptr);
             if (!exist_file (menu))
             {
                 g_free (menu);
                 menu =
                     mc_build_filename (mc_global.sysconfig_dir,
-                                       edit_widget != NULL ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
-                                       (char *) NULL);
+                                       edit_widget != nullptr ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
+                                       (char *) nullptr);
                 if (!exist_file (menu))
                 {
                     g_free (menu);
                     menu =
                         mc_build_filename (mc_global.share_data_dir,
-                                           edit_widget != NULL ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
-                                           (char *) NULL);
+                                           edit_widget != nullptr ? EDIT_GLOBAL_MENU : MC_GLOBAL_MENU,
+                                           (char *) nullptr);
                 }
             }
         }
     }
 
-    if (!g_file_get_contents (menu, &data, NULL, NULL))
+    if (!g_file_get_contents (menu, &data, nullptr, nullptr))
     {
         message (D_ERROR, MSG_ERROR, _("Cannot open file %s\n%s"), menu, unix_error_string (errno));
         MC_PTR_FREE (menu);
@@ -1000,7 +1000,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
     max_cols = 0;
     selected = 0;
     menu_limit = 0;
-    entries = NULL;
+    entries = nullptr;
 
     /* Parse the menu file */
     old_patterns = easy_patterns;
@@ -1011,16 +1011,16 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
         {
             menu_limit += MAX_ENTRIES;
             char **new_entries = static_cast<char **> (g_try_realloc (entries, sizeof (new_entries[0]) * menu_limit));
-            if (new_entries == NULL)
+            if (new_entries == nullptr)
                 break;
 
             entries = new_entries;
             new_entries += menu_limit;
             while (--new_entries >= &entries[menu_lines])
-                *new_entries = NULL;
+                *new_entries = nullptr;
         }
 
-        if (col == 0 && entries[menu_lines] == NULL)
+        if (col == 0 && entries[menu_lines] == nullptr)
             switch (*p)
             {
             case '#':
@@ -1078,7 +1078,7 @@ user_menu_cmd (const WEdit * edit_widget, const char *menu_file, int selected_en
 
         if (*p == '\n')
         {
-            if (entries[menu_lines] != NULL)
+            if (entries[menu_lines] != nullptr)
             {
                 menu_lines++;
                 accept_entry = TRUE;

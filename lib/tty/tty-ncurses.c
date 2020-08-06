@@ -196,10 +196,10 @@ mc_tty_normalize_lines_char (const char *ch)
         {"\342\225\220", ACS_HLINE | A_BOLD},   /* ═ */
         {"\342\225\221", ACS_VLINE | A_BOLD},   /* ║ */
 
-        {NULL, 0}
+        {nullptr, 0}
     };
 
-    if (ch == NULL)
+    if (ch == nullptr)
         return (int) ' ';
 
     for (res = 0; lines_codes[res].line; res++)
@@ -282,7 +282,7 @@ tty_shutdown (void)
 void
 tty_enter_ca_mode (void)
 {
-    if (mc_global.tty.xterm_flag && smcup != NULL)
+    if (mc_global.tty.xterm_flag && smcup != nullptr)
     {
         fprintf (stdout, /* ESC_STR ")0" */ ESC_STR "7" ESC_STR "[?47h");
         fflush (stdout);
@@ -294,7 +294,7 @@ tty_enter_ca_mode (void)
 void
 tty_exit_ca_mode (void)
 {
-    if (mc_global.tty.xterm_flag && rmcup != NULL)
+    if (mc_global.tty.xterm_flag && rmcup != nullptr)
     {
         fprintf (stdout, ESC_STR "[?47l" ESC_STR "8" ESC_STR "[m");
         fflush (stdout);
@@ -570,8 +570,8 @@ tty_colorize_area (int y, int x, int rows, int cols, int color)
 
         for (int col = 0; col < cols; col++)
         {
-            getcchar (&ctext[col], wch, &attrs, &color_pair, NULL);
-            setcchar (&ctext[col], wch, attrs, color, NULL);
+            getcchar (&ctext[col], wch, &attrs, &color_pair, nullptr);
+            setcchar (&ctext[col], wch, attrs, color, nullptr);
         }
 
         mvadd_wchnstr (y + row, x, ctext, cols);
@@ -731,7 +731,7 @@ tty_printf (const char *fmt, ...)
 char *
 tty_tgetstr (const char *cap)
 {
-    char *unused = NULL;
+    char *unused = nullptr;
 
     return tgetstr ((NCURSES_CONST char *) cap, &unused);
 }

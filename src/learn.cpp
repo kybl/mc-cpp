@@ -70,7 +70,7 @@ typedef struct
 static WDialog *learn_dlg;
 static const char *learn_title = N_("Learn keys");
 
-static learnkey_t *learnkeys = NULL;
+static learnkey_t *learnkeys = nullptr;
 static int learn_total;
 static int learnok;
 static gboolean learnchanged = FALSE;
@@ -94,11 +94,11 @@ learn_button (WButton * button, int action)
                           "If you want to escape, press a single Escape key\n"
                           "and wait as well."), _(key_name_conv_tab[action - B_USER].longname));
     mc_refresh ();
-    if (learnkeys[action - B_USER].sequence != NULL)
+    if (learnkeys[action - B_USER].sequence != nullptr)
         MC_PTR_FREE (learnkeys[action - B_USER].sequence);
 
     seq = learn_key ();
-    if (seq != NULL)
+    if (seq != nullptr)
     {
         /* Esc hides the dialog and do not allow definitions of
          * regular characters
@@ -277,12 +277,12 @@ init_learn (void)
 
     learn_dlg =
         dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, dialog_colors,
-                    learn_callback, NULL, "[Learn keys]", learn_title);
+                    learn_callback, nullptr, "[Learn keys]", learn_title);
     g = GROUP (learn_dlg);
 
     /* find first unshown button */
     for (key = key_name_conv_tab, learn_total = 0;
-         key->name != NULL && strcmp (key->name, "kpleft") != 0; key++, learn_total++)
+         key->name != nullptr && strcmp (key->name, "kpleft") != 0; key++, learn_total++)
         ;
 
     learnok = 0;
@@ -301,7 +301,7 @@ init_learn (void)
         int padding;
 
         learnkeys[i].ok = FALSE;
-        learnkeys[i].sequence = NULL;
+        learnkeys[i].sequence = nullptr;
 
         label = _(key_name_conv_tab[i].longname);
         padding = 16 - str_term_width1 (label);
@@ -334,8 +334,8 @@ init_learn (void)
     bl1 = str_term_width1 (b1) + 3;     /* normal button */
     bx0 = (dlg_width - (bl0 + bl1 + 1)) / 2;
     bx1 = bx0 + bl0 + 1;
-    group_add_widget (g, button_new (dlg_height - 3, bx0, B_ENTER, DEFPUSH_BUTTON, b0, NULL));
-    group_add_widget (g, button_new (dlg_height - 3, bx1, B_CANCEL, NORMAL_BUTTON, b1, NULL));
+    group_add_widget (g, button_new (dlg_height - 3, bx0, B_ENTER, DEFPUSH_BUTTON, b0, nullptr));
+    group_add_widget (g, button_new (dlg_height - 3, bx1, B_CANCEL, NORMAL_BUTTON, b1, nullptr));
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -356,10 +356,10 @@ learn_save (void)
     char *section;
     gboolean profile_changed = FALSE;
 
-    section = g_strconcat ("terminal:", getenv ("TERM"), (char *) NULL);
+    section = g_strconcat ("terminal:", getenv ("TERM"), (char *) nullptr);
 
     for (i = 0; i < learn_total; i++)
-        if (learnkeys[i].sequence != NULL)
+        if (learnkeys[i].sequence != nullptr)
         {
             char *esc_str;
 
@@ -378,7 +378,7 @@ learn_save (void)
      * disk is much worse.
      */
     if (profile_changed)
-        mc_config_save_file (mc_global.main_config, NULL);
+        mc_config_save_file (mc_global.main_config, nullptr);
 
     g_free (section);
 }

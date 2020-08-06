@@ -204,13 +204,13 @@ handle_console_linux (console_action_t action)
                 if (dup2 (status, STDERR_FILENO) == -1)
                     break;
                 status = close (status);
-                if (tty_name != NULL)
+                if (tty_name != nullptr)
                 {
                     char *mc_conssaver;
 
                     /* Exec the console save/restore handler */
-                    mc_conssaver = mc_build_filename (SAVERDIR, "cons.saver", (char *) NULL);
-                    execl (mc_conssaver, "cons.saver", tty_name, (char *) NULL);
+                    mc_conssaver = mc_build_filename (SAVERDIR, "cons.saver", (char *) nullptr);
+                    execl (mc_conssaver, "cons.saver", tty_name, (char *) nullptr);
                 }
                 /* Console is not a tty or execl() failed */
             }
@@ -279,7 +279,7 @@ console_init (void)
     screen_shot.xsize = screen_info.mv_csz;
     screen_shot.ysize = screen_info.mv_rsz;
     screen_shot.buf = g_try_malloc (screen_info.mv_csz * screen_info.mv_rsz * 2);
-    if (screen_shot.buf != NULL)
+    if (screen_shot.buf != nullptr)
         mc_global.tty.console_flag = '\001';
 }
 

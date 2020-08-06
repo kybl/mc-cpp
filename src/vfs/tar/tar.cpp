@@ -365,7 +365,7 @@ tar_open_archive_int (struct vfs_class *me, const vfs_path_t * vpath, struct vfs
         vfs_path_t *tmp_vpath;
 
         mc_close (result);
-        s = g_strconcat (archive->name, decompress_extension (type), (char *) NULL);
+        s = g_strconcat (archive->name, decompress_extension (type), (char *) nullptr);
         tmp_vpath = vfs_path_from_str_flags (s, VPF_NO_CANON);
         result = mc_open (tmp_vpath, O_RDONLY);
         vfs_path_free (tmp_vpath);
@@ -411,7 +411,7 @@ tar_get_next_block (struct vfs_s_super *archive, int tard)
 
     n = mc_read (tard, block_buf.buffer, sizeof (block_buf.buffer));
     if (n != sizeof (block_buf.buffer))
-        return NULL;            /* An error has occurred */
+        return nullptr;            /* An error has occurred */
     current_tar_position += sizeof (block_buf.buffer);
     return &block_buf;
 }
@@ -625,12 +625,12 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
     tar_super_t *arch = TAR_SUPER (archive);
     ReadStatus checksum_status;
     union block *header;
-    static char *next_long_name = NULL, *next_long_link = NULL;
+    static char *next_long_name = nullptr, *next_long_link = nullptr;
 
     while (TRUE)
     {
         header = tar_get_next_block (archive, tard);
-        if (header == NULL)
+        if (header == nullptr)
             return STATUS_EOF;
 
         checksum_status = tar_checksum (header);
@@ -671,7 +671,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
             for (size = *h_size; size > 0; size -= written)
             {
                 char *data = tar_get_next_block (archive, tard)->buffer;
-                if (data == NULL)
+                if (data == nullptr)
                 {
                     MC_PTR_FREE (*longp);
                     message (D_ERROR, MSG_ERROR, _("Unexpected EOF on archive file"));
@@ -701,20 +701,20 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
     {
         struct stat st;
         struct vfs_s_entry *entry;
-        struct vfs_s_inode *inode = NULL, *parent;
+        struct vfs_s_inode *inode = nullptr, *parent;
         off_t data_position;
         char *p, *q;
         size_t len;
         char *current_file_name, *current_link_name;
 
         current_link_name =
-            next_long_link != NULL ? next_long_link : g_strndup (header->header.linkname,
+            next_long_link != nullptr ? next_long_link : g_strndup (header->header.linkname,
                                                                  sizeof (header->header.linkname));
         len = strlen (current_link_name);
         if (len > 1 && IS_PATH_SEP (current_link_name[len - 1]))
             current_link_name[len - 1] = '\0';
 
-        current_file_name = NULL;
+        current_file_name = nullptr;
         switch (arch->type)
         {
         case TAR_USTAR:
@@ -736,22 +736,22 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
                 temp_name = g_strndup (header->header.name, sizeof (header->header.name));
                 temp_prefix = g_strndup (header->header.prefix, sizeof (header->header.prefix));
                 current_file_name = g_strconcat (temp_prefix, PATH_SEP_STR,
-                                                 temp_name, (char *) NULL);
+                                                 temp_name, (char *) nullptr);
                 g_free (temp_name);
                 g_free (temp_prefix);
             }
             break;
         case TAR_GNU:
-            if (next_long_name != NULL)
+            if (next_long_name != nullptr)
                 current_file_name = next_long_name;
             break;
         default:
             break;
         }
 
-        if (current_file_name == NULL)
+        if (current_file_name == nullptr)
         {
-            if (next_long_name != NULL)
+            if (next_long_name != nullptr)
                 current_file_name = g_strdup (next_long_name);
             else
                 current_file_name = g_strndup (header->header.name, sizeof (header->header.name));
@@ -763,7 +763,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
         data_position = current_tar_position;
 
         p = strrchr (current_file_name, PATH_SEP);
-        if (p == NULL)
+        if (p == nullptr)
         {
             p = current_file_name;
             q = current_file_name + len;        /* "" */
@@ -775,7 +775,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
         }
 
         parent = vfs_s_find_inode (me, archive, q, LINK_NO_FOLLOW, FL_MKDIR);
-        if (parent == NULL)
+        if (parent == nullptr)
         {
             message (D_ERROR, MSG_ERROR, _("Inconsistent tar archive"));
             return STATUS_BADCHECKSUM;
@@ -784,7 +784,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
         if (header->header.typeflag == LNKTYPE)
         {
             inode = vfs_s_find_inode (me, archive, current_link_name, LINK_NO_FOLLOW, FL_NONE);
-            if (inode == NULL)
+            if (inode == nullptr)
                 message (D_ERROR, MSG_ERROR, _("Inconsistent tar archive"));
             else
             {
@@ -799,7 +799,7 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
         if (S_ISDIR (st.st_mode))
         {
             entry = VFS_SUBCLASS (me)->find_entry (me, parent, p, LINK_NO_FOLLOW, FL_NONE);
-            if (entry != NULL)
+            if (entry != nullptr)
                 goto done;
         }
 
@@ -816,14 +816,14 @@ tar_read_header (struct vfs_class *me, struct vfs_s_super *archive, int tard, si
         g_free (current_file_name);
 
       done:
-        next_long_link = next_long_name = NULL;
+        next_long_link = next_long_name = nullptr;
 
         if (arch->type == TAR_GNU && header->oldgnu_header.isextended)
         {
             while (tar_get_next_block (archive, tard)->sparse_header.isextended != 0)
                 ;
 
-            if (inode != NULL)
+            if (inode != nullptr)
                 inode->data_offset = current_tar_position;
         }
         return STATUS_SUCCESS;
@@ -918,7 +918,7 @@ tar_super_check (const vfs_path_t * vpath)
 
     stat_result = mc_stat (vpath, &stat_buf);
 
-    return (stat_result != 0) ? NULL : &stat_buf;
+    return (stat_result != 0) ? nullptr : &stat_buf;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -935,7 +935,7 @@ tar_super_same (const vfs_path_element_t * vpath_element, struct vfs_s_super *pa
         return 0;
 
     /* Has the cached archive been changed on the disk? */
-    if (parc != NULL && TAR_SUPER (parc)->st.st_mtime < archive_stat->st_mtime)
+    if (parc != nullptr && TAR_SUPER (parc)->st.st_mtime < archive_stat->st_mtime)
     {
         /* Yes, reload! */
         vfs_tarfs_ops->free ((vfsid) parc);
@@ -994,7 +994,7 @@ vfs_init_tarfs (void)
     /* FIXME: tarfs used own temp files */
     vfs_init_subclass (&tarfs_subclass, "tarfs", VFSF_READONLY, "utar");
     vfs_tarfs_ops->read = tar_read;
-    vfs_tarfs_ops->setctl = NULL;
+    vfs_tarfs_ops->setctl = nullptr;
     tarfs_subclass.archive_check = tar_super_check;
     tarfs_subclass.archive_same = tar_super_same;
     tarfs_subclass.new_archive = tar_new_archive;

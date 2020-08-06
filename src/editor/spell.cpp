@@ -54,8 +54,8 @@ typedef struct aspell_struct
 
 /*** file scope variables ************************************************************************/
 
-static GModule *spell_module = NULL;
-static spell_t *global_speller = NULL;
+static GModule *spell_module = nullptr;
+static spell_t *global_speller = nullptr;
 
 static AspellConfig *(*mc_new_aspell_config) (void);
 static int (*mc_aspell_config_replace) (AspellConfig * ths, const char *key, const char *value);
@@ -119,7 +119,7 @@ static struct
     {"sk", N_("Slovak")},
     {"sv", N_("Swedish")},
     {"uk", N_("Ukrainian")},
-    {NULL, NULL}
+    {nullptr, nullptr}
     /* *INDENT-ON* */
 };
 
@@ -137,7 +137,7 @@ spell_decode_lang (const char *code)
 {
     size_t i;
 
-    for (i = 0; spell_codes_map[i].code != NULL; i++)
+    for (i = 0; spell_codes_map[i].code != nullptr; i++)
     {
         if (strcmp (spell_codes_map[i].code, code) == 0)
             return _(spell_codes_map[i].name);
@@ -159,15 +159,15 @@ spell_available (void)
     gchar *spell_module_fname;
     gboolean ret = FALSE;
 
-    if (spell_module != NULL)
+    if (spell_module != nullptr)
         return TRUE;
 
-    spell_module_fname = g_module_build_path (NULL, "libaspell");
+    spell_module_fname = g_module_build_path (nullptr, "libaspell");
     spell_module = g_module_open (spell_module_fname, G_MODULE_BIND_LAZY);
 
     g_free (spell_module_fname);
 
-    if (spell_module == NULL)
+    if (spell_module == nullptr)
         return FALSE;
 
     if (!g_module_symbol (spell_module, "new_aspell_config", reinterpret_cast<gpointer *> (&mc_new_aspell_config)))
@@ -267,7 +267,7 @@ spell_available (void)
     if (!ret)
     {
         g_module_close (spell_module);
-        spell_module = NULL;
+        spell_module = nullptr;
     }
     return ret;
 }
@@ -282,16 +282,16 @@ spell_available (void)
 void
 aspell_init (void)
 {
-    AspellCanHaveError *error = NULL;
+    AspellCanHaveError *error = nullptr;
 
     if (strcmp (spell_language, "NONE") == 0)
         return;
 
-    if (global_speller != NULL)
+    if (global_speller != nullptr)
         return;
 
     global_speller = g_try_malloc (sizeof (spell_t));
-    if (global_speller == NULL)
+    if (global_speller == nullptr)
         return;
 
     if (!spell_available ())
@@ -301,9 +301,9 @@ aspell_init (void)
     }
 
     global_speller->config = mc_new_aspell_config ();
-    global_speller->speller = NULL;
+    global_speller->speller = nullptr;
 
-    if (spell_language != NULL)
+    if (spell_language != nullptr)
         mc_aspell_config_replace (global_speller->config, "lang", spell_language);
 
     error = mc_new_aspell_speller (global_speller->config);
@@ -326,19 +326,19 @@ aspell_init (void)
 void
 aspell_clean (void)
 {
-    if (global_speller == NULL)
+    if (global_speller == nullptr)
         return;
 
-    if (global_speller->speller != NULL)
+    if (global_speller->speller != nullptr)
         mc_delete_aspell_speller (global_speller->speller);
 
-    if (global_speller->config != NULL)
+    if (global_speller->config != nullptr)
         mc_delete_aspell_config (global_speller->config);
 
     MC_PTR_FREE (global_speller);
 
     g_module_close (spell_module);
-    spell_module = NULL;
+    spell_module = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -357,16 +357,16 @@ aspell_get_lang_list (GArray * lang_list)
     const AspellDictInfo *entry;
     unsigned int i = 0;
 
-    if (spell_module == NULL)
+    if (spell_module == nullptr)
         return 0;
 
     /* the returned pointer should _not_ need to be deleted */
     dlist = mc_get_aspell_dict_info_list (global_speller->config);
     elem = mc_aspell_dict_info_list_elements (dlist);
 
-    while ((entry = mc_aspell_dict_info_enumeration_next (elem)) != NULL)
+    while ((entry = mc_aspell_dict_info_enumeration_next (elem)) != nullptr)
     {
-        if (entry->name != NULL)
+        if (entry->name != nullptr)
         {
             char *tmp;
 
@@ -391,7 +391,7 @@ aspell_get_lang_list (GArray * lang_list)
 void
 aspell_array_clean (GArray * array)
 {
-    if (array != NULL)
+    if (array != nullptr)
     {
         guint i = 0;
 
@@ -433,7 +433,7 @@ aspell_get_lang (void)
 gboolean
 aspell_set_lang (const char *lang)
 {
-    if (lang != NULL)
+    if (lang != nullptr)
     {
         AspellCanHaveError *error;
         const char *spell_codeset;
@@ -452,10 +452,10 @@ aspell_set_lang (const char *lang)
         mc_aspell_config_replace (global_speller->config, "encoding", spell_codeset);
 
         /* the returned pointer should _not_ need to be deleted */
-        if (global_speller->speller != NULL)
+        if (global_speller->speller != nullptr)
             mc_delete_aspell_speller (global_speller->speller);
 
-        global_speller->speller = NULL;
+        global_speller->speller = nullptr;
 
         error = mc_new_aspell_speller (global_speller->config);
         if (mc_aspell_error (error) != 0)
@@ -483,7 +483,7 @@ aspell_check (const char *word, const int word_size)
 {
     int res = 0;
 
-    if (word != NULL && global_speller != NULL && global_speller->speller != NULL)
+    if (word != nullptr && global_speller != nullptr && global_speller->speller != nullptr)
         res = mc_aspell_speller_check (global_speller->speller, word, word_size);
 
     return (res == 1);
@@ -504,14 +504,14 @@ aspell_suggest (GArray * suggest, const char *word, const int word_size)
 {
     unsigned int size = 0;
 
-    if (word != NULL && global_speller != NULL && global_speller->speller != NULL)
+    if (word != nullptr && global_speller != nullptr && global_speller->speller != nullptr)
     {
         const AspellWordList *wordlist;
 
         wordlist = mc_aspell_speller_suggest (global_speller->speller, word, word_size);
-        if (wordlist != NULL)
+        if (wordlist != nullptr)
         {
-            AspellStringEnumeration *elements = NULL;
+            AspellStringEnumeration *elements = nullptr;
             unsigned int i;
 
             elements = mc_aspell_word_list_elements (wordlist);
@@ -522,7 +522,7 @@ aspell_suggest (GArray * suggest, const char *word, const int word_size)
                 const char *cur_sugg_word;
 
                 cur_sugg_word = g_strdup (mc_aspell_string_enumeration_next (elements));
-                if (cur_sugg_word != NULL)
+                if (cur_sugg_word != nullptr)
                     g_array_append_val (suggest, cur_sugg_word);
             }
 

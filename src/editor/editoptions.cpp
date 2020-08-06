@@ -32,7 +32,7 @@
 
 #include <config.h>
 
-#include <stdlib.h>             /* atoi(), NULL */
+#include <stdlib.h>             /* atoi(), nullptr */
 
 #include "lib/global.h"
 #include "lib/widget.h"
@@ -53,7 +53,7 @@ static const char *wrap_str[] = {
     N_("&None"),
     N_("&Dynamic paragraphing"),
     N_("Type &writer wrap"),
-    NULL
+    nullptr
 };
 
 /*** file scope functions ************************************************************************/
@@ -63,7 +63,7 @@ static const char *wrap_str[] = {
 static void
 i18n_translate_array (const char *array[])
 {
-    while (*array != NULL)
+    while (*array != nullptr)
     {
         *array = _(*array);
         array++;
@@ -106,7 +106,7 @@ edit_reload_syntax (void *data, void *user_data)
     {
         WEdit *edit = (WEdit *) data;
 
-        edit_load_syntax (edit, NULL, edit->syntax_type);
+        edit_load_syntax (edit, nullptr, edit->syntax_type);
     }
 }
 
@@ -147,36 +147,36 @@ edit_options_dialog (WDialog * h)
             /* *INDENT-OFF* */
             QUICK_START_COLUMNS,
                 QUICK_START_GROUPBOX (N_("Wrap mode")),
-                    QUICK_RADIO (3, wrap_str, &wrap_mode, NULL),
+                    QUICK_RADIO (3, wrap_str, &wrap_mode, nullptr),
                 QUICK_STOP_GROUPBOX,
                 QUICK_SEPARATOR (FALSE),
                 QUICK_SEPARATOR (FALSE),
                 QUICK_START_GROUPBOX (N_("Tabulation")),
-                    QUICK_CHECKBOX (N_("&Fake half tabs"), &option_fake_half_tabs, NULL),
+                    QUICK_CHECKBOX (N_("&Fake half tabs"), &option_fake_half_tabs, nullptr),
                     QUICK_CHECKBOX (N_("&Backspace through tabs"), &option_backspace_through_tabs,
-                                    NULL),
+                                    nullptr),
                     QUICK_CHECKBOX (N_("Fill tabs with &spaces"), &option_fill_tabs_with_spaces,
-                                    NULL),
+                                    nullptr),
                     QUICK_LABELED_INPUT (N_("Tab spacing:"), input_label_left, tab_spacing,
-                                          "edit-tab-spacing", &q, NULL, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                          "edit-tab-spacing", &q, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
                 QUICK_STOP_GROUPBOX,
             QUICK_NEXT_COLUMN,
                 QUICK_START_GROUPBOX (N_("Other options")),
                     QUICK_CHECKBOX (N_("&Return does autoindent"), &option_return_does_auto_indent,
-                                    NULL),
-                    QUICK_CHECKBOX (N_("Confir&m before saving"), &edit_confirm_save, NULL),
-                    QUICK_CHECKBOX (N_("Save file &position"), &option_save_position, NULL),
-                    QUICK_CHECKBOX (N_("&Visible trailing spaces"), &visible_tws, NULL),
-                    QUICK_CHECKBOX (N_("Visible &tabs"), &visible_tabs, NULL),
-                    QUICK_CHECKBOX (N_("Synta&x highlighting"), &option_syntax_highlighting, NULL),
-                    QUICK_CHECKBOX (N_("C&ursor after inserted block"), &option_cursor_after_inserted_block, NULL),
+                                    nullptr),
+                    QUICK_CHECKBOX (N_("Confir&m before saving"), &edit_confirm_save, nullptr),
+                    QUICK_CHECKBOX (N_("Save file &position"), &option_save_position, nullptr),
+                    QUICK_CHECKBOX (N_("&Visible trailing spaces"), &visible_tws, nullptr),
+                    QUICK_CHECKBOX (N_("Visible &tabs"), &visible_tabs, nullptr),
+                    QUICK_CHECKBOX (N_("Synta&x highlighting"), &option_syntax_highlighting, nullptr),
+                    QUICK_CHECKBOX (N_("C&ursor after inserted block"), &option_cursor_after_inserted_block, nullptr),
                     QUICK_CHECKBOX (N_("Pers&istent selection"), &option_persistent_selections,
-                                     NULL),
+                                     nullptr),
                     QUICK_CHECKBOX (N_("Cursor be&yond end of line"), &option_cursor_beyond_eol,
-                                     NULL),
-                    QUICK_CHECKBOX (N_("&Group undo"), &option_group_undo, NULL),
+                                     nullptr),
+                    QUICK_CHECKBOX (N_("&Group undo"), &option_group_undo, nullptr),
                     QUICK_LABELED_INPUT (N_("Word wrap line length:"), input_label_left, wrap_length,
-                                         "edit-word-wrap", &p, NULL, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                         "edit-word-wrap", &p, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
                 QUICK_STOP_GROUPBOX,
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
@@ -187,7 +187,7 @@ edit_options_dialog (WDialog * h)
         quick_dialog_t qdlg = {
             -1, -1, 74,
             N_("Editor options"), "[Editor options]",
-            quick_widgets, NULL, NULL
+            quick_widgets, nullptr, nullptr
         };
 
         if (quick_dialog (&qdlg) == B_CANCEL)
@@ -197,9 +197,9 @@ edit_options_dialog (WDialog * h)
     old_syntax_hl = option_syntax_highlighting;
 
     if (!option_cursor_beyond_eol)
-        g_list_foreach (GROUP (h)->widgets, edit_reset_over_col, NULL);
+        g_list_foreach (GROUP (h)->widgets, edit_reset_over_col, nullptr);
 
-    if (p != NULL)
+    if (p != nullptr)
     {
         option_word_wrap_line_length = atoi (p);
         if (option_word_wrap_line_length <= 0)
@@ -207,7 +207,7 @@ edit_options_dialog (WDialog * h)
         g_free (p);
     }
 
-    if (q != NULL)
+    if (q != nullptr)
     {
         option_tab_spacing = atoi (q);
         if (option_tab_spacing <= 0)
@@ -233,7 +233,7 @@ edit_options_dialog (WDialog * h)
 
     /* Load or unload syntax rules if the option has changed */
     if (option_syntax_highlighting != old_syntax_hl)
-        g_list_foreach (GROUP (h)->widgets, edit_reload_syntax, NULL);
+        g_list_foreach (GROUP (h)->widgets, edit_reload_syntax, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */

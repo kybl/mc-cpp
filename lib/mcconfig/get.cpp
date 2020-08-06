@@ -48,15 +48,15 @@
 gchar **
 mc_config_get_groups (const mc_config_t * mc_config, gsize * len)
 {
-    gchar **ret = NULL;
+    gchar **ret = nullptr;
 
-    if (mc_config != NULL)
+    if (mc_config != nullptr)
         ret = g_key_file_get_groups (mc_config->handle, len);
 
-    if (ret == NULL)
+    if (ret == nullptr)
     {
         ret = static_cast<gchar **> (g_try_malloc0 (sizeof (gchar **)));
-        if (len != NULL)
+        if (len != nullptr)
             *len = 0;
     }
 
@@ -68,15 +68,15 @@ mc_config_get_groups (const mc_config_t * mc_config, gsize * len)
 gchar **
 mc_config_get_keys (const mc_config_t * mc_config, const gchar * group, gsize * len)
 {
-    gchar **ret = NULL;
+    gchar **ret = nullptr;
 
-    if (mc_config != NULL && group != NULL)
-        ret = g_key_file_get_keys (mc_config->handle, group, len, NULL);
+    if (mc_config != nullptr && group != nullptr)
+        ret = g_key_file_get_keys (mc_config->handle, group, len, nullptr);
 
-    if (ret == NULL)
+    if (ret == nullptr)
     {
         ret = static_cast<gchar **> (g_try_malloc0 (sizeof (gchar **)));
-        if (len != NULL)
+        if (len != nullptr)
             *len = 0;
     }
 
@@ -94,18 +94,18 @@ mc_config_get_string (mc_config_t * mc_config, const gchar * group,
     gchar *ret;
     estr_t conv_res;
 
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return g_strdup (def);
 
     if (!mc_config_has_param (mc_config, group, param))
     {
-        if (def != NULL)
+        if (def != nullptr)
             mc_config_set_string (mc_config, group, param, def);
         return g_strdup (def);
     }
 
-    ret = g_key_file_get_string (mc_config->handle, group, param, NULL);
-    if (ret == NULL)
+    ret = g_key_file_get_string (mc_config->handle, group, param, nullptr);
+    if (ret == nullptr)
         ret = g_strdup (def);
 
     if (mc_global.utf8_display)
@@ -138,19 +138,19 @@ mc_config_get_string_raw (mc_config_t * mc_config, const gchar * group,
 {
     gchar *ret;
 
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return g_strdup (def);
 
     if (!mc_config_has_param (mc_config, group, param))
     {
-        if (def != NULL)
+        if (def != nullptr)
             mc_config_set_string (mc_config, group, param, def);
         return g_strdup (def);
     }
 
-    ret = g_key_file_get_string (mc_config->handle, group, param, NULL);
+    ret = g_key_file_get_string (mc_config->handle, group, param, nullptr);
 
-    return ret != NULL ? ret : g_strdup (def);
+    return ret != nullptr ? ret : g_strdup (def);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -158,7 +158,7 @@ mc_config_get_string_raw (mc_config_t * mc_config, const gchar * group,
 gboolean
 mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * param, gboolean def)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return def;
 
     if (!mc_config_has_param (mc_config, group, param))
@@ -167,7 +167,7 @@ mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * 
         return def;
     }
 
-    return g_key_file_get_boolean (mc_config->handle, group, param, NULL);
+    return g_key_file_get_boolean (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -175,7 +175,7 @@ mc_config_get_bool (mc_config_t * mc_config, const gchar * group, const gchar * 
 int
 mc_config_get_int (mc_config_t * mc_config, const gchar * group, const gchar * param, int def)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
         return def;
 
     if (!mc_config_has_param (mc_config, group, param))
@@ -184,7 +184,7 @@ mc_config_get_int (mc_config_t * mc_config, const gchar * group, const gchar * p
         return def;
     }
 
-    return g_key_file_get_integer (mc_config->handle, group, param, NULL);
+    return g_key_file_get_integer (mc_config->handle, group, param, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -193,10 +193,10 @@ gchar **
 mc_config_get_string_list (mc_config_t * mc_config, const gchar * group,
                            const gchar * param, gsize * length)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
-        return NULL;
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
+        return nullptr;
 
-    return g_key_file_get_string_list (mc_config->handle, group, param, length, NULL);
+    return g_key_file_get_string_list (mc_config->handle, group, param, length, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -205,10 +205,10 @@ gboolean *
 mc_config_get_bool_list (mc_config_t * mc_config, const gchar * group,
                          const gchar * param, gsize * length)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
-        return NULL;
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
+        return nullptr;
 
-    return g_key_file_get_boolean_list (mc_config->handle, group, param, length, NULL);
+    return g_key_file_get_boolean_list (mc_config->handle, group, param, length, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -217,10 +217,10 @@ int *
 mc_config_get_int_list (mc_config_t * mc_config, const gchar * group,
                         const gchar * param, gsize * length)
 {
-    if (mc_config == NULL || group == NULL || param == NULL)
-        return NULL;
+    if (mc_config == nullptr || group == nullptr || param == nullptr)
+        return nullptr;
 
-    return g_key_file_get_integer_list (mc_config->handle, group, param, length, NULL);
+    return g_key_file_get_integer_list (mc_config->handle, group, param, length, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */

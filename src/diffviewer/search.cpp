@@ -72,7 +72,7 @@ static mcdiffview_search_options_t mcdiffview_search_options = {
 static gboolean
 mcdiffview_dialog_search (WDiff * dview)
 {
-    char *exp = NULL;
+    char *exp = nullptr;
     int qd_result;
     int num_of_types = 0;
     gchar **list_of_types;
@@ -83,17 +83,17 @@ mcdiffview_dialog_search (WDiff * dview)
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Enter search string:"), input_label_above, INPUT_LAST_TEXT,
-            MC_HISTORY_SHARED_SEARCH, &exp, NULL, FALSE, FALSE, INPUT_COMPLETE_NONE),
+            MC_HISTORY_SHARED_SEARCH, &exp, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
             QUICK_SEPARATOR (TRUE),
             QUICK_START_COLUMNS,
                 QUICK_RADIO (num_of_types, (const char **) list_of_types,
-                             (int *) &mcdiffview_search_options.type, NULL),
+                             (int *) &mcdiffview_search_options.type, nullptr),
             QUICK_NEXT_COLUMN,
-                QUICK_CHECKBOX (N_("Cas&e sensitive"), &mcdiffview_search_options.case_sens, NULL),
-                QUICK_CHECKBOX (N_("&Backwards"), &mcdiffview_search_options.backwards, NULL),
-                QUICK_CHECKBOX (N_("&Whole words"), &mcdiffview_search_options.whole_words, NULL),
+                QUICK_CHECKBOX (N_("Cas&e sensitive"), &mcdiffview_search_options.case_sens, nullptr),
+                QUICK_CHECKBOX (N_("&Backwards"), &mcdiffview_search_options.backwards, nullptr),
+                QUICK_CHECKBOX (N_("&Whole words"), &mcdiffview_search_options.whole_words, nullptr),
 #ifdef HAVE_CHARSET
-                QUICK_CHECKBOX (N_("&All charsets"), &mcdiffview_search_options.all_codepages, NULL),
+                QUICK_CHECKBOX (N_("&All charsets"), &mcdiffview_search_options.all_codepages, nullptr),
 #endif
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
@@ -104,7 +104,7 @@ mcdiffview_dialog_search (WDiff * dview)
         quick_dialog_t qdlg = {
             -1, -1, 58,
             N_("Search"), "[Input Line Keys]",
-            quick_widgets, NULL, NULL
+            quick_widgets, nullptr, nullptr
         };
 
         qd_result = quick_dialog (&qdlg);
@@ -112,7 +112,7 @@ mcdiffview_dialog_search (WDiff * dview)
 
     g_strfreev (list_of_types);
 
-    if ((qd_result == B_CANCEL) || (exp == NULL) || (exp[0] == '\0'))
+    if ((qd_result == B_CANCEL) || (exp == nullptr) || (exp[0] == '\0'))
     {
         g_free (exp);
         return FALSE;
@@ -158,7 +158,7 @@ mcdiffview_do_search_backward (WDiff * dview)
         if (p->u.len == 0)
             continue;
 
-        if (mc_search_run (dview->search.handle, p->p, 0, p->u.len, NULL))
+        if (mc_search_run (dview->search.handle, p->p, 0, p->u.len, nullptr))
         {
             dview->skip_rows = dview->search.last_found_line =
                 dview->search.last_accessed_num_line = ind;
@@ -193,7 +193,7 @@ mcdiffview_do_search_forward (WDiff * dview)
         if (p->u.len == 0)
             continue;
 
-        if (mc_search_run (dview->search.handle, p->p, 0, p->u.len, NULL))
+        if (mc_search_run (dview->search.handle, p->p, 0, p->u.len, nullptr))
         {
             dview->skip_rows = dview->search.last_found_line =
                 dview->search.last_accessed_num_line = (ssize_t) ind;
@@ -250,10 +250,10 @@ dview_search_cmd (WDiff * dview)
 #ifdef HAVE_CHARSET
     dview->search.handle = mc_search_new (dview->search.last_string, cp_source);
 #else
-    dview->search.handle = mc_search_new (dview->search.last_string, NULL);
+    dview->search.handle = mc_search_new (dview->search.last_string, nullptr);
 #endif
 
-    if (dview->search.handle == NULL)
+    if (dview->search.handle == nullptr)
         return;
 
     dview->search.handle->search_type = mcdiffview_search_options.type;
@@ -273,7 +273,7 @@ dview_continue_search_cmd (WDiff * dview)
 {
     if (dview->dsrc != DATA_SRC_MEM)
         error_dialog (_("Search"), _("Search is disabled"));
-    else if (dview->search.handle == NULL)
+    else if (dview->search.handle == nullptr)
         dview_search_cmd (dview);
     else
         mcdiffview_do_search (dview);

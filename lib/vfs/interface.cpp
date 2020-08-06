@@ -66,7 +66,7 @@ extern struct dirent *mc_readdir_result;
 
 /*** global variables ****************************************************************************/
 
-struct dirent *mc_readdir_result = NULL;
+struct dirent *mc_readdir_result = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -80,7 +80,7 @@ struct dirent *mc_readdir_result = NULL;
 static vfs_path_t *
 mc_def_getlocalcopy (const vfs_path_t * filename_vpath)
 {
-    vfs_path_t *tmp_vpath = NULL;
+    vfs_path_t *tmp_vpath = nullptr;
     int fdin, fdout = -1;
     ssize_t i;
     char buffer[BUF_1K * 8];
@@ -122,7 +122,7 @@ mc_def_getlocalcopy (const vfs_path_t * filename_vpath)
         close (fdout);
     if (fdin != -1)
         mc_close (fdin);
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -141,7 +141,7 @@ mc_def_ungetlocalcopy (const vfs_path_t * filename_vpath,
         char buffer[BUF_1K * 8];
         ssize_t i;
 
-        if (vfs_path_get_last_path_vfs (filename_vpath)->write == NULL)
+        if (vfs_path_get_last_path_vfs (filename_vpath)->write == nullptr)
             goto failed;
 
         fdin = open (local, O_RDONLY);
@@ -192,7 +192,7 @@ mc_open (const vfs_path_t * vpath, int flags, ...)
     mode_t mode = 0;
     const vfs_path_element_t *path_element;
 
-    if (vpath == NULL)
+    if (vpath == nullptr)
         return (-1);
 
     /* Get the mode flag */
@@ -209,13 +209,13 @@ mc_open (const vfs_path_t * vpath, int flags, ...)
     }
 
     path_element = vfs_path_get_by_index (vpath, -1);
-    if (vfs_path_element_valid (path_element) && path_element->clazz->open != NULL)
+    if (vfs_path_element_valid (path_element) && path_element->clazz->open != nullptr)
     {
         void *info;
 
         /* open must be supported */
         info = path_element->clazz->open (vpath, flags, mode);
-        if (info == NULL)
+        if (info == nullptr)
             errno = vfs_ferrno (path_element->clazz);
         else
             result = vfs_new_handle (path_element->clazz, info);
@@ -236,16 +236,16 @@ int mc_##name inarg \
     int result; \
     const vfs_path_element_t *path_element; \
 \
-    if (vpath == NULL) \
+    if (vpath == nullptr) \
         return (-1); \
 \
     path_element = vfs_path_get_by_index (vpath, -1); \
     if (!vfs_path_element_valid (path_element)) \
         return (-1); \
 \
-    result = path_element->clazz->name != NULL ? path_element->clazz->name callarg : -1; \
+    result = path_element->clazz->name != nullptr ? path_element->clazz->name callarg : -1; \
     if (result == -1) \
-        errno = path_element->clazz->name != NULL ? vfs_ferrno (path_element->clazz) : E_NOTSUPP; \
+        errno = path_element->clazz->name != nullptr ? vfs_ferrno (path_element->clazz) : E_NOTSUPP; \
     return result; \
 }
 
@@ -267,7 +267,7 @@ mc_symlink (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
 {
     int result = -1;
 
-    if (vpath1 != NULL && vpath2 != NULL)
+    if (vpath1 != nullptr && vpath2 != nullptr)
     {
         const vfs_path_element_t *path_element;
 
@@ -275,12 +275,12 @@ mc_symlink (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
         if (vfs_path_element_valid (path_element))
         {
             result =
-                path_element->clazz->symlink != NULL ?
+                path_element->clazz->symlink != nullptr ?
                 path_element->clazz->symlink (vpath1, vpath2) : -1;
 
             if (result == -1)
                 errno =
-                    path_element->clazz->symlink != NULL ?
+                    path_element->clazz->symlink != nullptr ?
                     vfs_ferrno (path_element->clazz) : E_NOTSUPP;
         }
     }
@@ -295,16 +295,16 @@ mc_symlink (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
 ssize_t mc_##name (int handle, C void *buf, size_t count) \
 { \
     struct vfs_class *vfs; \
-    void *fsinfo = NULL; \
+    void *fsinfo = nullptr; \
 \
     if (handle == -1) \
         return (-1); \
 \
     vfs = vfs_class_find_by_handle (handle, &fsinfo); \
-    if (vfs == NULL) \
+    if (vfs == nullptr) \
         return (-1); \
 \
-    if (vfs->name != NULL) \
+    if (vfs->name != nullptr) \
     { \
         char *buf_writable = g_strdup (static_cast<const char *> (buf)); \
         int result = vfs->name (fsinfo, buf_writable, count); \
@@ -312,7 +312,7 @@ ssize_t mc_##name (int handle, C void *buf, size_t count) \
         return result; \
     } else \
     { \
-        errno = vfs->name != NULL ? vfs_ferrno (vfs) : E_NOTSUPP; \
+        errno = vfs->name != nullptr ? vfs_ferrno (vfs) : E_NOTSUPP; \
         return -1; \
     } \
 }
@@ -333,7 +333,7 @@ int mc_##name (const vfs_path_t *vpath1, const vfs_path_t *vpath2) \
     const vfs_path_element_t *path_element1; \
     const vfs_path_element_t *path_element2; \
 \
-    if (vpath1 == NULL || vpath2 == NULL) \
+    if (vpath1 == nullptr || vpath2 == nullptr) \
         return (-1); \
 \
     path_element1 = vfs_path_get_by_index (vpath1, (-1)); \
@@ -346,10 +346,10 @@ int mc_##name (const vfs_path_t *vpath1, const vfs_path_t *vpath2) \
         return (-1); \
     } \
 \
-    result = path_element1->clazz->name != NULL \
+    result = path_element1->clazz->name != nullptr \
         ? path_element1->clazz->name (vpath1, vpath2) : -1; \
     if (result == -1) \
-        errno = path_element1->clazz->name != NULL ? vfs_ferrno (path_element1->clazz) : E_NOTSUPP; \
+        errno = path_element1->clazz->name != nullptr ? vfs_ferrno (path_element1->clazz) : E_NOTSUPP; \
     return result; \
 }
 
@@ -364,11 +364,11 @@ int
 mc_ctl (int handle, int ctlop, void *arg)
 {
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
+    void *fsinfo = nullptr;
 
     vfs = vfs_class_find_by_handle (handle, &fsinfo);
 
-    return (vfs == NULL || vfs->ctl == NULL) ? 0 : vfs->ctl (fsinfo, ctlop, arg);
+    return (vfs == nullptr || vfs->ctl == nullptr) ? 0 : vfs->ctl (fsinfo, ctlop, arg);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -379,13 +379,13 @@ mc_setctl (const vfs_path_t * vpath, int ctlop, void *arg)
     int result = -1;
     const vfs_path_element_t *path_element;
 
-    if (vpath == NULL)
-        vfs_die ("You don't want to pass NULL to mc_setctl.");
+    if (vpath == nullptr)
+        vfs_die ("You don't want to pass nullptr to mc_setctl.");
 
     path_element = vfs_path_get_by_index (vpath, -1);
     if (vfs_path_element_valid (path_element))
         result =
-            path_element->clazz->setctl != NULL ? path_element->clazz->setctl (vpath,
+            path_element->clazz->setctl != nullptr ? path_element->clazz->setctl (vpath,
                                                                                ctlop, arg) : 0;
 
     return result;
@@ -397,20 +397,20 @@ int
 mc_close (int handle)
 {
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
+    void *fsinfo = nullptr;
     int result;
 
     if (handle == -1)
         return (-1);
 
     vfs = vfs_class_find_by_handle (handle, &fsinfo);
-    if (vfs == NULL || fsinfo == NULL)
+    if (vfs == nullptr || fsinfo == nullptr)
         return (-1);
 
     if (handle < 3)
         return close (handle);
 
-    if (vfs->close == NULL)
+    if (vfs->close == nullptr)
         vfs_die ("VFS must support close.\n");
     result = vfs->close (fsinfo);
     vfs_free_handle (handle);
@@ -429,27 +429,27 @@ mc_opendir (const vfs_path_t * vpath)
     void *info;
     vfs_path_element_t *path_element;
 
-    if (vpath == NULL)
-        return NULL;
+    if (vpath == nullptr)
+        return nullptr;
 
     path_element = (vfs_path_element_t *) vfs_path_get_by_index (vpath, -1);
     if (!vfs_path_element_valid (path_element))
     {
         errno = E_NOTSUPP;
-        return NULL;
+        return nullptr;
     }
 
-    info = path_element->clazz->opendir ? path_element->clazz->opendir (vpath) : NULL;
-    if (info == NULL)
+    info = path_element->clazz->opendir ? path_element->clazz->opendir (vpath) : nullptr;
+    if (info == nullptr)
     {
         errno = path_element->clazz->opendir ? vfs_ferrno (path_element->clazz) : E_NOTSUPP;
-        return NULL;
+        return nullptr;
     }
 
     path_element->dir.info = static_cast<DIR *> (info);
 
 #ifdef HAVE_CHARSET
-    path_element->dir.converter = (path_element->encoding != NULL) ?
+    path_element->dir.converter = (path_element->encoding != nullptr) ?
         str_crt_conv_from (path_element->encoding) : str_cnv_from_term;
     if (path_element->dir.converter == INVALID_CONV)
         path_element->dir.converter = str_cnv_from_term;
@@ -469,11 +469,11 @@ mc_readdir (DIR * dirp)
 {
     int handle;
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
-    struct dirent *entry = NULL;
+    void *fsinfo = nullptr;
+    struct dirent *entry = nullptr;
     vfs_path_element_t *vfs_path_element;
 
-    if (mc_readdir_result == NULL)
+    if (mc_readdir_result == nullptr)
     {
         /* We can't just allocate struct dirent as (see man dirent.h)
          * struct dirent has VERY nonnaive semantics of allocating
@@ -488,24 +488,24 @@ mc_readdir (DIR * dirp)
         mc_readdir_result = (struct dirent *) g_malloc (sizeof (struct dirent) + MAXNAMLEN + 1);
     }
 
-    if (dirp == NULL)
+    if (dirp == nullptr)
     {
         errno = EFAULT;
-        return NULL;
+        return nullptr;
     }
 
     handle = *(int *) dirp;
 
     vfs = vfs_class_find_by_handle (handle, &fsinfo);
-    if (vfs == NULL || fsinfo == NULL)
-        return NULL;
+    if (vfs == nullptr || fsinfo == nullptr)
+        return nullptr;
 
     vfs_path_element = (vfs_path_element_t *) fsinfo;
-    if (vfs->readdir != NULL)
+    if (vfs->readdir != nullptr)
     {
         entry = static_cast<dirent *> (vfs->readdir (vfs_path_element->dir.info));
-        if (entry == NULL)
-            return NULL;
+        if (entry == nullptr)
+            return nullptr;
 
         g_string_set_size (vfs_str_buffer, 0);
 #ifdef HAVE_CHARSET
@@ -516,9 +516,9 @@ mc_readdir (DIR * dirp)
         mc_readdir_result->d_ino = entry->d_ino;
         g_strlcpy (mc_readdir_result->d_name, vfs_str_buffer->str, MAXNAMLEN + 1);
     }
-    if (entry == NULL)
+    if (entry == nullptr)
         errno = vfs->readdir ? vfs_ferrno (vfs) : E_NOTSUPP;
-    return (entry != NULL) ? mc_readdir_result : NULL;
+    return (entry != nullptr) ? mc_readdir_result : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -528,16 +528,16 @@ mc_closedir (DIR * dirp)
 {
     int handle;
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
+    void *fsinfo = nullptr;
     int result = -1;
 
-    if (dirp == NULL)
+    if (dirp == nullptr)
         return result;
 
     handle = *(int *) dirp;
 
     vfs = vfs_class_find_by_handle (handle, &fsinfo);
-    if (vfs != NULL && fsinfo != NULL)
+    if (vfs != nullptr && fsinfo != nullptr)
     {
         vfs_path_element_t *vfs_path_element = (vfs_path_element_t *) fsinfo;
 
@@ -565,7 +565,7 @@ mc_stat (const vfs_path_t * vpath, struct stat *buf)
     int result = -1;
     const vfs_path_element_t *path_element;
 
-    if (vpath == NULL)
+    if (vpath == nullptr)
         return (-1);
 
     path_element = vfs_path_get_by_index (vpath, -1);
@@ -587,7 +587,7 @@ mc_lstat (const vfs_path_t * vpath, struct stat *buf)
     int result = -1;
     const vfs_path_element_t *path_element;
 
-    if (vpath == NULL)
+    if (vpath == nullptr)
         return (-1);
 
     path_element = vfs_path_get_by_index (vpath, -1);
@@ -607,14 +607,14 @@ int
 mc_fstat (int handle, struct stat *buf)
 {
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
+    void *fsinfo = nullptr;
     int result;
 
     if (handle == -1)
         return (-1);
 
     vfs = vfs_class_find_by_handle (handle, &fsinfo);
-    if (vfs == NULL)
+    if (vfs == nullptr)
         return (-1);
 
     result = vfs->fstat ? vfs->fstat (fsinfo, buf) : -1;
@@ -628,19 +628,19 @@ mc_fstat (int handle, struct stat *buf)
 vfs_path_t *
 mc_getlocalcopy (const vfs_path_t * pathname_vpath)
 {
-    vfs_path_t *result = NULL;
+    vfs_path_t *result = nullptr;
     const vfs_path_element_t *path_element;
 
-    if (pathname_vpath == NULL)
-        return NULL;
+    if (pathname_vpath == nullptr)
+        return nullptr;
 
     path_element = vfs_path_get_by_index (pathname_vpath, -1);
     if (vfs_path_element_valid (path_element))
     {
-        result = path_element->clazz->getlocalcopy != NULL ?
+        result = path_element->clazz->getlocalcopy != nullptr ?
             path_element->clazz->getlocalcopy (pathname_vpath) :
             mc_def_getlocalcopy (pathname_vpath);
-        if (result == NULL)
+        if (result == nullptr)
             errno = vfs_ferrno (path_element->clazz);
     }
     return result;
@@ -655,12 +655,12 @@ mc_ungetlocalcopy (const vfs_path_t * pathname_vpath, const vfs_path_t * local_v
     int result = -1;
     const vfs_path_element_t *path_element;
 
-    if (pathname_vpath == NULL)
+    if (pathname_vpath == nullptr)
         return (-1);
 
     path_element = vfs_path_get_by_index (pathname_vpath, -1);
     if (vfs_path_element_valid (path_element))
-        result = path_element->clazz->ungetlocalcopy != NULL ?
+        result = path_element->clazz->ungetlocalcopy != nullptr ?
             path_element->clazz->ungetlocalcopy (pathname_vpath, local_vpath, has_changed) :
             mc_def_ungetlocalcopy (pathname_vpath, local_vpath, has_changed);
 
@@ -685,7 +685,7 @@ mc_chdir (const vfs_path_t * vpath)
     const vfs_path_element_t *path_element;
     vfs_path_t *cd_vpath;
 
-    if (vpath == NULL)
+    if (vpath == nullptr)
         return (-1);
 
     if (vpath->relative)
@@ -694,7 +694,7 @@ mc_chdir (const vfs_path_t * vpath)
         cd_vpath = vfs_path_clone (vpath);
 
     path_element = vfs_path_get_by_index (cd_vpath, -1);
-    if (!vfs_path_element_valid (path_element) || path_element->clazz->chdir == NULL)
+    if (!vfs_path_element_valid (path_element) || path_element->clazz->chdir == nullptr)
         goto error_end;
 
 
@@ -734,7 +734,7 @@ mc_chdir (const vfs_path_t * vpath)
             struct vfs_s_super *super;
 
             super = vfs_get_super_by_vpath (vpath);
-            if (super != NULL && super->path_element != NULL)
+            if (super != nullptr && super->path_element != nullptr)
             {
                 g_free (super->path_element->path);
                 super->path_element->path = g_strdup (path_element->path);
@@ -756,14 +756,14 @@ off_t
 mc_lseek (int fd, off_t offset, int whence)
 {
     struct vfs_class *vfs;
-    void *fsinfo = NULL;
+    void *fsinfo = nullptr;
     off_t result;
 
     if (fd == -1)
         return (-1);
 
     vfs = vfs_class_find_by_handle (fd, &fsinfo);
-    if (vfs == NULL)
+    if (vfs == nullptr)
         return (-1);
 
     result = vfs->lseek ? vfs->lseek (fsinfo, offset, whence) : -1;
@@ -777,10 +777,10 @@ mc_lseek (int fd, off_t offset, int whence)
 /*
  * Arguments:
  * pname (output) - pointer to the name of the temp file (needs g_free).
- *                  NULL if the function fails.
+ *                  nullptr if the function fails.
  * prefix - part of the filename before the random part.
  *          Prepend $TMPDIR or /tmp if there are no path separators.
- * suffix - if not NULL, part of the filename after the random part.
+ * suffix - if not nullptr, part of the filename after the random part.
  *
  * Result:
  * handle of the open file or -1 if couldn't open any.
@@ -792,15 +792,15 @@ mc_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *suffix)
     char *p1, *p2;
     int fd;
 
-    if (strchr (prefix, PATH_SEP) != NULL)
+    if (strchr (prefix, PATH_SEP) != nullptr)
         p1 = g_strdup (prefix);
     else
     {
         /* Add prefix first to find the position of XXXXXX */
-        p1 = g_build_filename (mc_tmpdir (), prefix, (char *) NULL);
+        p1 = g_build_filename (mc_tmpdir (), prefix, (char *) nullptr);
     }
 
-    p2 = g_strconcat (p1, "XXXXXX", suffix, (char *) NULL);
+    p2 = g_strconcat (p1, "XXXXXX", suffix, (char *) nullptr);
     g_free (p1);
 
     fd = g_mkstemp (p2);
@@ -808,7 +808,7 @@ mc_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *suffix)
         *pname_vpath = vfs_path_from_str (p2);
     else
     {
-        *pname_vpath = NULL;
+        *pname_vpath = nullptr;
         fd = -1;
     }
 
@@ -830,23 +830,23 @@ const char *
 mc_tmpdir (void)
 {
     static char buffer[PATH_MAX];
-    static const char *tmpdir = NULL;
+    static const char *tmpdir = nullptr;
     const char *sys_tmp;
     struct passwd *pwd;
     struct stat st;
-    const char *error = NULL;
+    const char *error = nullptr;
 
     /* Check if already correctly initialized */
-    if (tmpdir != NULL && lstat (tmpdir, &st) == 0 && S_ISDIR (st.st_mode) &&
+    if (tmpdir != nullptr && lstat (tmpdir, &st) == 0 && S_ISDIR (st.st_mode) &&
         st.st_uid == getuid () && (st.st_mode & 0777) == 0700)
         return tmpdir;
 
     sys_tmp = getenv ("TMPDIR");
-    if (sys_tmp == NULL || !IS_PATH_SEP (sys_tmp[0]))
+    if (sys_tmp == nullptr || !IS_PATH_SEP (sys_tmp[0]))
         sys_tmp = TMPDIR_DEFAULT;
 
     pwd = getpwuid (getuid ());
-    if (pwd != NULL)
+    if (pwd != nullptr)
         g_snprintf (buffer, sizeof (buffer), "%s/mc-%s", sys_tmp, pwd->pw_name);
     else
         g_snprintf (buffer, sizeof (buffer), "%s/mc-%lu", sys_tmp, (unsigned long) getuid ());
@@ -875,7 +875,7 @@ mc_tmpdir (void)
         }
     }
 
-    if (error != NULL)
+    if (error != nullptr)
     {
         int test_fd;
         char *fallback_prefix;
@@ -887,7 +887,7 @@ mc_tmpdir (void)
 
         /* Test if sys_tmp is suitable for temporary files */
         fallback_prefix = g_strdup_printf ("%s/mctest", sys_tmp);
-        test_fd = mc_mkstemps (&test_vpath, fallback_prefix, NULL);
+        test_fd = mc_mkstemps (&test_vpath, fallback_prefix, nullptr);
         g_free (fallback_prefix);
         if (test_fd != -1)
         {
@@ -905,7 +905,7 @@ mc_tmpdir (void)
         {
             fprintf (stderr, _("Temporary files will be created in %s\n"), sys_tmp);
             g_snprintf (buffer, sizeof (buffer), "%s", sys_tmp);
-            error = NULL;
+            error = nullptr;
         }
         else
         {
@@ -920,7 +920,7 @@ mc_tmpdir (void)
 
     tmpdir = buffer;
 
-    if (error == NULL)
+    if (error == nullptr)
         g_setenv ("MC_TMPDIR", tmpdir, TRUE);
 
     return tmpdir;

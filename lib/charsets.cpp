@@ -42,13 +42,13 @@
 
 /*** global variables ****************************************************************************/
 
-GPtrArray *codepages = NULL;
+GPtrArray *codepages = nullptr;
 
 unsigned char conv_displ[256];
 unsigned char conv_input[256];
 
-const char *cp_display = NULL;
-const char *cp_source = NULL;
+const char *cp_display = nullptr;
+const char *cp_source = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -96,13 +96,13 @@ load_codepages_list_from_file (GPtrArray ** list, const char *fname)
 {
     FILE *f;
     char buf[BUF_MEDIUM];
-    char *default_codepage = NULL;
+    char *default_codepage = nullptr;
 
     f = fopen (fname, "r");
-    if (f == NULL)
+    if (f == nullptr)
         return;
 
-    while (fgets (buf, sizeof buf, f) != NULL)
+    while (fgets (buf, sizeof buf, f) != nullptr)
     {
         /* split string into id and cpname */
         char *p = buf;
@@ -131,7 +131,7 @@ load_codepages_list_from_file (GPtrArray ** list, const char *fname)
         {
             const char *id = buf;
 
-            if (*list == NULL)
+            if (*list == nullptr)
             {
                 *list = g_ptr_array_sized_new (16);
                 g_ptr_array_add (*list, new_codepage_desc (id, p));
@@ -164,7 +164,7 @@ load_codepages_list_from_file (GPtrArray ** list, const char *fname)
         }
     }
 
-    if (default_codepage != NULL)
+    if (default_codepage != nullptr)
     {
         mc_global.display_codepage = get_codepage_index (default_codepage);
         g_free (default_codepage);
@@ -179,14 +179,14 @@ load_codepages_list_from_file (GPtrArray ** list, const char *fname)
 static char
 translate_character (GIConv cd, char c)
 {
-    gchar *tmp_buff = NULL;
+    gchar *tmp_buff = nullptr;
     gsize bytes_read, bytes_written = 0;
     const char *ibuf = &c;
     char ch = UNKNCHAR;
     int ibuflen = 1;
 
-    tmp_buff = g_convert_with_iconv (ibuf, ibuflen, cd, &bytes_read, &bytes_written, NULL);
-    if (tmp_buff != NULL)
+    tmp_buff = g_convert_with_iconv (ibuf, ibuflen, cd, &bytes_read, &bytes_written, nullptr);
+    if (tmp_buff != nullptr)
         ch = tmp_buff[0];
     g_free (tmp_buff);
     return ch;
@@ -202,16 +202,16 @@ load_codepages_list (void)
     char *fname;
 
     /* 1: try load /usr/share/mc/mc.charsets */
-    fname = g_build_filename (mc_global.share_data_dir, CHARSETS_LIST, (char *) NULL);
+    fname = g_build_filename (mc_global.share_data_dir, CHARSETS_LIST, (char *) nullptr);
     load_codepages_list_from_file (&codepages, fname);
     g_free (fname);
 
     /* 2: try load /etc/mc/mc.charsets */
-    fname = g_build_filename (mc_global.sysconfig_dir, CHARSETS_LIST, (char *) NULL);
+    fname = g_build_filename (mc_global.sysconfig_dir, CHARSETS_LIST, (char *) nullptr);
     load_codepages_list_from_file (&codepages, fname);
     g_free (fname);
 
-    if (codepages == NULL)
+    if (codepages == nullptr)
     {
         /* files are not found, add defaullt codepage */
         fprintf (stderr, "%s\n", _("Warning: cannot load codepages list"));
@@ -226,10 +226,10 @@ load_codepages_list (void)
 void
 free_codepages_list (void)
 {
-    g_ptr_array_foreach (codepages, free_codepage_desc, NULL);
+    g_ptr_array_foreach (codepages, free_codepage_desc, nullptr);
     g_ptr_array_free (codepages, TRUE);
-    /* NULL-ize pointer to make unit tests happy */
-    codepages = NULL;
+    /* nullptr-ize pointer to make unit tests happy */
+    codepages = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -247,7 +247,7 @@ get_codepage_index (const char *id)
 {
     size_t i;
 
-    if (codepages == NULL)
+    if (codepages == nullptr)
         return -1;
     if (strcmp (id, OTHER_8BIT) == 0)
         return -1;
@@ -298,7 +298,7 @@ init_translation_table (int cpsource, int cpdisplay)
             conv_input[i] = i;
         }
         cp_source = cp_display;
-        return NULL;
+        return nullptr;
     }
 
     for (i = 0; i <= 127; ++i)
@@ -335,7 +335,7 @@ init_translation_table (int cpsource, int cpdisplay)
 
     g_iconv_close (cd);
 
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -343,7 +343,7 @@ init_translation_table (int cpsource, int cpdisplay)
 void
 convert_to_display (char *str)
 {
-    if (str != NULL)
+    if (str != nullptr)
         for (; *str != '\0'; str++)
             *str = conv_displ[(unsigned char) *str];
 }
@@ -364,7 +364,7 @@ str_nconvert_to_display (const char *str, int len)
     GString *buff;
     GIConv conv;
 
-    if (str == NULL)
+    if (str == nullptr)
         return g_string_new ("");
 
     if (cp_display == cp_source)
@@ -383,7 +383,7 @@ str_nconvert_to_display (const char *str, int len)
 void
 convert_from_input (char *str)
 {
-    if (str != NULL)
+    if (str != nullptr)
         for (; *str != '\0'; str++)
             *str = conv_input[(unsigned char) *str];
 }
@@ -404,7 +404,7 @@ str_nconvert_to_input (const char *str, int len)
     GString *buff;
     GIConv conv;
 
-    if (str == NULL)
+    if (str == nullptr)
         return g_string_new ("");
 
     if (cp_display == cp_source)
@@ -428,7 +428,7 @@ convert_from_utf_to_current (const char *str)
     GIConv conv;
     const char *cp_to;
 
-    if (str == NULL)
+    if (str == nullptr)
         return '.';
 
     cp_to = get_codepage_id (mc_global.source_codepage);

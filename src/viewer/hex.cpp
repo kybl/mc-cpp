@@ -85,7 +85,7 @@ mcview_hex_calculate_boldflag (WView * view, off_t from, struct hexedit_change_n
                                gboolean force_changed)
 {
     return (from == view->hex_cursor) ? MARK_CURSOR
-        : ((curr != NULL && from == curr->offset) || force_changed) ? MARK_CHANGED
+        : ((curr != nullptr && from == curr->offset) || force_changed) ? MARK_CHANGED
         : (view->search_start <= from && from < view->search_end) ? MARK_SELECTED : MARK_NORMAL;
 }
 
@@ -149,7 +149,7 @@ mcview_display_hex (WView * view)
         curr = curr->next;
     }
 
-    for (; mcview_get_byte (view, from, NULL) && row < (int) height; row++)
+    for (; mcview_get_byte (view, from, nullptr) && row < (int) height; row++)
     {
         screen_dimen col = 0;
         int bytes;              /* Number of bytes already printed on the line */
@@ -205,13 +205,13 @@ mcview_display_hex (WView * view)
                             utf8buf[j] = '\0';
                             break;
                         }
-                        if (curr != NULL && from + j == curr->offset)
+                        if (curr != nullptr && from + j == curr->offset)
                         {
                             utf8buf[j] = curr->value;
                             if (first_changed == -1)
                                 first_changed = j;
                         }
-                        if (curr != NULL && from + j >= curr->offset)
+                        if (curr != nullptr && from + j >= curr->offset)
                             curr = curr->next;
                     }
                     utf8buf[UTF8_CHAR_LEN] = '\0';
@@ -242,7 +242,7 @@ mcview_display_hex (WView * view)
              * UTF-8 continuation bytes which were handled above. */
             if (row < 0)
             {
-                if (curr != NULL && from == curr->offset)
+                if (curr != nullptr && from == curr->offset)
                     curr = curr->next;
                 continue;
             }
@@ -262,7 +262,7 @@ mcview_display_hex (WView * view)
             boldflag_char = mcview_hex_calculate_boldflag (view, from, curr, utf8_changed);
 
             /* Determine the value of the current byte */
-            if (curr != NULL && from == curr->offset)
+            if (curr != nullptr && from == curr->offset)
             {
                 c = curr->value;
                 curr = curr->next;
@@ -381,7 +381,7 @@ mcview_hexedit_save_changes (WView * view)
 {
     int answer = 0;
 
-    if (view->change_list == NULL)
+    if (view->change_list == nullptr)
         return TRUE;
 
     while (answer == 0)
@@ -390,12 +390,12 @@ mcview_hexedit_save_changes (WView * view)
         char *text;
         struct hexedit_change_node *curr, *next;
 
-        g_assert (view->filename_vpath != NULL);
+        g_assert (view->filename_vpath != nullptr);
 
         fp = mc_open (view->filename_vpath, O_WRONLY);
         if (fp != -1)
         {
-            for (curr = view->change_list; curr != NULL; curr = next)
+            for (curr = view->change_list; curr != nullptr; curr = next)
             {
                 next = curr->next;
 
@@ -410,7 +410,7 @@ mcview_hexedit_save_changes (WView * view)
                 g_free (curr);
             }
 
-            view->change_list = NULL;
+            view->change_list = nullptr;
 
             if (view->locked)
                 view->locked = unlock_file (view->filename_vpath);
@@ -452,12 +452,12 @@ mcview_hexedit_free_change_list (WView * view)
 {
     struct hexedit_change_node *curr, *next;
 
-    for (curr = view->change_list; curr != NULL; curr = next)
+    for (curr = view->change_list; curr != nullptr; curr = next)
     {
         next = curr->next;
         g_free (curr);
     }
-    view->change_list = NULL;
+    view->change_list = nullptr;
 
     if (view->locked)
         view->locked = unlock_file (view->filename_vpath);
@@ -475,7 +475,7 @@ mcview_enqueue_change (struct hexedit_change_node **head, struct hexedit_change_
      * this location will be overwritten with the new node.   */
     struct hexedit_change_node **chnode = head;
 
-    while (*chnode != NULL && (*chnode)->offset < node->offset)
+    while (*chnode != nullptr && (*chnode)->offset < node->offset)
         chnode = &((*chnode)->next);
 
     node->next = *chnode;

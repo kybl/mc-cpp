@@ -69,7 +69,7 @@ is_num (int idx)
 {
     char *column = columns[idx];
 
-    return (column != NULL && isdigit (column[0]));
+    return (column != nullptr && isdigit (column[0]));
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -80,7 +80,7 @@ is_dos_date (const char *str)
 {
     size_t len;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     len = strlen (str);
@@ -90,7 +90,7 @@ is_dos_date (const char *str)
     if (str[2] != str[5])
         return FALSE;
 
-    return (strchr ("\\-/", (int) str[2]) != NULL);
+    return (strchr ("\\-/", (int) str[2]) != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -101,14 +101,14 @@ is_week (const char *str, struct tm *tim)
     static const char *week = "SunMonTueWedThuFriSat";
     const char *pos;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     pos = strstr (week, str);
-    if (pos == NULL)
+    if (pos == nullptr)
         return FALSE;
 
-    if (tim != NULL)
+    if (tim != nullptr)
         tim->tm_wday = (pos - week) / 3;
 
     return TRUE;
@@ -122,14 +122,14 @@ is_month (const char *str, struct tm *tim)
     static const char *month = "JanFebMarAprMayJunJulAugSepOctNovDec";
     const char *pos;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     pos = strstr (month, str);
-    if (pos == NULL)
+    if (pos == nullptr)
         return FALSE;
 
-    if (tim != NULL)
+    if (tim != nullptr)
         tim->tm_mon = (pos - month) / 3;
 
     return TRUE;
@@ -148,7 +148,7 @@ is_localized_month (const char *month)
 {
     int i;
 
-    if (month == NULL)
+    if (month == nullptr)
         return FALSE;
 
     for (i = 0;
@@ -166,15 +166,15 @@ is_time (const char *str, struct tm *tim)
 {
     const char *p, *p2;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     p = strchr (str, ':');
-    if (p == NULL)
+    if (p == nullptr)
         return FALSE;
 
     p2 = strrchr (str, ':');
-    if (p2 == NULL)
+    if (p2 == nullptr)
         return FALSE;
 
     if (p != p2)
@@ -198,10 +198,10 @@ is_year (char *str, struct tm *tim)
 {
     long year;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
-    if (strchr (str, ':') != NULL)
+    if (strchr (str, ':') != nullptr)
         return FALSE;
 
     if (strlen (str) != 4)
@@ -524,7 +524,7 @@ vfs_parse_filedate (int idx, time_t * t)
     struct tm *local_time;
 
     /* Let's setup default time values */
-    current_time = time (NULL);
+    current_time = time (nullptr);
     local_time = localtime (&current_time);
     tim.tm_mday = local_time->tm_mday;
     tim.tm_mon = local_time->tm_mon;
@@ -680,8 +680,8 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
 {
     int idx, idx2, num_cols;
     int i;
-    char *p_copy = NULL;
-    char *t = NULL;
+    char *p_copy = nullptr;
+    char *t = nullptr;
     const char *line = p;
     size_t skipped;
 
@@ -732,7 +732,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
 
     /* Mhm, the ls -lg did not produce a group field */
     for (idx = 3; idx <= 5; idx++)
-        if (is_month (columns[idx], NULL) || is_week (columns[idx], NULL)
+        if (is_month (columns[idx], nullptr) || is_week (columns[idx], nullptr)
             || is_dos_date (columns[idx]) || is_localized_month (columns[idx]))
             break;
 
@@ -786,7 +786,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
         if (!is_num (idx2))
             goto error;
 
-        s->st_size = (off_t) g_ascii_strtoll (columns[idx2], NULL, 10);
+        s->st_size = (off_t) g_ascii_strtoll (columns[idx2], nullptr, 10);
 #ifdef HAVE_STRUCT_STAT_ST_RDEV
         s->st_rdev = 0;
 #endif
@@ -808,7 +808,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
 #endif
     vfs_adjust_stat (s);
 
-    if (num_spaces != NULL)
+    if (num_spaces != nullptr)
     {
         *num_spaces = column_ptr[idx] - column_ptr[idx - 1] - strlen (columns[idx - 1]);
         if (DIR_IS_DOTDOT (columns[idx]))
@@ -825,10 +825,10 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
     if (((S_ISLNK (s->st_mode) || (num_cols == idx + 3 && s->st_nlink > 1)))    /* Maybe a hardlink? (in extfs) */
         && idx2 != 0)
     {
-        if (filename != NULL)
+        if (filename != nullptr)
             *filename = g_strndup (p + column_ptr[idx], column_ptr[idx2] - column_ptr[idx] - 1);
 
-        if (linkname != NULL)
+        if (linkname != nullptr)
         {
             t = g_strdup (p + column_ptr[idx2 + 1]);
             *linkname = t;
@@ -839,18 +839,18 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
         /* Extract the filename from the string copy, not from the columns
          * this way we have a chance of entering hidden directories like ". ."
          */
-        if (filename != NULL)
+        if (filename != nullptr)
         {
             /* filename = g_strdup (columns [idx++]); */
             t = g_strdup (p + column_ptr[idx]);
             *filename = t;
         }
 
-        if (linkname != NULL)
-            *linkname = NULL;
+        if (linkname != nullptr)
+            *linkname = nullptr;
     }
 
-    if (t != NULL)
+    if (t != nullptr)
     {
         size_t p2;
 
@@ -870,7 +870,7 @@ vfs_parse_ls_lga (const char *p, struct stat * s, char **filename, char **linkna
 
         if (++errorcount < 5)
             message (D_ERROR, _("Cannot parse:"), "%s",
-                     (p_copy != NULL && *p_copy != '\0') ? p_copy : line);
+                     (p_copy != nullptr && *p_copy != '\0') ? p_copy : line);
         else if (errorcount == 5)
             message (D_ERROR, MSG_ERROR, _("More parsing errors will be ignored."));
     }

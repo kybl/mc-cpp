@@ -100,22 +100,22 @@ tty_check_term (gboolean force_xterm)
     const char *xdisplay;
 
     termvalue = getenv ("TERM");
-    if (termvalue == NULL || *termvalue == '\0')
+    if (termvalue == nullptr || *termvalue == '\0')
     {
         fputs (_("The TERM environment variable is unset!\n"), stderr);
         exit (EXIT_FAILURE);
     }
 
     xdisplay = getenv ("DISPLAY");
-    if (xdisplay != NULL && *xdisplay == '\0')
-        xdisplay = NULL;
+    if (xdisplay != nullptr && *xdisplay == '\0')
+        xdisplay = nullptr;
 
     return force_xterm || strncmp (termvalue, "xterm", 5) == 0
         || strncmp (termvalue, "konsole", 7) == 0
         || strncmp (termvalue, "rxvt", 4) == 0
         || strcmp (termvalue, "Eterm") == 0
         || strcmp (termvalue, "dtterm") == 0
-        || (strncmp (termvalue, "screen", 6) == 0 && xdisplay != NULL);
+        || (strncmp (termvalue, "screen", 6) == 0 && xdisplay != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -131,7 +131,7 @@ tty_start_interrupt_key (void)
 #ifdef SA_RESTART
     act.sa_flags = SA_RESTART;
 #endif /* SA_RESTART */
-    sigaction (SIGINT, &act, NULL);
+    sigaction (SIGINT, &act, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -144,7 +144,7 @@ tty_enable_interrupt_key (void)
     memset (&act, 0, sizeof (act));
     act.sa_handler = sigintr_handler;
     sigemptyset (&act.sa_mask);
-    sigaction (SIGINT, &act, NULL);
+    sigaction (SIGINT, &act, nullptr);
     got_interrupt = 0;
 }
 
@@ -158,7 +158,7 @@ tty_disable_interrupt_key (void)
     memset (&act, 0, sizeof (act));
     act.sa_handler = SIG_IGN;
     sigemptyset (&act.sa_mask);
-    sigaction (SIGINT, &act, NULL);
+    sigaction (SIGINT, &act, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -188,7 +188,7 @@ tty_got_winch (void)
     FD_ZERO (&fdset);
     FD_SET (sigwinch_pipe[0], &fdset);
 
-    while ((ok = select (sigwinch_pipe[0] + 1, &fdset, NULL, NULL, &timeout)) < 0)
+    while ((ok = select (sigwinch_pipe[0] + 1, &fdset, nullptr, nullptr, &timeout)) < 0)
         if (errno != EINTR)
         {
             perror (_("Cannot check SIGWINCH pipe"));
@@ -335,13 +335,13 @@ tty_init_xterm_support (gboolean is_xterm)
        in slang_init() or/and init_curses()  */
     /* Check terminfo at first, then check termcap */
     xmouse_seq = tty_tgetstr ("kmous");
-    if (xmouse_seq == NULL)
+    if (xmouse_seq == nullptr)
         xmouse_seq = tty_tgetstr ("Km");
     smcup = tty_tgetstr ("smcup");
-    if (smcup == NULL)
+    if (smcup == nullptr)
         smcup = tty_tgetstr ("ti");
     rmcup = tty_tgetstr ("rmcup");
-    if (rmcup == NULL)
+    if (rmcup == nullptr)
         rmcup = tty_tgetstr ("te");
 
     if (strcmp (termvalue, "cygwin") == 0)
@@ -353,7 +353,7 @@ tty_init_xterm_support (gboolean is_xterm)
     if (is_xterm)
     {
         /* Default to the standard xterm sequence */
-        if (xmouse_seq == NULL)
+        if (xmouse_seq == nullptr)
             xmouse_seq = ESC_STR "[M";
 
         /* Enable mouse unless explicitly disabled by --nomouse */
@@ -366,7 +366,7 @@ tty_init_xterm_support (gboolean is_xterm)
                 /* FIXME: this dirty hack to set supported type of tracking the mouse */
                 const char *color_term = getenv ("COLORTERM");
                 if (strncmp (termvalue, "rxvt", 4) == 0 ||
-                    (color_term != NULL && strncmp (color_term, "rxvt", 4) == 0) ||
+                    (color_term != nullptr && strncmp (color_term, "rxvt", 4) == 0) ||
                     strcmp (termvalue, "Eterm") == 0)
                     use_mouse_p = MOUSE_XTERM_NORMAL_TRACKING;
                 else
@@ -378,7 +378,7 @@ tty_init_xterm_support (gboolean is_xterm)
     /* There's only one termcap entry "kmous", typically containing "\E[M" or "\E[<".
      * We need the former in xmouse_seq, the latter in xmouse_extended_seq.
      * See tickets 2956, 3954, and 4063 for details. */
-    if (xmouse_seq != NULL)
+    if (xmouse_seq != nullptr)
     {
         if (strcmp (xmouse_seq, ESC_STR "[<") == 0)
             xmouse_seq = ESC_STR "[M";

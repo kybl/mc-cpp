@@ -13,7 +13,7 @@
 
 #define MENUBAR(x) ((WMenuBar *)(x))
 
-#define menu_separator_create() NULL
+#define menu_separator_create() nullptr
 
 /*** enums ***************************************************************************************/
 

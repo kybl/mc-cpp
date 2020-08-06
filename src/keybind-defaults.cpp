@@ -34,45 +34,45 @@
 
 /*** global variables ****************************************************************************/
 
-GArray *main_keymap = NULL;
-GArray *main_x_keymap = NULL;
-GArray *panel_keymap = NULL;
-GArray *dialog_keymap = NULL;
-GArray *menu_keymap = NULL;
-GArray *input_keymap = NULL;
-GArray *listbox_keymap = NULL;
-GArray *radio_keymap = NULL;
-GArray *tree_keymap = NULL;
-GArray *help_keymap = NULL;
+GArray *main_keymap = nullptr;
+GArray *main_x_keymap = nullptr;
+GArray *panel_keymap = nullptr;
+GArray *dialog_keymap = nullptr;
+GArray *menu_keymap = nullptr;
+GArray *input_keymap = nullptr;
+GArray *listbox_keymap = nullptr;
+GArray *radio_keymap = nullptr;
+GArray *tree_keymap = nullptr;
+GArray *help_keymap = nullptr;
 #ifdef ENABLE_EXT2FS_ATTR
-GArray *chattr_keymap = NULL;
+GArray *chattr_keymap = nullptr;
 #endif
 #ifdef USE_INTERNAL_EDIT
-GArray *editor_keymap = NULL;
-GArray *editor_x_keymap = NULL;
+GArray *editor_keymap = nullptr;
+GArray *editor_x_keymap = nullptr;
 #endif
-GArray *viewer_keymap = NULL;
-GArray *viewer_hex_keymap = NULL;
+GArray *viewer_keymap = nullptr;
+GArray *viewer_hex_keymap = nullptr;
 #ifdef USE_DIFF_VIEW
-GArray *diff_keymap = NULL;
+GArray *diff_keymap = nullptr;
 #endif
 
-const global_keymap_t *main_map = NULL;
-const global_keymap_t *main_x_map = NULL;
-const global_keymap_t *panel_map = NULL;
-const global_keymap_t *tree_map = NULL;
-const global_keymap_t *help_map = NULL;
+const global_keymap_t *main_map = nullptr;
+const global_keymap_t *main_x_map = nullptr;
+const global_keymap_t *panel_map = nullptr;
+const global_keymap_t *tree_map = nullptr;
+const global_keymap_t *help_map = nullptr;
 #ifdef ENABLE_EXT2FS_ATTR
-const global_keymap_t *chattr_map = NULL;
+const global_keymap_t *chattr_map = nullptr;
 #endif
 #ifdef USE_INTERNAL_EDIT
-const global_keymap_t *editor_map = NULL;
-const global_keymap_t *editor_x_map = NULL;
+const global_keymap_t *editor_map = nullptr;
+const global_keymap_t *editor_x_map = nullptr;
 #endif
-const global_keymap_t *viewer_map = NULL;
-const global_keymap_t *viewer_hex_map = NULL;
+const global_keymap_t *viewer_map = nullptr;
+const global_keymap_t *viewer_hex_map = nullptr;
 #ifdef USE_DIFF_VIEW
-const global_keymap_t *diff_map = NULL;
+const global_keymap_t *diff_map = nullptr;
 #endif
 
 /*** file scope macro definitions ****************************************************************/
@@ -140,7 +140,7 @@ static const global_keymap_ini_t default_main_keymap[] = {
     {"SelectInvert", "kpasterisk"},
     /* List of screens */
     {"ScreenList", "alt-prime"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 static const global_keymap_ini_t default_main_x_keymap[] = {
@@ -173,7 +173,7 @@ static const global_keymap_ini_t default_main_x_keymap[] = {
     {"Jobs", "j"},
 #endif /* ENABLE_BACKGROUND */
     {"ExternalPanelize", "!"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* panel */
@@ -214,7 +214,7 @@ static const global_keymap_ini_t default_panel_keymap[] = {
 #endif
     {"Search", "ctrl-s; alt-s"},
     {"PanelOtherSync", "alt-i"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* dialog */
@@ -233,7 +233,7 @@ static const global_keymap_ini_t default_dialog_keymap[] = {
     {"ScreenList", "alt-prime"},
     {"ScreenNext", "alt-rbrace"},
     {"ScreenPrev", "alt-lbrace"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* menubar */
@@ -247,7 +247,7 @@ static const global_keymap_ini_t default_menu_keymap[] = {
     {"End", "end; alt-gt; ctrl-e"},
     {"Enter", "enter"},
     {"Quit", "f10; ctrl-g; esc"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* input line */
@@ -282,7 +282,7 @@ static const global_keymap_ini_t default_input_keymap[] = {
     {"HistoryNext", "alt-n; ctrl-up"},
     /* Completion */
     {"Complete", "alt-tab"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* listbox */
@@ -298,7 +298,7 @@ static const global_keymap_ini_t default_listbox_keymap[] = {
     {"View", "f3"},
     {"Edit", "f4"},
     {"Enter", "enter"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* radio */
@@ -308,7 +308,7 @@ static const global_keymap_ini_t default_radio_keymap[] = {
     {"Top", "home; alt-lt; a1"},
     {"Bottom", "end; alt-gt; c1"},
     {"Select", "space"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* tree */
@@ -333,7 +333,7 @@ static const global_keymap_ini_t default_tree_keymap[] = {
     {"PageDown", "pgdn; ctrl-v"},
     {"Enter", "enter"},
     {"Search", "ctrl-s; alt-s"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* help */
@@ -355,7 +355,7 @@ static const global_keymap_ini_t default_help_keymap[] = {
     {"LinkPrev", "alt-tab"},
     {"NodeNext", "n"},
     {"NodePrev", "p"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 #ifdef ENABLE_EXT2FS_ATTR
@@ -369,7 +369,7 @@ static const global_keymap_ini_t default_chattr_keymap[] = {
     {"PageDown", "pgdn; ctrl-v"},
     {"Mark", "t; shift-t"},
     {"MarkAndDown", "insert"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 #endif /* ENABLE_EXT2FS_ATTR */
 
@@ -475,12 +475,12 @@ static const global_keymap_ini_t default_editor_keymap[] = {
     {"SpellCheckCurrentWord", "ctrl-p"},
 #endif
     {"ExtendedKeyMap", "ctrl-x"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* emacs keyboard layout emulation */
 static const global_keymap_ini_t default_editor_x_keymap[] = {
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 #endif /* USE_INTERNAL_EDIT */
 
@@ -524,7 +524,7 @@ static const global_keymap_ini_t default_viewer_keymap[] = {
     {"SearchBackwardContinue", "ctrl-r"},
     {"SearchOppositeContinue", "shift-n"},
     {"History", "alt-shift-e"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 /* hex viewer */
@@ -560,7 +560,7 @@ static const global_keymap_ini_t default_viewer_hex_keymap[] = {
     {"SearchBackwardContinue", "ctrl-r"},
     {"SearchOppositeContinue", "shift-n"},
     {"History", "alt-shift-e"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 #ifdef  USE_DIFF_VIEW
@@ -607,7 +607,7 @@ static const global_keymap_ini_t default_diff_keymap[] = {
     {"SelectCodepage", "alt-e"},
 #endif
     {"Shell", "ctrl-o"},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 #endif
 
@@ -626,7 +626,7 @@ create_default_keymap_section (mc_config_t * keymap, const char *section,
 {
     size_t i;
 
-    for (i = 0; k[i].key != NULL; i++)
+    for (i = 0; k[i].key != nullptr; i++)
         mc_config_set_string_raw (keymap, section, k[i].key, k[i].value);
 }
 
@@ -639,7 +639,7 @@ create_default_keymap (void)
 {
     mc_config_t *keymap;
 
-    keymap = mc_config_init (NULL, TRUE);
+    keymap = mc_config_init (nullptr, TRUE);
 
     create_default_keymap_section (keymap, KEYMAP_SECTION_MAIN, default_main_keymap);
     create_default_keymap_section (keymap, KEYMAP_SECTION_MAIN_EXT, default_main_x_keymap);

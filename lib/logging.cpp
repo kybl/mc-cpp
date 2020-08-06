@@ -63,7 +63,7 @@ is_logging_enabled_from_env (void)
     const char *env_is_enabled;
 
     env_is_enabled = g_getenv ("MC_LOG_ENABLE");
-    if (env_is_enabled == NULL)
+    if (env_is_enabled == nullptr)
         return FALSE;
 
     logging_enabled = (*env_is_enabled == '1' || g_ascii_strcasecmp (env_is_enabled, "true") == 0);
@@ -98,12 +98,12 @@ get_log_filename (void)
     const char *env_filename;
 
     env_filename = g_getenv ("MC_LOG_FILE");
-    if (env_filename != NULL)
+    if (env_filename != nullptr)
         return g_strdup (env_filename);
 
     if (mc_config_has_param (mc_global.main_config, CONFIG_GROUP_NAME, CONFIG_KEY_NAME_FILE))
         return mc_config_get_string (mc_global.main_config, CONFIG_GROUP_NAME, CONFIG_KEY_NAME_FILE,
-                                     NULL);
+                                     nullptr);
 
     return mc_config_get_full_path ("mc.log");
 }
@@ -118,12 +118,12 @@ mc_va_log (const char *fmt, va_list args)
 
     logfilename = get_log_filename ();
 
-    if (logfilename != NULL)
+    if (logfilename != nullptr)
     {
         FILE *f;
 
         f = fopen (logfilename, "a");
-        if (f != NULL)
+        if (f != nullptr)
         {
             (void) vfprintf (f, fmt, args);
             (void) fclose (f);

@@ -51,11 +51,11 @@
 mc_global_t mc_global = {
     .mc_run_mode = MC_RUN_FULL,
     .run_from_parent_mc = FALSE,
-    .timer = NULL,
+    .timer = nullptr,
     .midnight_shutdown = FALSE,
 
-    .sysconfig_dir = NULL,
-    .share_data_dir = NULL,
+    .sysconfig_dir = nullptr,
+    .share_data_dir = nullptr,
 
 #ifdef HAVE_CHARSET
     .source_codepage = -1,
@@ -80,16 +80,16 @@ mc_global_t mc_global = {
         .is_right = FALSE
     },
 
-    .shell = NULL,
+    .shell = nullptr,
 
     .tty =
     {
-        .skin = NULL,
+        .skin = nullptr,
         .shadows = TRUE,
-        .setup_color_string = NULL,
-        .term_color_string = NULL,
-        .color_terminal_string = NULL,
-        .command_line_colors = NULL,
+        .setup_color_string = nullptr,
+        .term_color_string = nullptr,
+        .color_terminal_string = nullptr,
+        .command_line_colors = nullptr,
 #ifndef LINUX_CONS_SAVER_C
         .console_flag = '\0',
 #endif /* !LINUX_CONS_SAVER_C */

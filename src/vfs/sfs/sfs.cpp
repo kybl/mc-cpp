@@ -102,7 +102,7 @@ typedef struct cachedfile
 
 /*** file scope variables ************************************************************************/
 
-static GSList *head = NULL;
+static GSList *head = nullptr;
 
 static struct vfs_s_subclass sfs_subclass;
 static struct vfs_class *vfs_sfs_ops = VFS_CLASS (&sfs_subclass);
@@ -162,7 +162,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
         vfs_path_t *s;
 
         s = mc_getlocalcopy (pname);
-        if (s == NULL)
+        if (s == nullptr)
         {
             vfs_path_free (pname);
             return (-1);
@@ -178,7 +178,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
     {
         if (was_percent)
         {
-            const char *ptr = NULL;
+            const char *ptr = nullptr;
 
             was_percent = FALSE;
 
@@ -200,7 +200,7 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
                 break;
             }
 
-            if (ptr != NULL)
+            if (ptr != nullptr)
             {
                 COPY_STRING (ptr);
             }
@@ -217,11 +217,11 @@ sfs_vfmake (const vfs_path_t * vpath, vfs_path_t * cache_vpath)
     open_error_pipe ();
     if (my_system (EXECUTE_AS_SHELL, "/bin/sh", pad))
     {
-        close_error_pipe (D_ERROR, NULL);
+        close_error_pipe (D_ERROR, nullptr);
         return (-1);
     }
 
-    close_error_pipe (D_NORMAL, NULL);
+    close_error_pipe (D_NORMAL, nullptr);
     return 0;                   /* OK */
 }
 
@@ -239,7 +239,7 @@ sfs_redirect (const vfs_path_t * vpath)
     path_element = vfs_path_get_by_index (vpath, -1);
     cur = g_slist_find_custom (head, vfs_path_as_str (vpath), cachedfile_compare);
 
-    if (cur != NULL)
+    if (cur != nullptr)
     {
         cf = (cachedfile *) cur->data;
         vfs_stamp (vfs_sfs_ops, cf);
@@ -281,7 +281,7 @@ sfs_open (const vfs_path_t * vpath /*struct vfs_class *me, const char *path */ ,
 
     fd = open (sfs_redirect (vpath), NO_LINEAR (flags), mode);
     if (fd == -1)
-        return NULL;
+        return nullptr;
 
     info = g_new (int, 1);
     *info = fd;
@@ -354,7 +354,7 @@ sfs_getid (const vfs_path_t * vpath)
 
     cur = g_slist_find_custom (head, vfs_path_as_str (vpath), cachedfile_compare);
 
-    return (vfsid) (cur != NULL ? cur->data : NULL);
+    return (vfsid) (cur != nullptr ? cur->data : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -367,7 +367,7 @@ sfs_free (vfsid id)
 
     which = (struct cachedfile *) id;
     cur = g_slist_find (head, which);
-    if (cur == NULL)
+    if (cur == nullptr)
         vfs_die ("Free of thing which is unknown to me\n");
 
     which = (struct cachedfile *) cur->data;
@@ -388,7 +388,7 @@ sfs_fill_names (struct vfs_class *me, fill_names_f func)
 
     (void) me;
 
-    for (cur = head; cur != NULL; cur = g_slist_next (cur))
+    for (cur = head; cur != nullptr; cur = g_slist_next (cur))
         func (((cachedfile *) cur->data)->name);
 }
 
@@ -433,10 +433,10 @@ sfs_init (struct vfs_class *me)
 
     (void) me;
 
-    mc_sfsini = g_build_filename (mc_global.sysconfig_dir, "sfs.ini", (char *) NULL);
+    mc_sfsini = g_build_filename (mc_global.sysconfig_dir, "sfs.ini", (char *) nullptr);
     cfg = fopen (mc_sfsini, "r");
 
-    if (cfg == NULL)
+    if (cfg == nullptr)
     {
         fprintf (stderr, _("%s: Warning: file %s not found\n"), "sfs_init()", mc_sfsini);
         g_free (mc_sfsini);
@@ -445,9 +445,9 @@ sfs_init (struct vfs_class *me)
     g_free (mc_sfsini);
 
     sfs_no = 0;
-    while (sfs_no < MAXFS && fgets (key, sizeof (key), cfg) != NULL)
+    while (sfs_no < MAXFS && fgets (key, sizeof (key), cfg) != nullptr)
     {
-        char *c, *semi = NULL;
+        char *c, *semi = nullptr;
         sfs_flags_t flags = F_NONE;
 
         if (*key == '#' || *key == '\n')
@@ -465,7 +465,7 @@ sfs_init (struct vfs_class *me)
                 break;
             }
 
-        if (semi == NULL)
+        if (semi == nullptr)
         {
           invalid_line:
             fprintf (stderr, _("Warning: Invalid line in %s:\n%s\n"), "sfs.ini", key);
@@ -494,7 +494,7 @@ sfs_init (struct vfs_class *me)
         c++;
         *(semi + 1) = '\0';
         semi = strchr (c, '\n');
-        if (semi != NULL)
+        if (semi != nullptr)
             *semi = '\0';
 
         sfs_info[sfs_no].prefix = g_strdup (key);
@@ -555,7 +555,7 @@ vfs_init_sfs (void)
     /* NULLize vfs_s_subclass members */
     memset (&sfs_subclass, 0, sizeof (sfs_subclass));
 
-    vfs_init_class (vfs_sfs_ops, "sfs", VFSF_UNKNOWN, NULL);
+    vfs_init_class (vfs_sfs_ops, "sfs", VFSF_UNKNOWN, nullptr);
     vfs_sfs_ops->init = sfs_init;
     vfs_sfs_ops->done = sfs_done;
     vfs_sfs_ops->fill_names = sfs_fill_names;

@@ -78,7 +78,7 @@ static mc_tty_color_table_t const color_table[] = {
     {"A_BOLD_REVERSE", SPEC_A_BOLD_REVERSE},
     {"A_UNDERLINE", SPEC_A_UNDERLINE},
     /* End of list */
-    {NULL, 0}
+    {nullptr, 0}
 };
 
 static mc_tty_color_table_t const attributes_table[] = {
@@ -90,7 +90,7 @@ static mc_tty_color_table_t const attributes_table[] = {
     {"reverse", A_REVERSE},
     {"blink", A_BLINK},
     /* End of list */
-    {NULL, 0}
+    {nullptr, 0}
 };
 
 /* --------------------------------------------------------------------------------------------- */
@@ -171,7 +171,7 @@ tty_color_get_name_by_index (int idx)
 
     /* Find the real English name of the first 16 colors, */
     /* as well as the A_* special values. */
-    for (i = 0; color_table[i].name != NULL; i++)
+    for (i = 0; color_table[i].name != nullptr; i++)
         if (idx == color_table[i].value)
             return color_table[i].name;
 
@@ -194,11 +194,11 @@ tty_color_get_name_by_index (int idx)
 int
 tty_color_get_index_by_name (const char *color_name)
 {
-    if (color_name != NULL)
+    if (color_name != nullptr)
     {
         size_t i;
 
-        for (i = 0; color_table[i].name != NULL; i++)
+        for (i = 0; color_table[i].name != nullptr; i++)
             if (strcmp (color_name, color_table[i].name) == 0)
                 return color_table[i].value;
         return parse_256_or_true_color_name (color_name);
@@ -213,18 +213,18 @@ tty_attr_get_bits (const char *attrs)
 {
     int attr_bits = 0;
 
-    if (attrs != NULL)
+    if (attrs != nullptr)
     {
         gchar **attr_list;
         int i;
 
         attr_list = g_strsplit (attrs, "+", -1);
 
-        for (i = 0; attr_list[i] != NULL; i++)
+        for (i = 0; attr_list[i] != nullptr; i++)
         {
             int j;
 
-            for (j = 0; attributes_table[j].name != NULL; j++)
+            for (j = 0; attributes_table[j].name != nullptr; j++)
             {
                 if (strcmp (attr_list[i], attributes_table[j].name) == 0)
                 {

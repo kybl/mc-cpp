@@ -125,7 +125,7 @@ typedef struct
 
 /* We only allow one opened ext2fs */
 static char *ext2_fname;
-static ext2_filsys fs = NULL;
+static ext2_filsys fs = nullptr;
 static struct lsdel_struct lsd;
 static struct deleted_info *delarray;
 static int num_delarray, max_delarray;
@@ -146,7 +146,7 @@ undelfs_shutdown (void)
 {
     if (fs)
         ext2fs_close (fs);
-    fs = NULL;
+    fs = nullptr;
     MC_PTR_FREE (ext2_fname);
     MC_PTR_FREE (delarray);
     MC_PTR_FREE (block_buf);
@@ -169,7 +169,7 @@ undelfs_get_path (const vfs_path_t * vpath, char **fsname, char **file)
 
     dirname = path_element->path;
 
-    *fsname = NULL;
+    *fsname = nullptr;
 
     if (strncmp (dirname, "undel://", 8) != 0)
         return;
@@ -197,14 +197,14 @@ undelfs_get_path (const vfs_path_t * vpath, char **fsname, char **file)
 
             *file = g_strdup (p + 1);
             tmp = g_strndup (dirname, p - dirname);
-            *fsname = g_strconcat ("/dev/", tmp, (char *) NULL);
+            *fsname = g_strconcat ("/dev/", tmp, (char *) nullptr);
             g_free (tmp);
             return;
         }
         p--;
     }
     *file = g_strdup ("");
-    *fsname = g_strconcat ("/dev/", dirname, (char *) NULL);
+    *fsname = g_strconcat ("/dev/", dirname, (char *) nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -344,12 +344,12 @@ undelfs_loaddel (void)
 static void *
 undelfs_opendir (const vfs_path_t * vpath)
 {
-    char *file, *f = NULL;
+    char *file, *f = nullptr;
     const vfs_path_element_t *path_element;
 
     path_element = vfs_path_get_by_index (vpath, -1);
     undelfs_get_path (vpath, &file, &f);
-    if (file == NULL)
+    if (file == nullptr)
     {
         g_free (f);
         return 0;
@@ -396,7 +396,7 @@ undelfs_opendir (const vfs_path_t * vpath)
   quit_opendir:
     vfs_print_message (_("%s: failure"), path_element->clazz->name);
     ext2fs_close (fs);
-    fs = NULL;
+    fs = nullptr;
     return 0;
 }
 
@@ -411,10 +411,10 @@ undelfs_readdir (void *vfs_info)
     if (vfs_info != fs)
     {
         message (D_ERROR, undelfserr, "%s", _("vfs_info is not fs!"));
-        return NULL;
+        return nullptr;
     }
     if (readdir_ptr == num_delarray)
-        return NULL;
+        return nullptr;
     if (readdir_ptr < 0)
         strcpy (dirent_dest, readdir_ptr == -2 ? "." : "..");
     else
@@ -440,15 +440,15 @@ undelfs_closedir (void *vfs_info)
 static void *
 undelfs_open (const vfs_path_t * vpath, int flags, mode_t mode)
 {
-    char *file, *f = NULL;
+    char *file, *f = nullptr;
     ext2_ino_t inode, i;
-    undelfs_file *p = NULL;
+    undelfs_file *p = nullptr;
     (void) flags;
     (void) mode;
 
     /* Only allow reads on this file system */
     undelfs_get_path (vpath, &file, &f);
-    if (file == NULL)
+    if (file == nullptr)
     {
         g_free (f);
         return 0;
@@ -599,7 +599,7 @@ undelfs_read (void *vfs_info, char *buffer, size_t count)
     {
         p->count = p->size - p->pos;
     }
-    retval = ext2fs_block_iterate (fs, p->inode, 0, NULL, undelfs_dump_read, p);
+    retval = ext2fs_block_iterate (fs, p->inode, 0, nullptr, undelfs_dump_read, p);
     if (retval)
     {
         message (D_ERROR, undelfserr, "%s", _("while iterating over blocks"));
@@ -654,10 +654,10 @@ static int
 undelfs_lstat (const vfs_path_t * vpath, struct stat *buf)
 {
     int inode_index;
-    char *file, *f = NULL;
+    char *file, *f = nullptr;
 
     undelfs_get_path (vpath, &file, &f);
-    if (file == NULL)
+    if (file == nullptr)
     {
         g_free (f);
         return 0;
@@ -708,11 +708,11 @@ undelfs_fstat (void *vfs_info, struct stat *buf)
 static int
 undelfs_chdir (const vfs_path_t * vpath)
 {
-    char *file, *f = NULL;
+    char *file, *f = nullptr;
     int fd;
 
     undelfs_get_path (vpath, &file, &f);
-    if (file == NULL)
+    if (file == nullptr)
     {
         g_free (f);
         return (-1);
@@ -753,16 +753,16 @@ undelfs_lseek (void *vfs_info, off_t offset, int whence)
 static vfsid
 undelfs_getid (const vfs_path_t * vpath)
 {
-    char *fname = NULL, *fsname;
+    char *fname = nullptr, *fsname;
     gboolean ok;
 
     undelfs_get_path (vpath, &fsname, &fname);
-    ok = fsname != NULL;
+    ok = fsname != nullptr;
 
     g_free (fname);
     g_free (fsname);
 
-    return ok ? (vfsid) fs : NULL;
+    return ok ? (vfsid) fs : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -797,7 +797,7 @@ undelfs_init (struct vfs_class *me)
     return 1;
 }
 #else
-#define undelfs_init NULL
+#define undelfs_init nullptr
 #endif
 
 /* --------------------------------------------------------------------------------------------- */

@@ -59,7 +59,7 @@ check_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
     switch (msg)
     {
     case MSG_HOTKEY:
-        if (c->text.hotkey != NULL)
+        if (c->text.hotkey != nullptr)
         {
             if (g_ascii_tolower ((gchar) c->text.hotkey[0]) == parm)
             {
@@ -75,7 +75,7 @@ check_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
             return MSG_NOT_HANDLED;
         c->state = !c->state;
         widget_draw (w);
-        send_message (w->owner, w, MSG_NOTIFY, 0, NULL);
+        send_message (w->owner, w, MSG_NOTIFY, 0, nullptr);
         return MSG_HANDLED;
 
     case MSG_CURSOR:
@@ -117,8 +117,8 @@ check_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         break;
 
     case MSG_MOUSE_CLICK:
-        send_message (w, NULL, MSG_KEY, ' ', NULL);
-        send_message (w->owner, w, MSG_POST_KEY, ' ', NULL);
+        send_message (w, nullptr, MSG_KEY, ' ', nullptr);
+        send_message (w->owner, w, MSG_POST_KEY, ' ', nullptr);
         break;
 
     default:
@@ -165,7 +165,7 @@ check_set_text (WCheck * check, const char *text)
     hotkey_free (check->text);
     check->text = hk;
 
-    if (check->text.start[0] == '\0' && check->text.hotkey == NULL && check->text.end == NULL)
+    if (check->text.start[0] == '\0' && check->text.hotkey == nullptr && check->text.end == nullptr)
         w->cols = 3;            /* "[ ]" */
     else
         w->cols = 4 + hotkey_width (check->text);       /* "[ ]  text" */

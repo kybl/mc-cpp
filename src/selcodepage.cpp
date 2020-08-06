@@ -86,20 +86,20 @@ select_charset (int center_y, int center_x, int current_charset, gboolean seldis
                                                        "[Codepages Translation]");
 
     if (!seldisplay)
-        LISTBOX_APPEND_TEXT (listbox, '-', _("-  < No translation >"), NULL, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, '-', _("-  < No translation >"), nullptr, FALSE);
 
     /* insert all the items found */
     for (i = 0; i < codepages->len; i++)
     {
         const char *name = ((codepage_desc *) g_ptr_array_index (codepages, i))->name;
         g_snprintf (buffer, sizeof (buffer), "%c  %s", get_hotkey (i), name);
-        LISTBOX_APPEND_TEXT (listbox, get_hotkey (i), buffer, NULL, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, get_hotkey (i), buffer, nullptr, FALSE);
     }
     if (seldisplay)
     {
         unsigned char hotkey = get_hotkey (codepages->len);
         g_snprintf (buffer, sizeof (buffer), "%c  %s", hotkey, _("Other 8 bit"));
-        LISTBOX_APPEND_TEXT (listbox, hotkey, buffer, NULL, FALSE);
+        LISTBOX_APPEND_TEXT (listbox, hotkey, buffer, nullptr, FALSE);
     }
 
     /* Select the default entry */
@@ -146,7 +146,7 @@ do_set_codepage (int codepage)
     errmsg = init_translation_table (codepage == SELECT_CHARSET_NO_TRANSLATE ?
                                      mc_global.display_codepage : mc_global.source_codepage,
                                      mc_global.display_codepage);
-    ret = errmsg == NULL;
+    ret = errmsg == nullptr;
 
     if (!ret)
     {

@@ -85,7 +85,7 @@
 /*** file scope macro definitions ****************************************************************/
 
 #define CALL(x) \
-        if (VFS_SUBCLASS (me)->x != NULL) \
+        if (VFS_SUBCLASS (me)->x != nullptr) \
             VFS_SUBCLASS (me)->x
 
 /*** file scope type declarations ****************************************************************/
@@ -111,13 +111,13 @@ vfs_s_automake (struct vfs_class *me, struct vfs_s_inode *dir, char *path, int f
     char *sep;
 
     sep = strchr (path, PATH_SEP);
-    if (sep != NULL)
+    if (sep != nullptr)
         *sep = '\0';
 
     res = vfs_s_generate_entry (me, path, dir, (flags & FL_MKDIR) != 0 ? (0777 | S_IFDIR) : 0777);
     vfs_s_insert_entry (me, dir, res);
 
-    if (sep != NULL)
+    if (sep != nullptr)
         *sep = PATH_SEP;
 
     return res;
@@ -130,21 +130,21 @@ static struct vfs_s_entry *
 vfs_s_resolve_symlink (struct vfs_class *me, struct vfs_s_entry *entry, int follow)
 {
     char *linkname;
-    char *fullname = NULL;
+    char *fullname = nullptr;
     struct vfs_s_entry *target;
 
     if (follow == LINK_NO_FOLLOW)
         return entry;
     if (follow == 0)
-        ERRNOR (ELOOP, NULL);
-    if (entry == NULL)
-        ERRNOR (ENOENT, NULL);
+        ERRNOR (ELOOP, nullptr);
+    if (entry == nullptr)
+        ERRNOR (ENOENT, nullptr);
     if (!S_ISLNK (entry->ino->st.st_mode))
         return entry;
 
     linkname = entry->ino->linkname;
-    if (linkname == NULL)
-        ERRNOR (EFAULT, NULL);
+    if (linkname == nullptr)
+        ERRNOR (EFAULT, nullptr);
 
     /* make full path from relative */
     if (!IS_PATH_SEP (*linkname))
@@ -152,9 +152,9 @@ vfs_s_resolve_symlink (struct vfs_class *me, struct vfs_s_entry *entry, int foll
         char *fullpath;
 
         fullpath = vfs_s_fullpath (me, entry->dir);
-        if (fullpath != NULL)
+        if (fullpath != nullptr)
         {
-            fullname = g_strconcat (fullpath, PATH_SEP_STR, linkname, (char *) NULL);
+            fullname = g_strconcat (fullpath, PATH_SEP_STR, linkname, (char *) nullptr);
             linkname = fullname;
             g_free (fullpath);
         }
@@ -177,14 +177,14 @@ vfs_s_find_entry_tree (struct vfs_class *me, struct vfs_s_inode *root,
                        const char *a_path, int follow, int flags)
 {
     size_t pseg;
-    struct vfs_s_entry *ent = NULL;
+    struct vfs_s_entry *ent = nullptr;
     char *const pathref = g_strdup (a_path);
     char *path = pathref;
 
     /* canonicalize as well, but don't remove '../' from path */
     custom_canonicalize_pathname (path, CANON_PATH_ALL & (~CANON_PATH_REMDOUBLEDOTS));
 
-    while (root != NULL)
+    while (root != nullptr)
     {
         GList *iter;
 
@@ -200,7 +200,7 @@ vfs_s_find_entry_tree (struct vfs_class *me, struct vfs_s_inode *root,
         for (pseg = 0; path[pseg] != '\0' && !IS_PATH_SEP (path[pseg]); pseg++)
             ;
 
-        for (iter = g_queue_peek_head_link (root->subdir); iter != NULL; iter = g_list_next (iter))
+        for (iter = g_queue_peek_head_link (root->subdir); iter != nullptr; iter = g_list_next (iter))
         {
             ent = VFS_ENTRY (iter->data);
             if (strlen (ent->name) == pseg && strncmp (ent->name, path, pseg) == 0)
@@ -208,11 +208,11 @@ vfs_s_find_entry_tree (struct vfs_class *me, struct vfs_s_inode *root,
                 break;
         }
 
-        ent = iter != NULL ? VFS_ENTRY (iter->data) : NULL;
+        ent = iter != nullptr ? VFS_ENTRY (iter->data) : nullptr;
 
-        if (ent == NULL && (flags & (FL_MKFILE | FL_MKDIR)) != 0)
+        if (ent == nullptr && (flags & (FL_MKFILE | FL_MKDIR)) != 0)
             ent = vfs_s_automake (me, root, path, flags);
-        if (ent == NULL)
+        if (ent == nullptr)
         {
             me->verrno = ENOENT;
             goto cleanup;
@@ -222,14 +222,14 @@ vfs_s_find_entry_tree (struct vfs_class *me, struct vfs_s_inode *root,
         /* here we must follow leading directories always;
            only the actual file is optional */
         ent = vfs_s_resolve_symlink (me, ent,
-                                     strchr (path, PATH_SEP) != NULL ? LINK_FOLLOW : follow);
-        if (ent == NULL)
+                                     strchr (path, PATH_SEP) != nullptr ? LINK_FOLLOW : follow);
+        if (ent == nullptr)
             goto cleanup;
         root = ent->ino;
     }
   cleanup:
     g_free (pathref);
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -238,7 +238,7 @@ static struct vfs_s_entry *
 vfs_s_find_entry_linear (struct vfs_class *me, struct vfs_s_inode *root,
                          const char *a_path, int follow, int flags)
 {
-    struct vfs_s_entry *ent = NULL;
+    struct vfs_s_entry *ent = nullptr;
     char *const path = g_strdup (a_path);
     GList *iter;
 
@@ -264,18 +264,18 @@ vfs_s_find_entry_linear (struct vfs_class *me, struct vfs_s_inode *root,
     }
 
     iter = g_queue_find_custom (root->subdir, path, (GCompareFunc) vfs_s_entry_compare);
-    ent = iter != NULL ? VFS_ENTRY (iter->data) : NULL;
+    ent = iter != nullptr ? VFS_ENTRY (iter->data) : nullptr;
 
-    if (ent != NULL && !VFS_SUBCLASS (me)->dir_uptodate (me, ent->ino))
+    if (ent != nullptr && !VFS_SUBCLASS (me)->dir_uptodate (me, ent->ino))
     {
 #if 1
         vfs_print_message (_("Directory cache expired for %s"), path);
 #endif
         vfs_s_free_entry (me, ent);
-        ent = NULL;
+        ent = nullptr;
     }
 
-    if (ent == NULL)
+    if (ent == nullptr)
     {
         struct vfs_s_inode *ino;
 
@@ -285,22 +285,22 @@ vfs_s_find_entry_linear (struct vfs_class *me, struct vfs_s_inode *root,
         {
             vfs_s_free_entry (me, ent);
             g_free (path);
-            return NULL;
+            return nullptr;
         }
 
         vfs_s_insert_entry (me, root, ent);
 
         iter = g_queue_find_custom (root->subdir, path, (GCompareFunc) vfs_s_entry_compare);
-        ent = iter != NULL ? VFS_ENTRY (iter->data) : NULL;
+        ent = iter != nullptr ? VFS_ENTRY (iter->data) : nullptr;
     }
-    if (ent == NULL)
+    if (ent == nullptr)
         vfs_die ("find_linear: success but directory is not there\n");
 
 #if 0
-    if (vfs_s_resolve_symlink (me, ent, follow) == NULL)
+    if (vfs_s_resolve_symlink (me, ent, follow) == nullptr)
     {
         g_free (path);
-        return NULL;
+        return nullptr;
     }
 #endif
     g_free (path);
@@ -334,10 +334,10 @@ vfs_s_insert_super (struct vfs_class *me, struct vfs_s_super *super)
 static void
 vfs_s_free_super (struct vfs_class *me, struct vfs_s_super *super)
 {
-    if (super->root != NULL)
+    if (super->root != nullptr)
     {
         vfs_s_free_inode (me, super->root);
-        super->root = NULL;
+        super->root = nullptr;
     }
 
 #if 0
@@ -378,7 +378,7 @@ vfs_s_new_fh (struct vfs_s_inode *ino, gboolean changed)
 static void
 vfs_s_free_fh (struct vfs_s_subclass *s, vfs_file_handler_t * fh)
 {
-    if (s->fh_free != NULL)
+    if (s->fh_free != nullptr)
         s->fh_free (fh);
 
     g_free (fh);
@@ -397,8 +397,8 @@ vfs_s_inode_from_path (const vfs_path_t * vpath, int flags)
     const vfs_path_element_t *path_element;
 
     q = vfs_s_get_path (vpath, &super, 0);
-    if (q == NULL)
-        return NULL;
+    if (q == nullptr)
+        return nullptr;
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
@@ -406,7 +406,7 @@ vfs_s_inode_from_path (const vfs_path_t * vpath, int flags)
         vfs_s_find_inode (path_element->clazz, super, q,
                           (flags & FL_FOLLOW) != 0 ? LINK_FOLLOW : LINK_NO_FOLLOW,
                           flags & ~FL_FOLLOW);
-    if (ino == NULL && *q == '\0')
+    if (ino == nullptr && *q == '\0')
         /* We are asking about / directory of ftp server: assume it exists */
         ino =
             vfs_s_find_inode (path_element->clazz, super, q,
@@ -425,23 +425,23 @@ vfs_s_opendir (const vfs_path_t * vpath)
     const vfs_path_element_t *path_element;
 
     dir = vfs_s_inode_from_path (vpath, FL_DIR | FL_FOLLOW);
-    if (dir == NULL)
-        return NULL;
+    if (dir == nullptr)
+        return nullptr;
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
     if (!S_ISDIR (dir->st.st_mode))
     {
         path_element->clazz->verrno = ENOTDIR;
-        return NULL;
+        return nullptr;
     }
 
     dir->st.st_nlink++;
 #if 0
-    if (dir->subdir == NULL)    /* This can actually happen if we allow empty directories */
+    if (dir->subdir == nullptr)    /* This can actually happen if we allow empty directories */
     {
         path_element->class->verrno = EAGAIN;
-        return NULL;
+        return nullptr;
     }
 #endif
     info = g_new (struct dirhandle, 1);
@@ -460,11 +460,11 @@ vfs_s_readdir (void *data)
     struct dirhandle *info = (struct dirhandle *) data;
     const char *name;
 
-    if (info->cur == NULL || info->cur->data == NULL)
-        return NULL;
+    if (info->cur == nullptr || info->cur->data == nullptr)
+        return nullptr;
 
     name = VFS_ENTRY (info->cur->data)->name;
-    if (name != NULL)
+    if (name != nullptr)
         g_strlcpy (dir.dent.d_name, name, MC_MAXPATHLEN);
     else
         vfs_die ("Null in structure-cannot happen");
@@ -495,7 +495,7 @@ vfs_s_chdir (const vfs_path_t * vpath)
     void *data;
 
     data = vfs_s_opendir (vpath);
-    if (data == NULL)
+    if (data == nullptr)
         return (-1);
     vfs_s_closedir (data);
     return 0;
@@ -510,7 +510,7 @@ vfs_s_internal_stat (const vfs_path_t * vpath, struct stat *buf, int flag)
     struct vfs_s_inode *ino;
 
     ino = vfs_s_inode_from_path (vpath, flag);
-    if (ino == NULL)
+    if (ino == nullptr)
         return (-1);
     *buf = ino->st;
     return 0;
@@ -526,7 +526,7 @@ vfs_s_readlink (const vfs_path_t * vpath, char *buf, size_t size)
     const vfs_path_element_t *path_element;
 
     ino = vfs_s_inode_from_path (vpath, 0);
-    if (ino == NULL)
+    if (ino == nullptr)
         return (-1);
 
     path_element = vfs_path_get_by_index (vpath, -1);
@@ -537,7 +537,7 @@ vfs_s_readlink (const vfs_path_t * vpath, char *buf, size_t size)
         return (-1);
     }
 
-    if (ino->linkname == NULL)
+    if (ino->linkname == nullptr)
     {
         path_element->clazz->verrno = EFAULT;
         return (-1);
@@ -661,7 +661,7 @@ vfs_s_close (void *fh)
     struct vfs_s_subclass *sub = VFS_SUBCLASS (me);
     int res = 0;
 
-    if (me == NULL)
+    if (me == nullptr)
         return (-1);
 
     super->fd_usage--;
@@ -670,15 +670,15 @@ vfs_s_close (void *fh)
 
     if (file->linear == LS_LINEAR_OPEN)
         sub->linear_close (me, static_cast<vfs_file_handler_t *> (fh));
-    if (sub->fh_close != NULL)
+    if (sub->fh_close != nullptr)
         res = sub->fh_close (me, static_cast<vfs_file_handler_t *> (fh));
-    if ((me->flags & VFSF_USETMP) != 0 && file->changed && sub->file_store != NULL)
+    if ((me->flags & VFSF_USETMP) != 0 && file->changed && sub->file_store != nullptr)
     {
         char *s;
 
         s = vfs_s_fullpath (me, file->ino);
 
-        if (s == NULL)
+        if (s == nullptr)
             res = -1;
         else
         {
@@ -722,13 +722,13 @@ vfs_s_fill_names (struct vfs_class *me, fill_names_f func)
 {
     GList *iter;
 
-    for (iter = VFS_SUBCLASS (me)->supers; iter != NULL; iter = g_list_next (iter))
+    for (iter = VFS_SUBCLASS (me)->supers; iter != nullptr; iter = g_list_next (iter))
     {
         const struct vfs_s_super *super = (const struct vfs_s_super *) iter->data;
         char *name;
 
         name = g_strconcat (super->name, PATH_SEP_STR, me->prefix, VFS_PATH_URL_DELIMITER,
-                            /* super->current_dir->name, */ (char *) NULL);
+                            /* super->current_dir->name, */ (char *) nullptr);
         func (name);
         g_free (name);
     }
@@ -752,19 +752,19 @@ static vfs_path_t *
 vfs_s_getlocalcopy (const vfs_path_t * vpath)
 {
     vfs_file_handler_t *fh;
-    vfs_path_t *local = NULL;
+    vfs_path_t *local = nullptr;
 
-    if (vpath == NULL)
-        return NULL;
+    if (vpath == nullptr)
+        return nullptr;
 
     fh = static_cast<vfs_file_handler_t *> (vfs_s_open (vpath, O_RDONLY, 0));
 
-    if (fh != NULL)
+    if (fh != nullptr)
     {
         const struct vfs_class *me;
 
         me = vfs_path_get_by_index (vpath, -1)->clazz;
-        if ((me->flags & VFSF_USETMP) != 0 && fh->ino != NULL)
+        if ((me->flags & VFSF_USETMP) != 0 && fh->ino != nullptr)
             local = vfs_path_from_str_flags (fh->ino->localname, VPF_NO_CANON);
 
         vfs_s_close (fh);
@@ -804,9 +804,9 @@ vfs_s_setctl (const vfs_path_t * vpath, int ctlop, void *arg)
             struct vfs_s_inode *ino;
 
             ino = vfs_s_inode_from_path (vpath, 0);
-            if (ino == NULL)
+            if (ino == nullptr)
                 return 0;
-            if (arg != NULL)
+            if (arg != nullptr)
                 ino->super->want_stale = TRUE;
             else
             {
@@ -832,12 +832,12 @@ vfs_s_setctl (const vfs_path_t * vpath, int ctlop, void *arg)
 static vfsid
 vfs_s_getid (const vfs_path_t * vpath)
 {
-    struct vfs_s_super *archive = NULL;
+    struct vfs_s_super *archive = nullptr;
     const char *p;
 
     p = vfs_s_get_path (vpath, &archive, FL_NO_OPEN);
-    if (p == NULL)
-        return NULL;
+    if (p == nullptr)
+        return nullptr;
 
     return (vfsid) archive;
 }
@@ -886,10 +886,10 @@ vfs_s_new_inode (struct vfs_class *me, struct vfs_s_super *super, struct stat *i
     struct vfs_s_inode *ino;
 
     ino = g_try_new0 (struct vfs_s_inode, 1);
-    if (ino == NULL)
-        return NULL;
+    if (ino == nullptr)
+        return nullptr;
 
-    if (initstat != NULL)
+    if (initstat != nullptr)
         ino->st = *initstat;
     ino->super = super;
     ino->subdir = g_queue_new ();
@@ -909,8 +909,8 @@ vfs_s_new_inode (struct vfs_class *me, struct vfs_s_super *super, struct stat *i
 void
 vfs_s_free_inode (struct vfs_class *me, struct vfs_s_inode *ino)
 {
-    if (ino == NULL)
-        vfs_die ("Don't pass NULL to me");
+    if (ino == nullptr)
+        vfs_die ("Don't pass nullptr to me");
 
     /* ==0 can happen if freshly created entry is deleted */
     if (ino->st.st_nlink > 1)
@@ -928,11 +928,11 @@ vfs_s_free_inode (struct vfs_class *me, struct vfs_s_inode *ino)
     }
 
     g_queue_free (ino->subdir);
-    ino->subdir = NULL;
+    ino->subdir = nullptr;
 
     CALL (free_inode) (me, ino);
     g_free (ino->linkname);
-    if ((me->flags & VFSF_USETMP) != 0 && ino->localname != NULL)
+    if ((me->flags & VFSF_USETMP) != 0 && ino->localname != nullptr)
     {
         unlink (ino->localname);
         g_free (ino->localname);
@@ -963,14 +963,14 @@ vfs_s_new_entry (struct vfs_class *me, const char *name, struct vfs_s_inode *ino
 void
 vfs_s_free_entry (struct vfs_class *me, struct vfs_s_entry *ent)
 {
-    if (ent->dir != NULL)
+    if (ent->dir != nullptr)
         g_queue_remove (ent->dir->subdir, ent);
 
     MC_PTR_FREE (ent->name);
 
-    if (ent->ino != NULL)
+    if (ent->ino != nullptr)
     {
-        ent->ino->ent = NULL;
+        ent->ino->ent = nullptr;
         vfs_s_free_inode (me, ent->ino);
     }
 
@@ -1028,7 +1028,7 @@ vfs_s_default_stat (struct vfs_class *me, mode_t mode)
 #endif
     st.st_size = 0;
 
-    st.st_mtime = st.st_atime = st.st_ctime = time (NULL);
+    st.st_mtime = st.st_atime = st.st_ctime = time (nullptr);
 #ifdef HAVE_STRUCT_STAT_ST_MTIM
     st.st_atim.tv_nsec = st.st_mtim.tv_nsec = st.st_ctim.tv_nsec = 0;
 #endif
@@ -1099,7 +1099,7 @@ vfs_s_find_inode (struct vfs_class *me, const struct vfs_s_super *super,
         return super->root;
 
     ent = VFS_SUBCLASS (me)->find_entry (me, super->root, path, follow, flags);
-    return (ent != NULL ? ent->ino : NULL);
+    return (ent != nullptr ? ent->ino : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1109,17 +1109,17 @@ vfs_s_find_inode (struct vfs_class *me, const struct vfs_s_super *super,
  * get superlock object by vpath
  *
  * @param vpath path
- * @return superlock object or NULL if not found
+ * @return superlock object or nullptr if not found
  */
 
 struct vfs_s_super *
 vfs_get_super_by_vpath (const vfs_path_t * vpath)
 {
     GList *iter;
-    void *cookie = NULL;
+    void *cookie = nullptr;
     const vfs_path_element_t *path_element;
     struct vfs_s_subclass *subclass;
-    struct vfs_s_super *super = NULL;
+    struct vfs_s_super *super = nullptr;
     vfs_path_t *vpath_archive;
 
     path_element = vfs_path_get_by_index (vpath, -1);
@@ -1128,17 +1128,17 @@ vfs_get_super_by_vpath (const vfs_path_t * vpath)
     vpath_archive = vfs_path_clone (vpath);
     vfs_path_remove_element_by_index (vpath_archive, -1);
 
-    if (subclass->archive_check != NULL)
+    if (subclass->archive_check != nullptr)
     {
         cookie = subclass->archive_check (vpath_archive);
-        if (cookie == NULL)
+        if (cookie == nullptr)
             goto ret;
     }
 
-    if (subclass->archive_same == NULL)
+    if (subclass->archive_same == nullptr)
         goto ret;
 
-    for (iter = subclass->supers; iter != NULL; iter = g_list_next (iter))
+    for (iter = subclass->supers; iter != nullptr; iter = g_list_next (iter))
     {
         int i;
 
@@ -1151,7 +1151,7 @@ vfs_get_super_by_vpath (const vfs_path_t * vpath)
         if (i != 0)
             break;
 
-        super = NULL;
+        super = nullptr;
     }
 
   ret:
@@ -1180,25 +1180,25 @@ vfs_s_get_path (const vfs_path_t * vpath, struct vfs_s_super **archive, int flag
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
-    if (path_element->path != NULL)
+    if (path_element->path != nullptr)
         retval = path_element->path;
 
     super = vfs_get_super_by_vpath (vpath);
-    if (super != NULL)
+    if (super != nullptr)
         goto return_success;
 
     if ((flags & FL_NO_OPEN) != 0)
     {
         path_element->clazz->verrno = EIO;
-        return NULL;
+        return nullptr;
     }
 
     subclass = VFS_SUBCLASS (path_element->clazz);
 
-    super = subclass->new_archive != NULL ?
+    super = subclass->new_archive != nullptr ?
             subclass->new_archive (path_element->clazz) : vfs_s_new_super (path_element->clazz);
 
-    if (subclass->open_archive != NULL)
+    if (subclass->open_archive != nullptr)
     {
         vfs_path_t *vpath_archive;
 
@@ -1212,11 +1212,11 @@ vfs_s_get_path (const vfs_path_t * vpath, struct vfs_s_super **archive, int flag
     {
         vfs_s_free_super (path_element->clazz, super);
         path_element->clazz->verrno = EIO;
-        return NULL;
+        return nullptr;
     }
-    if (super->name == NULL)
+    if (super->name == nullptr)
         vfs_die ("You have to fill name\n");
-    if (super->root == NULL)
+    if (super->root == nullptr)
         vfs_die ("You have to fill root inode\n");
 
     vfs_s_insert_super (path_element->clazz, super);
@@ -1244,8 +1244,8 @@ vfs_s_invalidate (struct vfs_class *me, struct vfs_s_super *super)
 char *
 vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino)
 {
-    if (ino->ent == NULL)
-        ERRNOR (EAGAIN, NULL);
+    if (ino->ent == nullptr)
+        ERRNOR (EAGAIN, nullptr);
 
     if ((me->flags & VFSF_USETMP) == 0)
     {
@@ -1262,7 +1262,7 @@ vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino)
             if (ino == ino->super->root)
                 break;
 
-            newpath = g_strconcat (ino->ent->name, PATH_SEP_STR, path, (char *) NULL);
+            newpath = g_strconcat (ino->ent->name, PATH_SEP_STR, path, (char *) nullptr);
             g_free (path);
             path = newpath;
         }
@@ -1270,10 +1270,10 @@ vfs_s_fullpath (struct vfs_class *me, struct vfs_s_inode *ino)
     }
 
     /* remote systems */
-    if (ino->ent->dir == NULL || ino->ent->dir->ent == NULL)
+    if (ino->ent->dir == nullptr || ino->ent->dir->ent == nullptr)
         return g_strdup (ino->ent->name);
 
-    return g_strconcat (ino->ent->dir->ent->name, PATH_SEP_STR, ino->ent->name, (char *) NULL);
+    return g_strconcat (ino->ent->dir->ent->name, PATH_SEP_STR, ino->ent->name, (char *) nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1302,38 +1302,38 @@ vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
     struct vfs_s_subclass *s;
 
     q = vfs_s_get_path (vpath, &super, 0);
-    if (q == NULL)
-        return NULL;
+    if (q == nullptr)
+        return nullptr;
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
     ino = vfs_s_find_inode (path_element->clazz, super, q, LINK_FOLLOW, FL_NONE);
-    if (ino != NULL && (flags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))
+    if (ino != nullptr && (flags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))
     {
         path_element->clazz->verrno = EEXIST;
-        return NULL;
+        return nullptr;
     }
 
     s = VFS_SUBCLASS (path_element->clazz);
 
-    if (ino == NULL)
+    if (ino == nullptr)
     {
         char *dirname, *name;
         struct vfs_s_entry *ent;
         struct vfs_s_inode *dir;
 
         /* If the filesystem is read-only, disable file creation */
-        if ((flags & O_CREAT) == 0 || path_element->clazz->write == NULL)
-            return NULL;
+        if ((flags & O_CREAT) == 0 || path_element->clazz->write == nullptr)
+            return nullptr;
 
         dirname = g_path_get_dirname (q);
         name = g_path_get_basename (q);
         dir = vfs_s_find_inode (path_element->clazz, super, dirname, LINK_FOLLOW, FL_DIR);
-        if (dir == NULL)
+        if (dir == nullptr)
         {
             g_free (dirname);
             g_free (name);
-            return NULL;
+            return nullptr;
         }
 
         ent = vfs_s_generate_entry (path_element->clazz, name, dir, 0755);
@@ -1351,7 +1351,7 @@ vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
             {
                 g_free (dirname);
                 g_free (name);
-                return NULL;
+                return nullptr;
             }
 
             close (tmp_handle);
@@ -1364,14 +1364,14 @@ vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
     if (S_ISDIR (ino->st.st_mode))
     {
         path_element->clazz->verrno = EISDIR;
-        return NULL;
+        return nullptr;
     }
 
-    fh = s->fh_new != NULL ? s->fh_new (ino, was_changed) : vfs_s_new_fh (ino, was_changed);
+    fh = s->fh_new != nullptr ? s->fh_new (ino, was_changed) : vfs_s_new_fh (ino, was_changed);
 
     if (IS_LINEAR (flags))
     {
-        if (s->linear_start != NULL)
+        if (s->linear_start != nullptr)
         {
             vfs_print_message ("%s", _("Starting linear transfer..."));
             fh->linear = LS_LINEAR_PREOPEN;
@@ -1379,21 +1379,21 @@ vfs_s_open (const vfs_path_t * vpath, int flags, mode_t mode)
     }
     else
     {
-        if (s->fh_open != NULL && s->fh_open (path_element->clazz, fh, flags, mode) != 0)
+        if (s->fh_open != nullptr && s->fh_open (path_element->clazz, fh, flags, mode) != 0)
         {
             vfs_s_free_fh (s, fh);
-            return NULL;
+            return nullptr;
         }
     }
 
-    if ((VFS_CLASS (s)->flags & VFSF_USETMP) != 0 && fh->ino->localname != NULL)
+    if ((VFS_CLASS (s)->flags & VFSF_USETMP) != 0 && fh->ino->localname != nullptr)
     {
         fh->handle = open (fh->ino->localname, NO_LINEAR (flags), mode);
         if (fh->handle == -1)
         {
             vfs_s_free_fh (s, fh);
             path_element->clazz->verrno = errno;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -1440,7 +1440,7 @@ vfs_s_retrieve_file (struct vfs_class *me, struct vfs_s_inode *ino)
     int handle;
     ssize_t n;
     off_t stat_size = ino->st.st_size;
-    vfs_file_handler_t *fh = NULL;
+    vfs_file_handler_t *fh = nullptr;
     vfs_path_t *tmp_vpath;
     struct vfs_s_subclass *s = VFS_SUBCLASS (me);
 
@@ -1456,7 +1456,7 @@ vfs_s_retrieve_file (struct vfs_class *me, struct vfs_s_inode *ino)
         goto error_4;
     }
 
-    fh = s->fh_new != NULL ? s->fh_new (ino, FALSE) : vfs_s_new_fh (ino, FALSE);
+    fh = s->fh_new != nullptr ? s->fh_new (ino, FALSE) : vfs_s_new_fh (ino, FALSE);
 
     if (s->linear_start (me, fh, 0) == 0)
         goto error_3;
@@ -1501,7 +1501,7 @@ vfs_s_retrieve_file (struct vfs_class *me, struct vfs_s_inode *ino)
     unlink (ino->localname);
   error_4:
     MC_PTR_FREE (ino->localname);
-    if (fh != NULL)
+    if (fh != nullptr)
         vfs_s_free_fh (s, fh);
     return (-1);
 }
@@ -1580,8 +1580,8 @@ vfs_getid (const vfs_path_t * vpath)
     const vfs_path_element_t *path_element;
 
     path_element = vfs_path_get_by_index (vpath, -1);
-    if (!vfs_path_element_valid (path_element) || path_element->clazz->getid == NULL)
-        return NULL;
+    if (!vfs_path_element_valid (path_element) || path_element->clazz->getid == nullptr)
+        return nullptr;
 
     return (*path_element->clazz->getid) (vpath);
 }
@@ -1628,7 +1628,7 @@ vfs_s_get_line (struct vfs_class *me, int sock, char *buf, int buf_len, char ter
         if (read (sock, buf, sizeof (char)) <= 0)
             return 0;
 
-        if (logfile != NULL)
+        if (logfile != nullptr)
         {
             size_t ret1;
             int ret2;
@@ -1650,7 +1650,7 @@ vfs_s_get_line (struct vfs_class *me, int sock, char *buf, int buf_len, char ter
     *buf = '\0';
     while (read (sock, &c, sizeof (c)) > 0)
     {
-        if (logfile != NULL)
+        if (logfile != nullptr)
         {
             size_t ret1;
             int ret2;
@@ -1721,7 +1721,7 @@ vfs_s_normalize_filename_leading_spaces (struct vfs_s_inode *root_inode, size_t 
 {
     GList *iter;
 
-    for (iter = g_queue_peek_head_link (root_inode->subdir); iter != NULL;
+    for (iter = g_queue_peek_head_link (root_inode->subdir); iter != nullptr;
          iter = g_list_next (iter))
     {
         struct vfs_s_entry *entry = VFS_ENTRY (iter->data);
@@ -1732,7 +1732,7 @@ vfs_s_normalize_filename_leading_spaces (struct vfs_s_inode *root_inode, size_t 
 
             source_name = entry->name;
             spacer = g_strnfill (entry->ino->data_offset - final_num_spaces, ' ');
-            entry->name = g_strconcat (spacer, source_name, (char *) NULL);
+            entry->name = g_strconcat (spacer, source_name, (char *) nullptr);
             g_free (spacer);
             g_free (source_name);
         }

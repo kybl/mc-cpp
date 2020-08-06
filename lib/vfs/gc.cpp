@@ -103,7 +103,7 @@ struct vfs_stamping
 
 /*** file scope variables ************************************************************************/
 
-static GSList *stamps = NULL;
+static GSList *stamps = nullptr;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -115,7 +115,7 @@ vfs_stamp_compare (gconstpointer a, gconstpointer b)
     const struct vfs_stamping *vsa = (const struct vfs_stamping *) a;
     const struct vfs_stamping *vsb = (const struct vfs_stamping *) b;
 
-    return (vsa == NULL || vsb == NULL || (vsa->v == vsb->v && vsa->id == vsb->id)) ? 0 : 1;
+    return (vsa == nullptr || vsb == nullptr || (vsa->v == vsb->v && vsa->id == vsb->id)) ? 0 : 1;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -123,7 +123,7 @@ vfs_stamp_compare (gconstpointer a, gconstpointer b)
 static void
 vfs_addstamp (struct vfs_class *v, vfsid id)
 {
-    if ((v->flags & VFSF_LOCAL) == 0 && id != NULL && !vfs_stamp (v, id))
+    if ((v->flags & VFSF_LOCAL) == 0 && id != nullptr && !vfs_stamp (v, id))
     {
         struct vfs_stamping *stamp;
 
@@ -151,7 +151,7 @@ vfs_stamp (struct vfs_class *v, vfsid id)
     gboolean ret = FALSE;
 
     stamp = g_slist_find_custom (stamps, &what, vfs_stamp_compare);
-    if (stamp != NULL && stamp->data != NULL)
+    if (stamp != nullptr && stamp->data != nullptr)
     {
         VFS_STAMPING (stamp->data)->time = mc_timer_elapsed (mc_global.timer);
         ret = TRUE;
@@ -172,7 +172,7 @@ vfs_rmstamp (struct vfs_class *v, vfsid id)
     GSList *stamp;
 
     stamp = g_slist_find_custom (stamps, &what, vfs_stamp_compare);
-    if (stamp != NULL)
+    if (stamp != nullptr)
     {
         g_free (stamp->data);
         stamps = g_slist_delete_link (stamps, stamp);
@@ -221,11 +221,11 @@ vfs_stamp_create (struct vfs_class *vclass, vfsid id)
     nvfsid = vfs_getid (vpath);
     vfs_rmstamp (path_element->clazz, nvfsid);
 
-    if (!(id == NULL || (path_element->clazz == vclass && nvfsid == id)))
+    if (!(id == nullptr || (path_element->clazz == vclass && nvfsid == id)))
     {
         mc_event_raise (MCEVENT_GROUP_CORE, "vfs_timestamp", (gpointer) & event_data);
 
-        if (!event_data.ret && vclass != NULL && vclass->nothingisopen != NULL
+        if (!event_data.ret && vclass != nullptr && vclass->nothingisopen != nullptr
             && vclass->nothingisopen (id))
             vfs_addstamp (vclass, id);
     }
@@ -258,25 +258,25 @@ vfs_expire (gboolean now)
     }
 
     /* NULLize stamps that point to expired VFS */
-    for (stamp = stamps; stamp != NULL; stamp = g_slist_next (stamp))
+    for (stamp = stamps; stamp != nullptr; stamp = g_slist_next (stamp))
     {
         struct vfs_stamping *stamping = VFS_STAMPING (stamp->data);
 
         if (now)
         {
             /* free VFS forced */
-            if (stamping->v->free != NULL)
+            if (stamping->v->free != nullptr)
                 stamping->v->free (stamping->id);
             MC_PTR_FREE (stamp->data);
         }
         else if (stamping->time <= exp_time)
         {
             /* update timestamp of VFS that is in use, or free unused VFS */
-            if (stamping->v->nothingisopen != NULL && !stamping->v->nothingisopen (stamping->id))
+            if (stamping->v->nothingisopen != nullptr && !stamping->v->nothingisopen (stamping->id))
                 stamping->time = curr_time;
             else
             {
-                if (stamping->v->free != NULL)
+                if (stamping->v->free != nullptr)
                     stamping->v->free (stamping->id);
                 MC_PTR_FREE (stamp->data);
             }
@@ -284,7 +284,7 @@ vfs_expire (gboolean now)
     }
 
     /* then remove NULLized stamps */
-    stamps = g_slist_remove_all (stamps, NULL);
+    stamps = g_slist_remove_all (stamps, nullptr);
 
     locked = FALSE;
 }
@@ -299,7 +299,7 @@ vfs_expire (gboolean now)
 int
 vfs_timeouts (void)
 {
-    return stamps != NULL ? 10 : 0;
+    return stamps != nullptr ? 10 : 0;
 }
 
 /* --------------------------------------------------------------------------------------------- */

@@ -69,7 +69,7 @@ struct WEdit
     WRect loc_prev;
 
     vfs_path_t *filename_vpath; /* Name of the file */
-    vfs_path_t *dir_vpath;      /* NULL if filename is absolute */
+    vfs_path_t *dir_vpath;      /* nullptr if filename is absolute */
 
     /* dynamic buffers and cursor position for editor: */
     edit_buffer_t buffer;

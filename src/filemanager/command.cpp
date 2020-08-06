@@ -136,9 +136,9 @@ examine_cd (const char *_path)
 
         case subst_var:
             {
-                char *s = NULL;
+                char *s = nullptr;
                 char c;
-                const char *t = NULL;
+                const char *t = nullptr;
 
                 /* skip dollar */
                 p++;
@@ -148,15 +148,15 @@ examine_cd (const char *_path)
                     p++;
                     s = strchr (p, '}');
                 }
-                if (s == NULL)
+                if (s == nullptr)
                     s = strchr (p, PATH_SEP);
-                if (s == NULL)
+                if (s == nullptr)
                     s = strchr (p, '\0');
                 c = *s;
                 *s = '\0';
                 t = getenv (p);
                 *s = c;
-                if (t == NULL)
+                if (t == nullptr)
                 {
                     g_string_append_c (q, '$');
                     if (p[-1] != '$')
@@ -200,14 +200,14 @@ handle_cdpath (const char *path)
 
         cdpath = g_strdup (getenv ("CDPATH"));
         p = cdpath;
-        c = (p == NULL) ? '\0' : ':';
+        c = (p == nullptr) ? '\0' : ':';
 
         while (!result && c == ':')
         {
             char *s;
 
             s = strchr (p, ':');
-            if (s == NULL)
+            if (s == nullptr)
                 s = strchr (p, '\0');
             c = *s;
             *s = '\0';
@@ -215,7 +215,7 @@ handle_cdpath (const char *path)
             {
                 vfs_path_t *r_vpath;
 
-                r_vpath = vfs_path_build_filename (p, path, (char *) NULL);
+                r_vpath = vfs_path_build_filename (p, path, (char *) nullptr);
                 result = do_cd (r_vpath, cd_parse_command);
                 vfs_path_free (r_vpath);
             }
@@ -292,7 +292,7 @@ enter (WInput * lc_cmdline)
             {
                 char *s;
 
-                s = expand_format (NULL, cmd[++i], TRUE);
+                s = expand_format (nullptr, cmd[++i], TRUE);
                 g_string_append (command, s);
                 g_free (s);
             }
@@ -388,7 +388,7 @@ do_cd_command (char *orig_cmd)
 
     if (get_current_type () == view_tree)
     {
-        vfs_path_t *new_vpath = NULL;
+        vfs_path_t *new_vpath = nullptr;
 
         if (cmd[0] == '\0')
         {
@@ -415,7 +415,7 @@ do_cd_command (char *orig_cmd)
             else
                 new_vpath =
                     vfs_path_append_new (current_panel->cwd_vpath, cmd + operand_pos,
-                                         (char *) NULL);
+                                         (char *) nullptr);
 
             sync_tree (new_vpath);
         }

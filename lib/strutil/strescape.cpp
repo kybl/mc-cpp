@@ -52,8 +52,8 @@ strutils_escape (const char *src, gsize src_len, const char *escaped_chars,
     GString *ret;
     gsize curr_index;
     /* do NOT break allocation semantics */
-    if (src == NULL)
-        return NULL;
+    if (src == nullptr)
+        return nullptr;
 
     if (*src == '\0')
         return strdup ("");
@@ -102,8 +102,8 @@ strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
     GString *ret;
     gsize curr_index;
 
-    if (src == NULL)
-        return NULL;
+    if (src == nullptr)
+        return nullptr;
 
     if (*src == '\0')
         return strdup ("");
@@ -152,7 +152,7 @@ strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
                 }
             }
 
-            if (strchr (unescaped_chars, (int) src[curr_index]) == NULL)
+            if (strchr (unescaped_chars, (int) src[curr_index]) == nullptr)
                 g_string_append_c (ret, '\\');
         }
 
@@ -171,7 +171,7 @@ strutils_unescape (const char *src, gsize src_len, const char *unescaped_chars,
  *
  * @param src string for escaping
  *
- * @return escaped string (which needs to be freed later) or NULL when NULL string is passed.
+ * @return escaped string (which needs to be freed later) or nullptr when nullptr string is passed.
  */
 
 char *
@@ -244,7 +244,7 @@ strutils_is_char_escaped (const char *start, const char *current)
 {
     int num_esc = 0;
 
-    if (start == NULL || current == NULL || current <= start)
+    if (start == nullptr || current == nullptr || current <= start)
         return FALSE;
 
     current--;

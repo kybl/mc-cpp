@@ -147,8 +147,8 @@ static struct
 {
     /* *INDENT-OFF* */
     /* init MAX_VIEWS items */
-    { view_listing, NULL, NULL},
-    { view_listing, NULL, NULL}
+    { view_listing, nullptr, nullptr},
+    { view_listing, nullptr, nullptr}
     /* *INDENT-ON* */
 };
 
@@ -170,17 +170,17 @@ static struct
 } check_options[] =
 {
     /* *INDENT-OFF* */
-    { N_("&Equal split"), &equal_split, NULL },
-    { N_("&Menubar visible"), &menubar_visible, NULL },
-    { N_("Command &prompt"), &command_prompt, NULL },
-    { N_("&Keybar visible"), &mc_global.keybar_visible, NULL },
-    { N_("H&intbar visible"), &mc_global.message_visible, NULL },
-    { N_("&XTerm window title"), &xterm_title, NULL },
-    { N_("&Show free space"), &free_space, NULL }
+    { N_("&Equal split"), &equal_split, nullptr },
+    { N_("&Menubar visible"), &menubar_visible, nullptr },
+    { N_("Command &prompt"), &command_prompt, nullptr },
+    { N_("&Keybar visible"), &mc_global.keybar_visible, nullptr },
+    { N_("H&intbar visible"), &mc_global.message_visible, nullptr },
+    { N_("&XTerm window title"), &xterm_title, nullptr },
+    { N_("&Show free space"), &free_space, nullptr }
     /* *INDENT-ON* */
 };
 
-static const char *output_lines_label = NULL;
+static const char *output_lines_label = nullptr;
 static int output_lines_label_len;
 
 static WButton *bleft_widget, *bright_widget;
@@ -319,7 +319,7 @@ layout_bg_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, voi
     switch (msg)
     {
     case MSG_DRAW:
-        frame_callback (w, NULL, MSG_DRAW, 0, NULL);
+        frame_callback (w, nullptr, MSG_DRAW, 0, nullptr);
 
         old_layout.output_lines = -1;
 
@@ -556,7 +556,7 @@ layout_dlg_create (void)
     width = max (l1 * 2 + 7, b);
 
     layout_dlg =
-        dlg_create (TRUE, 0, 0, 15, width, WPOS_CENTER, FALSE, dialog_colors, layout_callback, NULL,
+        dlg_create (TRUE, 0, 0, 15, width, WPOS_CENTER, FALSE, dialog_colors, layout_callback, nullptr,
                     "[Layout]", _("Layout"));
     g = GROUP (layout_dlg);
 
@@ -732,7 +732,7 @@ layout_box (void)
         size_t i;
 
         for (i = 0; i < (size_t) LAYOUT_OPTIONS_COUNT; i++)
-            if (check_options[i].widget != NULL)
+            if (check_options[i].widget != nullptr)
                 *check_options[i].variable = check_options[i].widget->state;
 
         output_lines = _output_lines;
@@ -756,7 +756,7 @@ panel_update_cols (Widget * widget, panel_display_t frame_size)
     /* don't touch panel if it is not in dialog yet */
     /* if panel is not in dialog it is not in widgets list
        and cannot be compared with get_panel_widget() result */
-    if (widget->owner == NULL)
+    if (widget->owner == nullptr)
         return;
 
     if (panels_layout.horizontal_split)
@@ -1093,10 +1093,10 @@ create_panel (int num, panel_view_mode_t type)
 {
     int x = 0, y = 0, cols = 0, lines = 0;
     unsigned int the_other = 0; /* Index to the other panel */
-    const char *file_name = NULL;       /* For Quick view */
-    Widget *new_widget = NULL, *old_widget = NULL;
+    const char *file_name = nullptr;       /* For Quick view */
+    Widget *new_widget = nullptr, *old_widget = nullptr;
     panel_view_mode_t old_type = view_listing;
-    WPanel *the_other_panel = NULL;
+    WPanel *the_other_panel = nullptr;
 
     if (num >= MAX_VIEWS)
     {
@@ -1113,7 +1113,7 @@ create_panel (int num, panel_view_mode_t type)
     }
 
     /* Get rid of it */
-    if (panels[num].widget != NULL)
+    if (panels[num].widget != nullptr)
     {
         Widget *w = panels[num].widget;
         WPanel *panel = PANEL (w);
@@ -1145,7 +1145,7 @@ create_panel (int num, panel_view_mode_t type)
 
     /* Restoring saved path from panels.ini for nonlist panel */
     /* when it's first creation (for example view_info) */
-    if (old_widget == NULL && type != view_listing)
+    if (old_widget == nullptr && type != view_listing)
         panels[num].last_saved_dir = _vfs_get_cwd ();
 
     switch (type)
@@ -1155,7 +1155,7 @@ create_panel (int num, panel_view_mode_t type)
         {
             gboolean last_was_panel;
 
-            last_was_panel = old_widget != NULL && get_panel_type (num) != view_listing;
+            last_was_panel = old_widget != nullptr && get_panel_type (num) != view_listing;
             new_widget = restore_into_right_dir_panel (num, last_was_panel, y, x, lines, cols);
             break;
         }
@@ -1171,7 +1171,7 @@ create_panel (int num, panel_view_mode_t type)
     case view_quick:
         new_widget = WIDGET (mcview_new (y, x, lines, cols, TRUE));
         the_other_panel = PANEL (panels[the_other].widget);
-        if (the_other_panel != NULL)
+        if (the_other_panel != nullptr)
             file_name = the_other_panel->dir.list[the_other_panel->selected].fname;
         else
             file_name = "";
@@ -1193,7 +1193,7 @@ create_panel (int num, panel_view_mode_t type)
 
     /* We use replace to keep the circular list of the dialog in the */
     /* same state.  Maybe we could just kill it and then replace it  */
-    if ((midnight_dlg != NULL) && (old_widget != NULL))
+    if ((midnight_dlg != nullptr) && (old_widget != nullptr))
     {
         if (old_type == view_listing)
         {
@@ -1210,9 +1210,9 @@ create_panel (int num, panel_view_mode_t type)
         WPanel *panel = PANEL (new_widget);
 
         /* if existing panel changed type to view_listing, then load history */
-        if (old_widget != NULL)
+        if (old_widget != nullptr)
         {
-            ev_history_load_save_t event_data = { NULL, new_widget };
+            ev_history_load_save_t event_data = { nullptr, new_widget };
 
             mc_event_raise (midnight_dlg->event_group, MCEVENT_HISTORY_LOAD, &event_data);
         }
@@ -1425,7 +1425,7 @@ save_panel_dir (int idx)
         WPanel *p;
 
         p = PANEL (get_panel_widget (idx));
-        if (p != NULL)
+        if (p != nullptr)
         {
             g_free (panels[idx].last_saved_dir);        /* last path no needed */
             /* Because path can be nonlocal */
@@ -1473,7 +1473,7 @@ do_load_prompt (void)
         return ret;
 
     /* Don't actually change the prompt if it's invisible */
-    if (top_dlg != NULL && DIALOG (top_dlg->data) == midnight_dlg && command_prompt)
+    if (top_dlg != nullptr && DIALOG (top_dlg->data) == midnight_dlg && command_prompt)
     {
         setup_cmdline ();
 
@@ -1508,7 +1508,7 @@ void
 title_path_prepare (char **path, char **login)
 {
     char host[BUF_TINY];
-    struct passwd *pw = NULL;
+    struct passwd *pw = nullptr;
     int res = 0;
 
     *path =
@@ -1521,7 +1521,7 @@ title_path_prepare (char **path, char **login)
         host[sizeof (host) - 1] = '\0';
 
     pw = getpwuid (getuid ());
-    if (pw != NULL)
+    if (pw != nullptr)
         *login = g_strdup_printf ("%s@%s", pw->pw_name, host);
     else
         *login = g_strdup (host);

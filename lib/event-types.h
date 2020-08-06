@@ -72,7 +72,7 @@ struct Widget;
 typedef struct
 {
     struct mc_config_t *cfg;
-    struct Widget *receiver;    /* NULL means broadcast message */
+    struct Widget *receiver;    /* nullptr means broadcast message */
 } ev_history_load_save_t;
 
 /*** global variables defined in .c file *********************************************************/

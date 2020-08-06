@@ -120,21 +120,21 @@ old_color_comparator (const void *p1, const void *p2)
 static gboolean
 mc_skin_colors_old_transform (const char *old_color, const char **group, const char **key)
 {
-    const mc_skin_colors_old_t oc = { old_color, NULL, NULL };
+    const mc_skin_colors_old_t oc = { old_color, nullptr, nullptr };
     mc_skin_colors_old_t *res;
 
-    if (old_color == NULL)
+    if (old_color == nullptr)
         return FALSE;
 
     res = (mc_skin_colors_old_t *) bsearch (&oc, old_colors, num_old_colors,
                                             sizeof (old_colors[0]), old_color_comparator);
 
-    if (res == NULL)
+    if (res == nullptr)
         return FALSE;
 
-    if (group != NULL)
+    if (group != nullptr)
         *group = res->group;
-    if (key != NULL)
+    if (key != nullptr)
         *key = res->key;
     return TRUE;
 }
@@ -146,30 +146,30 @@ mc_skin_colors_old_configure_one (mc_skin_t * mc_skin, const char *the_color_str
 {
     gchar **colors, **orig_colors;
 
-    if (the_color_string == NULL)
+    if (the_color_string == nullptr)
         return;
 
     orig_colors = g_strsplit (the_color_string, ":", -1);
-    if (orig_colors == NULL)
+    if (orig_colors == nullptr)
         return;
 
-    for (colors = orig_colors; *colors != NULL; colors++)
+    for (colors = orig_colors; *colors != nullptr; colors++)
     {
         gchar **key_val;
         const gchar *skin_group, *skin_key;
 
         key_val = g_strsplit_set (*colors, "=,", 4);
 
-        if (key_val == NULL)
+        if (key_val == nullptr)
             continue;
 
-        if (key_val[1] != NULL && mc_skin_colors_old_transform (key_val[0], &skin_group, &skin_key))
+        if (key_val[1] != nullptr && mc_skin_colors_old_transform (key_val[0], &skin_group, &skin_key))
         {
             gchar *skin_val;
 
-            if (key_val[2] == NULL)
+            if (key_val[2] == nullptr)
                 skin_val = g_strdup_printf ("%s;", key_val[1]);
-            else if (key_val[3] == NULL)
+            else if (key_val[3] == nullptr)
                 skin_val = g_strdup_printf ("%s;%s", key_val[1], key_val[2]);
             else
                 skin_val = g_strdup_printf ("%s;%s;%s", key_val[1], key_val[2], key_val[3]);

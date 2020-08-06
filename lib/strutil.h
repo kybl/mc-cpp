@@ -224,7 +224,7 @@ void str_printf (GString * buffer, const char *format, ...) G_GNUC_PRINTF (2, 3)
 void str_insert_replace_char (GString *);
 
 /* init strings and set terminal encoding,
- * if is termenc NULL, detect terminal encoding
+ * if is termenc nullptr, detect terminal encoding
  * create all str_cnv_* and set functions for terminal encoding
  */
 void str_init_strings (const char *termenc);
@@ -570,7 +570,7 @@ void str_msg_term_size (const char *text, int *lines, int *columns);
  * @param needle pointer to string
  * @param skip_count skip first bytes
  *
- * @return pointer to skip_count+1 needle (or NULL if not found).
+ * @return pointer to skip_count+1 needle (or nullptr if not found).
  */
 
 char *strrstr_skip_count (const char *haystack, const char *needle, size_t skip_count);

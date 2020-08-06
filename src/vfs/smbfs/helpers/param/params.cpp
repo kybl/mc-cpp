@@ -105,7 +105,7 @@ const char *unix_error_string (int error_num);
 
 extern int DEBUGLEVEL;
 
-static char *bufr = NULL;
+static char *bufr = nullptr;
 static int bSize = 0;
 
 /* -------------------------------------------------------------------------- **
@@ -227,7 +227,7 @@ Section (FILE * InFile, BOOL (*sfunc) (const char *))
         {
             bSize += BUFR_INC;
             bufr = static_cast<char *> (Realloc (bufr, bSize));
-            if (NULL == bufr)
+            if (nullptr == bufr)
             {
                 DEBUG (0, ("%s Memory re-allocation failure.", func));
                 return (False);
@@ -321,7 +321,7 @@ Parameter (FILE * InFile, BOOL (*pfunc) (const char *, const char *), int c)
         {
             bSize += BUFR_INC;
             bufr = static_cast<char *> (Realloc (bufr, bSize));
-            if (NULL == bufr)
+            if (nullptr == bufr)
             {
                 DEBUG (0, ("%s Memory re-allocation failure.", func));
                 return (False);
@@ -386,7 +386,7 @@ Parameter (FILE * InFile, BOOL (*pfunc) (const char *, const char *), int c)
         {
             bSize += BUFR_INC;
             bufr = static_cast<char *> (Realloc (bufr, bSize));
-            if (NULL == bufr)
+            if (nullptr == bufr)
             {
                 DEBUG (0, ("%s Memory re-allocation failure.", func));
                 return (False);
@@ -491,7 +491,7 @@ OpenConfFile (const char *FileName)
    *
    *  Input:  FileName  - The pathname of the config file to be opened.
    *
-   *  Output: A pointer of type (FILE *) to the opened file, or NULL if the
+   *  Output: A pointer of type (FILE *) to the opened file, or nullptr if the
    *          file could not be opened.
    *
    * ------------------------------------------------------------------------ **
@@ -502,14 +502,14 @@ OpenConfFile (const char *FileName)
     extern BOOL in_client;
     int lvl = in_client ? 1 : 0;
 
-    if (NULL == FileName || 0 == *FileName)
+    if (nullptr == FileName || 0 == *FileName)
     {
         DEBUG (lvl, ("%s No configuration filename specified.\n", func));
-        return (NULL);
+        return (nullptr);
     }
 
     OpenedFile = sys_fopen (FileName, "r");
-    if (NULL == OpenedFile)
+    if (nullptr == OpenedFile)
     {
         DEBUG (lvl,
                ("%s Unable to open configuration file \"%s\":\n\t%s\n",
@@ -541,12 +541,12 @@ pm_process (const char *FileName,
     const char *func = "params.c:pm_process() -";
 
     InFile = OpenConfFile (FileName);   /* Open the config file. */
-    if (NULL == InFile)
+    if (nullptr == InFile)
         return (False);
 
     DEBUG (3, ("%s Processing configuration file \"%s\"\n", func, FileName));
 
-    if (NULL != bufr)           /* If we already have a buffer */
+    if (nullptr != bufr)           /* If we already have a buffer */
         result = Parse (InFile, sfunc, pfunc);  /* (recursive call), then just */
     /* use it.                     */
 
@@ -554,7 +554,7 @@ pm_process (const char *FileName,
     {                           /* allocate one, then parse,   */
         bSize = BUFR_INC;       /* then free.                  */
         bufr = (char *) malloc (bSize);
-        if (NULL == bufr)
+        if (nullptr == bufr)
         {
             DEBUG (0, ("%s memory allocation failure.\n", func));
             fclose (InFile);
@@ -562,7 +562,7 @@ pm_process (const char *FileName,
         }
         result = Parse (InFile, sfunc, pfunc);
         free (bufr);
-        bufr = NULL;
+        bufr = nullptr;
         bSize = 0;
     }
 

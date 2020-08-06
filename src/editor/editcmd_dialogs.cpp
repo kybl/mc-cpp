@@ -102,25 +102,25 @@ editcmd_dialog_search_show (WEdit * edit)
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Enter search string:"), input_label_above, INPUT_LAST_TEXT, 
-                                 MC_HISTORY_SHARED_SEARCH, &search_text, NULL, FALSE, FALSE,
+                                 MC_HISTORY_SHARED_SEARCH, &search_text, nullptr, FALSE, FALSE,
                                  INPUT_COMPLETE_NONE),
             QUICK_SEPARATOR (TRUE),
             QUICK_START_COLUMNS,
                 QUICK_RADIO (num_of_types, (const char **) list_of_types,
-                             (int *) &edit_search_options.type, NULL),
+                             (int *) &edit_search_options.type, nullptr),
             QUICK_NEXT_COLUMN,
-                QUICK_CHECKBOX (N_("Cas&e sensitive"), &edit_search_options.case_sens, NULL),
-                QUICK_CHECKBOX (N_("&Backwards"), &edit_search_options.backwards, NULL),
-                QUICK_CHECKBOX (N_("In se&lection"), &edit_search_options.only_in_selection, NULL),
-                QUICK_CHECKBOX (N_("&Whole words"), &edit_search_options.whole_words, NULL),
+                QUICK_CHECKBOX (N_("Cas&e sensitive"), &edit_search_options.case_sens, nullptr),
+                QUICK_CHECKBOX (N_("&Backwards"), &edit_search_options.backwards, nullptr),
+                QUICK_CHECKBOX (N_("In se&lection"), &edit_search_options.only_in_selection, nullptr),
+                QUICK_CHECKBOX (N_("&Whole words"), &edit_search_options.whole_words, nullptr),
 #ifdef HAVE_CHARSET
-                QUICK_CHECKBOX (N_("&All charsets"), &edit_search_options.all_codepages, NULL),
+                QUICK_CHECKBOX (N_("&All charsets"), &edit_search_options.all_codepages, nullptr),
 #endif
             QUICK_STOP_COLUMNS,
             QUICK_START_BUTTONS (TRUE, TRUE),
-                QUICK_BUTTON (N_("&OK"), B_ENTER, NULL, NULL),
-                QUICK_BUTTON (N_("&Find all"), B_USER, NULL, NULL),
-                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, NULL, NULL),
+                QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),
+                QUICK_BUTTON (N_("&Find all"), B_USER, nullptr, nullptr),
+                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr),
             QUICK_END
             /* *INDENT-ON* */
         };
@@ -128,7 +128,7 @@ editcmd_dialog_search_show (WEdit * edit)
         quick_dialog_t qdlg = {
             -1, -1, 58,
             N_("Search"), "[Input Line Keys]",
-            quick_widgets, NULL, NULL
+            quick_widgets, nullptr, nullptr
         };
 
         dialog_result = quick_dialog (&qdlg);
@@ -136,7 +136,7 @@ editcmd_dialog_search_show (WEdit * edit)
 
     g_strfreev (list_of_types);
 
-    if ((dialog_result == B_CANCEL) || (search_text == NULL) || (search_text[0] == '\0'))
+    if ((dialog_result == B_CANCEL) || (search_text == nullptr) || (search_text[0] == '\0'))
     {
         g_free (search_text);
         return FALSE;
@@ -162,9 +162,9 @@ editcmd_dialog_search_show (WEdit * edit)
 #ifdef HAVE_CHARSET
     edit->search = mc_search_new (edit->last_search_string, cp_source);
 #else
-    edit->search = mc_search_new (edit->last_search_string, NULL);
+    edit->search = mc_search_new (edit->last_search_string, nullptr);
 #endif
-    if (edit->search != NULL)
+    if (edit->search != nullptr)
     {
         edit->search->search_type = edit_search_options.type;
 #ifdef HAVE_CHARSET
@@ -176,7 +176,7 @@ editcmd_dialog_search_show (WEdit * edit)
         edit->search->update_fn = edit_search_update_callback;
     }
 
-    return (edit->search != NULL);
+    return (edit->search != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -188,7 +188,7 @@ editcmd_dialog_replace_show (WEdit * edit, const char *search_default, const cha
     int num_of_types = 0;
     gchar **list_of_types;
 
-    if ((search_default == NULL) || (*search_default == '\0'))
+    if ((search_default == nullptr) || (*search_default == '\0'))
         search_default = INPUT_LAST_TEXT;
 
     list_of_types = mc_search_get_types_strings_array (&num_of_types);
@@ -197,21 +197,21 @@ editcmd_dialog_replace_show (WEdit * edit, const char *search_default, const cha
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (N_("Enter search string:"), input_label_above, search_default,
-                                 MC_HISTORY_SHARED_SEARCH, search_text, NULL, FALSE, FALSE,
+                                 MC_HISTORY_SHARED_SEARCH, search_text, nullptr, FALSE, FALSE,
                                  INPUT_COMPLETE_NONE),
             QUICK_LABELED_INPUT (N_("Enter replacement string:"), input_label_above, replace_default,
-                                 "replace", replace_text, NULL, FALSE, FALSE, INPUT_COMPLETE_NONE),
+                                 "replace", replace_text, nullptr, FALSE, FALSE, INPUT_COMPLETE_NONE),
             QUICK_SEPARATOR (TRUE),
             QUICK_START_COLUMNS,
                 QUICK_RADIO (num_of_types, (const char **) list_of_types,
-                             (int *) &edit_search_options.type, NULL),
+                             (int *) &edit_search_options.type, nullptr),
             QUICK_NEXT_COLUMN,
-                QUICK_CHECKBOX (N_("Cas&e sensitive"), &edit_search_options.case_sens, NULL),
-                QUICK_CHECKBOX (N_("&Backwards"), &edit_search_options.backwards, NULL),
-                QUICK_CHECKBOX (N_("In se&lection"), &edit_search_options.only_in_selection, NULL),
-                QUICK_CHECKBOX (N_("&Whole words"), &edit_search_options.whole_words, NULL),
+                QUICK_CHECKBOX (N_("Cas&e sensitive"), &edit_search_options.case_sens, nullptr),
+                QUICK_CHECKBOX (N_("&Backwards"), &edit_search_options.backwards, nullptr),
+                QUICK_CHECKBOX (N_("In se&lection"), &edit_search_options.only_in_selection, nullptr),
+                QUICK_CHECKBOX (N_("&Whole words"), &edit_search_options.whole_words, nullptr),
 #ifdef HAVE_CHARSET
-                QUICK_CHECKBOX (N_("&All charsets"), &edit_search_options.all_codepages, NULL),
+                QUICK_CHECKBOX (N_("&All charsets"), &edit_search_options.all_codepages, nullptr),
 #endif
             QUICK_STOP_COLUMNS,
             QUICK_BUTTONS_OK_CANCEL,
@@ -222,15 +222,15 @@ editcmd_dialog_replace_show (WEdit * edit, const char *search_default, const cha
         quick_dialog_t qdlg = {
             -1, -1, 58,
             N_("Replace"), "[Input Line Keys]",
-            quick_widgets, NULL, NULL
+            quick_widgets, nullptr, nullptr
         };
 
         if (quick_dialog (&qdlg) != B_CANCEL)
             edit->replace_mode = 0;
         else
         {
-            *replace_text = NULL;
-            *search_text = NULL;
+            *replace_text = nullptr;
+            *search_text = nullptr;
         }
     }
 
@@ -272,22 +272,22 @@ editcmd_dialog_replace_prompt_show (WEdit * edit, char *from_text, char *to_text
     {
         quick_widget_t quick_widgets[] = {
             /* *INDENT-OFF* */
-            QUICK_LABEL (repl_from, NULL),
-            QUICK_LABEL (N_("Replace with:"), NULL),
-            QUICK_LABEL (repl_to, NULL),
+            QUICK_LABEL (repl_from, nullptr),
+            QUICK_LABEL (N_("Replace with:"), nullptr),
+            QUICK_LABEL (repl_to, nullptr),
             QUICK_START_BUTTONS (TRUE, TRUE),
-                QUICK_BUTTON (N_("&Replace"), B_ENTER, NULL, NULL),
-                QUICK_BUTTON (N_("A&ll"), B_REPLACE_ALL, NULL, NULL),
-                QUICK_BUTTON (N_("&Skip"), B_SKIP_REPLACE, NULL, NULL),
-                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, NULL, NULL),
+                QUICK_BUTTON (N_("&Replace"), B_ENTER, nullptr, nullptr),
+                QUICK_BUTTON (N_("A&ll"), B_REPLACE_ALL, nullptr, nullptr),
+                QUICK_BUTTON (N_("&Skip"), B_SKIP_REPLACE, nullptr, nullptr),
+                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr),
             QUICK_END
             /* *INDENT-ON* */
         };
 
         quick_dialog_t qdlg = {
             ypos, xpos, -1,
-            N_("Confirm replace"), NULL,
-            quick_widgets, NULL, NULL
+            N_("Confirm replace"), nullptr,
+            quick_widgets, nullptr, nullptr
         };
 
         retval = quick_dialog (&qdlg);
@@ -319,7 +319,7 @@ editcmd_dialog_raw_key_query (const char *heading, const char *query, gboolean c
 
     raw_dlg =
         dlg_create (TRUE, 0, 0, cancel ? 7 : 5, w, WPOS_CENTER | WPOS_TRYUP, FALSE, dialog_colors,
-                    editcmd_dialog_raw_key_query_cb, NULL, NULL, heading);
+                    editcmd_dialog_raw_key_query_cb, nullptr, nullptr, heading);
     g = GROUP (raw_dlg);
     widget_want_tab (WIDGET (raw_dlg), TRUE);
 
@@ -331,8 +331,8 @@ editcmd_dialog_raw_key_query (const char *heading, const char *query, gboolean c
     {
         group_add_widget (g, hline_new (y++, -1, -1));
         /* Button w/o hotkey to allow use any key as raw or macro one */
-        group_add_widget_autopos (g, button_new (y, 1, B_CANCEL, NORMAL_BUTTON, _("Cancel"), NULL),
-                                  WPOS_KEEP_TOP | WPOS_CENTER_HORZ, NULL);
+        group_add_widget_autopos (g, button_new (y, 1, B_CANCEL, NORMAL_BUTTON, _("Cancel"), nullptr),
+                                  WPOS_KEEP_TOP | WPOS_CENTER_HORZ, nullptr);
     }
 
     w = dlg_run (raw_dlg);
@@ -349,7 +349,7 @@ editcmd_dialog_completion_show (const WEdit * edit, int max_len, GString ** comp
 {
     const Widget *we = CONST_WIDGET (edit);
     int start_x, start_y, offset, i;
-    char *curr = NULL;
+    char *curr = nullptr;
     WDialog *compl_dlg;
     WListbox *compl_list;
     int compl_dlg_h;            /* completion dialog height */
@@ -381,23 +381,23 @@ editcmd_dialog_completion_show (const WEdit * edit, int max_len, GString ** comp
     /* create the dialog */
     compl_dlg =
         dlg_create (TRUE, start_y, start_x, compl_dlg_h, compl_dlg_w, WPOS_KEEP_DEFAULT, TRUE,
-                    dialog_colors, NULL, NULL, "[Completion]", NULL);
+                    dialog_colors, nullptr, nullptr, "[Completion]", nullptr);
 
     /* create the listbox */
-    compl_list = listbox_new (1, 1, compl_dlg_h - 2, compl_dlg_w - 2, FALSE, NULL);
+    compl_list = listbox_new (1, 1, compl_dlg_h - 2, compl_dlg_w - 2, FALSE, nullptr);
 
     /* add the dialog */
     group_add_widget (GROUP (compl_dlg), compl_list);
 
     /* fill the listbox with the completions */
     for (i = num_compl - 1; i >= 0; i--)        /* reverse order */
-        listbox_add_item (compl_list, LISTBOX_APPEND_AT_END, 0, (char *) compl_[i]->str, NULL,
+        listbox_add_item (compl_list, LISTBOX_APPEND_AT_END, 0, (char *) compl_[i]->str, nullptr,
                           FALSE);
 
     /* pop up the dialog and apply the chosen completion */
     if (dlg_run (compl_dlg) == B_ENTER)
     {
-        listbox_get_current (compl_list, &curr, NULL);
+        listbox_get_current (compl_list, &curr, nullptr);
         curr = g_strdup (curr);
     }
 
@@ -415,7 +415,7 @@ editcmd_dialog_select_definition_show (WEdit * edit, char *match_expr, int max_l
                                        etags_hash_t * def_hash, int num_lines)
 {
     int start_x, start_y, offset, i;
-    char *curr = NULL;
+    char *curr = nullptr;
     WDialog *def_dlg;
     WListbox *def_list;
     int def_dlg_h;              /* dialog height */
@@ -444,8 +444,8 @@ editcmd_dialog_select_definition_show (WEdit * edit, char *match_expr, int max_l
         start_y -= (offset + 1);
 
     def_dlg = dlg_create (TRUE, start_y, start_x, def_dlg_h, def_dlg_w, WPOS_KEEP_DEFAULT, TRUE,
-                          dialog_colors, NULL, NULL, "[Definitions]", match_expr);
-    def_list = listbox_new (1, 1, def_dlg_h - 2, def_dlg_w - 2, FALSE, NULL);
+                          dialog_colors, nullptr, nullptr, "[Definitions]", match_expr);
+    def_list = listbox_new (1, 1, def_dlg_h - 2, def_dlg_w - 2, FALSE, nullptr);
     group_add_widget (GROUP (def_dlg), def_list);
 
     /* fill the listbox with the completions */
@@ -463,7 +463,7 @@ editcmd_dialog_select_definition_show (WEdit * edit, char *match_expr, int max_l
     /* pop up the dialog and apply the chosen completion */
     if (dlg_run (def_dlg) == B_ENTER)
     {
-        etags_hash_t *curr_def = NULL;
+        etags_hash_t *curr_def = nullptr;
         gboolean do_moveto = FALSE;
 
         listbox_get_current (def_list, &curr, (void **) &curr_def);
@@ -479,13 +479,13 @@ editcmd_dialog_select_definition_show (WEdit * edit, char *match_expr, int max_l
             do_moveto = TRUE;
         }
 
-        if (curr != NULL && do_moveto && edit_stack_iterator + 1 < MAX_HISTORY_MOVETO)
+        if (curr != nullptr && do_moveto && edit_stack_iterator + 1 < MAX_HISTORY_MOVETO)
         {
             vfs_path_free (edit_history_moveto[edit_stack_iterator].filename_vpath);
 
-            if (edit->dir_vpath != NULL)
+            if (edit->dir_vpath != nullptr)
                 edit_history_moveto[edit_stack_iterator].filename_vpath =
-                    vfs_path_append_vpath_new (edit->dir_vpath, edit->filename_vpath, NULL);
+                    vfs_path_append_vpath_new (edit->dir_vpath, edit->filename_vpath, nullptr);
             else
                 edit_history_moveto[edit_stack_iterator].filename_vpath =
                     vfs_path_clone (edit->filename_vpath);

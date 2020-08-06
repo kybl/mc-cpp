@@ -251,7 +251,7 @@ cpio_open_cpio_file (struct vfs_class *me, struct vfs_s_super *super, const vfs_
         vfs_path_t *tmp_vpath;
 
         mc_close (fd);
-        s = g_strconcat (super->name, decompress_extension (type), (char *) NULL);
+        s = g_strconcat (super->name, decompress_extension (type), (char *) nullptr);
         tmp_vpath = vfs_path_from_str_flags (s, VPF_NO_CANON);
         fd = mc_open (tmp_vpath, O_RDONLY);
         vfs_path_free (tmp_vpath);
@@ -376,9 +376,9 @@ static int
 cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat *st, char *name)
 {
     cpio_super_t *arch = CPIO_SUPER (super);
-    struct vfs_s_inode *inode = NULL;
+    struct vfs_s_inode *inode = nullptr;
     struct vfs_s_inode *root = super->root;
-    struct vfs_s_entry *entry = NULL;
+    struct vfs_s_entry *entry = nullptr;
     char *tn;
 
     switch (st->st_mode & S_IFMT)
@@ -413,11 +413,11 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
 
     if ((st->st_nlink > 1) && ((arch->type == CPIO_NEWC) || (arch->type == CPIO_CRC)))
     {                           /* For case of hardlinked files */
-        defer_inode i = { st->st_ino, st->st_dev, NULL };
+        defer_inode i = { st->st_ino, st->st_dev, nullptr };
         GSList *l;
 
         l = g_slist_find_custom (arch->deferred, &i, cpio_defer_find);
-        if (l != NULL)
+        if (l != nullptr)
         {
             inode = ((defer_inode *) l->data)->inode;
             if (inode->st.st_size != 0 && st->st_size != 0 && (inode->st.st_size != st->st_size))
@@ -425,7 +425,7 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
                 message (D_ERROR, MSG_ERROR,
                          _("Inconsistent hardlinks of\n%s\nin cpio archive\n%s"),
                          name, super->name);
-                inode = NULL;
+                inode = nullptr;
             }
             else if (inode->st.st_size == 0)
                 inode->st.st_size = st->st_size;
@@ -437,7 +437,7 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
         *tn = '\0';
 
     tn = strrchr (name, PATH_SEP);
-    if (tn == NULL)
+    if (tn == nullptr)
         tn = name;
     else if (tn == name + 1)
     {
@@ -454,7 +454,7 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
 
     entry = VFS_SUBCLASS (me)->find_entry (me, root, tn, LINK_FOLLOW, FL_NONE); /* In case entry is already there */
 
-    if (entry != NULL)
+    if (entry != nullptr)
     {
         /* This shouldn't happen! (well, it can happen if there is a record for a
            file and than a record for a directory it is in; cpio would die with
@@ -486,13 +486,13 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
     }
     else
     {                           /* !entry */
-        /* root == NULL can be in the following case:
+        /* root == nullptr can be in the following case:
          * a/b/c -> d
          * where 'a/b' is the stale link and therefore root of 'c' cannot be found in the archive
          */
-        if (root != NULL)
+        if (root != nullptr)
         {
-            if (inode == NULL)
+            if (inode == nullptr)
             {
                 inode = vfs_s_new_inode (me, super, st);
                 if ((st->st_nlink > 0) && ((arch->type == CPIO_NEWC) || (arch->type == CPIO_CRC)))
@@ -522,9 +522,9 @@ cpio_create_entry (struct vfs_class *me, struct vfs_s_super *super, struct stat 
             CPIO_SEEK_CUR (super, st->st_size);
         else
         {
-            if (inode != NULL)
+            if (inode != nullptr)
             {
-                /* FIXME: do we must read from arch->fd in case of inode != NULL only or in any case? */
+                /* FIXME: do we must read from arch->fd in case of inode != nullptr only or in any case? */
 
                 inode->linkname = static_cast<char *> (g_malloc (st->st_size + 1));
 
@@ -813,7 +813,7 @@ cpio_super_check (const vfs_path_t * vpath)
     int stat_result;
 
     stat_result = mc_stat (vpath, &sb);
-    return (stat_result == 0 ? &sb : NULL);
+    return (stat_result == 0 ? &sb : nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -830,7 +830,7 @@ cpio_super_same (const vfs_path_element_t * vpath_element, struct vfs_s_super *p
         return 0;
 
     /* Has the cached archive been changed on the disk? */
-    if (parc != NULL && CPIO_SUPER (parc)->st.st_mtime < archive_stat->st_mtime)
+    if (parc != nullptr && CPIO_SUPER (parc)->st.st_mtime < archive_stat->st_mtime)
     {
         /* Yes, reload! */
         vfs_cpiofs_ops->free ((vfsid) parc);
@@ -889,7 +889,7 @@ vfs_init_cpiofs (void)
     /* FIXME: cpiofs used own temp files */
     vfs_init_subclass (&cpio_subclass, "cpiofs", VFSF_READONLY, "ucpio");
     vfs_cpiofs_ops->read = cpio_read;
-    vfs_cpiofs_ops->setctl = NULL;
+    vfs_cpiofs_ops->setctl = nullptr;
     cpio_subclass.archive_check = cpio_super_check;
     cpio_subclass.archive_same = cpio_super_same;
     cpio_subclass.new_archive = cpio_new_archive;

@@ -74,7 +74,7 @@ get_netmask (struct in_addr *ipaddr, struct in_addr *nmask)
     struct ifconf ifc;
     char buff[2048];
     int fd, i, n;
-    struct ifreq *ifr = NULL;
+    struct ifreq *ifr = nullptr;
 
     if ((fd = socket (AF_INET, SOCK_DGRAM, 0)) == -1)
     {
@@ -178,7 +178,7 @@ get_netmask (struct in_addr *ipaddr, struct in_addr *nmask)
     struct ifconf *ifc;
     char buff[2048];
     int fd, i, n;
-    struct ifreq *ifr = NULL;
+    struct ifreq *ifr = nullptr;
 
     if ((fd = socket (AF_INET, SOCK_DGRAM, 0)) == -1)
     {
@@ -282,7 +282,7 @@ get_netmask (struct in_addr *ipaddr, struct in_addr *nmask)
     char buff[2048];
     int fd, i;
     struct ifconf ifc;
-    struct ifreq *ifr = NULL;
+    struct ifreq *ifr = nullptr;
 
     if ((fd = socket (AF_INET, SOCK_DGRAM, 0)) == -1)
     {

@@ -27,7 +27,7 @@ void flush_extension_file (void);
 static inline int
 regex_command (const vfs_path_t * filename_vpath, const char *action)
 {
-    return regex_command_for (NULL, filename_vpath, action, NULL);
+    return regex_command_for (nullptr, filename_vpath, action, nullptr);
 }
 
 #endif /* MC__EXT_H */

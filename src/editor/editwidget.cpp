@@ -70,8 +70,8 @@
 
 /*** global variables ****************************************************************************/
 
-char *edit_window_state_char = NULL;
-char *edit_window_close_char = NULL;
+char *edit_window_state_char = nullptr;
+char *edit_window_close_char = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -141,14 +141,14 @@ edit_about (void)
 {
     quick_widget_t quick_widgets[] = {
         /* *INDENT-OFF* */
-        QUICK_LABEL ("MCEdit " VERSION, NULL),
+        QUICK_LABEL ("MCEdit " VERSION, nullptr),
         QUICK_SEPARATOR (TRUE),
         QUICK_LABEL (N_("A user friendly text editor\n"
-                        "written for the Midnight Commander."), NULL),
+                        "written for the Midnight Commander."), nullptr),
         QUICK_SEPARATOR (FALSE),
-        QUICK_LABEL (N_("Copyright (C) 1996-2020 the Free Software Foundation"), NULL),
+        QUICK_LABEL (N_("Copyright (C) 1996-2020 the Free Software Foundation"), nullptr),
         QUICK_START_BUTTONS (TRUE, TRUE),
-            QUICK_BUTTON (N_("&OK"), B_ENTER, NULL, NULL),
+            QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),
         QUICK_END
         /* *INDENT-ON* */
     };
@@ -156,7 +156,7 @@ edit_about (void)
     quick_dialog_t qdlg = {
         -1, -1, 40,
         N_("About"), "[Internal File Editor]",
-        quick_widgets, NULL, NULL
+        quick_widgets, nullptr, nullptr
     };
 
     quick_widgets[0].pos_flags = WPOS_KEEP_TOP | WPOS_CENTER_HORZ;
@@ -174,7 +174,7 @@ edit_about (void)
 static void
 edit_help (void)
 {
-    ev_help_t event_data = { NULL, "[Internal File Editor]" };
+    ev_help_t event_data = { nullptr, "[Internal File Editor]" };
     mc_event_raise (MCEVENT_GROUP_CORE, "help", &event_data);
 }
 
@@ -309,13 +309,13 @@ edit_window_list (const WDialog * h)
 
     listbox = create_listbox_window (lines, cols, _("Open files"), "[Open files]");
 
-    for (w = g->widgets; w != NULL; w = g_list_next (w))
+    for (w = g->widgets; w != nullptr; w = g_list_next (w))
         if (edit_widget_is_editor (CONST_WIDGET (w->data)))
         {
             WEdit *e = (WEdit *) w->data;
             char *fname;
 
-            if (e->filename_vpath == NULL)
+            if (e->filename_vpath == nullptr)
                 fname = g_strdup_printf ("%c [%s]", e->modified ? '*' : ' ', _("NoName"));
             else
                 fname =
@@ -328,7 +328,7 @@ edit_window_list (const WDialog * h)
         }
 
     selected = static_cast<WEdit *> (run_listbox_with_data (listbox, g->current->data));
-    if (selected != NULL)
+    if (selected != nullptr)
         widget_select (WIDGET (selected));
 }
 
@@ -338,19 +338,19 @@ static char *
 edit_get_shortcut (long command)
 {
     const char *ext_map;
-    const char *shortcut = NULL;
+    const char *shortcut = nullptr;
 
     shortcut = keybind_lookup_keymap_shortcut (editor_map, command);
-    if (shortcut != NULL)
+    if (shortcut != nullptr)
         return g_strdup (shortcut);
 
     ext_map = keybind_lookup_keymap_shortcut (editor_map, CK_ExtendedKeyMap);
-    if (ext_map != NULL)
+    if (ext_map != nullptr)
         shortcut = keybind_lookup_keymap_shortcut (editor_x_map, command);
-    if (shortcut != NULL)
+    if (shortcut != nullptr)
         return g_strdup_printf ("%s %s", ext_map, shortcut);
 
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -365,7 +365,7 @@ edit_get_title (const WDialog * h, size_t len)
 
     len -= 4;
 
-    if (edit->filename_vpath == NULL)
+    if (edit->filename_vpath == nullptr)
         filename = g_strdup (_("[NoName]"));
     else
         filename = g_strdup (vfs_path_as_str (edit->filename_vpath));
@@ -373,7 +373,7 @@ edit_get_title (const WDialog * h, size_t len)
     file_label = str_term_trim (filename, len - str_term_width1 (_("Edit: ")));
     g_free (filename);
 
-    return g_strconcat (_("Edit: "), modified, file_label, (char *) NULL);
+    return g_strconcat (_("Edit: "), modified, file_label, (char *) nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -388,7 +388,7 @@ edit_dialog_command_execute (WDialog * h, long command)
     switch (command)
     {
     case CK_EditNew:
-        edit_add_window (h, wh->y + 1, wh->x, wh->lines - 2, wh->cols, NULL, 0);
+        edit_add_window (h, wh->y + 1, wh->x, wh->lines - 2, wh->cols, nullptr, 0);
         break;
     case CK_EditFile:
         edit_load_cmd (h);
@@ -405,7 +405,7 @@ edit_dialog_command_execute (WDialog * h, long command)
     case CK_Close:
         /* if there are no opened files anymore, close MC editor */
         if (edit_widget_is_editor (CONST_WIDGET (g->current->data)) &&
-            edit_close_cmd ((WEdit *) g->current->data) && find_editor (h) == NULL)
+            edit_close_cmd ((WEdit *) g->current->data) && find_editor (h) == nullptr)
             dlg_stop (h);
         break;
     case CK_Help:
@@ -607,15 +607,15 @@ static inline void
 edit_quit (WDialog * h)
 {
     GList *l;
-    WEdit *e = NULL;
-    GSList *m = NULL;
+    WEdit *e = nullptr;
+    GSList *m = nullptr;
     GSList *me;
 
     /* don't stop the dialog before final decision */
     widget_set_state (WIDGET (h), WST_ACTIVE, TRUE);
 
     /* check window state and get modified files */
-    for (l = GROUP (h)->widgets; l != NULL; l = g_list_next (l))
+    for (l = GROUP (h)->widgets; l != nullptr; l = g_list_next (l))
         if (edit_widget_is_editor (CONST_WIDGET (l->data)))
         {
             e = (WEdit *) l->data;
@@ -633,7 +633,7 @@ edit_quit (WDialog * h)
                 m = g_slist_prepend (m, l->data);
         }
 
-    for (me = m; me != NULL; me = g_slist_next (me))
+    for (me = m; me != nullptr; me = g_slist_next (me))
     {
         e = (WEdit *) me->data;
 
@@ -644,7 +644,7 @@ edit_quit (WDialog * h)
     }
 
     /* if all files were checked, quit editor */
-    if (me == NULL)
+    if (me == nullptr)
         dlg_stop (h);
 
     g_slist_free (m);
@@ -657,7 +657,7 @@ edit_set_buttonbar (WEdit * edit, WButtonBar * bb)
 {
     Widget *w = WIDGET (edit);
 
-    buttonbar_set_label (bb, 1, Q_ ("ButtonBar|Help"), w->keymap, NULL);
+    buttonbar_set_label (bb, 1, Q_ ("ButtonBar|Help"), w->keymap, nullptr);
     buttonbar_set_label (bb, 2, Q_ ("ButtonBar|Save"), w->keymap, w);
     buttonbar_set_label (bb, 3, Q_ ("ButtonBar|Mark"), w->keymap, w);
     buttonbar_set_label (bb, 4, Q_ ("ButtonBar|Replac"), w->keymap, w);
@@ -665,8 +665,8 @@ edit_set_buttonbar (WEdit * edit, WButtonBar * bb)
     buttonbar_set_label (bb, 6, Q_ ("ButtonBar|Move"), w->keymap, w);
     buttonbar_set_label (bb, 7, Q_ ("ButtonBar|Search"), w->keymap, w);
     buttonbar_set_label (bb, 8, Q_ ("ButtonBar|Delete"), w->keymap, w);
-    buttonbar_set_label (bb, 9, Q_ ("ButtonBar|PullDn"), w->keymap, NULL);
-    buttonbar_set_label (bb, 10, Q_ ("ButtonBar|Quit"), w->keymap, NULL);
+    buttonbar_set_label (bb, 9, Q_ ("ButtonBar|PullDn"), w->keymap, nullptr);
+    buttonbar_set_label (bb, 10, Q_ ("ButtonBar|Quit"), w->keymap, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -755,7 +755,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
         return MSG_HANDLED;
 
     case MSG_RESIZE:
-        dlg_default_callback (w, NULL, MSG_RESIZE, 0, NULL);
+        dlg_default_callback (w, nullptr, MSG_RESIZE, 0, nullptr);
         menubar_arrange (find_menubar (h));
         return MSG_HANDLED;
 
@@ -770,7 +770,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
             /* We forward any commands coming from the menu, and which haven't been
                handled by the dialog, to the focused WEdit window. */
             if (result == MSG_NOT_HANDLED && sender == WIDGET (find_menubar (h)))
-                result = send_message (g->current->data, NULL, MSG_ACTION, parm, NULL);
+                result = send_message (g->current->data, nullptr, MSG_ACTION, parm, nullptr);
 
             return result;
         }
@@ -828,7 +828,7 @@ edit_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
 
     case MSG_IDLE:
         widget_idle (w, FALSE);
-        return send_message (g->current->data, NULL, MSG_IDLE, 0, NULL);
+        return send_message (g->current->data, nullptr, MSG_IDLE, 0, nullptr);
 
     default:
         return dlg_default_callback (w, sender, msg, parm, data);
@@ -862,11 +862,11 @@ edit_dialog_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             /* menubar */
 
             GList *l;
-            GList *top = NULL;
+            GList *top = nullptr;
             int x;
 
             /* Try find top fullscreen window */
-            for (l = g->widgets; l != NULL; l = g_list_next (l))
+            for (l = g->widgets; l != nullptr; l = g_list_next (l))
                 if (edit_widget_is_editor (CONST_WIDGET (l->data))
                     && ((WEdit *) l->data)->fullscreen)
                     top = l;
@@ -874,7 +874,7 @@ edit_dialog_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
             /* Handle fullscreen/close buttons in the top line */
             x = w->cols - 6;
 
-            if (top != NULL && event->x >= x)
+            if (top != nullptr && event->x >= x)
             {
                 WEdit *e = (WEdit *) top->data;
 
@@ -888,7 +888,7 @@ edit_dialog_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
                 if (event->x - x <= 2)
                     edit_toggle_fullscreen (e);
                 else
-                    send_message (h, NULL, MSG_ACTION, CK_Close, NULL);
+                    send_message (h, nullptr, MSG_ACTION, CK_Close, nullptr);
 
                 unhandled = FALSE;
             }
@@ -1134,7 +1134,7 @@ edit_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         if (event->y == 0)
         {
             if (event->x >= close_x - 1 && event->x <= close_x + 1)
-                send_message (w->owner, NULL, MSG_ACTION, CK_Close, NULL);
+                send_message (w->owner, nullptr, MSG_ACTION, CK_Close, nullptr);
             else if (event->x >= toggle_fullscreen_x - 1 && event->x <= toggle_fullscreen_x + 1)
                 edit_toggle_fullscreen (edit);
             else if (!edit->fullscreen && event->count == GPM_DOUBLE)
@@ -1193,7 +1193,7 @@ edit_file (const vfs_path_t * file_vpath, long line)
     GList *files;
     gboolean ok;
 
-    files = g_list_prepend (NULL, &arg);
+    files = g_list_prepend (nullptr, &arg);
     ok = edit_files (files);
     g_list_free (files);
 
@@ -1217,23 +1217,23 @@ edit_files (const GList * files)
     {
         char *dir;
 
-        dir = mc_build_filename (mc_config_get_cache_path (), EDIT_HOME_DIR, (char *) NULL);
+        dir = mc_build_filename (mc_config_get_cache_path (), EDIT_HOME_DIR, (char *) nullptr);
         made_directory = (mkdir (dir, 0700) != -1 || errno == EEXIST);
         g_free (dir);
 
-        dir = mc_build_filename (mc_config_get_path (), EDIT_HOME_DIR, (char *) NULL);
+        dir = mc_build_filename (mc_config_get_path (), EDIT_HOME_DIR, (char *) nullptr);
         made_directory = (mkdir (dir, 0700) != -1 || errno == EEXIST);
         g_free (dir);
 
-        dir = mc_build_filename (mc_config_get_data_path (), EDIT_HOME_DIR, (char *) NULL);
+        dir = mc_build_filename (mc_config_get_data_path (), EDIT_HOME_DIR, (char *) nullptr);
         made_directory = (mkdir (dir, 0700) != -1 || errno == EEXIST);
         g_free (dir);
     }
 
     /* Create a new dialog and add it widgets to it */
     edit_dlg =
-        dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, NULL, edit_dialog_callback,
-                    edit_dialog_mouse_callback, "[Internal File Editor]", NULL);
+        dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, nullptr, edit_dialog_callback,
+                    edit_dialog_mouse_callback, "[Internal File Editor]", nullptr);
     wd = WIDGET (edit_dlg);
     widget_want_tab (wd, TRUE);
     wd->keymap = editor_map;
@@ -1249,15 +1249,15 @@ edit_files (const GList * files)
                 (1, 0, wd->lines - 2, wd->cols, EDITOR_BACKGROUND, ' ', edit_dialog_bg_callback));
     group_add_widget (g, edit_dlg->bg);
 
-    menubar = menubar_new (NULL, TRUE);
+    menubar = menubar_new (nullptr, TRUE);
     w = WIDGET (menubar);
-    group_add_widget_autopos (g, w, w->pos_flags, NULL);
+    group_add_widget_autopos (g, w, w->pos_flags, nullptr);
     edit_init_menu (menubar);
 
     w = WIDGET (buttonbar_new (TRUE));
-    group_add_widget_autopos (g, w, w->pos_flags, NULL);
+    group_add_widget_autopos (g, w, w->pos_flags, nullptr);
 
-    for (file = files; file != NULL; file = g_list_next (file))
+    for (file = files; file != nullptr; file = g_list_next (file))
     {
         mcedit_arg_t *f = (mcedit_arg_t *) file->data;
         gboolean f_ok;
@@ -1308,7 +1308,7 @@ find_editor (const WDialog * h)
 gboolean
 edit_widget_is_editor (const Widget * w)
 {
-    return (w != NULL && w->callback == edit_callback);
+    return (w != nullptr && w->callback == edit_callback);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1369,15 +1369,15 @@ edit_add_window (WDialog * h, int y, int x, int lines, int cols, const vfs_path_
     WEdit *edit;
     Widget *w;
 
-    edit = edit_init (NULL, y, x, lines, cols, f, fline);
-    if (edit == NULL)
+    edit = edit_init (nullptr, y, x, lines, cols, f, fline);
+    if (edit == nullptr)
         return FALSE;
 
     w = WIDGET (edit);
     w->callback = edit_callback;
     w->mouse_callback = edit_mouse_callback;
 
-    group_add_widget_autopos (GROUP (h), w, WPOS_KEEP_ALL, NULL);
+    group_add_widget_autopos (GROUP (h), w, WPOS_KEEP_ALL, nullptr);
     edit_set_buttonbar (edit, find_buttonbar (h));
     widget_draw (WIDGET (h));
 

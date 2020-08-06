@@ -183,7 +183,7 @@ vfs_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *param_b
 
     /* Strip directories */
     p = strrchr (param_basename, PATH_SEP);
-    if (p == NULL)
+    if (p == nullptr)
         p = param_basename;
     else
         p++;
@@ -197,7 +197,7 @@ vfs_mkstemps (vfs_path_t ** pname_vpath, const char *prefix, const char *param_b
 
     /* Protection against unusual characters */
     for (; *p != '\0' && *p != '#'; p++)
-        if (strchr (".-_@", *p) != NULL || g_ascii_isalnum (*p))
+        if (strchr (".-_@", *p) != nullptr || g_ascii_isalnum (*p))
             g_string_append_c (suffix, *p);
 
     fd = mc_mkstemps (pname_vpath, prefix, suffix->str);
@@ -265,7 +265,7 @@ vfs_url_split (const char *path, int default_port, vfs_url_flags_t flags)
     at = strrchr (pcopy, '@');
 
     /* We have a username */
-    if (at == NULL)
+    if (at == nullptr)
         rest = pcopy;
     else
     {
@@ -273,7 +273,7 @@ vfs_url_split (const char *path, int default_port, vfs_url_flags_t flags)
 
         *at = '\0';
         inner_colon = strchr (pcopy, ':');
-        if (inner_colon != NULL)
+        if (inner_colon != nullptr)
         {
             *inner_colon = '\0';
             inner_colon++;
@@ -300,7 +300,7 @@ vfs_url_split (const char *path, int default_port, vfs_url_flags_t flags)
     else
     {
         colon = strchr (++rest, ']');
-        if (colon != NULL)
+        if (colon != nullptr)
         {
             colon[0] = '\0';
             colon[1] = '\0';
@@ -310,11 +310,11 @@ vfs_url_split (const char *path, int default_port, vfs_url_flags_t flags)
         {
             vfs_path_element_free (path_element);
             g_free (pcopy);
-            return NULL;
+            return nullptr;
         }
     }
 
-    if (colon != NULL)
+    if (colon != nullptr)
     {
         *colon = '\0';
         /* cppcheck-suppress invalidscanf */

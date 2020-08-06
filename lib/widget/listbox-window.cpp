@@ -68,7 +68,7 @@ create_listbox_window_centered (int center_y, int center_x, int lines, int cols,
     /* Adjust sizes */
     lines = MIN (lines, LINES - 6);
 
-    if (title != NULL)
+    if (title != nullptr)
     {
         int len;
 
@@ -106,9 +106,9 @@ create_listbox_window_centered (int center_y, int center_x, int lines, int cols,
 
     listbox->dlg =
         dlg_create (TRUE, ypos, xpos, lines + space, cols + space, pos_flags, FALSE, listbox_colors,
-                    NULL, NULL, help, title);
+                    nullptr, nullptr, help, title);
 
-    listbox->list = listbox_new (2, 2, lines, cols, FALSE, NULL);
+    listbox->list = listbox_new (2, 2, lines, cols, FALSE, nullptr);
     group_add_widget (GROUP (listbox->dlg), listbox->list);
 
     return listbox;
@@ -144,21 +144,21 @@ run_listbox (Listbox * l)
  * need to select arbitrary 'data'.
  *
  * @param select  the item to select initially, by its 'data'. Optional.
- * @return        the 'data' of the item selected, or NULL if none selected.
+ * @return        the 'data' of the item selected, or nullptr if none selected.
  */
 void *
 run_listbox_with_data (Listbox * l, const void *select)
 {
-    void *val = NULL;
+    void *val = nullptr;
 
-    if (select != NULL)
+    if (select != nullptr)
         listbox_select_entry (l->list, listbox_search_data (l->list, select));
 
     if (dlg_run (l->dlg) != B_CANCEL)
     {
         WLEntry *e;
         e = listbox_get_nth_item (l->list, l->list->pos);
-        if (e != NULL)
+        if (e != nullptr)
         {
             /* The assert guards against returning a soon-to-be deallocated
              * pointer (as in listbox_add_item(..., TRUE)). */

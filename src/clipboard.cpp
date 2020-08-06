@@ -45,8 +45,8 @@
 /*** global variables ****************************************************************************/
 
 /* path to X clipboard utility */
-char *clipboard_store_path = NULL;
-char *clipboard_paste_path = NULL;
+char *clipboard_store_path = nullptr;
+char *clipboard_paste_path = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -78,13 +78,13 @@ clipboard_file_to_ext_clip (const gchar * event_group_name, const gchar * event_
     (void) init_data;
     (void) data;
 
-    if (d == NULL || clipboard_store_path == NULL || clipboard_store_path[0] == '\0')
+    if (d == nullptr || clipboard_store_path == nullptr || clipboard_store_path[0] == '\0')
         return TRUE;
 
     tmp = mc_config_get_full_path (EDIT_HOME_CLIP_FILE);
-    cmd = g_strconcat (clipboard_store_path, " ", tmp, " 2>/dev/null", (char *) NULL);
+    cmd = g_strconcat (clipboard_store_path, " ", tmp, " 2>/dev/null", (char *) nullptr);
 
-    if (cmd != NULL)
+    if (cmd != nullptr)
         my_system (EXECUTE_AS_SHELL, mc_global.shell->path, cmd);
 
     g_free (cmd);
@@ -108,11 +108,11 @@ clipboard_file_from_ext_clip (const gchar * event_group_name, const gchar * even
     (void) init_data;
     (void) data;
 
-    if (d == NULL || clipboard_paste_path == NULL || clipboard_paste_path[0] == '\0')
+    if (d == nullptr || clipboard_paste_path == nullptr || clipboard_paste_path[0] == '\0')
         return TRUE;
 
-    p = mc_popen (clipboard_paste_path, NULL);
-    if (p == NULL)
+    p = mc_popen (clipboard_paste_path, nullptr);
+    if (p == nullptr)
         return TRUE;            /* don't show error message */
 
     p->out.null_term = FALSE;
@@ -120,14 +120,14 @@ clipboard_file_from_ext_clip (const gchar * event_group_name, const gchar * even
 
     while (TRUE)
     {
-        GError *error = NULL;
+        GError *error = nullptr;
 
         p->out.len = MC_PIPE_BUFSIZE;
         p->err.len = MC_PIPE_BUFSIZE;
 
         mc_pread (p, &error);
 
-        if (error != NULL)
+        if (error != nullptr)
         {
             /* don't show error message */
             g_error_free (error);
@@ -162,7 +162,7 @@ clipboard_file_from_ext_clip (const gchar * event_group_name, const gchar * even
     if (file >= 0)
         mc_close (file);
 
-    mc_pclose (p, NULL);
+    mc_pclose (p, nullptr);
 
     return TRUE;
 }
@@ -175,7 +175,7 @@ clipboard_text_to_file (const gchar * event_group_name, const gchar * event_name
                         gpointer init_data, gpointer data)
 {
     int file;
-    vfs_path_t *fname_vpath = NULL;
+    vfs_path_t *fname_vpath = nullptr;
     size_t str_len;
     const char *text = (const char *) data;
 
@@ -183,7 +183,7 @@ clipboard_text_to_file (const gchar * event_group_name, const gchar * event_name
     (void) event_name;
     (void) init_data;
 
-    if (text == NULL)
+    if (text == nullptr)
         return FALSE;
 
     fname_vpath = mc_config_get_full_vpath (EDIT_HOME_CLIP_FILE);
@@ -213,7 +213,7 @@ clipboard_text_from_file (const gchar * event_group_name, const gchar * event_na
 {
     char buf[BUF_LARGE];
     FILE *f;
-    char *fname = NULL;
+    char *fname = nullptr;
     gboolean first = TRUE;
     ev_clipboard_text_from_file_t *event_data = (ev_clipboard_text_from_file_t *) data;
 
@@ -225,13 +225,13 @@ clipboard_text_from_file (const gchar * event_group_name, const gchar * event_na
     f = fopen (fname, "r");
     g_free (fname);
 
-    if (f == NULL)
+    if (f == nullptr)
     {
         event_data->ret = FALSE;
         return TRUE;
     }
 
-    *(event_data->text) = NULL;
+    *(event_data->text) = nullptr;
 
     while (fgets (buf, sizeof (buf), f))
     {
@@ -253,7 +253,7 @@ clipboard_text_from_file (const gchar * event_group_name, const gchar * event_na
                 /* remove \n on EOL */
                 char *tmp;
 
-                tmp = g_strconcat (*(event_data->text), " ", buf, (char *) NULL);
+                tmp = g_strconcat (*(event_data->text), " ", buf, (char *) nullptr);
                 g_free (*(event_data->text));
                 *(event_data->text) = tmp;
             }
@@ -261,7 +261,7 @@ clipboard_text_from_file (const gchar * event_group_name, const gchar * event_na
     }
 
     fclose (f);
-    event_data->ret = (*(event_data->text) != NULL);
+    event_data->ret = (*(event_data->text) != nullptr);
     return TRUE;
 }
 

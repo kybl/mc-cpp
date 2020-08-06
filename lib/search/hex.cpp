@@ -117,11 +117,11 @@ mc_search__hex_translate_to_regex (const GString * astr, mc_search_hex_parse_err
     if (error != MC_SEARCH_HEX_E_OK)
     {
         g_string_free (buff, TRUE);
-        if (error_ptr != NULL)
+        if (error_ptr != nullptr)
             *error_ptr = error;
-        if (error_pos_ptr != NULL)
+        if (error_pos_ptr != nullptr)
             *error_pos_ptr = loop;
-        return NULL;
+        return nullptr;
     }
 
     return buff;
@@ -174,7 +174,7 @@ mc_search__cond_struct_new_init_hex (const char *charset, mc_search_t * lc_mc_se
         charset = "ASCII";
 
     tmp = mc_search__hex_translate_to_regex (mc_search_cond->str, &error, &error_pos);
-    if (tmp != NULL)
+    if (tmp != nullptr)
     {
         g_string_free (mc_search_cond->str, TRUE);
         mc_search_cond->str = tmp;

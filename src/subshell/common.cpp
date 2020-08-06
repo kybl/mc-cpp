@@ -117,7 +117,7 @@
 enum subshell_state_enum subshell_state;
 
 /* Holds the latest prompt captured from the subshell */
-GString *subshell_prompt = NULL;
+GString *subshell_prompt = nullptr;
 
 /* Subshell: if set, then the prompt was not saved on CONSOLE_SAVE */
 /* We need to paint it after CONSOLE_RESTORE, see: load_prompt */
@@ -240,8 +240,8 @@ write_all (int fd, const void *buf, size_t count)
 static void
 init_subshell_child (const char *pty_name)
 {
-    char *init_file = NULL;
-    char *putenv_str = NULL;
+    char *init_file = nullptr;
+    char *putenv_str = nullptr;
     pid_t mc_sid;
 
     (void) pty_name;
@@ -313,7 +313,7 @@ init_subshell_child (const char *pty_name)
             input_file = mc_config_get_full_path ("inputrc");
             if (exist_file (input_file))
             {
-                putenv_str = g_strconcat ("INPUTRC=", input_file, (char *) NULL);
+                putenv_str = g_strconcat ("INPUTRC=", input_file, (char *) nullptr);
                 putenv (putenv_str);
             }
             g_free (input_file);
@@ -334,7 +334,7 @@ init_subshell_child (const char *pty_name)
         }
 
         /* Put init file to ENV variable used by ash */
-        putenv_str = g_strconcat ("ENV=", init_file, (char *) NULL);
+        putenv_str = g_strconcat ("ENV=", init_file, (char *) nullptr);
         putenv (putenv_str);
         /* Do not use "g_free (putenv_str)" here, otherwise ENV will be undefined! */
 
@@ -375,13 +375,13 @@ init_subshell_child (const char *pty_name)
     switch (mc_global.shell->type)
     {
     case SHELL_BASH:
-        execl (mc_global.shell->path, "bash", "-rcfile", init_file, (char *) NULL);
+        execl (mc_global.shell->path, "bash", "-rcfile", init_file, (char *) nullptr);
         break;
 
     case SHELL_ZSH:
         /* Use -g to exclude cmds beginning with space from history
          * and -Z to use the line editor on non-interactive term */
-        execl (mc_global.shell->path, "zsh", "-Z", "-g", (char *) NULL);
+        execl (mc_global.shell->path, "zsh", "-Z", "-g", (char *) nullptr);
 
         break;
 
@@ -389,7 +389,7 @@ init_subshell_child (const char *pty_name)
     case SHELL_DASH:
     case SHELL_TCSH:
     case SHELL_FISH:
-        execl (mc_global.shell->path, mc_global.shell->path, (char *) NULL);
+        execl (mc_global.shell->path, mc_global.shell->path, (char *) nullptr);
         break;
 
     default:
@@ -464,7 +464,7 @@ synchronize (void)
     subshell_stopped = FALSE;
     kill (subshell_pid, SIGCONT);
 
-    sigprocmask (SIG_SETMASK, &old_mask, NULL);
+    sigprocmask (SIG_SETMASK, &old_mask, nullptr);
     /* We can't do any better without modifying the shell(s) */
 }
 
@@ -484,7 +484,7 @@ feed_subshell (int how, gboolean fail_on_error)
     /* we wait up to 10 seconds if fail_on_error, forever otherwise */
     wtime.tv_sec = 10;
     wtime.tv_usec = 0;
-    wptr = fail_on_error ? &wtime : NULL;
+    wptr = fail_on_error ? &wtime : nullptr;
 
     while (TRUE)
     {
@@ -505,7 +505,7 @@ feed_subshell (int how, gboolean fail_on_error)
             maxfdp = MAX (maxfdp, STDIN_FILENO);
         }
 
-        if (select (maxfdp + 1, &read_set, NULL, NULL, wptr) == -1)
+        if (select (maxfdp + 1, &read_set, nullptr, nullptr, wptr) == -1)
         {
             /* Despite using SA_RESTART, we still have to check for this */
             if (errno == EINTR)
@@ -749,7 +749,7 @@ pty_open_slave (const char *pty_name)
     struct group *group_info;
 
     group_info = getgrnam ("tty");
-    if (group_info != NULL)
+    if (group_info != nullptr)
     {
         /* The following two calls will only succeed if we are root */
         /* [Commented out while permissions problem is investigated] */
@@ -985,7 +985,7 @@ init_subshell (void)
         /* FIXME: We may need to open a fresh pty each time on SVR4 */
 
 #ifdef HAVE_OPENPTY
-        if (openpty (&mc_global.tty.subshell_pty, &subshell_pty_slave, NULL, NULL, NULL))
+        if (openpty (&mc_global.tty.subshell_pty, &subshell_pty_slave, nullptr, nullptr, nullptr))
         {
             fprintf (stderr, "Cannot open master and slave sides of pty: %s\n",
                      unix_error_string (errno));
@@ -1088,10 +1088,10 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
     tcsetattr (STDOUT_FILENO, TCSANOW, &raw_mode);
 
     /* Make the subshell change to MC's working directory */
-    if (new_dir_vpath != NULL)
+    if (new_dir_vpath != nullptr)
         do_subshell_chdir (subshell_get_cwd (), TRUE);
 
-    if (command == NULL)        /* The user has done "C-o" from MC */
+    if (command == nullptr)        /* The user has done "C-o" from MC */
     {
         if (subshell_state == INACTIVE)
         {
@@ -1115,7 +1115,7 @@ invoke_subshell (const char *command, int how, vfs_path_t ** new_dir_vpath)
 
     feed_subshell (how, FALSE);
 
-    if (new_dir_vpath != NULL && subshell_alive)
+    if (new_dir_vpath != nullptr && subshell_alive)
     {
         const char *pcwd;
 
@@ -1148,13 +1148,13 @@ read_subshell_prompt (void)
     FD_SET (mc_global.tty.subshell_pty, &tmp);
 
     /* First time through */
-    if (subshell_prompt == NULL)
+    if (subshell_prompt == nullptr)
         subshell_prompt = g_string_sized_new (INITIAL_PROMPT_SIZE);
 
     p = g_string_sized_new (INITIAL_PROMPT_SIZE);
 
     while (subshell_alive
-           && (rc = select (mc_global.tty.subshell_pty + 1, &tmp, NULL, NULL, &timeleft)) != 0)
+           && (rc = select (mc_global.tty.subshell_pty + 1, &tmp, nullptr, nullptr, &timeleft)) != 0)
     {
         ssize_t i;
 
@@ -1230,7 +1230,7 @@ exit_subshell (void)
         }
 
         g_string_free (subshell_prompt, TRUE);
-        subshell_prompt = NULL;
+        subshell_prompt = nullptr;
         pty_buffer[0] = '\0';
     }
 
@@ -1263,12 +1263,12 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
        because we set "HISTCONTROL=ignorespace") */
     write_all (mc_global.tty.subshell_pty, " cd ", 4);
 
-    if (vpath != NULL)
+    if (vpath != nullptr)
     {
         const char *translate;
 
         translate = vfs_translate_path (vfs_path_as_str (vpath));
-        if (translate != NULL)
+        if (translate != nullptr)
         {
             GString *temp;
 
@@ -1305,9 +1305,9 @@ do_subshell_chdir (const vfs_path_t * vpath, gboolean update_prompt)
             p_subshell_cwd = mc_realpath (subshell_cwd, rp_subshell_cwd);
             p_current_panel_cwd = mc_realpath (pcwd, rp_current_panel_cwd);
 
-            if (p_subshell_cwd == NULL)
+            if (p_subshell_cwd == nullptr)
                 p_subshell_cwd = subshell_cwd;
-            if (p_current_panel_cwd == NULL)
+            if (p_current_panel_cwd == nullptr)
                 p_current_panel_cwd = pcwd;
             bPathNotEq = strcmp (p_subshell_cwd, p_current_panel_cwd) != 0;
         }

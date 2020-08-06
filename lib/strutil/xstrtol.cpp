@@ -83,7 +83,7 @@ xstrtoumax (const char *s, char **ptr, int base, uintmax_t * val, const char *va
 
     g_assert (0 <= base && base <= 36);
 
-    p = (ptr != NULL ? ptr : &t_ptr);
+    p = (ptr != nullptr ? ptr : &t_ptr);
 
     {
         const char *q = s;
@@ -103,7 +103,7 @@ xstrtoumax (const char *s, char **ptr, int base, uintmax_t * val, const char *va
     {
         /* If there is no number but there is a valid suffix, assume the
            number is 1.  The string is invalid otherwise.  */
-        if (valid_suffixes != NULL && **p != '\0' && strchr (valid_suffixes, **p) != NULL)
+        if (valid_suffixes != nullptr && **p != '\0' && strchr (valid_suffixes, **p) != nullptr)
             tmp = 1;
         else
             return LONGINT_INVALID;
@@ -115,10 +115,10 @@ xstrtoumax (const char *s, char **ptr, int base, uintmax_t * val, const char *va
         err = LONGINT_OVERFLOW;
     }
 
-    /* Let valid_suffixes == NULL mean "allow any suffix".  */
+    /* Let valid_suffixes == nullptr mean "allow any suffix".  */
     /* FIXME: update all callers except the ones that allow suffixes
-       after the number, changing last parameter NULL to "".  */
-    if (valid_suffixes == NULL)
+       after the number, changing last parameter nullptr to "".  */
+    if (valid_suffixes == nullptr)
     {
         *val = tmp;
         return err;
@@ -129,7 +129,7 @@ xstrtoumax (const char *s, char **ptr, int base, uintmax_t * val, const char *va
         int suffixes = 1;
         strtol_error_t overflow;
 
-        if (strchr (valid_suffixes, **p) == NULL)
+        if (strchr (valid_suffixes, **p) == nullptr)
         {
             *val = tmp;
             return err | LONGINT_INVALID_SUFFIX_CHAR;
@@ -151,7 +151,7 @@ xstrtoumax (const char *s, char **ptr, int base, uintmax_t * val, const char *va
         case 't':
         case 'Y':
         case 'Z':
-            if (strchr (valid_suffixes, '0') != NULL)
+            if (strchr (valid_suffixes, '0') != nullptr)
             {
                 /* The "valid suffix" '0' is a special flag meaning that
                    an optional second suffix is allowed, which can change

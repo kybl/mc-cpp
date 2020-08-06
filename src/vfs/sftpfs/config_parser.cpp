@@ -79,14 +79,14 @@ static struct
     size_t offset;
 } config_variables[] =
 {
-    {"^\\s*User\\s+(.*)$", NULL, STRING, offsetof (sftpfs_ssh_config_entity_t, user)},
-    {"^\\s*HostName\\s+(.*)$", NULL, STRING, offsetof (sftpfs_ssh_config_entity_t, real_host)},
-    {"^\\s*IdentitiesOnly\\s+(.*)$", NULL, BOOLEAN, offsetof (sftpfs_ssh_config_entity_t, identities_only)},
-    {"^\\s*IdentityFile\\s+(.*)$", NULL, FILENAME, offsetof (sftpfs_ssh_config_entity_t, identity_file)},
-    {"^\\s*Port\\s+(.*)$", NULL, INTEGER, offsetof (sftpfs_ssh_config_entity_t, port)},
-    {"^\\s*PasswordAuthentication\\s+(.*)$", NULL, BOOLEAN, offsetof (sftpfs_ssh_config_entity_t, password_auth)},
-    {"^\\s*PubkeyAuthentication\\s+(.*)$", NULL, STRING, offsetof (sftpfs_ssh_config_entity_t, pubkey_auth)},
-    {NULL, NULL, static_cast<config_var_type> (0), 0}
+    {"^\\s*User\\s+(.*)$", nullptr, STRING, offsetof (sftpfs_ssh_config_entity_t, user)},
+    {"^\\s*HostName\\s+(.*)$", nullptr, STRING, offsetof (sftpfs_ssh_config_entity_t, real_host)},
+    {"^\\s*IdentitiesOnly\\s+(.*)$", nullptr, BOOLEAN, offsetof (sftpfs_ssh_config_entity_t, identities_only)},
+    {"^\\s*IdentityFile\\s+(.*)$", nullptr, FILENAME, offsetof (sftpfs_ssh_config_entity_t, identity_file)},
+    {"^\\s*Port\\s+(.*)$", nullptr, INTEGER, offsetof (sftpfs_ssh_config_entity_t, port)},
+    {"^\\s*PasswordAuthentication\\s+(.*)$", nullptr, BOOLEAN, offsetof (sftpfs_ssh_config_entity_t, password_auth)},
+    {"^\\s*PubkeyAuthentication\\s+(.*)$", nullptr, STRING, offsetof (sftpfs_ssh_config_entity_t, pubkey_auth)},
+    {nullptr, nullptr, static_cast<config_var_type> (0), 0}
 };
 /* *INDENT-ON* */
 
@@ -147,9 +147,9 @@ sftpfs_fill_config_entity_from_string (sftpfs_ssh_config_entity_t * config_entit
 {
     int i;
 
-    for (i = 0; config_variables[i].pattern != NULL; i++)
+    for (i = 0; config_variables[i].pattern != nullptr; i++)
     {
-        if (mc_search_run (config_variables[i].pattern_regexp, buffer, 0, strlen (buffer), NULL))
+        if (mc_search_run (config_variables[i].pattern_regexp, buffer, 0, strlen (buffer), nullptr))
         {
             int value_offset;
             char *value;
@@ -222,7 +222,7 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
     {
         char *cr;
 
-        if (fgets (buffer, sizeof (buffer), ssh_config_handler) == NULL)
+        if (fgets (buffer, sizeof (buffer), ssh_config_handler) == nullptr)
         {
             int e;
 
@@ -241,10 +241,10 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
         }
 
         cr = strrchr (buffer, '\n');
-        if (cr != NULL)
+        if (cr != nullptr)
             *cr = '\0';
 
-        if (mc_search_run (host_regexp, buffer, 0, strlen (buffer), NULL))
+        if (mc_search_run (host_regexp, buffer, 0, strlen (buffer), nullptr))
         {
             const char *host_pattern;
             int host_pattern_offset;
@@ -270,7 +270,7 @@ sftpfs_fill_config_entity_from_config (FILE * ssh_config_handler,
                 pattern_regexp->is_entire_line = TRUE;
                 pattern_block_hit =
                     mc_search_run (pattern_regexp, vpath_element->host, 0,
-                                   strlen (vpath_element->host), NULL);
+                                   strlen (vpath_element->host), nullptr);
                 mc_search_free (pattern_regexp);
             }
         }
@@ -313,7 +313,7 @@ sftpfs_get_config_entity (const vfs_path_element_t * vpath_element, GError ** mc
     ssh_config_handler = fopen (config_filename, "r");
     g_free (config_filename);
 
-    if (ssh_config_handler != NULL)
+    if (ssh_config_handler != nullptr)
     {
         gboolean ok;
 
@@ -324,17 +324,17 @@ sftpfs_get_config_entity (const vfs_path_element_t * vpath_element, GError ** mc
         if (!ok)
         {
             sftpfs_ssh_config_entity_free (config_entity);
-            return NULL;
+            return nullptr;
         }
     }
 
-    if (config_entity->user == NULL)
+    if (config_entity->user == nullptr)
     {
         config_entity->user = vfs_get_local_username ();
-        if (config_entity->user == NULL)
+        if (config_entity->user == nullptr)
         {
             sftpfs_ssh_config_entity_free (config_entity);
-            config_entity = NULL;
+            config_entity = nullptr;
             mc_propagate_error (mcerror, EPERM, "%s", _("sftp: Unable to get current user name."));
         }
     }
@@ -360,7 +360,7 @@ sftpfs_fill_connection_data_from_config (struct vfs_s_super *super, GError ** mc
     mc_return_if_error (mcerror);
 
     config_entity = sftpfs_get_config_entity (super->path_element, mcerror);
-    if (config_entity == NULL)
+    if (config_entity == nullptr)
         return;
 
     sftpfs_super->config_auth_type = (config_entity->pubkey_auth) ? SFTPS_AUTH_PUBKEY : SFTPS_AUTH_NONE;
@@ -370,16 +370,16 @@ sftpfs_fill_connection_data_from_config (struct vfs_s_super *super, GError ** mc
     if (super->path_element->port == 0)
         super->path_element->port = config_entity->port;
 
-    if (super->path_element->user == NULL)
+    if (super->path_element->user == nullptr)
         super->path_element->user = g_strdup (config_entity->user);
 
-    if (config_entity->real_host != NULL)
+    if (config_entity->real_host != nullptr)
     {
         g_free (super->path_element->host);
         super->path_element->host = g_strdup (config_entity->real_host);
     }
 
-    if (config_entity->identity_file != NULL)
+    if (config_entity->identity_file != nullptr)
     {
         sftpfs_super->privkey = g_strdup (config_entity->identity_file);
         sftpfs_super->pubkey = g_strdup_printf ("%s.pub", config_entity->identity_file);
@@ -398,7 +398,7 @@ sftpfs_init_config_variables_patterns (void)
 {
     int i;
 
-    for (i = 0; config_variables[i].pattern != NULL; i++)
+    for (i = 0; config_variables[i].pattern != nullptr; i++)
     {
         config_variables[i].pattern_regexp =
             mc_search_new (config_variables[i].pattern, DEFAULT_CHARSET);
@@ -417,10 +417,10 @@ sftpfs_deinit_config_variables_patterns (void)
 {
     int i;
 
-    for (i = 0; config_variables[i].pattern != NULL; i++)
+    for (i = 0; config_variables[i].pattern != nullptr; i++)
     {
         mc_search_free (config_variables[i].pattern_regexp);
-        config_variables[i].pattern_regexp = NULL;
+        config_variables[i].pattern_regexp = nullptr;
     }
 }
 

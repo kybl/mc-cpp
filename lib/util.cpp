@@ -117,7 +117,7 @@ resolve_symlinks (const vfs_path_t * vpath)
     struct stat mybuf;
 
     if (vpath->relative)
-        return NULL;
+        return nullptr;
 
     p = p2 = g_strdup (vfs_path_as_str (vpath));
     r = buf = static_cast<char *> (g_malloc (MC_MAXPATHLEN));
@@ -128,7 +128,7 @@ resolve_symlinks (const vfs_path_t * vpath)
     do
     {
         q = strchr (p + 1, PATH_SEP);
-        if (q == NULL)
+        if (q == nullptr)
         {
             q = strchr (p + 1, '\0');
             if (q == p + 1)
@@ -193,11 +193,11 @@ mc_util_write_backup_content (const char *from_file_name, const char *to_file_na
     gsize length;
     gboolean ret1 = TRUE;
 
-    if (!g_file_get_contents (from_file_name, &contents, &length, NULL))
+    if (!g_file_get_contents (from_file_name, &contents, &length, nullptr))
         return FALSE;
 
     backup_fd = fopen (to_file_name, "w");
-    if (backup_fd == NULL)
+    if (backup_fd == nullptr)
     {
         g_free (contents);
         return FALSE;
@@ -452,8 +452,8 @@ size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, gbool
 #endif
     };
     /* *INDENT-ON* */
-    static const char *const suffix[] = { "", "K", "M", "G", "T", "P", "E", "Z", "Y", NULL };
-    static const char *const suffix_lc[] = { "", "k", "m", "g", "t", "p", "e", "z", "y", NULL };
+    static const char *const suffix[] = { "", "K", "M", "G", "T", "P", "E", "Z", "Y", nullptr };
+    static const char *const suffix_lc[] = { "", "k", "m", "g", "t", "p", "e", "z", "y", nullptr };
 
     const char *const *sfx = use_si ? suffix_lc : suffix;
     int j = 0;
@@ -486,7 +486,7 @@ size_trunc_len (char *buffer, unsigned int len, uintmax_t size, int units, gbool
             size += size_remain;        /* Re-add remainder lost by division/multiplication */
         }
 
-    for (j = units; sfx[j] != NULL; j++)
+    for (j = units; sfx[j] != nullptr; j++)
     {
         if (size == 0)
         {
@@ -583,7 +583,7 @@ extension (const char *filename)
 
     d = strrchr (filename, '.');
 
-    return d != NULL ? d + 1 : "";
+    return d != nullptr ? d + 1 : "";
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -596,22 +596,22 @@ load_mc_home_file (const char *from, const char *filename, char **allocated_file
     char *lang;
     char *data;
 
-    hintfile_base = g_build_filename (from, filename, (char *) NULL);
+    hintfile_base = g_build_filename (from, filename, (char *) nullptr);
     lang = guess_message_value ();
 
-    hintfile = g_strconcat (hintfile_base, ".", lang, (char *) NULL);
-    if (!g_file_get_contents (hintfile, &data, length, NULL))
+    hintfile = g_strconcat (hintfile_base, ".", lang, (char *) nullptr);
+    if (!g_file_get_contents (hintfile, &data, length, nullptr))
     {
         /* Fall back to the two-letter language code */
         if (lang[0] != '\0' && lang[1] != '\0')
             lang[2] = '\0';
         g_free (hintfile);
-        hintfile = g_strconcat (hintfile_base, ".", lang, (char *) NULL);
-        if (!g_file_get_contents (hintfile, &data, length, NULL))
+        hintfile = g_strconcat (hintfile_base, ".", lang, (char *) nullptr);
+        if (!g_file_get_contents (hintfile, &data, length, nullptr))
         {
             g_free (hintfile);
             hintfile = hintfile_base;
-            g_file_get_contents (hintfile_base, &data, length, NULL);
+            g_file_get_contents (hintfile_base, &data, length, nullptr);
         }
     }
 
@@ -620,7 +620,7 @@ load_mc_home_file (const char *from, const char *filename, char **allocated_file
     if (hintfile != hintfile_base)
         g_free (hintfile_base);
 
-    if (allocated_filename != NULL)
+    if (allocated_filename != nullptr)
         *allocated_filename = hintfile;
     else
         g_free (hintfile);
@@ -655,16 +655,16 @@ x_basename (const char *s)
     url_delim = g_strrstr (s, VFS_PATH_URL_DELIMITER);
     path_sep = strrchr (s, PATH_SEP);
 
-    if (path_sep == NULL)
+    if (path_sep == nullptr)
         return s;
 
-    if (url_delim == NULL
+    if (url_delim == nullptr
         || url_delim < path_sep - strlen (VFS_PATH_URL_DELIMITER)
         || url_delim - s + strlen (VFS_PATH_URL_DELIMITER) < strlen (s))
     {
         /* avoid trailing PATH_SEP, if present */
         if (!IS_PATH_SEP (s[strlen (s) - 1]))
-            return (path_sep != NULL) ? path_sep + 1 : s;
+            return (path_sep != nullptr) ? path_sep + 1 : s;
 
         while (--path_sep > s && !IS_PATH_SEP (*path_sep))
             ;
@@ -687,7 +687,7 @@ unix_error_string (int error_num)
     static char buffer[BUF_LARGE];
     gchar *strerror_currentlocale;
 
-    strerror_currentlocale = g_locale_from_utf8 (g_strerror (error_num), -1, NULL, NULL, NULL);
+    strerror_currentlocale = g_locale_from_utf8 (g_strerror (error_num), -1, nullptr, nullptr, nullptr);
     g_snprintf (buffer, sizeof (buffer), "%s (%d)", strerror_currentlocale, error_num);
     g_free (strerror_currentlocale);
 
@@ -743,8 +743,8 @@ strip_ctrl_codes (char *s)
     char *w;                    /* Current position where the stripped data is written */
     char *r;                    /* Current position where the original data is read */
 
-    if (s == NULL)
-        return NULL;
+    if (s == nullptr)
+        return nullptr;
 
     for (w = s, r = s; *r != '\0';)
     {
@@ -755,7 +755,7 @@ strip_ctrl_codes (char *s)
             if (*(++r) == '[' || *r == '(')
             {
                 /* strchr() matches trailing binary 0 */
-                while (*(++r) != '\0' && strchr ("0123456789;:?", *r) != NULL)
+                while (*(++r) != '\0' && strchr ("0123456789;:?", *r) != nullptr)
                     ;
             }
             else if (*r == ']')
@@ -939,7 +939,7 @@ decompress_extension (int type)
 void
 wipe_password (char *passwd)
 {
-    if (passwd != NULL)
+    if (passwd != nullptr)
     {
         char *p;
 
@@ -1017,15 +1017,15 @@ char *
 diff_two_paths (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
 {
     int j, prevlen = -1, currlen;
-    char *my_first = NULL, *my_second = NULL;
-    char *buf = NULL;
+    char *my_first = nullptr, *my_second = nullptr;
+    char *buf = nullptr;
 
     my_first = resolve_symlinks (vpath1);
-    if (my_first == NULL)
+    if (my_first == nullptr)
         goto ret;
 
     my_second = resolve_symlinks (vpath2);
-    if (my_second == NULL)
+    if (my_second == nullptr)
         goto ret;
 
     for (j = 0; j < 2; j++)
@@ -1042,10 +1042,10 @@ diff_two_paths (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
             ptrdiff_t len;
 
             r = strchr (p, PATH_SEP);
-            if (r == NULL)
+            if (r == nullptr)
                 break;
             s = strchr (q, PATH_SEP);
-            if (s == NULL)
+            if (s == nullptr)
                 break;
 
             len = r - p;
@@ -1056,7 +1056,7 @@ diff_two_paths (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
             q = s + 1;
         }
         p--;
-        for (i = 0; (p = strchr (p + 1, PATH_SEP)) != NULL; i++)
+        for (i = 0; (p = strchr (p + 1, PATH_SEP)) != nullptr; i++)
             ;
         currlen = (i + 1) * 3 + strlen (q) + 1;
         if (j != 0)
@@ -1098,7 +1098,7 @@ list_append_unique (GList * list, char *text)
     list = g_list_last (list);
     lc_link = g_list_previous (list);
 
-    while (lc_link != NULL)
+    while (lc_link != nullptr)
     {
         GList *newlink;
 
@@ -1142,14 +1142,14 @@ load_file_position (const vfs_path_t * filename_vpath, long *line, long *column,
     fn = mc_config_get_full_path (MC_FILEPOS_FILE);
     f = fopen (fn, "r");
     g_free (fn);
-    if (f == NULL)
+    if (f == nullptr)
         return;
 
     /* prepare array for serialized bookmarks */
-    if (bookmarks != NULL)
+    if (bookmarks != nullptr)
         *bookmarks = g_array_sized_new (FALSE, FALSE, sizeof (size_t), MAX_SAVED_BOOKMARKS);
 
-    while (fgets (buf, sizeof (buf), f) != NULL)
+    while (fgets (buf, sizeof (buf), f) != nullptr)
     {
         const char *p;
         gchar **pos_tokens;
@@ -1164,11 +1164,11 @@ load_file_position (const vfs_path_t * filename_vpath, long *line, long *column,
 
         /* and string without spaces */
         p = &buf[len + 1];
-        if (strchr (p, ' ') != NULL)
+        if (strchr (p, ' ') != nullptr)
             continue;
 
         pos_tokens = g_strsplit (p, ";", 3 + MAX_SAVED_BOOKMARKS);
-        if (pos_tokens[0] == NULL)
+        if (pos_tokens[0] == nullptr)
         {
             *line = 1;
             *column = 0;
@@ -1176,28 +1176,28 @@ load_file_position (const vfs_path_t * filename_vpath, long *line, long *column,
         }
         else
         {
-            *line = strtol (pos_tokens[0], NULL, 10);
-            if (pos_tokens[1] == NULL)
+            *line = strtol (pos_tokens[0], nullptr, 10);
+            if (pos_tokens[1] == nullptr)
             {
                 *column = 0;
                 *offset = 0;
             }
             else
             {
-                *column = strtol (pos_tokens[1], NULL, 10);
-                if (pos_tokens[2] == NULL)
+                *column = strtol (pos_tokens[1], nullptr, 10);
+                if (pos_tokens[2] == nullptr)
                     *offset = 0;
-                else if (bookmarks != NULL)
+                else if (bookmarks != nullptr)
                 {
                     size_t i;
 
-                    *offset = (off_t) g_ascii_strtoll (pos_tokens[2], NULL, 10);
+                    *offset = (off_t) g_ascii_strtoll (pos_tokens[2], nullptr, 10);
 
-                    for (i = 0; i < MAX_SAVED_BOOKMARKS && pos_tokens[3 + i] != NULL; i++)
+                    for (i = 0; i < MAX_SAVED_BOOKMARKS && pos_tokens[3 + i] != nullptr; i++)
                     {
                         size_t val;
 
-                        val = strtoul (pos_tokens[3 + i], NULL, 10);
+                        val = strtoul (pos_tokens[3 + i], nullptr, 10);
                         g_array_append_val (*bookmarks, val);
                     }
                 }
@@ -1232,32 +1232,32 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
                                                        "filepos_max_saved_entries", 1024);
 
     fn = mc_config_get_full_path (MC_FILEPOS_FILE);
-    if (fn == NULL)
+    if (fn == nullptr)
         goto early_error;
 
     mc_util_make_backup_if_possible (fn, TMP_SUFFIX);
 
     /* open file */
     f = fopen (fn, "w");
-    if (f == NULL)
+    if (f == nullptr)
         goto open_target_error;
 
     tmp_fn = g_strdup_printf ("%s" TMP_SUFFIX, fn);
     tmp_f = fopen (tmp_fn, "r");
-    if (tmp_f == NULL)
+    if (tmp_f == nullptr)
     {
         src_error = TRUE;
         goto open_source_error;
     }
 
     /* put the new record */
-    if (line != 1 || column != 0 || bookmarks != NULL)
+    if (line != 1 || column != 0 || bookmarks != nullptr)
     {
         if (fprintf
             (f, "%s %ld;%ld;%" PRIuMAX, vfs_path_as_str (filename_vpath), line, column,
              (uintmax_t) offset) < 0)
             goto write_position_error;
-        if (bookmarks != NULL)
+        if (bookmarks != nullptr)
             for (i = 0; i < bookmarks->len && i < MAX_SAVED_BOOKMARKS; i++)
                 if (fprintf (f, ";%zu", g_array_index (bookmarks, size_t, i)) < 0)
                     goto write_position_error;
@@ -1267,10 +1267,10 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
     }
 
     i = 1;
-    while (fgets (buf, sizeof (buf), tmp_f) != NULL)
+    while (fgets (buf, sizeof (buf), tmp_f) != nullptr)
     {
         if (buf[len] == ' ' && strncmp (buf, vfs_path_as_str (filename_vpath), len) == 0
-            && strchr (&buf[len + 1], ' ') == NULL)
+            && strchr (&buf[len + 1], ' ') == nullptr)
             continue;
 
         fprintf (f, "%s", buf);
@@ -1290,7 +1290,7 @@ save_file_position (const vfs_path_t * filename_vpath, long line, long column, o
   open_target_error:
     g_free (fn);
   early_error:
-    if (bookmarks != NULL)
+    if (bookmarks != nullptr)
         g_array_free (bookmarks, TRUE);
 }
 
@@ -1315,7 +1315,7 @@ Q_ (const char *s)
     result = _(s);
     sep = strchr (result, '|');
 
-    return sep != NULL ? sep + 1 : result;
+    return sep != nullptr ? sep + 1 : result;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1331,7 +1331,7 @@ mc_util_make_backup_if_possible (const char *file_name, const char *backup_suffi
         return FALSE;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
-    if (backup_path == NULL)
+    if (backup_path == nullptr)
         return FALSE;
 
     ret = mc_util_write_backup_content (file_name, backup_path);
@@ -1358,7 +1358,7 @@ mc_util_restore_from_backup_if_possible (const char *file_name, const char *back
     char *backup_path;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
-    if (backup_path == NULL)
+    if (backup_path == nullptr)
         return FALSE;
 
     ret = mc_util_write_backup_content (backup_path, file_name);
@@ -1375,7 +1375,7 @@ mc_util_unlink_backup_if_possible (const char *file_name, const char *backup_suf
     char *backup_path;
 
     backup_path = g_strdup_printf ("%s%s", file_name, backup_suffix);
-    if (backup_path == NULL)
+    if (backup_path == nullptr)
         return FALSE;
 
     if (exist_file (backup_path))
@@ -1408,21 +1408,21 @@ guess_message_value (void)
         "LC_MESSAGES",
         /* Last possibility is the LANG environment variable.  */
         "LANG",
-        /* NULL exit loops */
-        NULL
+        /* nullptr exit loops */
+        nullptr
     };
 
     size_t i;
-    const char *locale = NULL;
+    const char *locale = nullptr;
 
-    for (i = 0; var[i] != NULL; i++)
+    for (i = 0; var[i] != nullptr; i++)
     {
         locale = getenv (var[i]);
-        if (locale != NULL && locale[0] != '\0')
+        if (locale != nullptr && locale[0] != '\0')
             break;
     }
 
-    if (locale == NULL)
+    if (locale == nullptr)
         locale = "";
 
     return g_strdup (locale);
@@ -1440,12 +1440,12 @@ guess_message_value (void)
 const char *
 mc_get_profile_root (void)
 {
-    static const char *profile_root = NULL;
+    static const char *profile_root = nullptr;
 
-    if (profile_root == NULL)
+    if (profile_root == nullptr)
     {
         profile_root = g_getenv ("MC_PROFILE_ROOT");
-        if (profile_root == NULL || *profile_root == '\0')
+        if (profile_root == nullptr || *profile_root == '\0')
             profile_root = mc_config_get_home_dir ();
     }
 
@@ -1465,7 +1465,7 @@ mc_get_profile_root (void)
 void
 mc_propagate_error (GError ** dest, int code, const char *format, ...)
 {
-    if (dest != NULL && *dest == NULL)
+    if (dest != nullptr && *dest == nullptr)
     {
         GError *tmp_error;
         va_list args;
@@ -1491,7 +1491,7 @@ mc_propagate_error (GError ** dest, int code, const char *format, ...)
 void
 mc_replace_error (GError ** dest, int code, const char *format, ...)
 {
-    if (dest != NULL)
+    if (dest != nullptr)
     {
         GError *tmp_error;
         va_list args;
@@ -1501,7 +1501,7 @@ mc_replace_error (GError ** dest, int code, const char *format, ...)
         va_end (args);
 
         g_error_free (*dest);
-        *dest = NULL;
+        *dest = nullptr;
         g_propagate_error (dest, tmp_error);
     }
 }

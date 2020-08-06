@@ -53,8 +53,8 @@
 
 /*** file scope variables ************************************************************************/
 
-static const char *kbi_passwd = NULL;
-static const struct vfs_s_super *kbi_super = NULL;
+static const char *kbi_passwd = nullptr;
+static const struct vfs_s_super *kbi_super = nullptr;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -70,14 +70,14 @@ static const struct vfs_s_super *kbi_super = NULL;
 static int
 sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
 {
-    struct addrinfo hints, *res = NULL, *curr_res;
+    struct addrinfo hints, *res = nullptr, *curr_res;
     int my_socket = 0;
     char port[BUF_TINY];
     int e;
 
     mc_return_val_if_error (mcerror, LIBSSH2_INVALID_SOCKET);
 
-    if (super->path_element->host == NULL || *super->path_element->host == '\0')
+    if (super->path_element->host == nullptr || *super->path_element->host == '\0')
     {
         mc_propagate_error (mcerror, 0, "%s", _("sftp: Invalid host name."));
         return LIBSSH2_INVALID_SOCKET;
@@ -116,7 +116,7 @@ sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
         goto ret;
     }
 
-    for (curr_res = res; curr_res != NULL; curr_res = curr_res->ai_next)
+    for (curr_res = res; curr_res != nullptr; curr_res = curr_res->ai_next)
     {
         int save_errno;
 
@@ -124,7 +124,7 @@ sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
 
         if (my_socket < 0)
         {
-            if (curr_res->ai_next != NULL)
+            if (curr_res->ai_next != nullptr)
                 continue;
 
             vfs_print_message (_("sftp: %s"), unix_error_string (errno));
@@ -143,7 +143,7 @@ sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
 
         if (save_errno == EINTR && tty_got_interrupt ())
             mc_propagate_error (mcerror, 0, "%s", _("sftp: connection interrupted by user"));
-        else if (res->ai_next == NULL)
+        else if (res->ai_next == nullptr)
             mc_propagate_error (mcerror, save_errno, _("sftp: connection to server failed: %s"),
                                 unix_error_string (save_errno));
         else
@@ -154,7 +154,7 @@ sftpfs_open_socket (struct vfs_s_super *super, GError ** mcerror)
     }
 
   ret:
-    if (res != NULL)
+    if (res != nullptr)
         freeaddrinfo (res);
     tty_disable_interrupt_key ();
     return my_socket;
@@ -179,15 +179,15 @@ sftpfs_recognize_auth_types (struct vfs_s_super *super)
     userauthlist = libssh2_userauth_list (sftpfs_super->session, super->path_element->user,
                                           strlen (super->path_element->user));
 
-    if (userauthlist == NULL)
+    if (userauthlist == nullptr)
         return FALSE;
 
-    if ((strstr (userauthlist, "password") != NULL
-         || strstr (userauthlist, "keyboard-interactive") != NULL)
+    if ((strstr (userauthlist, "password") != nullptr
+         || strstr (userauthlist, "keyboard-interactive") != nullptr)
         && (sftpfs_super->config_auth_type & SFTPS_AUTH_PASSWORD) != 0)
         sftpfs_super->auth_type |= SFTPS_AUTH_PASSWORD;
 
-    if (strstr (userauthlist, "publickey") != NULL
+    if (strstr (userauthlist, "publickey") != nullptr
         && (sftpfs_super->config_auth_type & SFTPS_AUTH_PUBKEY) != 0)
         sftpfs_super->auth_type |= SFTPS_AUTH_PUBKEY;
 
@@ -210,19 +210,19 @@ static gboolean
 sftpfs_open_connection_ssh_agent (struct vfs_s_super *super, GError ** mcerror)
 {
     sftpfs_super_t *sftpfs_super = SFTP_SUPER (super);
-    struct libssh2_agent_publickey *identity, *prev_identity = NULL;
+    struct libssh2_agent_publickey *identity, *prev_identity = nullptr;
     int rc;
 
     mc_return_val_if_error (mcerror, FALSE);
 
-    sftpfs_super->agent = NULL;
+    sftpfs_super->agent = nullptr;
 
     if ((sftpfs_super->auth_type & SFTPS_AUTH_AGENT) == 0)
         return FALSE;
 
     /* Connect to the ssh-agent */
     sftpfs_super->agent = libssh2_agent_init (sftpfs_super->session);
-    if (sftpfs_super->agent == NULL)
+    if (sftpfs_super->agent == nullptr)
         return FALSE;
 
     if (libssh2_agent_connect (sftpfs_super->agent) != 0)
@@ -270,7 +270,7 @@ sftpfs_open_connection_ssh_key (struct vfs_s_super *super, GError ** mcerror)
     if ((sftpfs_super->auth_type & SFTPS_AUTH_PUBKEY) == 0)
         return FALSE;
 
-    if (sftpfs_super->privkey == NULL)
+    if (sftpfs_super->privkey == nullptr)
         return FALSE;
 
     if (libssh2_userauth_publickey_fromfile (sftpfs_super->session, super->path_element->user,
@@ -282,7 +282,7 @@ sftpfs_open_connection_ssh_key (struct vfs_s_super *super, GError ** mcerror)
     passwd = vfs_get_password (p);
     g_free (p);
 
-    if (passwd == NULL)
+    if (passwd == nullptr)
         mc_propagate_error (mcerror, 0, "%s", _("sftp: Passphrase is empty."));
     else
     {
@@ -324,7 +324,7 @@ LIBSSH2_USERAUTH_KBDINT_RESPONSE_FUNC (sftpfs_keyboard_interactive_helper)
     (void) instruction_len;
     (void) abstract;
 
-    if (kbi_super == NULL || kbi_passwd == NULL)
+    if (kbi_super == nullptr || kbi_passwd == nullptr)
         return;
 
     if (strncmp (name, kbi_super->path_element->user, name_len) != 0)
@@ -363,7 +363,7 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
     if ((sftpfs_super->auth_type & SFTPS_AUTH_PASSWORD) == 0)
         return FALSE;
 
-    if (super->path_element->password != NULL)
+    if (super->path_element->password != nullptr)
     {
         while ((rc = libssh2_userauth_password (sftpfs_super->session, super->path_element->user,
                                                 super->path_element->password)) ==
@@ -381,8 +381,8 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
                LIBSSH2_ERROR_EAGAIN)
             ;
 
-        kbi_super = NULL;
-        kbi_passwd = NULL;
+        kbi_super = nullptr;
+        kbi_passwd = nullptr;
 
         if (rc == 0)
             return TRUE;
@@ -392,7 +392,7 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
     passwd = vfs_get_password (p);
     g_free (p);
 
-    if (passwd == NULL)
+    if (passwd == nullptr)
         mc_propagate_error (mcerror, 0, "%s", _("sftp: Password is empty."));
     else
     {
@@ -412,8 +412,8 @@ sftpfs_open_connection_ssh_password (struct vfs_s_super *super, GError ** mcerro
                    LIBSSH2_ERROR_EAGAIN)
                 ;
 
-            kbi_super = NULL;
-            kbi_passwd = NULL;
+            kbi_super = nullptr;
+            kbi_passwd = nullptr;
         }
 
         if (rc == 0)
@@ -458,7 +458,7 @@ sftpfs_open_connection (struct vfs_s_super *super, GError ** mcerror)
 
     /* Create a session instance */
     sftpfs_super->session = libssh2_session_init ();
-    if (sftpfs_super->session == NULL)
+    if (sftpfs_super->session == nullptr)
         return (-1);
 
     /* ... start it up. This will trade welcome banners, exchange keys,
@@ -500,7 +500,7 @@ sftpfs_open_connection (struct vfs_s_super *super, GError ** mcerror)
 
     sftpfs_super->sftp_session = libssh2_sftp_init (sftpfs_super->session);
 
-    if (sftpfs_super->sftp_session == NULL)
+    if (sftpfs_super->sftp_session == nullptr)
         return (-1);
 
     /* Since we have not set non-blocking, tell libssh2 we are blocking */
@@ -526,26 +526,26 @@ sftpfs_close_connection (struct vfs_s_super *super, const char *shutdown_message
     /* no mc_return_*_if_error() here because of abort open_connection handling too */
     (void) mcerror;
 
-    if (sftpfs_super->sftp_session != NULL)
+    if (sftpfs_super->sftp_session != nullptr)
     {
         libssh2_sftp_shutdown (sftpfs_super->sftp_session);
-        sftpfs_super->sftp_session = NULL;
+        sftpfs_super->sftp_session = nullptr;
     }
 
-    if (sftpfs_super->agent != NULL)
+    if (sftpfs_super->agent != nullptr)
     {
         libssh2_agent_disconnect (sftpfs_super->agent);
         libssh2_agent_free (sftpfs_super->agent);
-        sftpfs_super->agent = NULL;
+        sftpfs_super->agent = nullptr;
     }
 
-    sftpfs_super->fingerprint = NULL;
+    sftpfs_super->fingerprint = nullptr;
 
-    if (sftpfs_super->session != NULL)
+    if (sftpfs_super->session != nullptr)
     {
         libssh2_session_disconnect (sftpfs_super->session, shutdown_message);
         libssh2_session_free (sftpfs_super->session);
-        sftpfs_super->session = NULL;
+        sftpfs_super->session = nullptr;
     }
 
     if (sftpfs_super->socket_handle != LIBSSH2_INVALID_SOCKET)

@@ -127,7 +127,7 @@ static const struct
     { KEY_BACKSPACE, "kb" },
     { KEY_HOME, "kh" },
     { KEY_END, "@7" },
-    { 0, NULL }
+    { 0, nullptr }
     /* *INDENT-ON* */
 };
 
@@ -187,7 +187,7 @@ slang_reset_softkeys (void)
 
         g_snprintf (tmp, sizeof (tmp), "k%d", key);
         send = SLtt_tgetstr (tmp);
-        if (send != NULL)
+        if (send != nullptr)
         {
             g_snprintf (tmp, sizeof (tmp), ESC_STR "&f%dk%dd%dL%s%s", key,
                         (int) (sizeof (display) - 1), (int) strlen (send), display, send);
@@ -204,7 +204,7 @@ do_define_key (int code, const char *strcap)
     char *seq;
 
     seq = SLtt_tgetstr ((SLFUTURE_CONST char *) strcap);
-    if (seq != NULL)
+    if (seq != nullptr)
         define_sequence (code, seq, MCKEY_NOACTION);
 }
 
@@ -246,7 +246,7 @@ mc_tty_normalize_lines_char (const char *str)
         {"\342\224\202", SLSMG_VLINE_CHAR},
         {"\342\224\274", SLSMG_PLUS_CHAR},
 
-        {NULL, 0}
+        {nullptr, 0}
     };
 
     if (!str)
@@ -310,7 +310,7 @@ tty_init (gboolean mouse_enable, gboolean is_xterm)
     tty_reset_prog_mode ();
     load_terminfo_keys ();
 
-    SLtt_Blink_Mode = (tty_use_256colors () || tty_use_truecolors (NULL)) ? 1 : 0;
+    SLtt_Blink_Mode = (tty_use_256colors () || tty_use_truecolors (nullptr)) ? 1 : 0;
 
     tty_start_interrupt_key ();
 
@@ -356,7 +356,7 @@ tty_shutdown (void)
      * active when the program was started up 
      */
     op_cap = SLtt_tgetstr ((SLFUTURE_CONST char *) "op");
-    if (op_cap != NULL)
+    if (op_cap != nullptr)
     {
         fputs (op_cap, stdout);
         fflush (stdout);
@@ -453,7 +453,7 @@ tty_keypad (gboolean set)
     char *keypad_string;
 
     keypad_string = SLtt_tgetstr ((SLFUTURE_CONST char *) (set ? "ks" : "ke"));
-    if (keypad_string != NULL)
+    if (keypad_string != nullptr)
         SLtt_write_string (keypad_string);
     if (set && reset_hp_softkeys)
         slang_reset_softkeys ();

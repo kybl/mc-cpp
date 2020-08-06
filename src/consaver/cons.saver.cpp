@@ -238,7 +238,7 @@ main (int argc, char **argv)
 
     buffer_size = 4 + 2 * winsz.ws_col * winsz.ws_row;
     buffer = static_cast<char *> (calloc (buffer_size, 1));
-    if (buffer == NULL)
+    if (buffer == nullptr)
         die ();
 
     if (write (1, &console_flag, 1) != 1)

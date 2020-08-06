@@ -79,10 +79,10 @@ typedef struct mc_search_struct
     /* search entire string (from begin to end). Used only with GLOB search type */
     gboolean is_entire_line;
 
-    /* function, used for getting data. NULL if not used */
+    /* function, used for getting data. nullptr if not used */
     mc_search_fn search_fn;
 
-    /* function, used for updatin current search status. NULL if not used */
+    /* function, used for updatin current search status. nullptr if not used */
     mc_update_fn update_fn;
 
     /* type of search */

@@ -96,8 +96,8 @@ gboolean option_check_nl_at_eof = FALSE;
 gboolean option_group_undo = FALSE;
 gboolean show_right_margin = FALSE;
 
-char *option_backup_ext = NULL;
-char *option_filesize_threshold = NULL;
+char *option_backup_ext = nullptr;
+char *option_filesize_threshold = nullptr;
 
 unsigned int edit_stack_iterator = 0;
 edit_stack_type edit_history_moveto[MAX_HISTORY_MOVETO];
@@ -200,7 +200,7 @@ edit_load_file_fast (edit_buffer_t * buf, const vfs_path_t * filename_vpath)
     rsm.loaded = 0;
 
     status_msg_init (STATUS_MSG (&rsm), _("Load file"), 1.0, simple_status_msg_init_cb,
-                     edit_load_status_update_cb, NULL);
+                     edit_load_status_update_cb, nullptr);
 
     ret = (edit_buffer_read_file (buf, file, buf->size, &rsm, &aborted) == buf->size);
 
@@ -227,7 +227,7 @@ edit_find_filter (const vfs_path_t * filename_vpath)
 {
     size_t i, l;
 
-    if (filename_vpath == NULL)
+    if (filename_vpath == nullptr)
         return -1;
 
     l = strlen (vfs_path_as_str (filename_vpath));
@@ -253,7 +253,7 @@ edit_get_filter (const vfs_path_t * filename_vpath)
 
     i = edit_find_filter (filename_vpath);
     if (i < 0)
-        return NULL;
+        return nullptr;
 
     quoted_name = name_quote (vfs_path_as_str (filename_vpath), FALSE);
     p = g_strdup_printf (all_filters[i].read, quoted_name);
@@ -292,7 +292,7 @@ check_file_access (WEdit * edit, const vfs_path_t * filename_vpath, struct stat 
 {
     static uintmax_t threshold = UINTMAX_MAX;
     int file;
-    gchar *errmsg = NULL;
+    gchar *errmsg = nullptr;
     gboolean ret = TRUE;
 
     /* Try opening an existing file */
@@ -365,7 +365,7 @@ check_file_access (WEdit * edit, const vfs_path_t * filename_vpath, struct stat 
   cleanup:
     (void) mc_close (file);
 
-    if (errmsg != NULL)
+    if (errmsg != nullptr)
     {
         edit_error_dialog (_("Error"), errmsg);
         g_free (errmsg);
@@ -402,7 +402,7 @@ edit_load_file (WEdit * edit)
      * FIXME: line end translation should disable fast loading as well
      * Consider doing fseek() to the end and ftell() for the real size.
      */
-    if (edit->filename_vpath != NULL)
+    if (edit->filename_vpath != nullptr)
     {
         /*
          * VFS may report file size incorrectly, and slow load is not a big
@@ -438,7 +438,7 @@ edit_load_file (WEdit * edit)
     {
         edit_buffer_init (&edit->buffer, 0);
 
-        if (edit->filename_vpath != NULL
+        if (edit->filename_vpath != nullptr
             && *(vfs_path_get_by_index (edit->filename_vpath, 0)->path) != '\0')
         {
             edit->undo_stack_disable = 1;
@@ -469,7 +469,7 @@ edit_load_position (WEdit * edit, gboolean load_position)
     long line, column;
     off_t offset;
 
-    if (edit->filename_vpath == NULL
+    if (edit->filename_vpath == nullptr
         || *(vfs_path_get_by_index (edit->filename_vpath, 0)->path) == '\0')
         return;
 
@@ -502,14 +502,14 @@ edit_load_position (WEdit * edit, gboolean load_position)
 static void
 edit_save_position (WEdit * edit)
 {
-    if (edit->filename_vpath == NULL
+    if (edit->filename_vpath == nullptr
         || *(vfs_path_get_by_index (edit->filename_vpath, 0)->path) == '\0')
         return;
 
     book_mark_serialize (edit, BOOK_MARK_COLOR);
     save_file_position (edit->filename_vpath, edit->buffer.curs_line + 1, edit->curs_col,
                         edit->buffer.curs1, edit->serialized_bookmarks);
-    edit->serialized_bookmarks = NULL;
+    edit->serialized_bookmarks = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -643,7 +643,7 @@ is_in_indent (const edit_buffer_t * buf)
     off_t p;
 
     for (p = edit_buffer_get_current_bol (buf); p < buf->curs1; p++)
-        if (strchr (" \t", edit_buffer_get_byte (buf, p)) == NULL)
+        if (strchr (" \t", edit_buffer_get_byte (buf, p)) == nullptr)
             return FALSE;
 
     return TRUE;
@@ -1521,12 +1521,12 @@ edit_get_bracket (WEdit * edit, gboolean in_screen, unsigned long furthest_brack
     c = edit_buffer_get_current_byte (&edit->buffer);
     p = strchr (b, c);
     /* not on a bracket at all */
-    if (p == NULL || *p == '\0')
+    if (p == nullptr || *p == '\0')
         return -1;
     /* the matching bracket */
     d = p[1];
     /* going left or right? */
-    if (strchr ("{[(", c) != NULL)
+    if (strchr ("{[(", c) != nullptr)
         inc = 1;
     /* no limit */
     if (furthest_bracket_search == 0)
@@ -1705,7 +1705,7 @@ edit_insert_column_from_file (WEdit * edit, int file, off_t * start_pos, off_t *
         char *pn;
 
         pn = strchr ((char *) data, '\n');
-        width = pn == NULL ? blocklen : pn - (char *) data;
+        width = pn == nullptr ? blocklen : pn - (char *) data;
 
         for (i = 0; i < blocklen; i++)
         {
@@ -1797,7 +1797,7 @@ user_menu (WEdit * edit, const char *menu_file, int selected_entry)
         }
         /* truncate block file */
         fd = fopen (block_file, "w");
-        if (fd != NULL)
+        if (fd != nullptr)
             fclose (fd);
     }
     g_free (block_file);
@@ -1819,7 +1819,7 @@ edit_get_write_filter (const vfs_path_t * write_name_vpath, const vfs_path_t * f
 
     i = edit_find_filter (filename_vpath);
     if (i < 0)
-        return NULL;
+        return nullptr;
 
     path_element = vfs_path_get_by_index (write_name_vpath, -1);
     writename = name_quote (path_element->path, FALSE);
@@ -1954,12 +1954,12 @@ edit_insert_file (WEdit * edit, const vfs_path_t * filename_vpath)
     p = edit_get_filter (filename_vpath);
     current = edit->buffer.curs1;
 
-    if (p != NULL)
+    if (p != nullptr)
     {
         FILE *f;
 
         f = (FILE *) popen (p, "r");
-        if (f != NULL)
+        if (f != nullptr)
         {
             edit_insert_stream (edit, f);
 
@@ -2066,8 +2066,8 @@ edit_insert_file (WEdit * edit, const vfs_path_t * filename_vpath)
 
 /* --------------------------------------------------------------------------------------------- */
 /**
- * Fill in the edit structure.  Return NULL on failure.  Pass edit as
- * NULL to allocate a new structure.
+ * Fill in the edit structure.  Return nullptr on failure.  Pass edit as
+ * nullptr to allocate a new structure.
  *
  * If line is 0, try to restore saved position.  Otherwise put the
  * cursor on that line and show it in the middle of the screen.
@@ -2082,7 +2082,7 @@ edit_init (WEdit * edit, int y, int x, int lines, int cols, const vfs_path_t * f
     option_auto_syntax = TRUE;  /* Resetting to auto on every invokation */
     option_line_state_width = option_line_state ? LINE_STATE_WIDTH : 0;
 
-    if (edit != NULL)
+    if (edit != nullptr)
     {
         gboolean fullscreen;
         WRect loc_prev;
@@ -2104,7 +2104,7 @@ edit_init (WEdit * edit, int y, int x, int lines, int cols, const vfs_path_t * f
         to_free = TRUE;
 
         w = WIDGET (edit);
-        widget_init (w, y, x, lines, cols, NULL, NULL);
+        widget_init (w, y, x, lines, cols, nullptr, nullptr);
         w->options |= WOP_SELECTABLE | WOP_TOP_SELECT | WOP_WANT_CURSOR;
         w->keymap = editor_map;
         w->ext_keymap = editor_x_map;
@@ -2146,13 +2146,13 @@ edit_init (WEdit * edit, int y, int x, int lines, int cols, const vfs_path_t * f
         /* edit_load_file already gives an error message */
         if (to_free)
             g_free (edit);
-        return NULL;
+        return nullptr;
     }
 
     edit->loading_done = 1;
     edit->modified = 0;
     edit->locked = 0;
-    edit_load_syntax (edit, NULL, NULL);
+    edit_load_syntax (edit, nullptr, nullptr);
     edit_get_syntax_color (edit, -1);
 
     /* load saved cursor position and/or boolmarks */
@@ -2178,7 +2178,7 @@ edit_init (WEdit * edit, int y, int x, int lines, int cols, const vfs_path_t * f
 gboolean
 edit_clean (WEdit * edit)
 {
-    if (edit == NULL)
+    if (edit == nullptr)
         return FALSE;
 
     /* a stale lock, remove it */
@@ -2188,7 +2188,7 @@ edit_clean (WEdit * edit)
     /* save cursor position */
     if (option_save_position)
         edit_save_position (edit);
-    else if (edit->serialized_bookmarks != NULL)
+    else if (edit->serialized_bookmarks != nullptr)
         g_array_free (edit->serialized_bookmarks, TRUE);
 
     /* File specified on the mcedit command line and never saved */
@@ -2237,7 +2237,7 @@ edit_reload_line (WEdit * edit, const vfs_path_t * filename_vpath, long line)
     e->fullscreen = edit->fullscreen;
     e->loc_prev = edit->loc_prev;
 
-    if (edit_init (e, w->y, w->x, w->lines, w->cols, filename_vpath, line) == NULL)
+    if (edit_init (e, w->y, w->x, w->lines, w->cols, filename_vpath, line) == nullptr)
     {
         g_free (e);
         return FALSE;
@@ -2262,7 +2262,7 @@ edit_set_codeset (WEdit * edit)
         get_codepage_id (mc_global.source_codepage >=
                          0 ? mc_global.source_codepage : mc_global.display_codepage);
 
-    if (cp_id != NULL)
+    if (cp_id != nullptr)
     {
         GIConv conv;
         conv = str_crt_conv_from (cp_id);
@@ -2274,7 +2274,7 @@ edit_set_codeset (WEdit * edit)
         }
     }
 
-    if (cp_id != NULL)
+    if (cp_id != nullptr)
         edit->utf8 = str_isutf8 (cp_id);
 }
 #endif
@@ -3729,12 +3729,12 @@ edit_execute_cmd (WEdit * edit, long command, int char_for_insertion)
         edit->force |= REDRAW_PAGE;
         break;
     case CK_BookmarkNext:
-        if (edit->book_mark != NULL)
+        if (edit->book_mark != nullptr)
         {
             edit_book_mark_t *p;
 
             p = book_mark_find (edit, edit->buffer.curs_line);
-            if (p->next != NULL)
+            if (p->next != nullptr)
             {
                 p = p->next;
                 if (p->line >= edit->start_line + w->lines || p->line < edit->start_line)
@@ -3744,13 +3744,13 @@ edit_execute_cmd (WEdit * edit, long command, int char_for_insertion)
         }
         break;
     case CK_BookmarkPrev:
-        if (edit->book_mark != NULL)
+        if (edit->book_mark != nullptr)
         {
             edit_book_mark_t *p;
 
             p = book_mark_find (edit, edit->buffer.curs_line);
             while (p->line == edit->buffer.curs_line)
-                if (p->prev != NULL)
+                if (p->prev != nullptr)
                     p = p->prev;
             if (p->line >= 0)
             {
@@ -3900,7 +3900,7 @@ edit_execute_cmd (WEdit * edit, long command, int char_for_insertion)
         edit_goto_matching_bracket (edit);
         break;
     case CK_UserMenu:
-        user_menu (edit, NULL, -1);
+        user_menu (edit, nullptr, -1);
         break;
     case CK_Sort:
         edit_sort_cmd (edit);
@@ -4009,7 +4009,7 @@ edit_stack_init (void)
 {
     for (edit_stack_iterator = 0; edit_stack_iterator < MAX_HISTORY_MOVETO; edit_stack_iterator++)
     {
-        edit_history_moveto[edit_stack_iterator].filename_vpath = NULL;
+        edit_history_moveto[edit_stack_iterator].filename_vpath = nullptr;
         edit_history_moveto[edit_stack_iterator].line = -1;
     }
 

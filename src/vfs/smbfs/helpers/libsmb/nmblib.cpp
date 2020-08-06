@@ -75,7 +75,7 @@ debug_nmb_res_rec (struct res_rec *res, const char *hdr)
     DEBUGADD (4, ("    %s: nmb_name=%s rr_type=%d rr_class=%d ttl=%d\n",
                   hdr, nmb_namestr (&res->rr_name), res->rr_type, res->rr_class, res->ttl));
 
-    if (res->rdlength == 0 || res->rdata == NULL)
+    if (res->rdlength == 0 || res->rdata == nullptr)
         return;
 
     for (i = 0; i < res->rdlength; i += 16)
@@ -550,10 +550,10 @@ copy_nmb_packet (struct packet_struct *packet)
     struct nmb_packet *copy_nmb;
     struct packet_struct *pkt_copy;
 
-    if ((pkt_copy = (struct packet_struct *) malloc (sizeof (*packet))) == NULL)
+    if ((pkt_copy = (struct packet_struct *) malloc (sizeof (*packet))) == nullptr)
     {
         DEBUG (0, ("copy_nmb_packet: malloc fail.\n"));
-        return NULL;
+        return nullptr;
     }
 
     /* Structure copy of entire thing. */
@@ -567,16 +567,16 @@ copy_nmb_packet (struct packet_struct *packet)
     nmb = &packet->packet.nmb;
     copy_nmb = &pkt_copy->packet.nmb;
 
-    copy_nmb->answers = NULL;
-    copy_nmb->nsrecs = NULL;
-    copy_nmb->additional = NULL;
+    copy_nmb->answers = nullptr;
+    copy_nmb->nsrecs = nullptr;
+    copy_nmb->additional = nullptr;
 
     /* Now copy any resource records. */
 
     if (nmb->answers)
     {
         if ((copy_nmb->answers = (struct res_rec *)
-             malloc (nmb->header.ancount * sizeof (struct res_rec))) == NULL)
+             malloc (nmb->header.ancount * sizeof (struct res_rec))) == nullptr)
             goto free_and_exit;
         memcpy ((char *) copy_nmb->answers, (char *) nmb->answers,
                 nmb->header.ancount * sizeof (struct res_rec));
@@ -584,7 +584,7 @@ copy_nmb_packet (struct packet_struct *packet)
     if (nmb->nsrecs)
     {
         if ((copy_nmb->nsrecs = (struct res_rec *)
-             malloc (nmb->header.nscount * sizeof (struct res_rec))) == NULL)
+             malloc (nmb->header.nscount * sizeof (struct res_rec))) == nullptr)
             goto free_and_exit;
         memcpy ((char *) copy_nmb->nsrecs, (char *) nmb->nsrecs,
                 nmb->header.nscount * sizeof (struct res_rec));
@@ -592,7 +592,7 @@ copy_nmb_packet (struct packet_struct *packet)
     if (nmb->additional)
     {
         if ((copy_nmb->additional = (struct res_rec *)
-             malloc (nmb->header.arcount * sizeof (struct res_rec))) == NULL)
+             malloc (nmb->header.arcount * sizeof (struct res_rec))) == nullptr)
             goto free_and_exit;
         memcpy ((char *) copy_nmb->additional, (char *) nmb->additional,
                 nmb->header.arcount * sizeof (struct res_rec));
@@ -611,7 +611,7 @@ copy_nmb_packet (struct packet_struct *packet)
     free ((char *) pkt_copy);
 
     DEBUG (0, ("copy_nmb_packet: malloc fail in resource records.\n"));
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -622,10 +622,10 @@ copy_dgram_packet (struct packet_struct *packet)
 {
     struct packet_struct *pkt_copy;
 
-    if ((pkt_copy = (struct packet_struct *) malloc (sizeof (*packet))) == NULL)
+    if ((pkt_copy = (struct packet_struct *) malloc (sizeof (*packet))) == nullptr)
     {
         DEBUG (0, ("copy_dgram_packet: malloc fail.\n"));
-        return NULL;
+        return nullptr;
     }
 
     /* Structure copy of entire thing. */
@@ -650,7 +650,7 @@ copy_packet (struct packet_struct *packet)
         return copy_nmb_packet (packet);
     else if (packet->packet_type == DGRAM_PACKET)
         return copy_dgram_packet (packet);
-    return NULL;
+    return nullptr;
 }
 #endif /* 0 */
 /*******************************************************************
@@ -708,19 +708,19 @@ read_packet (int fd, enum packet_type packet_type)
 
     length = read_udp_socket (fd, buf, sizeof (buf));
     if (length < MIN_DGRAM_SIZE)
-        return (NULL);
+        return (nullptr);
 
     packet = (struct packet_struct *) malloc (sizeof (*packet));
     if (!packet)
-        return (NULL);
+        return (nullptr);
 
-    packet->next = NULL;
-    packet->prev = NULL;
+    packet->next = nullptr;
+    packet->prev = nullptr;
     packet->ip = lastip;
     packet->port = lastport;
     packet->fd = fd;
     packet->locked = False;
-    packet->timestamp = time (NULL);
+    packet->timestamp = time (nullptr);
     packet->packet_type = packet_type;
     switch (packet_type)
     {
@@ -737,7 +737,7 @@ read_packet (int fd, enum packet_type packet_type)
         DEBUG (10, ("read_packet: discarding packet id = %d\n",
                     packet->packet.nmb.header.name_trn_id));
         free_packet (packet);
-        return (NULL);
+        return (nullptr);
     }
 
     num_good_receives++;
@@ -977,7 +977,7 @@ receive_packet (int fd, enum packet_type type, int t)
     if (FD_ISSET (fd, &fds))
         return (read_packet (fd, type));
 
-    return (NULL);
+    return (nullptr);
 }
 
 #if 0

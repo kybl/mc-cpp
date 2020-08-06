@@ -108,7 +108,7 @@
   * @param buf pointer to editor buffer
   * @param byte_index byte index
   *
-  * @return NULL if byte_index is negative or larger than file size; pointer to byte otherwise.
+  * @return nullptr if byte_index is negative or larger than file size; pointer to byte otherwise.
   */
 static char *
 edit_buffer_get_byte_ptr (const edit_buffer_t * buf, off_t byte_index)
@@ -116,7 +116,7 @@ edit_buffer_get_byte_ptr (const edit_buffer_t * buf, off_t byte_index)
     void *b;
 
     if (byte_index >= (buf->curs1 + buf->curs2) || byte_index < 0)
-        return NULL;
+        return nullptr;
 
     if (byte_index >= buf->curs1)
     {
@@ -163,15 +163,15 @@ edit_buffer_init (edit_buffer_t * buf, off_t size)
 void
 edit_buffer_clean (edit_buffer_t * buf)
 {
-    if (buf->b1 != NULL)
+    if (buf->b1 != nullptr)
     {
-        g_ptr_array_foreach (buf->b1, (GFunc) g_free, NULL);
+        g_ptr_array_foreach (buf->b1, (GFunc) g_free, nullptr);
         g_ptr_array_free (buf->b1, TRUE);
     }
 
-    if (buf->b2 != NULL)
+    if (buf->b2 != nullptr)
     {
-        g_ptr_array_foreach (buf->b2, (GFunc) g_free, NULL);
+        g_ptr_array_foreach (buf->b2, (GFunc) g_free, nullptr);
         g_ptr_array_free (buf->b2, TRUE);
     }
 }
@@ -193,7 +193,7 @@ edit_buffer_get_byte (const edit_buffer_t * buf, off_t byte_index)
 
     p = edit_buffer_get_byte_ptr (buf, byte_index);
 
-    return (p != NULL) ? *(unsigned char *) p : '\n';
+    return (p != nullptr) ? *(unsigned char *) p : '\n';
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -214,10 +214,10 @@ edit_buffer_get_byte (const edit_buffer_t * buf, off_t byte_index)
 int
 edit_buffer_get_utf (const edit_buffer_t * buf, off_t byte_index, int *char_length)
 {
-    gchar *str = NULL;
+    gchar *str = nullptr;
     gunichar res;
     gunichar ch;
-    gchar *next_ch = NULL;
+    gchar *next_ch = nullptr;
 
     if (byte_index >= (buf->curs1 + buf->curs2) || byte_index < 0)
     {
@@ -226,7 +226,7 @@ edit_buffer_get_utf (const edit_buffer_t * buf, off_t byte_index, int *char_leng
     }
 
     str = edit_buffer_get_byte_ptr (buf, byte_index);
-    if (str == NULL)
+    if (str == nullptr)
     {
         *char_length = 0;
         return 0;
@@ -296,7 +296,7 @@ edit_buffer_get_prev_utf (const edit_buffer_t * buf, off_t byte_index, int *char
     cursor_buf_ptr = utf8_buf + (2 * UTF8_CHAR_LEN);
     str = g_utf8_find_prev_char (utf8_buf, cursor_buf_ptr);
 
-    if (str == NULL || g_utf8_next_char (str) != cursor_buf_ptr)
+    if (str == nullptr || g_utf8_next_char (str) != cursor_buf_ptr)
     {
         *char_length = 1;
         return *(cursor_buf_ptr - 1);
@@ -697,13 +697,13 @@ edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
             if (*((char *) b + j) == '\n')
                 buf->lines++;
 
-        if (s != NULL && s->update != NULL)
+        if (s != nullptr && s->update != nullptr)
         {
             update_cnt = (update_cnt + 1) & 0xf;
             if (update_cnt == 0)
             {
                 /* FIXME: overcare */
-                if (sm->buf == NULL)
+                if (sm->buf == nullptr)
                     sm->buf = buf;
 
                 sm->loaded = ret;
@@ -731,7 +731,7 @@ edit_buffer_read_file (edit_buffer_t * buf, int fd, off_t size,
         *b1 = *b2;
         *b2 = b;
 
-        if (s != NULL && s->update != NULL)
+        if (s != nullptr && s->update != nullptr)
         {
             update_cnt = (update_cnt + 1) & 0xf;
             if (update_cnt == 0)

@@ -120,7 +120,7 @@ static const struct
     "SO_RCVTIMEO", SOL_SOCKET, SO_RCVTIMEO, 0, OPT_INT},
 #endif
     {
-NULL, 0, 0, 0, 0}};
+nullptr, 0, 0, 0, 0}};
 
 
 

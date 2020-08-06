@@ -56,9 +56,9 @@ mc_fhl_filter_free (void *data)
 void
 mc_fhl_array_free (mc_fhl_t * fhl)
 {
-    if (fhl->filters != NULL)
+    if (fhl->filters != nullptr)
     {
-        g_ptr_array_foreach (fhl->filters, (GFunc) mc_fhl_filter_free, NULL);
+        g_ptr_array_foreach (fhl->filters, (GFunc) mc_fhl_filter_free, nullptr);
         fhl->filters = (GPtrArray *) g_ptr_array_free (fhl->filters, TRUE);
     }
 }
@@ -73,8 +73,8 @@ mc_fhl_new (gboolean need_auto_fill)
     mc_fhl_t *fhl;
 
     fhl = g_try_new0 (mc_fhl_t, 1);
-    if (fhl == NULL)
-        return NULL;
+    if (fhl == nullptr)
+        return nullptr;
 
     if (!need_auto_fill)
         return fhl;
@@ -82,13 +82,13 @@ mc_fhl_new (gboolean need_auto_fill)
     if (!mc_fhl_init_from_standard_files (fhl))
     {
         g_free (fhl);
-        return NULL;
+        return nullptr;
     }
 
     if (!mc_fhl_parse_ini_file (fhl))
     {
         mc_fhl_free (&fhl);
-        return NULL;
+        return nullptr;
     }
 
     return fhl;
@@ -99,7 +99,7 @@ mc_fhl_new (gboolean need_auto_fill)
 void
 mc_fhl_free (mc_fhl_t ** fhl)
 {
-    if (fhl == NULL || *fhl == NULL)
+    if (fhl == nullptr || *fhl == nullptr)
         return;
 
     mc_fhl_clear (*fhl);
@@ -112,7 +112,7 @@ mc_fhl_free (mc_fhl_t ** fhl)
 void
 mc_fhl_clear (mc_fhl_t * fhl)
 {
-    if (fhl != NULL)
+    if (fhl != nullptr)
     {
         mc_config_deinit (fhl->config);
         mc_fhl_array_free (fhl);

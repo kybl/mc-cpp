@@ -156,7 +156,7 @@ Atoic (char *p, int *n, char *c)
     if (!isdigit ((int) *p))
     {
         DEBUG (5, ("Atoic: malformed number\n"));
-        return NULL;
+        return nullptr;
     }
 
     (*n) = atoi (p);
@@ -166,10 +166,10 @@ Atoic (char *p, int *n, char *c)
         p++;
     }
 
-    if (strchr (c, *p) == NULL)
+    if (strchr (c, *p) == nullptr)
     {
         DEBUG (5, ("Atoic: no separator characters (%s) not found\n", c));
-        return NULL;
+        return nullptr;
     }
 
     return p;
@@ -183,20 +183,20 @@ get_numlist (char *p, uint32 ** num, int *count)
 {
     int val;
 
-    if (num == NULL || count == NULL)
+    if (num == nullptr || count == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     (*count) = 0;
-    (*num) = NULL;
+    (*num) = nullptr;
 
-    while ((p = Atoic (p, &val, ":,")) != NULL && (*p) != ':')
+    while ((p = Atoic (p, &val, ":,")) != nullptr && (*p) != ':')
     {
         (*num) = Realloc ((*num), ((*count) + 1) * sizeof (uint32));
-        if ((*num) == NULL)
+        if ((*num) == nullptr)
         {
-            return NULL;
+            return nullptr;
         }
         (*num)[(*count)] = val;
         (*count)++;
@@ -619,28 +619,28 @@ reduce a file name, removing .. elements.
 void
 dos_clean_name (char *s)
 {
-    char *p = NULL;
+    char *p = nullptr;
 
     DEBUG (3, ("dos_clean_name [%s]\n", s));
 
     /* remove any double slashes */
     string_sub (s, "\\\\", "\\");
 
-    while ((p = strstr (s, "\\..\\")) != NULL)
+    while ((p = strstr (s, "\\..\\")) != nullptr)
     {
         pstring s1;
 
         *p = 0;
         pstrcpy (s1, p + 3);
 
-        if ((p = strrchr (s, '\\')) != NULL)
+        if ((p = strrchr (s, '\\')) != nullptr)
             *p = 0;
         else
             *s = 0;
         pstrcat (s, s1);
     }
 
-    trim_string (s, NULL, "\\..");
+    trim_string (s, nullptr, "\\..");
 
     string_sub (s, "\\.\\", "\\");
 }
@@ -651,7 +651,7 @@ reduce a file name, removing .. elements.
 void
 unix_clean_name (char *s)
 {
-    char *p = NULL;
+    char *p = nullptr;
 
     DEBUG (3, ("unix_clean_name [%s]\n", s));
 
@@ -661,26 +661,26 @@ unix_clean_name (char *s)
     /* Remove leading ./ characters */
     if (strncmp (s, "./", 2) == 0)
     {
-        trim_string (s, "./", NULL);
+        trim_string (s, "./", nullptr);
         if (*s == 0)
             pstrcpy (s, "./");
     }
 
-    while ((p = strstr (s, "/../")) != NULL)
+    while ((p = strstr (s, "/../")) != nullptr)
     {
         pstring s1;
 
         *p = 0;
         pstrcpy (s1, p + 3);
 
-        if ((p = strrchr (s, '/')) != NULL)
+        if ((p = strrchr (s, '/')) != nullptr)
             *p = 0;
         else
             *s = 0;
         pstrcat (s, s1);
     }
 
-    trim_string (s, NULL, "/..");
+    trim_string (s, nullptr, "/..");
 }
 
 /*******************************************************************
@@ -700,7 +700,7 @@ reduce_name (char *s, char *dir, BOOL widelinks)
     pstring wd;
     pstring base_name;
     pstring newname;
-    char *p = NULL;
+    char *p = nullptr;
     BOOL relative = (*s != '/');
 
     *dir2 = *wd = *base_name = *newname = 0;
@@ -823,7 +823,7 @@ static void
 expand_one (char *Mask, int len)
 {
     char *p1;
-    while ((p1 = strchr (Mask, '*')) != NULL)
+    while ((p1 = strchr (Mask, '*')) != nullptr)
     {
         int lfill = (len + 1) - strlen (Mask);
         int l1 = (p1 - Mask);
@@ -841,7 +841,7 @@ parse out a directory name from a path name. Assumes dos style filenames.
 static void
 dirname_dos (char *path, char *buf)
 {
-    split_at_last_component (path, buf, '\\', NULL);
+    split_at_last_component (path, buf, '\\', nullptr);
 }
 
 
@@ -883,7 +883,7 @@ expand_mask (char *Mask, BOOL doext)
     filename_dos (Mask, filepart);
 
     pstrcpy (mbeg, filepart);
-    if ((p1 = strchr (mbeg, '.')) != NULL)
+    if ((p1 = strchr (mbeg, '.')) != nullptr)
     {
         hasdot = True;
         *p1 = 0;
@@ -939,7 +939,7 @@ make_dir_struct (char *buf, char *mask, char *fname, SMB_OFF_T size, int mode, t
         size = 0;
 
     memset (buf + 1, ' ', 11);
-    if ((p = strchr (mask2, '.')) != NULL)
+    if ((p = strchr (mask2, '.')) != nullptr)
     {
         *p = 0;
         memcpy (buf + 1, mask2, MIN (strlen (mask2), 8));
@@ -1043,7 +1043,7 @@ transfer some data between two fd's
 SMB_OFF_T
 transfer_file (int infd, int outfd, SMB_OFF_T n, char *header, int headlen, int align)
 {
-    static char *buf = NULL;
+    static char *buf = nullptr;
     static int size = 0;
     char *buf1, *abuf;
     SMB_OFF_T total = 0;
@@ -1087,7 +1087,7 @@ transfer_file (int infd, int outfd, SMB_OFF_T n, char *header, int headlen, int 
             s = headlen;
             ret = headlen;
             headlen = 0;
-            header = NULL;
+            header = nullptr;
         }
         else
         {
@@ -1101,7 +1101,7 @@ transfer_file (int infd, int outfd, SMB_OFF_T n, char *header, int headlen, int 
             headlen -= ret;
             header += ret;
             if (headlen <= 0)
-                header = NULL;
+                header = nullptr;
         }
 
         if (s > ret)
@@ -1114,7 +1114,7 @@ transfer_file (int infd, int outfd, SMB_OFF_T n, char *header, int headlen, int 
                 total += ret2;
             /* if we can't write then dump excess data */
             if (ret2 != ret)
-                transfer_file (infd, -1, n - (ret + headlen), NULL, 0, 0);
+                transfer_file (infd, -1, n - (ret + headlen), nullptr, 0, 0);
         }
         if (ret <= 0 || ret2 != ret)
             return (total);
@@ -1560,10 +1560,10 @@ mask_match (char *str, char *regexp, int case_sig, BOOL trans2)
                 if (!do_match (cp2, cp1, case_sig))
                     break;
 
-                cp1 = rp ? rp + 1 : NULL;
+                cp1 = rp ? rp + 1 : nullptr;
                 cp2 = fp ? fp + 1 : "";
 
-                if (last_wcard_was_star || ((cp1 != NULL) && (*cp1 == '*')))
+                if (last_wcard_was_star || ((cp1 != nullptr) && (*cp1 == '*')))
                 {
                     /* Eat the extra path components. */
                     int i;
@@ -1574,7 +1574,7 @@ mask_match (char *str, char *regexp, int case_sig, BOOL trans2)
                         if (fp)
                             *fp = '\0';
 
-                        if ((cp1 != NULL) && do_match (cp2, cp1, case_sig))
+                        if ((cp1 != nullptr) && do_match (cp2, cp1, case_sig))
                         {
                             cp2 = fp ? fp + 1 : "";
                             break;
@@ -1584,7 +1584,7 @@ mask_match (char *str, char *regexp, int case_sig, BOOL trans2)
                     num_path_components -= i;
                 }
             }
-            if (cp1 == NULL && ((*cp2 == '\0') || last_wcard_was_star))
+            if (cp1 == nullptr && ((*cp2 == '\0') || last_wcard_was_star))
                 matched = True;
         }
     }
@@ -1790,14 +1790,14 @@ expand a pointer to be a particular size
 void *
 Realloc (void *p, size_t size)
 {
-    void *ret = NULL;
+    void *ret = nullptr;
 
     if (size == 0)
     {
         if (p)
             free (p);
         DEBUG (5, ("Realloc asked for 0 bytes\n"));
-        return NULL;
+        return nullptr;
     }
 
     if (!p)
@@ -1937,7 +1937,7 @@ interpret_addr (const char *str)
             DEBUG (3, ("Get_Hostbyname: Unknown host. %s\n", str));
             return 0;
         }
-        if (hp->h_addr == NULL)
+        if (hp->h_addr == nullptr)
         {
             DEBUG (3, ("Get_Hostbyname: host address is invalid for host %s\n", str));
             return 0;
@@ -2077,7 +2077,7 @@ automount_lookup (char *user_name)
                   (char *) nis_local_directory ());
         DEBUG (5, ("NIS+ querystring: %s\n", buffer));
 
-        if (result = nis_list (buffer, RETURN_RESULT, NULL, NULL))
+        if (result = nis_list (buffer, RETURN_RESULT, nullptr, nullptr))
         {
             if (result->status != NIS_SUCCESS)
             {
@@ -2211,7 +2211,7 @@ automount_path (char *user_name)
 
     /* use the passwd entry as the default */
     /* this will be the default if WITH_AUTOMOUNT is not used or fails */
-    /* pstrcpy() copes with get_home_dir() returning NULL */
+    /* pstrcpy() copes with get_home_dir() returning nullptr */
     pstrcpy (server_path, get_home_dir (user_name));
 
 #if (defined(HAVE_NETGROUP) && defined (WITH_AUTOMOUNT))
@@ -2221,7 +2221,7 @@ automount_path (char *user_name)
         char *home_path_start;
         char *automount_value = automount_lookup (user_name);
         home_path_start = strchr (automount_value, ':');
-        if (home_path_start != NULL)
+        if (home_path_start != nullptr)
         {
             DEBUG (5, ("NIS lookup succeeded.  Home path is: %s\n",
                        home_path_start ? (home_path_start + 1) : ""));
@@ -2255,7 +2255,7 @@ standard_sub_basic (char *str)
         {
         case 'G':
             {
-                if ((pass = Get_Pwnam (username)) != NULL)
+                if ((pass = Get_Pwnam (username)) != nullptr)
                 {
                     string_sub (p, "%G", gidtoname (pass->pw_gid));
                 }
@@ -2317,7 +2317,7 @@ standard_sub_basic (char *str)
                     p += 2;
                     break;
                 }
-                if ((q = strchr (p, ')')) == NULL)
+                if ((q = strchr (p, ')')) == nullptr)
                 {
                     DEBUG (0, ("standard_sub_basic: Unterminated environment \
 					variable [%s]\n", p));
@@ -2330,7 +2330,7 @@ standard_sub_basic (char *str)
                 strncpy (envname, r, copylen);
                 envname[copylen] = '\0';
 
-                if ((envval = getenv (envname)) == NULL)
+                if ((envval = getenv (envname)) == nullptr)
                 {
                     DEBUG (0, ("standard_sub_basic: Environment variable [%s] not set\n", envname));
                     p += 2;
@@ -2463,12 +2463,12 @@ Get_Hostbyname (const char *name)
     if (!isalnum (*name2))
     {
         free (name2);
-        return (NULL);
+        return (nullptr);
     }
 #endif /* 0 */
 
     ret = sys_gethostbyname (name2);
-    if (ret != NULL)
+    if (ret != nullptr)
     {
         free (name2);
         return (ret);
@@ -2477,7 +2477,7 @@ Get_Hostbyname (const char *name)
     /* try with all lowercase */
     strlower (name2);
     ret = sys_gethostbyname (name2);
-    if (ret != NULL)
+    if (ret != nullptr)
     {
         free (name2);
         return (ret);
@@ -2486,7 +2486,7 @@ Get_Hostbyname (const char *name)
     /* try with all uppercase */
     strupper (name2);
     ret = sys_gethostbyname (name2);
-    if (ret != NULL)
+    if (ret != nullptr)
     {
         free (name2);
         return (ret);
@@ -2494,7 +2494,7 @@ Get_Hostbyname (const char *name)
 
     /* nothing works :-( */
     free (name2);
-    return (NULL);
+    return (nullptr);
 }
 
 #if 0
@@ -2571,17 +2571,17 @@ readdirname (DIR * p)
     char *dname;
 
     if (!p)
-        return (NULL);
+        return (nullptr);
 
     ptr = (SMB_STRUCT_DIRENT *) sys_readdir (p);
     if (!ptr)
-        return (NULL);
+        return (nullptr);
 
     dname = ptr->d_name;
 
 #ifdef NEXT2
     if (telldir (p) < 0)
-        return (NULL);
+        return (nullptr);
 #endif
 
 #ifdef HAVE_BROKEN_READDIR
@@ -2612,7 +2612,7 @@ is_in_path (char *name, name_compare_entry * namelist)
     DEBUG (8, ("is_in_path: %s\n", name));
 
     /* if we have no list it's obviously not in the path */
-    if ((namelist == NULL) || ((namelist != NULL) && (namelist[0].name == NULL)))
+    if ((namelist == nullptr) || ((namelist != nullptr) && (namelist[0].name == nullptr)))
     {
         DEBUG (8, ("is_in_path: no name list.\n"));
         return False;
@@ -2623,7 +2623,7 @@ is_in_path (char *name, name_compare_entry * namelist)
     strncpy (last_component, p ? ++p : name, sizeof (last_component) - 1);
     last_component[sizeof (last_component) - 1] = '\0';
 
-    for (; namelist->name != NULL; namelist++)
+    for (; namelist->name != nullptr; namelist++)
     {
         if (namelist->is_wild)
         {
@@ -2674,9 +2674,9 @@ set_namearray (name_compare_entry ** ppname_array, char *namelist)
     int num_entries = 0;
     int i;
 
-    (*ppname_array) = NULL;
+    (*ppname_array) = nullptr;
 
-    if ((nameptr == NULL) || ((nameptr != NULL) && (*nameptr == '\0')))
+    if ((nameptr == nullptr) || ((nameptr != nullptr) && (*nameptr == '\0')))
         return;
 
     /* We need to make two passes over the string. The
@@ -2695,7 +2695,7 @@ set_namearray (name_compare_entry ** ppname_array, char *namelist)
         name_end = strchr (nameptr, '/');
 
         /* oops - the last check for a / didn't find one. */
-        if (name_end == NULL)
+        if (name_end == nullptr)
             break;
 
         /* next segment please */
@@ -2708,7 +2708,7 @@ set_namearray (name_compare_entry ** ppname_array, char *namelist)
 
     if (((*ppname_array) = (name_compare_entry *) malloc ((num_entries +
                                                            1) * sizeof (name_compare_entry))) ==
-        NULL)
+        nullptr)
     {
         DEBUG (0, ("set_namearray: malloc fail\n"));
         return;
@@ -2726,18 +2726,18 @@ set_namearray (name_compare_entry ** ppname_array, char *namelist)
             continue;
         }
         /* find the next / */
-        if ((name_end = strchr (nameptr, '/')) != NULL)
+        if ((name_end = strchr (nameptr, '/')) != nullptr)
         {
             *name_end = 0;
         }
 
         /* oops - the last check for a / didn't find one. */
-        if (name_end == NULL)
+        if (name_end == nullptr)
             break;
 
-        (*ppname_array)[i].is_wild = ((strchr (nameptr, '?') != NULL) ||
-                                      (strchr (nameptr, '*') != NULL));
-        if (((*ppname_array)[i].name = strdup (nameptr)) == NULL)
+        (*ppname_array)[i].is_wild = ((strchr (nameptr, '?') != nullptr) ||
+                                      (strchr (nameptr, '*') != nullptr));
+        if (((*ppname_array)[i].name = strdup (nameptr)) == nullptr)
         {
             DEBUG (0, ("set_namearray: malloc fail (1)\n"));
             return;
@@ -2748,7 +2748,7 @@ set_namearray (name_compare_entry ** ppname_array, char *namelist)
         i++;
     }
 
-    (*ppname_array)[i].name = NULL;
+    (*ppname_array)[i].name = nullptr;
 
     return;
 }
@@ -2763,7 +2763,7 @@ free_namearray (name_compare_entry * name_array)
     if (name_array == 0)
         return;
 
-    if (name_array->name != NULL)
+    if (name_array->name != nullptr)
         free (name_array->name);
 
     free ((char *) name_array);

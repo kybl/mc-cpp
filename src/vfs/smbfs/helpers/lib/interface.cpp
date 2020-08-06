@@ -38,7 +38,7 @@ static BOOL got_ip = False;
 static BOOL got_bcast = False;
 static BOOL got_nmask = False;
 
-static struct interface *local_interfaces = NULL;
+static struct interface *local_interfaces = nullptr;
 
 struct interface *last_iface;
 
@@ -147,7 +147,7 @@ interpret_interfaces (char *s, struct interface **interfaces, const char *descri
     allones_ip = *interpret_addr2 ("255.255.255.255");
     loopback_ip = *interpret_addr2 ("127.0.0.1");
 
-    while (next_token (&ptr, token, NULL, sizeof (token)))
+    while (next_token (&ptr, token, nullptr, sizeof (token)))
     {
         /* parse it into an IP address/netmasklength pair */
         char *p = strchr (token, '/');
@@ -184,7 +184,7 @@ interpret_interfaces (char *s, struct interface **interfaces, const char *descri
             default_netmask (&iface->nmask, &iface->ip);
         }
         iface->bcast.s_addr = MKBCADDR (iface->ip.s_addr, iface->nmask.s_addr);
-        iface->next = NULL;
+        iface->next = nullptr;
 
         if (!(*interfaces))
         {
@@ -208,7 +208,7 @@ interpret_interfaces (char *s, struct interface **interfaces, const char *descri
     if (!iface)
         return;
 
-    iface->next = NULL;
+    iface->next = nullptr;
 
     if (got_ip)
     {
@@ -216,7 +216,7 @@ interpret_interfaces (char *s, struct interface **interfaces, const char *descri
     }
     else
     {
-        get_myname (NULL, &iface->ip);
+        get_myname (nullptr, &iface->ip);
     }
 
     if (got_bcast)
@@ -239,7 +239,7 @@ interpret_interfaces (char *s, struct interface **interfaces, const char *descri
         DEBUG (2, ("Warning: inconsistent interface %s\n", inet_ntoa (iface->ip)));
     }
 
-    iface->next = NULL;
+    iface->next = nullptr;
     (*interfaces) = last_iface = iface;
 
     DEBUG (2, ("Added interface ip=%s ", inet_ntoa (iface->ip)));
@@ -355,7 +355,7 @@ get_interface (int n)
 
     if (i)
         return i;
-    return NULL;
+    return nullptr;
 }
 #endif /* 0 */
 /****************************************************************************
@@ -371,11 +371,11 @@ iface_n_ip (int n)
 
     if (i)
         return &i->ip;
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************************************
-Try and find an interface that matches an ip. If we cannot, return NULL
+Try and find an interface that matches an ip. If we cannot, return nullptr
   **************************************************************************/
 static struct interface *
 iface_find (struct in_addr ip)
@@ -388,7 +388,7 @@ iface_find (struct in_addr ip)
         if (same_net (i->ip, ip, i->nmask))
             return i;
 
-    return NULL;
+    return nullptr;
 }
 
 #if 0

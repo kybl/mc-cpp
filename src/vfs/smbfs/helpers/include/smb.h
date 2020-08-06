@@ -905,7 +905,7 @@ struct bitmap
 
 #define CHECK_FSP(fsp,conn) if (!FNUM_OK(fsp,conn)) \
                                return(ERROR(ERRDOS,ERRbadfid)); \
-                            else if((fsp)->fd_ptr == NULL) \
+                            else if((fsp)->fd_ptr == nullptr) \
                                return(ERROR(ERRDOS,ERRbadaccess))
 
 #define CHECK_READ(fsp) if (!(fsp)->can_read) \
@@ -1688,7 +1688,7 @@ extern int unix_ERR_code;
 #define ZERO_STRUCTPN(x) memset((char *)(x), 0, sizeof(*(x)))
 
 /* zero a structure given a pointer to the structure */
-#define ZERO_STRUCTP(x) { if ((x) != NULL) ZERO_STRUCTPN(x); }
+#define ZERO_STRUCTP(x) { if ((x) != nullptr) ZERO_STRUCTPN(x); }
 
 /* zero an array - note that sizeof(array) must work - ie. it must not be a 
    pointer */

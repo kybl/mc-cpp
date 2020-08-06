@@ -215,12 +215,12 @@ const key_code_name_t key_name_conv_tab[] = {
     {KEY_M_ALT, "ralt", N_("Alt"), "M"},
     {KEY_M_SHIFT, "shift", N_("Shift"), "S"},
 
-    {0, NULL, NULL, NULL}
+    {0, nullptr, nullptr, nullptr}
 };
 
 /*** file scope macro definitions ****************************************************************/
 
-#define GET_TIME(tv)     (gettimeofday(&tv, (struct timezone *) NULL))
+#define GET_TIME(tv)     (gettimeofday(&tv, (struct timezone *) nullptr))
 #define DIF_TIME(t1, t2) ((t2.tv_sec  - t1.tv_sec) * 1000 + (t2.tv_usec - t1.tv_usec)/1000)
 
 /* The maximum sequence length (32 + null terminator) */
@@ -240,7 +240,7 @@ typedef enum
 typedef struct key_def
 {
     char ch;                    /* Holds the matching char code */
-    int code;                   /* The code returned, valid if child == NULL */
+    int code;                   /* The code returned, valid if child == nullptr */
     struct key_def *next;
     struct key_def *child;      /* sequence continuation */
     int action;                 /* optional action to be done. Now used only
@@ -283,7 +283,7 @@ static key_define_t mc_default_keys[] = {
     {ESC_CHAR, ESC_STR ESC_STR, MCKEY_NOACTION},
     {MCKEY_BRACKETED_PASTING_START, ESC_STR "[200~", MCKEY_NOACTION},
     {MCKEY_BRACKETED_PASTING_END, ESC_STR "[201~", MCKEY_NOACTION},
-    {0, NULL, MCKEY_NOACTION},
+    {0, nullptr, MCKEY_NOACTION},
 };
 
 /* Broken terminfo and termcap databases on xterminals */
@@ -443,7 +443,7 @@ static key_define_t xterm_key_defines[] = {
     {'/', ESC_STR "Oo", MCKEY_NOACTION},
     {'\n', ESC_STR "OM", MCKEY_NOACTION},
 
-    {0, NULL, MCKEY_NOACTION},
+    {0, nullptr, MCKEY_NOACTION},
 };
 
 /* qansi-m terminals have a much more key combinatios,
@@ -516,21 +516,21 @@ static key_define_t qansi_key_defines[] = {
     {KEY_M_ALT | 'z', ESC_STR "Nz", MCKEY_NOACTION},    /* Alt-z     */
     {KEY_KP_SUBTRACT, ESC_STR "[S", MCKEY_NOACTION},    /* Gr-Minus  */
     {KEY_KP_ADD, ESC_STR "[T", MCKEY_NOACTION}, /* Gr-Plus   */
-    {0, NULL, MCKEY_NOACTION},
+    {0, nullptr, MCKEY_NOACTION},
 };
 
 /* This holds all the key definitions */
-static key_def *keys = NULL;
+static key_def *keys = nullptr;
 
 static int input_fd;
 static int disabled_channels = 0;       /* Disable channels checking */
 
-static GSList *select_list = NULL;
+static GSList *select_list = nullptr;
 
 static int seq_buffer[SEQ_BUFFER_LEN];
-static int *seq_append = NULL;
+static int *seq_append = nullptr;
 
-static int *pending_keys = NULL;
+static int *pending_keys = nullptr;
 
 #ifdef __QNXNTO__
 ph_dv_f ph_attach;
@@ -586,7 +586,7 @@ add_selects (fd_set * select_set)
     {
         GSList *s;
 
-        for (s = select_list; s != NULL; s = g_slist_next (s))
+        for (s = select_list; s != nullptr; s = g_slist_next (s))
         {
             select_t *p = (select_t *) s->data;
 
@@ -610,7 +610,7 @@ check_selects (fd_set * select_set)
         select_t *p;
 
         s = g_slist_find_custom (select_list, select_set, select_cmp_by_fd_set);
-        if (s == NULL)
+        if (s == nullptr)
             break;
 
         p = (select_t *) s->data;
@@ -630,7 +630,7 @@ try_channels (gboolean set_timeout)
 
     while (TRUE)
     {
-        struct timeval *timeptr = NULL;
+        struct timeval *timeptr = nullptr;
         int maxfdp, v;
 
         FD_ZERO (&select_set);
@@ -644,7 +644,7 @@ try_channels (gboolean set_timeout)
             timeptr = &time_out;
         }
 
-        v = select (maxfdp + 1, &select_set, NULL, NULL, timeptr);
+        v = select (maxfdp + 1, &select_set, nullptr, nullptr, timeptr);
         if (v > 0)
         {
             check_selects (&select_set);
@@ -661,17 +661,17 @@ create_sequence (const char *seq, int code, int action)
 {
     key_def *base, *p, *attach;
 
-    for (base = attach = NULL; *seq != '\0'; seq++)
+    for (base = attach = nullptr; *seq != '\0'; seq++)
     {
         p = g_new (key_def, 1);
-        if (base == NULL)
+        if (base == nullptr)
             base = p;
-        if (attach != NULL)
+        if (attach != nullptr)
             attach->child = p;
 
         p->ch = *seq;
         p->code = code;
-        p->child = p->next = NULL;
+        p->child = p->next = nullptr;
         if (seq[1] == '\0')
             p->action = action;
         else
@@ -698,11 +698,11 @@ define_sequences (const key_define_t * kd)
 static void
 init_key_x11 (void)
 {
-    if (getenv ("DISPLAY") != NULL && !mc_global.tty.disable_x11)
+    if (getenv ("DISPLAY") != nullptr && !mc_global.tty.disable_x11)
     {
         x11_display = mc_XOpenDisplay (0);
 
-        if (x11_display != NULL)
+        if (x11_display != nullptr)
             x11_window = DefaultRootWindow (x11_display);
     }
 }
@@ -720,7 +720,7 @@ getch_with_delay (void)
        so we need to do the select check :-( */
     while (TRUE)
     {
-        if (pending_keys == NULL)
+        if (pending_keys == nullptr)
             try_channels (FALSE);
 
         /* Try to get a character */
@@ -920,19 +920,19 @@ get_modifier (void)
         /* First time here, let's load Photon library and attach to Photon */
         in_photon = -1;
 
-        if (getenv ("PHOTON2_PATH") != NULL)
+        if (getenv ("PHOTON2_PATH") != nullptr)
         {
             /* QNX 6.x has no support for RTLD_LAZY */
             void *ph_handle;
 
             ph_handle = dlopen ("/usr/lib/libph.so", RTLD_NOW);
-            if (ph_handle != NULL)
+            if (ph_handle != nullptr)
             {
                 ph_attach = (ph_dv_f) dlsym (ph_handle, "PhAttach");
                 ph_input_group = (ph_ov_f) dlsym (ph_handle, "PhInputGroup");
                 ph_query_cursor = (ph_pqc_f) dlsym (ph_handle, "PhQueryCursor");
-                if ((ph_attach != NULL) && (ph_input_group != NULL) && (ph_query_cursor != NULL)
-                    && (*ph_attach) (0, 0) != NULL)
+                if ((ph_attach != nullptr) && (ph_input_group != nullptr) && (ph_query_cursor != nullptr)
+                    && (*ph_attach) (0, 0) != nullptr)
                 {
                     /* Attached */
                     ph_ig = (*ph_input_group) (0);
@@ -947,7 +947,7 @@ get_modifier (void)
         int mod_status;
         int shift_ext_status;
 
-        if (devctl (fileno (stdin), DCMD_CHR_LINESTATUS, &mod_status, sizeof (mod_status), NULL) ==
+        if (devctl (fileno (stdin), DCMD_CHR_LINESTATUS, &mod_status, sizeof (mod_status), nullptr) ==
             -1)
             return 0;
 
@@ -1001,7 +1001,7 @@ push_char (int c)
 {
     gboolean ret = FALSE;
 
-    if (seq_append == NULL)
+    if (seq_append == nullptr)
         seq_append = seq_buffer;
 
     if (seq_append != &(seq_buffer[SEQ_BUFFER_LEN - 2]))
@@ -1158,7 +1158,7 @@ getch_with_timeout (unsigned int delay_us)
     tty_nodelay (TRUE);
     FD_ZERO (&Read_FD_Set);
     FD_SET (input_fd, &Read_FD_Set);
-    select (input_fd + 1, &Read_FD_Set, NULL, NULL, &time_out);
+    select (input_fd + 1, &Read_FD_Set, nullptr, nullptr, &time_out);
     c = tty_lowlevel_getch ();
     tty_nodelay (FALSE);
     return c;
@@ -1196,7 +1196,7 @@ learn_store_key (char *buffer, char **p, int c)
 static void
 k_dispose (key_def * k)
 {
-    if (k != NULL)
+    if (k != nullptr)
     {
         k_dispose (k->child);
         k_dispose (k->next);
@@ -1256,7 +1256,7 @@ lookup_keyname (const char *name, int *idx)
 {
     if (name[0] != '\0')
     {
-        const key_code_name_t key = { 0, name, NULL, NULL };
+        const key_code_name_t key = { 0, name, nullptr, nullptr };
         const key_code_name_t *keyp = &key;
         const key_code_name_t **res;
 
@@ -1271,7 +1271,7 @@ lookup_keyname (const char *name, int *idx)
         res = static_cast<const key_code_name_t **> (bsearch (&keyp, key_conv_tab_sorted, key_conv_tab_size,
                        sizeof (key_conv_tab_sorted[0]), key_code_comparator_by_name));
 
-        if (res != NULL)
+        if (res != nullptr)
         {
             *idx = (int) (res - key_conv_tab_sorted);
             return (*res)->code;
@@ -1289,7 +1289,7 @@ lookup_keycode (const long code, int *idx)
 {
     if (code != 0)
     {
-        const key_code_name_t key = { static_cast<int> (code), NULL, NULL, NULL };
+        const key_code_name_t key = { static_cast<int> (code), nullptr, nullptr, nullptr };
         const key_code_name_t *keyp = &key;
         const key_code_name_t **res;
 
@@ -1298,7 +1298,7 @@ lookup_keycode (const long code, int *idx)
         res = static_cast<const key_code_name_t **> (bsearch (&keyp, key_conv_tab_sorted, key_conv_tab_size,
                        sizeof (key_conv_tab_sorted[0]), key_code_comparator_by_code));
 
-        if (res != NULL)
+        if (res != nullptr)
         {
             *idx = (int) (res - key_conv_tab_sorted);
             return TRUE;
@@ -1328,7 +1328,7 @@ init_key (void)
 
     /* Terminfo on irix does not have some keys */
     if (mc_global.tty.xterm_flag
-        || (term != NULL
+        || (term != nullptr
             && (strncmp (term, "iris-ansi", 9) == 0
                 || strncmp (term, "xterm", 5) == 0
                 || strncmp (term, "rxvt", 4) == 0 || strncmp (term, "screen", 6) == 0)))
@@ -1338,7 +1338,7 @@ init_key (void)
     load_xtra_key_defines ();
 
 #ifdef __QNX__
-    if ((term != NULL) && (strncmp (term, "qnx", 3) == 0))
+    if ((term != nullptr) && (strncmp (term, "qnx", 3) == 0))
     {
         /* Modify the default value of use_8th_bit_as_meta: we would
          * like to provide a working mc for a newbie who knows nothing
@@ -1363,7 +1363,7 @@ init_key (void)
 
     /* Load the qansi-m key definitions
        if we are running under the qansi-m terminal */
-    if (term != NULL && (strncmp (term, "qansi-m", 7) == 0))
+    if (term != nullptr && (strncmp (term, "qansi-m", 7) == 0))
         define_sequences (qansi_key_defines);
 }
 
@@ -1417,7 +1417,7 @@ delete_select_channel (int fd)
     GSList *p;
 
     p = g_slist_find_custom (select_list, GINT_TO_POINTER (fd), select_cmp_by_fd);
-    if (p != NULL)
+    if (p != nullptr)
         select_list = g_slist_delete_link (select_list, p);
 }
 
@@ -1457,14 +1457,14 @@ lookup_key (const char *name, char **label)
     int use_ctrl = -1;
     int use_shift = -1;
 
-    if (name == NULL)
+    if (name == nullptr)
         return 0;
 
     cname = g_strstrip (g_strdup (name));
     lc_keys = g_strsplit_set (cname, "-+ ", -1);
     g_free (cname);
 
-    for (p = lc_keys; p != NULL && *p != NULL; p++)
+    for (p = lc_keys; p != nullptr && *p != nullptr; p++)
     {
         if ((*p)[0] != '\0')
         {
@@ -1493,7 +1493,7 @@ lookup_key (const char *name, char **label)
     if (k <= 0)
         return 0;
 
-    if (label != NULL)
+    if (label != nullptr)
     {
         GString *s;
 
@@ -1522,12 +1522,12 @@ lookup_key (const char *name, char **label)
         }
         else if (k < 128)
         {
-            if ((k >= 'A') || (lc_index < 0) || (key_conv_tab_sorted[lc_index]->shortcut == NULL))
+            if ((k >= 'A') || (lc_index < 0) || (key_conv_tab_sorted[lc_index]->shortcut == nullptr))
                 g_string_append_c (s, (gchar) g_ascii_tolower ((gchar) k));
             else
                 g_string_append (s, key_conv_tab_sorted[lc_index]->shortcut);
         }
-        else if ((lc_index != -1) && (key_conv_tab_sorted[lc_index]->shortcut != NULL))
+        else if ((lc_index != -1) && (key_conv_tab_sorted[lc_index]->shortcut != nullptr))
             g_string_append (s, key_conv_tab_sorted[lc_index]->shortcut);
         else
             g_string_append_c (s, (gchar) g_ascii_tolower ((gchar) key));
@@ -1611,12 +1611,12 @@ lookup_key_by_code (const int keycode)
         }
         else if (k < 128)
         {
-            if ((k >= 'A') || (key_idx < 0) || (key_conv_tab_sorted[key_idx]->name == NULL))
+            if ((k >= 'A') || (key_idx < 0) || (key_conv_tab_sorted[key_idx]->name == nullptr))
                 g_string_append_c (s, (gchar) k);
             else
                 g_string_append (s, key_conv_tab_sorted[key_idx]->name);
         }
-        else if ((key_idx != -1) && (key_conv_tab_sorted[key_idx]->name != NULL))
+        else if ((key_idx != -1) && (key_conv_tab_sorted[key_idx]->name != nullptr))
             g_string_append (s, key_conv_tab_sorted[key_idx]->name);
         else
             g_string_append_c (s, (gchar) keycode);
@@ -1639,10 +1639,10 @@ define_sequence (int code, const char *seq, int action)
     if (strlen (seq) > SEQ_BUFFER_LEN - 1)
         return FALSE;
 
-    for (base = keys; (base != NULL) && (*seq != '\0');)
+    for (base = keys; (base != nullptr) && (*seq != '\0');)
         if (*seq == base->ch)
         {
-            if (base->child == NULL)
+            if (base->child == nullptr)
             {
                 if (*(seq + 1) != '\0')
                     base->child = create_sequence (seq + 1, code, action);
@@ -1660,7 +1660,7 @@ define_sequence (int code, const char *seq, int action)
         }
         else
         {
-            if (base->next != NULL)
+            if (base->next != nullptr)
                 base = base->next;
             else
             {
@@ -1730,18 +1730,18 @@ int
 get_key_code (int no_delay)
 {
     int c;
-    static key_def *this_ = NULL, *parent;
+    static key_def *this_ = nullptr, *parent;
     static struct timeval esctime = { -1, -1 };
     static int lastnodelay = -1;
 
     if (no_delay != lastnodelay)
     {
-        this_ = NULL;
+        this_ = nullptr;
         lastnodelay = no_delay;
     }
 
   pend_send:
-    if (pending_keys != NULL)
+    if (pending_keys != nullptr)
     {
         gboolean bad_seq;
 
@@ -1751,7 +1751,7 @@ get_key_code (int no_delay)
 
         bad_seq = (*pending_keys != ESC_CHAR && *pending_keys != '\0');
         if (*pending_keys == '\0' || bad_seq)
-            pending_keys = seq_append = NULL;
+            pending_keys = seq_append = nullptr;
 
         if (bad_seq)
         {
@@ -1792,7 +1792,7 @@ get_key_code (int no_delay)
         {
             struct timeval current, time_out;
 
-            if (this_ == NULL || parent == NULL || parent->action != MCKEY_ESCAPE || !old_esc_mode ||
+            if (this_ == nullptr || parent == nullptr || parent->action != MCKEY_ESCAPE || !old_esc_mode ||
                 esctime.tv_sec == -1)
                 return -1;
 
@@ -1808,8 +1808,8 @@ get_key_code (int no_delay)
                 (current.tv_sec == time_out.tv_sec && current.tv_usec < time_out.tv_usec))
                 return -1;
 
-            this_ = NULL;
-            pending_keys = seq_append = NULL;
+            this_ = nullptr;
+            pending_keys = seq_append = nullptr;
             return ESC_CHAR;
         }
     }
@@ -1818,9 +1818,9 @@ get_key_code (int no_delay)
         /* Maybe we got an incomplete match.
            This we do only in delay mode, since otherwise
            tty_lowlevel_getch can return -1 at any time. */
-        if (seq_append == NULL)
+        if (seq_append == nullptr)
         {
-            this_ = NULL;
+            this_ = nullptr;
             return -1;
         }
 
@@ -1829,10 +1829,10 @@ get_key_code (int no_delay)
     }
 
     /* Search the key on the root */
-    if (no_delay == 0 || this_ == NULL)
+    if (no_delay == 0 || this_ == nullptr)
     {
         this_ = keys;
-        parent = NULL;
+        parent = nullptr;
 
         if (c > 127 && c < 256 && use_8th_bit_as_meta)
         {
@@ -1844,14 +1844,14 @@ get_key_code (int no_delay)
         }
     }
 
-    while (this_ != NULL)
+    while (this_ != nullptr)
     {
         if (c == this_->ch)
         {
-            if (this_->child == NULL)
+            if (this_->child == nullptr)
             {
                 /* We got a complete match, return and reset search */
-                pending_keys = seq_append = NULL;
+                pending_keys = seq_append = nullptr;
                 c = this_->code;
                 goto done;
             }
@@ -1878,8 +1878,8 @@ get_key_code (int no_delay)
                 if (c != -1)
                     continue;
 
-                pending_keys = seq_append = NULL;
-                this_ = NULL;
+                pending_keys = seq_append = nullptr;
+                this_ = nullptr;
                 return ESC_CHAR;
             }
 
@@ -1890,14 +1890,14 @@ get_key_code (int no_delay)
         }
 
         /* c != this->ch. Try other keys with this prefix */
-        if (this_->next != NULL)
+        if (this_->next != nullptr)
         {
             this_ = this_->next;
             continue;
         }
 
         /* No match found. Is it one of our ESC <key> specials? */
-        if ((parent != NULL) && (parent->action == MCKEY_ESCAPE))
+        if ((parent != nullptr) && (parent->action == MCKEY_ESCAPE))
         {
             /* Convert escape-digits to F-keys */
             if (g_ascii_isdigit (c))
@@ -1907,7 +1907,7 @@ get_key_code (int no_delay)
             else
                 c = ALT (c);
 
-            pending_keys = seq_append = NULL;
+            pending_keys = seq_append = nullptr;
             goto done;
         }
 
@@ -1915,10 +1915,10 @@ get_key_code (int no_delay)
         push_char (c);
         pending_keys = seq_buffer;
         goto pend_send;
-    }                           /* while (this != NULL) */
+    }                           /* while (this != nullptr) */
 
   done:
-    this_ = NULL;
+    this_ = nullptr;
     return correct_key_code (c);
 }
 
@@ -1937,7 +1937,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
     static struct Gpm_Event ev; /* Mouse event */
 #endif
     struct timeval time_out;
-    struct timeval *time_addr = NULL;
+    struct timeval *time_addr = nullptr;
     static int dirty = 3;
 
     if ((dirty == 3) || is_idle ())
@@ -1962,7 +1962,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
     }
 
     /* Repeat if using mouse */
-    while (pending_keys == NULL)
+    while (pending_keys == nullptr)
     {
         int nfd;
         fd_set select_set;
@@ -2010,7 +2010,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
             int seconds;
 
             seconds = vfs_timeouts ();
-            time_addr = NULL;
+            time_addr = nullptr;
 
             if (seconds != 0)
             {
@@ -2033,7 +2033,7 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
         }
 
         tty_enable_interrupt_key ();
-        flag = select (nfd, &select_set, NULL, NULL, time_addr);
+        flag = select (nfd, &select_set, nullptr, nullptr, time_addr);
         tty_disable_interrupt_key ();
 
         /* select timed out: it could be for any of the following reasons:
@@ -2124,8 +2124,8 @@ tty_get_event (struct Gpm_Event *event, gboolean redo_event, gboolean block)
         gboolean extended = c == MCKEY_EXTENDED_MOUSE;
 
 #ifdef KEY_MOUSE
-        extended = extended || (c == KEY_MOUSE && xmouse_seq == NULL
-                                && xmouse_extended_seq != NULL);
+        extended = extended || (c == KEY_MOUSE && xmouse_seq == nullptr
+                                && xmouse_extended_seq != nullptr);
 #endif /* KEY_MOUSE */
 
         xmouse_get_event (event, extended);
@@ -2203,7 +2203,7 @@ learn_key (void)
             {
                 FD_ZERO (&Read_FD_Set);
                 FD_SET (input_fd, &Read_FD_Set);
-                select (input_fd + 1, &Read_FD_Set, NULL, NULL, &time_out);
+                select (input_fd + 1, &Read_FD_Set, nullptr, nullptr, &time_out);
             }
             else
                 break;

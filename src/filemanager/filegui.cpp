@@ -249,10 +249,10 @@ static struct
 } progress_buttons[] =
 {
     /* *INDENT-OFF* */
-    { NULL, FILE_SKIP, N_("&Skip"), NORMAL_BUTTON, -1 },
-    { NULL, FILE_SUSPEND, N_("S&uspend"), NORMAL_BUTTON, -1 },
-    { NULL, FILE_SUSPEND, N_("Con&tinue"), NORMAL_BUTTON, -1 },
-    { NULL, FILE_ABORT, N_("&Abort"), NORMAL_BUTTON, -1 }
+    { nullptr, FILE_SKIP, N_("&Skip"), NORMAL_BUTTON, -1 },
+    { nullptr, FILE_SUSPEND, N_("S&uspend"), NORMAL_BUTTON, -1 },
+    { nullptr, FILE_SUSPEND, N_("Con&tinue"), NORMAL_BUTTON, -1 },
+    { nullptr, FILE_ABORT, N_("&Abort"), NORMAL_BUTTON, -1 }
     /* *INDENT-ON* */
 };
 
@@ -317,7 +317,7 @@ filegui__check_attrs_on_fs (const char *fs_path)
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "ntfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "procfs") == 0
         || strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "smbfs") == 0
-        || strstr (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "fusefs") != NULL)
+        || strstr (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "fusefs") != nullptr)
         return FALSE;
 #elif defined(HAVE_STRUCT_STATVFS_F_BASETYPE)
     if (strcmp (stfs.STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME, "pcfs") == 0
@@ -411,11 +411,11 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
 
 #define ADD_LABEL(i) \
     group_add_widget_autopos (g, W(i), dlg_widgets[i].pos_flags, \
-                              g->current != NULL ? g->current->data : NULL)
+                              g->current != nullptr ? g->current->data : nullptr)
 
 #define NEW_BUTTON(i) \
     W(i) = WIDGET (button_new (dlg_widgets[i].y, dlg_widgets[i].x, \
-                               dlg_widgets[i].value, NORMAL_BUTTON, dlg_widgets[i].text, NULL))
+                               dlg_widgets[i].value, NORMAL_BUTTON, dlg_widgets[i].text, nullptr))
 
 #define ADD_BUTTON(i) \
     group_add_widget_autopos (g, W(i), dlg_widgets[i].pos_flags, g->current->data)
@@ -436,50 +436,50 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
     {
         /* *INDENT-OFF* */
         /*  0 - label */
-        { NULL, N_("New     :"), 2, 3, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, N_("New     :"), 2, 3, WPOS_KEEP_DEFAULT, 0 },
         /*  1 - label - name */
-        { NULL, NULL, 2, 14, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, nullptr, 2, 14, WPOS_KEEP_DEFAULT, 0 },
         /*  2 - label - size */
-        { NULL, NULL, 3, 3, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, nullptr, 3, 3, WPOS_KEEP_DEFAULT, 0 },
         /*  3 - label - date & time */
-        { NULL, NULL, 3, 43, WPOS_KEEP_TOP | WPOS_KEEP_RIGHT, 0 },
+        { nullptr, nullptr, 3, 43, WPOS_KEEP_TOP | WPOS_KEEP_RIGHT, 0 },
         /*  4 - label */
-        { NULL, N_("Existing:"), 4, 3, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, N_("Existing:"), 4, 3, WPOS_KEEP_DEFAULT, 0 },
         /*  5 - label - name */
-        { NULL, NULL, 4, 14, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, nullptr, 4, 14, WPOS_KEEP_DEFAULT, 0 },
         /*  6 - label - size */
-        { NULL, NULL, 5, 3, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, nullptr, 5, 3, WPOS_KEEP_DEFAULT, 0 },
         /*  7 - label - date & time */
-        { NULL, NULL, 5, 43, WPOS_KEEP_TOP | WPOS_KEEP_RIGHT, 0 },
+        { nullptr, nullptr, 5, 43, WPOS_KEEP_TOP | WPOS_KEEP_RIGHT, 0 },
         /* --------------------------------------------------- */
         /*  8 - label */
-        { NULL, N_("Overwrite this file?"), 7, 21, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, 0 },
+        { nullptr, N_("Overwrite this file?"), 7, 21, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, 0 },
         /*  9 - button */
-        { NULL, N_("&Yes"), 8, 14, WPOS_KEEP_DEFAULT, REPLACE_YES },
+        { nullptr, N_("&Yes"), 8, 14, WPOS_KEEP_DEFAULT, REPLACE_YES },
         /* 10 - button */
-        { NULL, N_("&No"), 8, 22, WPOS_KEEP_DEFAULT, REPLACE_NO },
+        { nullptr, N_("&No"), 8, 22, WPOS_KEEP_DEFAULT, REPLACE_NO },
         /* 11 - button */
-        { NULL, N_("A&ppend"), 8, 29, WPOS_KEEP_DEFAULT, REPLACE_APPEND },
+        { nullptr, N_("A&ppend"), 8, 29, WPOS_KEEP_DEFAULT, REPLACE_APPEND },
         /* 12 - button */
-        { NULL, N_("&Reget"), 8, 40, WPOS_KEEP_DEFAULT, REPLACE_REGET },
+        { nullptr, N_("&Reget"), 8, 40, WPOS_KEEP_DEFAULT, REPLACE_REGET },
         /* --------------------------------------------------- */
         /* 13 - label */
-        { NULL, N_("Overwrite all files?"), 10, 21, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, 0 },
+        { nullptr, N_("Overwrite all files?"), 10, 21, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, 0 },
         /* 14 - checkbox */
-        { NULL, N_("Don't overwrite with &zero length file"), 11, 3, WPOS_KEEP_DEFAULT, 0 },
+        { nullptr, N_("Don't overwrite with &zero length file"), 11, 3, WPOS_KEEP_DEFAULT, 0 },
         /* 15 - button */
-        { NULL, N_("A&ll"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_ALL },
+        { nullptr, N_("A&ll"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_ALL },
         /* 16 - button */
-        { NULL, N_("&Older"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_OLDER },
+        { nullptr, N_("&Older"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_OLDER },
         /* 17 - button */
-        { NULL, N_("Non&e"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_NONE },
+        { nullptr, N_("Non&e"), 12, 12, WPOS_KEEP_DEFAULT, REPLACE_NONE },
         /* 18 - button */
-        { NULL, N_("S&maller"), 12, 25, WPOS_KEEP_DEFAULT, REPLACE_SMALLER },
+        { nullptr, N_("S&maller"), 12, 25, WPOS_KEEP_DEFAULT, REPLACE_SMALLER },
         /* 19 - button */
-        { NULL, N_("&Size differs"), 12, 40, WPOS_KEEP_DEFAULT, REPLACE_SIZE },
+        { nullptr, N_("&Size differs"), 12, 40, WPOS_KEEP_DEFAULT, REPLACE_SIZE },
         /* --------------------------------------------------- */
         /* 20 - button */
-        { NULL, N_("&Abort"), 14, 27, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, REPLACE_ABORT }
+        { nullptr, N_("&Abort"), 14, 27, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, REPLACE_ABORT }
         /* *INDENT-ON* */
     };
 
@@ -510,7 +510,7 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
         const unsigned short num = G_N_ELEMENTS (dlg_widgets);
 
         for (i = 0; i < num; i++)
-            if (dlg_widgets[i].text != NULL)
+            if (dlg_widgets[i].text != nullptr)
                 dlg_widgets[i].text = _(dlg_widgets[i].text);
     }
 #endif /* ENABLE_NLS */
@@ -634,7 +634,7 @@ overwrite_query_dialog (file_op_context_t * ctx, enum OperationMode mode)
 
     /* TODO: write help (ticket #3970) */
     ui->replace_dlg =
-        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, alarm_colors, NULL, NULL,
+        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, alarm_colors, nullptr, nullptr,
                     "[Replace]", title);
     wd = WIDGET (ui->replace_dlg);
     g = GROUP (ui->replace_dlg);
@@ -749,7 +749,7 @@ check_progress_buttons (file_op_context_t * ctx)
     Gpm_Event event;
     file_op_context_ui_t *ui;
 
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return FILE_CONT;
 
     ui = static_cast<file_op_context_ui_t *> (ctx->ui);
@@ -804,7 +804,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
     int dlg_width = 58, dlg_height = 17;
     int y = 2, x = 3;
 
-    if (ctx == NULL || ctx->ui != NULL)
+    if (ctx == nullptr || ctx->ui != nullptr)
         return;
 
 #ifdef ENABLE_NLS
@@ -825,8 +825,8 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
     ui->replace_result = REPLACE_YES;
 
     ui->op_dlg =
-        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, dialog_colors, NULL,
-                    NULL, NULL, op_names[ctx->operation]);
+        dlg_create (TRUE, 0, 0, dlg_height, dlg_width, WPOS_CENTER, FALSE, dialog_colors, nullptr,
+                    nullptr, nullptr, op_names[ctx->operation]);
     w = WIDGET (ui->op_dlg);
     g = GROUP (ui->op_dlg);
 
@@ -850,7 +850,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
         ui->progress_file_gauge = gauge_new (y++, x + 3, dlg_width - (x + 3) * 2, FALSE, 100, 0);
         if (!classic_progressbar && (current_panel == right_panel))
             ui->progress_file_gauge->from_left_to_right = FALSE;
-        group_add_widget_autopos (g, ui->progress_file_gauge, WPOS_KEEP_TOP | WPOS_KEEP_HORZ, NULL);
+        group_add_widget_autopos (g, ui->progress_file_gauge, WPOS_KEEP_TOP | WPOS_KEEP_HORZ, nullptr);
 
         ui->progress_file_label = label_new (y++, x, "");
         group_add_widget (g, ui->progress_file_label);
@@ -867,7 +867,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
                 if (!classic_progressbar && (current_panel == right_panel))
                     ui->progress_total_gauge->from_left_to_right = FALSE;
                 group_add_widget_autopos (g, ui->progress_total_gauge,
-                                          WPOS_KEEP_TOP | WPOS_KEEP_HORZ, NULL);
+                                          WPOS_KEEP_TOP | WPOS_KEEP_HORZ, nullptr);
             }
 
             ui->total_files_processed_label = label_new (y++, x, "");
@@ -914,7 +914,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
 
     progress_buttons[3].w = WIDGET (button_new (y, 0, progress_buttons[3].action,
                                                 progress_buttons[3].flags, progress_buttons[3].text,
-                                                NULL));
+                                                nullptr));
     if (progress_buttons[3].len == -1)
         progress_buttons[3].len = button_get_len (BUTTON (progress_buttons[3].w));
 
@@ -943,7 +943,7 @@ file_op_context_create_ui (file_op_context_t * ctx, gboolean with_eta,
 void
 file_op_context_destroy_ui (file_op_context_t * ctx)
 {
-    if (ctx != NULL && ctx->ui != NULL)
+    if (ctx != nullptr && ctx->ui != nullptr)
     {
         file_op_context_ui_t *ui = (file_op_context_ui_t *) ctx->ui;
 
@@ -964,7 +964,7 @@ file_progress_show (file_op_context_t * ctx, off_t done, off_t total,
 {
     file_op_context_ui_t *ui;
 
-    if (!verbose || ctx == NULL || ctx->ui == NULL)
+    if (!verbose || ctx == nullptr || ctx->ui == nullptr)
         return;
 
     ui = static_cast<file_op_context_ui_t *> (ctx->ui);
@@ -1006,12 +1006,12 @@ file_progress_show (file_op_context_t * ctx, off_t done, off_t total,
 void
 file_progress_show_count (file_op_context_t * ctx, size_t done, size_t total)
 {
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return;
 
     file_op_context_ui_t *ui = static_cast<file_op_context_ui_t*>(ctx->ui);
 
-    if (ui->total_files_processed_label == NULL)
+    if (ui->total_files_processed_label == nullptr)
         return;
 
     if (ctx->progress_totals_computed)
@@ -1030,12 +1030,12 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
     char buffer2[BUF_TINY];
     char buffer3[BUF_TINY];
 
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return;
 
     file_op_context_ui_t *ui = static_cast<file_op_context_ui_t *> (ctx->ui);
 
-    if (ui->progress_total_gauge != NULL)
+    if (ui->progress_total_gauge != nullptr)
     {
         if (ctx->progress_bytes == 0)
             gauge_show (ui->progress_total_gauge, FALSE);
@@ -1050,12 +1050,12 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
     if (!show_summary && tctx->bps == 0)
         return;
 
-    if (ui->time_label != NULL)
+    if (ui->time_label != nullptr)
     {
         struct timeval tv_current;
         char buffer4[BUF_TINY];
 
-        gettimeofday (&tv_current, NULL);
+        gettimeofday (&tv_current, nullptr);
         file_frmt_time (buffer2, tv_current.tv_sec - tctx->transfer_start.tv_sec);
 
         if (ctx->progress_totals_computed)
@@ -1081,7 +1081,7 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
         }
     }
 
-    if (ui->total_bytes_label != NULL)
+    if (ui->total_bytes_label != nullptr)
     {
         size_trunc_len (buffer2, 5, tctx->copied_bytes, 0, panels_options.kilobyte_si);
 
@@ -1102,12 +1102,12 @@ file_progress_show_total (file_op_total_context_t * tctx, file_op_context_t * ct
 void
 file_progress_show_source (file_op_context_t * ctx, const vfs_path_t * vpath)
 {
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return;
 
     file_op_context_ui_t *ui = static_cast<file_op_context_ui_t *> (ctx->ui);
 
-    if (vpath != NULL)
+    if (vpath != nullptr)
     {
         char *s;
 
@@ -1128,12 +1128,12 @@ file_progress_show_source (file_op_context_t * ctx, const vfs_path_t * vpath)
 void
 file_progress_show_target (file_op_context_t * ctx, const vfs_path_t * vpath)
 {
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return;
 
     file_op_context_ui_t *ui = static_cast<file_op_context_ui_t *> (ctx->ui);
 
-    if (vpath != NULL)
+    if (vpath != nullptr)
     {
         label_set_text (ui->tgt_file_label, _("Target"));
         label_set_text (ui->tgt_file, truncFileStringSecure (ui->op_dlg, vfs_path_as_str (vpath)));
@@ -1156,7 +1156,7 @@ file_progress_show_deleting (file_op_context_t * ctx, const char *s, size_t * co
 
     gboolean ret;
 
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return FALSE;
 
     ret = mc_time_elapsed (&timestamp, delay);
@@ -1165,13 +1165,13 @@ file_progress_show_deleting (file_op_context_t * ctx, const char *s, size_t * co
     {
         file_op_context_ui_t *ui = static_cast<file_op_context_ui_t *> (ctx->ui);
 
-        if (ui->src_file_label != NULL)
+        if (ui->src_file_label != nullptr)
             label_set_text (ui->src_file_label, _("Deleting"));
 
         label_set_text (ui->src_file, truncFileStringSecure (ui->op_dlg, s));
     }
 
-    if (count != NULL)
+    if (count != nullptr)
         (*count)++;
 
     return ret;
@@ -1186,7 +1186,7 @@ file_progress_real_query_replace (file_op_context_t * ctx, enum OperationMode mo
 {
     FileProgressStatus replace_with_zero;
 
-    if (ctx == NULL || ctx->ui == NULL)
+    if (ctx == nullptr || ctx->ui == nullptr)
         return FILE_CONT;
 
     file_op_context_ui_t *ui = static_cast<file_op_context_ui_t*> (ctx->ui);
@@ -1269,8 +1269,8 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
     char *dest_dir, *tmp;
     char *def_text_secure;
 
-    if (ctx == NULL)
-        return NULL;
+    if (ctx == nullptr)
+        return nullptr;
 
     /* unselect checkbox if target filesystem doesn't support attributes */
     ctx->op_preserve = copymove_persistent_attr && filegui__check_attrs_on_fs (def_text);
@@ -1326,28 +1326,28 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
             /* *INDENT-OFF* */
             QUICK_LABELED_INPUT (fmd_buf, input_label_above,
                                  easy_patterns ? "*" : "^(.*)$", "input-def", &source_mask,
-                                 NULL, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
+                                 nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
             QUICK_START_COLUMNS,
                 QUICK_SEPARATOR (FALSE),
             QUICK_NEXT_COLUMN,
-                QUICK_CHECKBOX (N_("&Using shell patterns"), &source_easy_patterns, NULL),
+                QUICK_CHECKBOX (N_("&Using shell patterns"), &source_easy_patterns, nullptr),
             QUICK_STOP_COLUMNS,
             QUICK_LABELED_INPUT (N_("to:"), input_label_above,
-                                 def_text_secure, "input2", &dest_dir, NULL, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
+                                 def_text_secure, "input2", &dest_dir, nullptr, FALSE, FALSE, INPUT_COMPLETE_FILENAMES),
             QUICK_SEPARATOR (TRUE),
             QUICK_START_COLUMNS,
-                QUICK_CHECKBOX (N_("Follow &links"), &ctx->follow_links, NULL),
-                QUICK_CHECKBOX (N_("Preserve &attributes"), &ctx->op_preserve, NULL),
+                QUICK_CHECKBOX (N_("Follow &links"), &ctx->follow_links, nullptr),
+                QUICK_CHECKBOX (N_("Preserve &attributes"), &ctx->op_preserve, nullptr),
             QUICK_NEXT_COLUMN,
-                QUICK_CHECKBOX (N_("Di&ve into subdir if exists"), &ctx->dive_into_subdirs, NULL),
-                QUICK_CHECKBOX (N_("&Stable symlinks"), &ctx->stable_symlinks, NULL),
+                QUICK_CHECKBOX (N_("Di&ve into subdir if exists"), &ctx->dive_into_subdirs, nullptr),
+                QUICK_CHECKBOX (N_("&Stable symlinks"), &ctx->stable_symlinks, nullptr),
             QUICK_STOP_COLUMNS,
             QUICK_START_BUTTONS (TRUE, TRUE),
-                QUICK_BUTTON (N_("&OK"), B_ENTER, NULL, NULL),
+                QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),
 #ifdef ENABLE_BACKGROUND
-                QUICK_BUTTON (N_("&Background"), B_USER, NULL, NULL),
+                QUICK_BUTTON (N_("&Background"), B_USER, nullptr, nullptr),
 #endif /* ENABLE_BACKGROUND */
-                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, NULL, NULL),
+                QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr),
             QUICK_END
             /* *INDENT-ON* */
         };
@@ -1355,7 +1355,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         quick_dialog_t qdlg = {
             -1, -1, fmd_xlen,
             op_names[operation], "[Mask Copy/Rename]",
-            quick_widgets, NULL, NULL
+            quick_widgets, nullptr, nullptr
         };
 
       ask_file_mask:
@@ -1364,7 +1364,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         if (val == B_CANCEL)
         {
             g_free (def_text_secure);
-            return NULL;
+            return nullptr;
         }
 
         ctx->stat_func = ctx->follow_links ? mc_stat : mc_lstat;
@@ -1385,17 +1385,17 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
             ctx->umask_kill = i2 ^ 0777777;
         }
 
-        if ((dest_dir == NULL) || (*dest_dir == '\0'))
+        if ((dest_dir == nullptr) || (*dest_dir == '\0'))
         {
             g_free (def_text_secure);
             g_free (source_mask);
             g_free (dest_dir);
-            return NULL;
+            return nullptr;
         }
 
-        ctx->search_handle = mc_search_new (source_mask, NULL);
+        ctx->search_handle = mc_search_new (source_mask, nullptr);
 
-        if (ctx->search_handle == NULL)
+        if (ctx->search_handle == nullptr)
         {
             message (D_ERROR, MSG_ERROR, _("Invalid source pattern '%s'"), source_mask);
             g_free (dest_dir);
@@ -1418,7 +1418,7 @@ file_mask_dialog (file_op_context_t * ctx, FileOperation operation,
         vpath = vfs_path_from_str (dest_dir);
 
         ctx->dest_mask = strrchr (dest_dir, PATH_SEP);
-        if (ctx->dest_mask == NULL)
+        if (ctx->dest_mask == nullptr)
             ctx->dest_mask = dest_dir;
         else
             ctx->dest_mask++;

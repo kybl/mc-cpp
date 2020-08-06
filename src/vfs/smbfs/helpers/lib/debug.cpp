@@ -84,7 +84,7 @@
  *                  levels higher than DEBUGLEVEL will not be processed.
  */
 
-FILE *dbf = NULL;
+FILE *dbf = nullptr;
 pstring debugf = "";
 BOOL append_log = False;
 int DEBUGLEVEL = 1;
@@ -177,7 +177,7 @@ Debug1 (va_alist)
         (void) umask (oldumask);
         if (dbf)
         {
-            setbuf (dbf, NULL);
+            setbuf (dbf, nullptr);
         }
         else
         {

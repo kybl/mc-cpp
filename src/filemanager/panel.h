@@ -211,7 +211,7 @@ panel_empty_new (const char *panel_name)
  * Panel creation for specified directory.
  *
  * @param panel_name name of panel for setup retieving
- * @param vpath working panel directory. If NULL then current directory is used
+ * @param vpath working panel directory. If nullptr then current directory is used
  *
  * @return new instance of WPanel
  */
@@ -236,7 +236,7 @@ panel_with_dir_new (const char *panel_name, const vfs_path_t * vpath)
 static inline WPanel *
 panel_new (const char *panel_name)
 {
-    return panel_with_dir_new (panel_name, NULL);
+    return panel_with_dir_new (panel_name, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -255,7 +255,7 @@ panel_new (const char *panel_name)
 static inline WPanel *
 panel_sized_new (const char *panel_name, int y, int x, int lines, int cols)
 {
-    return panel_sized_with_dir_new (panel_name, y, x, lines, cols, NULL);
+    return panel_sized_with_dir_new (panel_name, y, x, lines, cols, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */

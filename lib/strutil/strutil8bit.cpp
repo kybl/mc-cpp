@@ -246,7 +246,7 @@ str_8bit_conv_gerror_message (GError * mcerror, const char *def_msg)
     conv = str_crt_conv_from ("UTF-8");
 
     if (conv == INVALID_CONV)
-        ret = g_strdup (def_msg != NULL ? def_msg : "");
+        ret = g_strdup (def_msg != nullptr ? def_msg : "");
     else
     {
         GString *buf;
@@ -257,7 +257,7 @@ str_8bit_conv_gerror_message (GError * mcerror, const char *def_msg)
             ret = g_string_free (buf, FALSE);
         else
         {
-            ret = g_strdup (def_msg != NULL ? def_msg : "");
+            ret = g_strdup (def_msg != nullptr ? def_msg : "");
             g_string_free (buf, TRUE);
         }
 
@@ -575,8 +575,8 @@ str_8bit_strdown (const char *str)
 {
     char *rets, *p;
 
-    if (str == NULL)
-        return NULL;
+    if (str == nullptr)
+        return nullptr;
 
     rets = g_strdup (str);
 
@@ -599,7 +599,7 @@ str_8bit_search_first (const char *text, const char *search, gboolean case_sen)
     fold_search = case_sen ? (char *) search : str_8bit_strdown (search);
 
     match = g_strstr_len (fold_text, -1, fold_search);
-    if (match != NULL)
+    if (match != nullptr)
     {
         size_t offset;
 
@@ -629,7 +629,7 @@ str_8bit_search_last (const char *text, const char *search, gboolean case_sen)
     fold_search = case_sen ? (char *) search : str_8bit_strdown (search);
 
     match = g_strrstr_len (fold_text, -1, fold_search);
-    if (match != NULL)
+    if (match != nullptr)
     {
         size_t offset;
 
@@ -670,15 +670,15 @@ str_8bit_casecmp (const char *s1, const char *s2)
     /* code from GLib */
 
 #ifdef HAVE_STRCASECMP
-    g_return_val_if_fail (s1 != NULL, 0);
-    g_return_val_if_fail (s2 != NULL, 0);
+    g_return_val_if_fail (s1 != nullptr, 0);
+    g_return_val_if_fail (s2 != nullptr, 0);
 
     return strcasecmp (s1, s2);
 #else
     gint c1, c2;
 
-    g_return_val_if_fail (s1 != NULL, 0);
-    g_return_val_if_fail (s2 != NULL, 0);
+    g_return_val_if_fail (s1 != nullptr, 0);
+    g_return_val_if_fail (s2 != nullptr, 0);
 
     while (*s1 != '\0' && *s2 != '\0')
     {
@@ -704,8 +704,8 @@ str_8bit_ncasecmp (const char *s1, const char *s2)
 {
     size_t n;
 
-    g_return_val_if_fail (s1 != NULL, 0);
-    g_return_val_if_fail (s2 != NULL, 0);
+    g_return_val_if_fail (s1 != nullptr, 0);
+    g_return_val_if_fail (s2 != nullptr, 0);
 
     n = MIN (strlen (s1), strlen (s2));
 

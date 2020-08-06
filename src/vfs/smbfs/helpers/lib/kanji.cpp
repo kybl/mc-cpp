@@ -105,13 +105,13 @@ static char hex_tag = HEXTAG;
 static char *
 sj_strtok (char *s1, const char *s2)
 {
-    static char *s = NULL;
+    static char *s = nullptr;
     char *q;
     if (!s1)
     {
         if (!s)
         {
-            return NULL;
+            return nullptr;
         }
         s1 = s;
     }
@@ -141,12 +141,12 @@ sj_strtok (char *s1, const char *s2)
             s1++;
         }
     }
-    s = NULL;
+    s = nullptr;
     if (*q)
     {
         return q;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -176,7 +176,7 @@ sj_strstr (const char *s1, const char *s2)
             s1++;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -200,7 +200,7 @@ sj_strchr (const char *s, int c)
             s++;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -310,13 +310,13 @@ simpch_is_multibyte_char_1 (char c)
 static char *
 generic_multibyte_strtok (char *s1, const char *s2)
 {
-    static char *s = NULL;
+    static char *s = nullptr;
     char *q;
     if (!s1)
     {
         if (!s)
         {
-            return NULL;
+            return nullptr;
         }
         s1 = s;
     }
@@ -342,12 +342,12 @@ generic_multibyte_strtok (char *s1, const char *s2)
             s1++;
         }
     }
-    s = NULL;
+    s = nullptr;
     if (*q)
     {
         return q;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -377,7 +377,7 @@ generic_multibyte_strstr (const char *s1, const char *s2)
             s1++;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -401,7 +401,7 @@ generic_multibyte_strchr (const char *s, int c)
             s++;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -1135,7 +1135,7 @@ cap_to_sj (char *from, BOOL overwrite)
          * we only do the reverse (that's why the strchr is used rather than
          * isxdigit. Based on fix from ado@elsie.nci.nih.gov (Arthur David Olson).
          */
-        if (*sp == hex_tag && (strchr ("89abcdefABCDEF", sp[1]) != NULL) && isxdigit ((int) sp[2]))
+        if (*sp == hex_tag && (strchr ("89abcdefABCDEF", sp[1]) != nullptr) && isxdigit ((int) sp[2]))
         {
             *dp++ = (hex2bin (sp[1]) << 4) | (hex2bin (sp[2]));
             sp += 3;

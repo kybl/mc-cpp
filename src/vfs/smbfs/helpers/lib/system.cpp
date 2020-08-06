@@ -123,7 +123,7 @@ sys_select (int maxfd, fd_set * fds, struct timeval *tval)
         }
     }
 
-    timeout = (tval != NULL) ? (tval->tv_sec * 1000) + (tval->tv_usec / 1000) : -1;
+    timeout = (tval != nullptr) ? (tval->tv_sec * 1000) + (tval->tv_usec / 1000) : -1;
     errno = 0;
     do
     {
@@ -148,7 +148,7 @@ sys_select (int maxfd, fd_set * fds, struct timeval *tval)
         if (tval)
             memcpy ((void *) &t2, (void *) tval, sizeof (t2));
         errno = 0;
-        selrtn = select (maxfd, SELECT_CAST fds, NULL, NULL, tval ? &t2 : NULL);
+        selrtn = select (maxfd, SELECT_CAST fds, nullptr, nullptr, tval ? &t2 : nullptr);
     }
     while (selrtn < 0 && errno == EINTR);
 
@@ -287,7 +287,7 @@ sys_gethostbyname (const char *name)
 
     gethostname (hostname, sizeof (hostname) - 1);
     hostname[sizeof (hostname) - 1] = 0;
-    if ((domain = strchr (hostname, '.')) == NULL)
+    if ((domain = strchr (hostname, '.')) == nullptr)
         return (gethostbyname (name));
 
     /* Attach domain name to query and do modified query.

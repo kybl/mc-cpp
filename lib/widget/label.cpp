@@ -70,7 +70,7 @@ label_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
             gboolean disabled;
             align_crt_t align;
 
-            if (l->text == NULL)
+            if (l->text == nullptr)
                 return MSG_HANDLED;
 
             disabled = widget_get_state (w, WST_DISABLED);
@@ -94,7 +94,7 @@ label_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 
 
                 q = strchr (p, '\n');
-                if (q != NULL)
+                if (q != nullptr)
                 {
                     c = q[0];
                     q[0] = '\0';
@@ -103,7 +103,7 @@ label_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
                 widget_gotoyx (w, y, 0);
                 tty_print_string (str_fit_to_term (p, w->cols, align));
 
-                if (q == NULL)
+                if (q == nullptr)
                     break;
 
                 q[0] = c;
@@ -134,12 +134,12 @@ label_new (int y, int x, const char *text)
     int cols = 1;
     int lines = 1;
 
-    if (text != NULL)
+    if (text != nullptr)
         str_msg_term_size (text, &lines, &cols);
 
     l = g_new (WLabel, 1);
     w = WIDGET (l);
-    widget_init (w, y, x, lines, cols, label_callback, NULL);
+    widget_init (w, y, x, lines, cols, label_callback, nullptr);
 
     l->text = g_strdup (text);
     l->auto_adjust_cols = TRUE;
@@ -157,13 +157,13 @@ label_set_text (WLabel * label, const char *text)
     int newcols = w->cols;
     int newlines;
 
-    if (label->text != NULL && text != NULL && strcmp (label->text, text) == 0)
+    if (label->text != nullptr && text != nullptr && strcmp (label->text, text) == 0)
         return;                 /* Flickering is not nice */
 
     g_free (label->text);
 
-    if (text == NULL)
-        label->text = NULL;
+    if (text == nullptr)
+        label->text = nullptr;
     else
     {
         label->text = g_strdup (text);

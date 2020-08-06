@@ -73,7 +73,7 @@ int mcview_max_dirt_limit = 10;
 gboolean mcview_mouse_move_pages = TRUE;
 
 /* end of file will be showen from mcview_show_eof */
-char *mcview_show_eof = NULL;
+char *mcview_show_eof = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -240,18 +240,18 @@ mcview_viewer (const char *command, const vfs_path_t * file_vpath, int start_lin
     WGroup *g;
 
     /* Create dialog and widgets, put them on the dialog */
-    view_dlg = dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, NULL, mcview_dialog_callback,
-                           NULL, "[Internal File Viewer]", NULL);
+    view_dlg = dlg_create (FALSE, 0, 0, 1, 1, WPOS_FULLSCREEN, FALSE, nullptr, mcview_dialog_callback,
+                           nullptr, "[Internal File Viewer]", nullptr);
     vw = WIDGET (view_dlg);
     widget_want_tab (vw, TRUE);
 
     g = GROUP (view_dlg);
 
     lc_mcview = mcview_new (vw->y, vw->x, vw->lines - 1, vw->cols, FALSE);
-    group_add_widget_autopos (g, lc_mcview, WPOS_KEEP_ALL, NULL);
+    group_add_widget_autopos (g, lc_mcview, WPOS_KEEP_ALL, nullptr);
 
     b = WIDGET (buttonbar_new (TRUE));
-    group_add_widget_autopos (g, b, b->pos_flags, NULL);
+    group_add_widget_autopos (g, b, b->pos_flags, nullptr);
 
     view_dlg->get_title = mcview_get_title;
 
@@ -279,14 +279,14 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
              off_t search_start, off_t search_end)
 {
     gboolean retval = FALSE;
-    vfs_path_t *vpath = NULL;
+    vfs_path_t *vpath = nullptr;
 
     g_assert (view->bytes_per_line != 0);
 
     view->filename_vpath = vfs_path_from_str (file);
 
     /* get working dir */
-    if (file != NULL && file[0] != '\0')
+    if (file != nullptr && file[0] != '\0')
     {
         vfs_path_free (view->workdir_vpath);
 
@@ -295,7 +295,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
             vfs_path_t *p;
 
             p = vfs_path_clone (vfs_get_raw_current_dir ());
-            view->workdir_vpath = vfs_path_append_new (p, file, (char *) NULL);
+            view->workdir_vpath = vfs_path_append_new (p, file, (char *) nullptr);
             vfs_path_free (p);
         }
         else
@@ -318,9 +318,9 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
     mcview_set_codeset (view);
 #endif
 
-    if (command != NULL && (view->mode_flags.magic || file == NULL || file[0] == '\0'))
+    if (command != nullptr && (view->mode_flags.magic || file == nullptr || file[0] == '\0'))
         retval = mcview_load_command_output (view, command);
-    else if (file != NULL && file[0] != '\0')
+    else if (file != nullptr && file[0] != '\0')
     {
         int fd;
         char tmp[BUF_MEDIUM];
@@ -336,9 +336,9 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
             mcview_close_datasource (view);
             mcview_show_error (view, tmp);
             vfs_path_free (view->filename_vpath);
-            view->filename_vpath = NULL;
+            view->filename_vpath = nullptr;
             vfs_path_free (view->workdir_vpath);
-            view->workdir_vpath = NULL;
+            view->workdir_vpath = nullptr;
             goto finish;
         }
 
@@ -351,9 +351,9 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
             mcview_close_datasource (view);
             mcview_show_error (view, tmp);
             vfs_path_free (view->filename_vpath);
-            view->filename_vpath = NULL;
+            view->filename_vpath = nullptr;
             vfs_path_free (view->workdir_vpath);
-            view->workdir_vpath = NULL;
+            view->workdir_vpath = nullptr;
             goto finish;
         }
 
@@ -363,9 +363,9 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
             mcview_close_datasource (view);
             mcview_show_error (view, _("Cannot view: not a regular file"));
             vfs_path_free (view->filename_vpath);
-            view->filename_vpath = NULL;
+            view->filename_vpath = nullptr;
             vfs_path_free (view->workdir_vpath);
-            view->workdir_vpath = NULL;
+            view->workdir_vpath = nullptr;
             goto finish;
         }
 
@@ -388,7 +388,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
                     vfs_path_t *vpath1;
                     int fd1;
 
-                    tmp_filename = g_strconcat (file, decompress_extension (type), (char *) NULL);
+                    tmp_filename = g_strconcat (file, decompress_extension (type), (char *) nullptr);
                     vpath1 = vfs_path_from_str (tmp_filename);
                     g_free (tmp_filename);
                     fd1 = mc_open (vpath1, O_RDONLY | O_NONBLOCK);
@@ -427,7 +427,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
     mcview_compute_areas (view);
     mcview_update_bytes_per_line (view);
 
-    if (mcview_remember_file_position && view->filename_vpath != NULL && start_line == 0)
+    if (mcview_remember_file_position && view->filename_vpath != nullptr && start_line == 0)
     {
         long line, col;
         off_t new_offset, max_offset;
@@ -456,7 +456,7 @@ mcview_load (WView * view, const char *command, const char *file, int start_line
     view->search_end = search_end;
     view->hexedit_lownibble = FALSE;
     view->hexview_in_text = FALSE;
-    view->change_list = NULL;
+    view->change_list = nullptr;
     vfs_path_free (vpath);
     return retval;
 }

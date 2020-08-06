@@ -42,13 +42,13 @@
  *
  * @str pointer to string to scan.
  *
- * @return pointer to the matching suffix, or NULL if not found.
+ * @return pointer to the matching suffix, or nullptr if not found.
  *         Upon return, @str points to terminating NUL.
  */
 static const char *
 match_suffix (const char **str)
 {
-    const char *match = NULL;
+    const char *match = nullptr;
     gboolean read_alpha = FALSE;
 
     while (**str != '\0')
@@ -57,16 +57,16 @@ match_suffix (const char **str)
         {
             read_alpha = FALSE;
             if (!g_ascii_isalpha (**str) && **str != '~')
-                match = NULL;
+                match = nullptr;
         }
         else if (**str == '.')
         {
             read_alpha = TRUE;
-            if (match == NULL)
+            if (match == nullptr)
                 match = *str;
         }
         else if (!g_ascii_isalnum (**str) && **str != '~')
-            match = NULL;
+            match = nullptr;
         (*str)++;
     }
 
@@ -213,11 +213,11 @@ filevercmp (const char *s1, const char *s2)
     s2_pos = s2;
     s1_suffix = match_suffix (&s1_pos);
     s2_suffix = match_suffix (&s2_pos);
-    s1_len = (s1_suffix != NULL ? s1_suffix : s1_pos) - s1;
-    s2_len = (s2_suffix != NULL ? s2_suffix : s2_pos) - s2;
+    s1_len = (s1_suffix != nullptr ? s1_suffix : s1_pos) - s1;
+    s2_len = (s2_suffix != nullptr ? s2_suffix : s2_pos) - s2;
 
     /* restore file suffixes if strings are identical after "cut" */
-    if ((s1_suffix != NULL || s2_suffix != NULL) && (s1_len == s2_len)
+    if ((s1_suffix != nullptr || s2_suffix != nullptr) && (s1_len == s2_len)
         && strncmp (s1, s2, s1_len) == 0)
     {
         s1_len = s1_pos - s1;

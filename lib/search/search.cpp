@@ -54,7 +54,7 @@ static const mc_search_type_str_t mc_search__list_types[] = {
     {N_("Re&gular expression"), MC_SEARCH_T_REGEX},
     {N_("He&xadecimal"), MC_SEARCH_T_HEX},
     {N_("Wil&dcard search"), MC_SEARCH_T_GLOB},
-    {NULL, MC_SEARCH_T_INVALID}
+    {nullptr, MC_SEARCH_T_INVALID}
 };
 
 /*** file scope functions ************************************************************************/
@@ -118,7 +118,7 @@ mc_search__cond_struct_free (mc_search_cond_t * mc_search_cond)
 static void
 mc_search__conditions_free (GPtrArray * array)
 {
-    g_ptr_array_foreach (array, (GFunc) mc_search__cond_struct_free, NULL);
+    g_ptr_array_foreach (array, (GFunc) mc_search__cond_struct_free, nullptr);
     g_ptr_array_free (array, TRUE);
 }
 
@@ -128,7 +128,7 @@ mc_search__conditions_free (GPtrArray * array)
 /* Init search descriptor.
  *
  * @param original pattern to search
- * @param original_charset charset of #original. If NULL then cp_display will be used
+ * @param original_charset charset of #original. If nullptr then cp_display will be used
  *
  * @return new mc_search_t object. Use #mc_search_free() to free it.
  */
@@ -136,8 +136,8 @@ mc_search__conditions_free (GPtrArray * array)
 mc_search_t *
 mc_search_new (const gchar * original, const gchar * original_charset)
 {
-    if (original == NULL)
-        return NULL;
+    if (original == nullptr)
+        return nullptr;
 
     return mc_search_new_len (original, strlen (original), original_charset);
 }
@@ -146,8 +146,8 @@ mc_search_new (const gchar * original, const gchar * original_charset)
 /* Init search descriptor.
  *
  * @param original pattern to search
- * @param original_len length of #original or -1 if #original is NULL-terminated
- * @param original_charset charset of #original. If NULL then cp_display will be used
+ * @param original_len length of #original or -1 if #original is nullptr-terminated
+ * @param original_charset charset of #original. If nullptr then cp_display will be used
  *
  * @return new mc_search_t object. Use #mc_search_free() to free it.
  */
@@ -157,15 +157,15 @@ mc_search_new_len (const gchar * original, gsize original_len, const gchar * ori
 {
     mc_search_t *lc_mc_search;
 
-    if (original == NULL || original_len == 0)
-        return NULL;
+    if (original == nullptr || original_len == 0)
+        return nullptr;
 
     lc_mc_search = g_new0 (mc_search_t, 1);
     lc_mc_search->original = g_strndup (original, original_len);
     lc_mc_search->original_len = original_len;
 #ifdef HAVE_CHARSET
     lc_mc_search->original_charset =
-        g_strdup (original_charset != NULL
+        g_strdup (original_charset != nullptr
                   && *original_charset != '\0' ? original_charset : cp_display);
 #else
     (void) original_charset;
@@ -179,7 +179,7 @@ mc_search_new_len (const gchar * original, gsize original_len, const gchar * ori
 void
 mc_search_free (mc_search_t * lc_mc_search)
 {
-    if (lc_mc_search == NULL)
+    if (lc_mc_search == nullptr)
         return;
 
     g_free (lc_mc_search->original);
@@ -188,17 +188,17 @@ mc_search_free (mc_search_t * lc_mc_search)
 #endif
     g_free (lc_mc_search->error_str);
 
-    if (lc_mc_search->conditions != NULL)
+    if (lc_mc_search->conditions != nullptr)
         mc_search__conditions_free (lc_mc_search->conditions);
 
 #ifdef SEARCH_TYPE_GLIB
-    if (lc_mc_search->regex_match_info != NULL)
+    if (lc_mc_search->regex_match_info != nullptr)
         g_match_info_free (lc_mc_search->regex_match_info);
 #else /* SEARCH_TYPE_GLIB */
     g_free (lc_mc_search->regex_match_info);
 #endif /* SEARCH_TYPE_GLIB */
 
-    if (lc_mc_search->regex_buffer != NULL)
+    if (lc_mc_search->regex_buffer != nullptr)
         g_string_free (lc_mc_search->regex_buffer, TRUE);
 
     g_free (lc_mc_search);
@@ -282,7 +282,7 @@ mc_search_run (mc_search_t * lc_mc_search, const void *user_data,
 {
     gboolean ret = FALSE;
 
-    if (lc_mc_search == NULL || user_data == NULL)
+    if (lc_mc_search == nullptr || user_data == nullptr)
         return FALSE;
     if (!mc_search_is_type_avail (lc_mc_search->search_type))
     {
@@ -290,16 +290,16 @@ mc_search_run (mc_search_t * lc_mc_search, const void *user_data,
         return FALSE;
     }
 #ifdef SEARCH_TYPE_GLIB
-    if (lc_mc_search->regex_match_info != NULL)
+    if (lc_mc_search->regex_match_info != nullptr)
     {
         g_match_info_free (lc_mc_search->regex_match_info);
-        lc_mc_search->regex_match_info = NULL;
+        lc_mc_search->regex_match_info = nullptr;
     }
 #endif /* SEARCH_TYPE_GLIB */
 
-    mc_search_set_error (lc_mc_search, MC_SEARCH_E_OK, NULL);
+    mc_search_set_error (lc_mc_search, MC_SEARCH_E_OK, nullptr);
 
-    if ((lc_mc_search->conditions == NULL) && !mc_search_prepare (lc_mc_search))
+    if ((lc_mc_search->conditions == nullptr) && !mc_search_prepare (lc_mc_search))
         return FALSE;
 
     switch (lc_mc_search->search_type)
@@ -345,8 +345,8 @@ mc_search_is_type_avail (mc_search_type_t search_type)
 const mc_search_type_str_t *
 mc_search_types_list_get (size_t * num)
 {
-    /* don't count last NULL item */
-    if (num != NULL)
+    /* don't count last nullptr item */
+    if (num != nullptr)
         *num = G_N_ELEMENTS (mc_search__list_types) - 1;
 
     return mc_search__list_types;
@@ -359,10 +359,10 @@ mc_search_prepare_replace_str (mc_search_t * lc_mc_search, GString * replace_str
 {
     GString *ret;
 
-    if (replace_str == NULL || replace_str->len == 0)
+    if (replace_str == nullptr || replace_str->len == 0)
         return g_string_new ("");
 
-    if (lc_mc_search == NULL)
+    if (lc_mc_search == nullptr)
         return g_string_new_len (replace_str->str, replace_str->len);
 
     switch (lc_mc_search->search_type)
@@ -397,7 +397,7 @@ mc_search_prepare_replace_str2 (mc_search_t * lc_mc_search, const char *replace_
     replace_str2 = g_string_new (replace_str);
     ret = mc_search_prepare_replace_str (lc_mc_search, replace_str2);
     g_string_free (replace_str2, TRUE);
-    return (ret != NULL) ? g_string_free (ret, FALSE) : NULL;
+    return (ret != nullptr) ? g_string_free (ret, FALSE) : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -405,7 +405,7 @@ mc_search_prepare_replace_str2 (mc_search_t * lc_mc_search, const char *replace_
 gboolean
 mc_search_is_fixed_search_str (mc_search_t * lc_mc_search)
 {
-    if (lc_mc_search == NULL)
+    if (lc_mc_search == nullptr)
         return FALSE;
     switch (lc_mc_search->search_type)
     {
@@ -421,7 +421,7 @@ mc_search_is_fixed_search_str (mc_search_t * lc_mc_search)
 /* Search specified pattern in specified string.
  *
  * @param pattern string to search
- * @param pattern_charset charset of #pattern. If NULL then cp_display will be used
+ * @param pattern_charset charset of #pattern. If nullptr then cp_display will be used
  * @param str string where search #pattern
  * @param search type (normal, regex, hex or glob)
  *
@@ -435,11 +435,11 @@ mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * s
     gboolean ret;
     mc_search_t *search;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     search = mc_search_new (pattern, pattern_charset);
-    if (search == NULL)
+    if (search == nullptr)
         return FALSE;
 
     search->search_type = type;
@@ -448,7 +448,7 @@ mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * s
     if (type == MC_SEARCH_T_GLOB)
         search->is_entire_line = TRUE;
 
-    ret = mc_search_run (search, str, 0, strlen (str), NULL);
+    ret = mc_search_run (search, str, 0, strlen (str), nullptr);
     mc_search_free (search);
     return ret;
 }
@@ -458,7 +458,7 @@ mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * s
 int
 mc_search_getstart_result_by_num (mc_search_t * lc_mc_search, int lc_index)
 {
-    if (lc_mc_search == NULL)
+    if (lc_mc_search == nullptr)
         return 0;
     if (lc_mc_search->search_type == MC_SEARCH_T_NORMAL)
         return 0;
@@ -480,7 +480,7 @@ mc_search_getstart_result_by_num (mc_search_t * lc_mc_search, int lc_index)
 int
 mc_search_getend_result_by_num (mc_search_t * lc_mc_search, int lc_index)
 {
-    if (lc_mc_search == NULL)
+    if (lc_mc_search == nullptr)
         return 0;
     if (lc_mc_search->search_type == MC_SEARCH_T_NORMAL)
         return 0;
@@ -503,7 +503,7 @@ mc_search_getend_result_by_num (mc_search_t * lc_mc_search, int lc_index)
  *
  * @param mc_search mc_search_t object
  * @param code error code, one of mc_search_error_t values
- * @param format format of error message. If NULL, the old error string is free'd and become NULL
+ * @param format format of error message. If nullptr, the old error string is free'd and become nullptr
  */
 
 void
@@ -513,7 +513,7 @@ mc_search_set_error (mc_search_t * lc_mc_search, mc_search_error_t code, const g
 
     MC_PTR_FREE (lc_mc_search->error_str);
 
-    if (format != NULL)
+    if (format != nullptr)
     {
         va_list args;
 

@@ -59,7 +59,7 @@ typedef struct
  *
  * @param vpath   path to directory
  * @param mcerror pointer to the error handler
- * @return directory data handler if success, NULL otherwise
+ * @return directory data handler if success, nullptr otherwise
  */
 
 void *
@@ -71,12 +71,12 @@ sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror)
     const vfs_path_element_t *path_element;
     LIBSSH2_SFTP_HANDLE *handle;
 
-    mc_return_val_if_error (mcerror, NULL);
+    mc_return_val_if_error (mcerror, nullptr);
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
-    if (vfs_s_get_path (vpath, &super, 0) == NULL)
-        return NULL;
+    if (vfs_s_get_path (vpath, &super, 0) == nullptr)
+        return nullptr;
 
     sftpfs_super = SFTP_SUPER (super);
 
@@ -91,12 +91,12 @@ sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror)
         handle =
             libssh2_sftp_open_ex (sftpfs_super->sftp_session, fixfname, fixfname_len, 0, 0,
                                   LIBSSH2_SFTP_OPENDIR);
-        if (handle != NULL)
+        if (handle != nullptr)
             break;
 
         libssh_errno = libssh2_session_last_errno (sftpfs_super->session);
         if (!sftpfs_waitsocket (sftpfs_super, libssh_errno, mcerror))
-            return NULL;
+            return nullptr;
     }
 
     sftpfs_dir = g_new0 (sftpfs_dir_data_t, 1);
@@ -112,7 +112,7 @@ sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror)
  *
  * @param data    directory data handler
  * @param mcerror pointer to the error handler
- * @return information about direntry if success, NULL otherwise
+ * @return information about direntry if success, nullptr otherwise
  */
 
 void *
@@ -124,7 +124,7 @@ sftpfs_readdir (void *data, GError ** mcerror)
     static union vfs_dirent sftpfs_dirent;
     int rc;
 
-    mc_return_val_if_error (mcerror, NULL);
+    mc_return_val_if_error (mcerror, nullptr);
 
     do
     {
@@ -133,12 +133,12 @@ sftpfs_readdir (void *data, GError ** mcerror)
             break;
 
         if (!sftpfs_waitsocket (sftpfs_dir->super, rc, mcerror))
-            return NULL;
+            return nullptr;
     }
     while (rc == LIBSSH2_ERROR_EAGAIN);
 
     if (rc == 0)
-        return NULL;
+        return nullptr;
 
     g_strlcpy (sftpfs_dirent.dent.d_name, mem, BUF_MEDIUM);
     return &sftpfs_dirent;
@@ -188,14 +188,14 @@ sftpfs_mkdir (const vfs_path_t * vpath, mode_t mode, GError ** mcerror)
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
-    if (vfs_s_get_path (vpath, &super, 0) == NULL)
+    if (vfs_s_get_path (vpath, &super, 0) == nullptr)
         return -1;
 
-    if (super == NULL)
+    if (super == nullptr)
         return -1;
 
     sftpfs_super = SFTP_SUPER (super);
-    if (sftpfs_super->sftp_session == NULL)
+    if (sftpfs_super->sftp_session == nullptr)
         return -1;
 
     do
@@ -238,14 +238,14 @@ sftpfs_rmdir (const vfs_path_t * vpath, GError ** mcerror)
 
     path_element = vfs_path_get_by_index (vpath, -1);
 
-    if (vfs_s_get_path (vpath, &super, 0) == NULL)
+    if (vfs_s_get_path (vpath, &super, 0) == nullptr)
         return -1;
 
-    if (super == NULL)
+    if (super == nullptr)
         return -1;
 
     sftpfs_super = SFTP_SUPER (super);
-    if (sftpfs_super->sftp_session == NULL)
+    if (sftpfs_super->sftp_session == nullptr)
         return -1;
 
     do

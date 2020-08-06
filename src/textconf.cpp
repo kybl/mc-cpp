@@ -75,7 +75,7 @@ static const char *const vfs_supported[] = {
 #ifdef ENABLE_VFS_SMB
     "smbfs",
 #endif /* ENABLE_VFS_SMB */
-    NULL
+    nullptr
 };
 #endif /* ENABLE_VFS */
 
@@ -123,7 +123,7 @@ static const char *const features[] = {
     N_("With ext2fs attributes support"),
 #endif
 
-    NULL
+    nullptr
 };
 
 /*** file scope functions ************************************************************************/
@@ -161,12 +161,12 @@ show_version (void)
 #error "Cannot compile mc without S-Lang or ncurses"
 #endif /* !HAVE_SLANG && !USE_NCURSES */
 
-    for (i = 0; features[i] != NULL; i++)
+    for (i = 0; features[i] != nullptr; i++)
         puts (_(features[i]));
 
 #ifdef ENABLE_VFS
     puts (_("Virtual File Systems:"));
-    for (i = 0; vfs_supported[i] != NULL; i++)
+    for (i = 0; vfs_supported[i] != nullptr; i++)
         printf ("%s %s", i == 0 ? "" : ",", _(vfs_supported[i]));
     (void) puts ("");
 #endif /* ENABLE_VFS */

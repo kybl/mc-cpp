@@ -236,10 +236,10 @@ static int
 mc_fhl_get_color_regexp (mc_fhl_filter_t * mc_filter, mc_fhl_t * fhl, file_entry_t * fe)
 {
     (void) fhl;
-    if (mc_filter->search_condition == NULL)
+    if (mc_filter->search_condition == nullptr)
         return -1;
 
-    if (mc_search_run (mc_filter->search_condition, fe->fname, 0, strlen (fe->fname), NULL))
+    if (mc_search_run (mc_filter->search_condition, fe->fname, 0, strlen (fe->fname), nullptr))
         return mc_filter->color_pair_index;
 
     return -1;
@@ -257,7 +257,7 @@ mc_fhl_get_color (mc_fhl_t * fhl, file_entry_t * fe)
     guint i;
     int ret;
 
-    if (fhl == NULL)
+    if (fhl == nullptr)
         return NORMAL_COLOR;
 
     for (i = 0; i < fhl->filters->len; i++)

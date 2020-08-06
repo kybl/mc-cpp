@@ -13,7 +13,7 @@
 /* number of bttons in buttonbar */
 #define BUTTONBAR_LABELS_NUM 10
 
-#define buttonbar_clear_label(bb, idx, recv) buttonbar_set_label (bb, idx, "", NULL, recv)
+#define buttonbar_clear_label(bb, idx, recv) buttonbar_set_label (bb, idx, "", nullptr, recv)
 
 /*** enums ***************************************************************************************/
 

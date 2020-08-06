@@ -188,7 +188,7 @@ smbfs_set_debugf (const char *filename)
         {
             setup_logging ("", True);   /* No needs for timestamp for each message */
             dbf = outfile;
-            setbuf (dbf, NULL);
+            setbuf (dbf, nullptr);
             pstrcpy (debugf, filename);
         }
     }
@@ -271,7 +271,7 @@ smbfs_auth_add (const char *host, const char *share, const char *domain,
 
     auth = vfs_smb_authinfo_new (host, share, domain, user, pass);
 
-    if (auth != NULL)
+    if (auth != nullptr)
         auth_list = g_slist_prepend (auth_list, auth);
 }
 
@@ -298,7 +298,7 @@ smbfs_auth_remove (const char *host, const char *share)
 
 /* --------------------------------------------------------------------------------------------- */
 /* Set authentication information in bucket. Return 1 if successful, else 0 */
-/* Information in auth_list overrides user if pass is NULL. */
+/* Information in auth_list overrides user if pass is nullptr. */
 /* bucket->host and bucket->service must be valid. */
 
 static int
@@ -385,7 +385,7 @@ smbfs_init (struct vfs_class *me)
 
     DEBUG (3, ("smbfs_init(%s)\n", me->name));
 
-    if (!get_myname (myhostname, NULL))
+    if (!get_myname (myhostname, nullptr))
         DEBUG (0, ("Failed to get my hostname.\n"));
 
     if (!lp_load (servicesf, True, False, False))
@@ -441,7 +441,7 @@ smbfs_fill_names (struct vfs_class *me, fill_names_f func)
             path = g_strconcat (URL_HEADER,
                                 smbfs_connections[i].user, "@",
                                 smbfs_connections[i].host,
-                                "/", smbfs_connections[i].service, (char *) NULL);
+                                "/", smbfs_connections[i].service, (char *) nullptr);
             (*func) (path);
             g_free (path);
         }
@@ -492,7 +492,7 @@ smbfs_close (void *data)
     /* FIXME: Why too different cli have the same outbuf
      * if file is copied to share
      */
-    if (info->cli->outbuf == NULL)
+    if (info->cli->outbuf == nullptr)
     {
         my_errno = EINVAL;
         return -1;
@@ -649,7 +649,7 @@ smbfs_convert_path (const char *remote_file, gboolean trailing_asterik)
     if (p)
         my_remote = p;          /* strip off share/service name */
     /* create remote filename as understood by smb clientgen */
-    result = g_strconcat (my_remote, trailing_asterik ? "/*" : "", (char *) NULL);
+    result = g_strconcat (my_remote, trailing_asterik ? "/*" : "", (char *) nullptr);
     unix_to_dos (result, /* inplace = */ 1);    /* code page conversion */
     str_replace (result, '/', '\\');
     return result;
@@ -739,7 +739,7 @@ smbfs_chkpath (struct cli_state *cli, const char *path, BOOL send_only)
 
     fstrcpy (path2, path);
     unix_to_dos (path2, 1);
-    trim_string (path2, NULL, "\\");
+    trim_string (path2, nullptr, "\\");
     if (!*path2)
         *path2 = '\\';
 
@@ -779,7 +779,7 @@ smbfs_chkpath (struct cli_state *cli, const char *path, BOOL send_only)
         DEBUG (3, ("smbfs_chkpath: receive error\n"));
         return False;
     }
-    if ((my_errno = cli_error (cli, NULL, NULL, NULL)))
+    if ((my_errno = cli_error (cli, nullptr, nullptr, nullptr)))
     {
         if (my_errno == 20 || my_errno == 13)
             return True;        /* ignore if 'not a directory' error */
@@ -799,7 +799,7 @@ smbfs_fs (const char *text)
     const char *p = text;
     int count = 0;
 
-    while ((p = strchr (p, '/')) != NULL)
+    while ((p = strchr (p, '/')) != nullptr)
     {
         count++;
         p++;
@@ -844,7 +844,7 @@ smbfs_loaddir (opendir_info * smbfs_info)
             /* browse for servers */
             if (!cli_NetServerEnum
                 (smbfs_info->conn->cli, smbfs_info->conn->domain,
-                 SV_TYPE_ALL, smbfs_srv_browsing_helper, NULL))
+                 SV_TYPE_ALL, smbfs_srv_browsing_helper, nullptr))
                 return 0;
             else
                 current_server_info = smbfs_info;
@@ -853,7 +853,7 @@ smbfs_loaddir (opendir_info * smbfs_info)
         else
         {
             /* browse for shares */
-            if (cli_RNetShareEnum (smbfs_info->conn->cli, smbfs_browsing_helper, NULL) < 1)
+            if (cli_RNetShareEnum (smbfs_info->conn->cli, smbfs_browsing_helper, nullptr) < 1)
                 return 0;
             else
                 current_share_info = smbfs_info;
@@ -876,10 +876,10 @@ smbfs_loaddir (opendir_info * smbfs_info)
     DEBUG (6, ("smbfs_loaddir: cli->share: %s\n", smbfs_info->conn->cli->share));
     DEBUG (6, ("smbfs_loaddir: calling cli_list with mask %s\n", my_dirname));
     /* do file listing: cli_list returns number of files */
-    if (cli_list (smbfs_info->conn->cli, my_dirname, attribute, smbfs_loaddir_helper, NULL) < 0)
+    if (cli_list (smbfs_info->conn->cli, my_dirname, attribute, smbfs_loaddir_helper, nullptr) < 0)
     {
         /* cli_list returns -1 if directory empty or cannot read socket */
-        my_errno = cli_error (smbfs_info->conn->cli, NULL, &err, NULL);
+        my_errno = cli_error (smbfs_info->conn->cli, nullptr, &err, nullptr);
         g_free (my_dirname);
         return 0;
     }
@@ -926,7 +926,7 @@ smbfs_readdir (void *info)
 
     if (!smbfs_info->entries)
         if (!smbfs_loaddir (smbfs_info))
-            return NULL;
+            return nullptr;
 
     if (smbfs_info->current == 0)
     {                           /* reached end of dir entries */
@@ -935,7 +935,7 @@ smbfs_readdir (void *info)
         smbfs_free_dir (smbfs_info->entries);
         smbfs_info->entries = 0;
 #endif
-        return NULL;
+        return nullptr;
     }
     g_strlcpy (dirent_dest, smbfs_info->current->text, MC_MAXPATHLEN);
     smbfs_info->current = smbfs_info->current->next;
@@ -1059,7 +1059,7 @@ smbfs_do_connect (const char *server, char *share)
         server = share + 2;
         share = strchr (server, '\\');
         if (!share)
-            return NULL;
+            return nullptr;
         *share = 0;
         share++;
     }
@@ -1073,10 +1073,10 @@ smbfs_do_connect (const char *server, char *share)
         ip = (current_bucket->have_ip) ? current_bucket->dest_ip : ipzero;
 
         /* have to open a new connection */
-        if (!(c = cli_initialise (NULL)))
+        if (!(c = cli_initialise (nullptr)))
         {
             my_errno = ENOMEM;
-            return NULL;
+            return nullptr;
         }
 
         pwd_init (&(c->pwd));   /* should be moved into cli_initialise()? */
@@ -1090,7 +1090,7 @@ smbfs_do_connect (const char *server, char *share)
 
         if (!cli_session_request (c, &calling, &called))
         {
-            my_errno = cli_error (c, NULL, &err, NULL);
+            my_errno = cli_error (c, nullptr, &err, nullptr);
             DEBUG (1, ("session request to %s failed\n", called.name));
             cli_shutdown (c);
             if (strcmp (called.name, "*SMBSERVER"))
@@ -1098,7 +1098,7 @@ smbfs_do_connect (const char *server, char *share)
                 make_nmb_name (&called, "*SMBSERVER", 0x20);
                 continue;
             }
-            return NULL;
+            return nullptr;
         }
 
         DEBUG (3, (" session request ok\n"));
@@ -1138,9 +1138,9 @@ smbfs_do_connect (const char *server, char *share)
         return c;
     }
 
-    my_errno = cli_error (c, NULL, &err, NULL);
+    my_errno = cli_error (c, nullptr, &err, nullptr);
     cli_shutdown (c);
-    return NULL;
+    return nullptr;
 
 }
 
@@ -1162,7 +1162,7 @@ smbfs_get_master_browser (char **host)
     ip_list = iface_bcast (ipzero);
     bcast_addr = *ip_list;
     if ((ip_list = name_query (fd, "\01\02__MSBROWSE__\02", 1, True,
-                               True, bcast_addr, &count, NULL)))
+                               True, bcast_addr, &count, nullptr)))
     {
         if (!count)
             return 0;
@@ -1229,7 +1229,7 @@ smbfs_open_link (char *host, char *path, const char *user, int *port, char *this
     int i;
     smbfs_connection *bucket;
     pstring service;
-    struct in_addr *dest_ip = NULL;
+    struct in_addr *dest_ip = nullptr;
 
     DEBUG (3, ("smbfs_open_link(host:%s, path:%s)\n", host, path));
 
@@ -1273,7 +1273,7 @@ smbfs_open_link (char *host, char *path, const char *user, int *port, char *this
             }
             DEBUG (6, ("smbfs_open_link: returning smbfs_connection[%d]\n", i));
             current_bucket = &smbfs_connections[i];
-            smbfs_connections[i].last_use = time (NULL);
+            smbfs_connections[i].last_use = time (nullptr);
             return &smbfs_connections[i];
         }
         /* connection not found, find if we have ip for new connection */
@@ -1336,7 +1336,7 @@ smbfs_open_link (char *host, char *path, const char *user, int *port, char *this
 static char *
 smbfs_get_path (smbfs_connection ** sc, const vfs_path_t * vpath)
 {
-    char *remote_path = NULL;
+    char *remote_path = nullptr;
     vfs_path_element_t *url;
     const vfs_path_element_t *path_element;
     const char *path;
@@ -1347,26 +1347,26 @@ smbfs_get_path (smbfs_connection ** sc, const vfs_path_t * vpath)
     DEBUG (3, ("smbfs_get_path(%s)\n", path));
 
     if (path_element->clazz != vfs_smbfs_ops)
-        return NULL;
+        return nullptr;
 
     while (*path == '/')        /* '/' leading server name */
         path++;                 /* probably came from server browsing */
 
     url = vfs_url_split (path, SMB_PORT, URL_FLAGS_NONE);
 
-    if (url != NULL)
+    if (url != nullptr)
     {
         *sc = smbfs_open_link (url->host, url->path, url->user, &url->port, url->password);
         wipe_password (url->password);
 
-        if (*sc != NULL)
+        if (*sc != nullptr)
             remote_path = g_strdup (url->path);
 
         vfs_path_element_free (url);
     }
 
-    if (remote_path == NULL)
-        return NULL;
+    if (remote_path == nullptr)
+        return nullptr;
 
     /* NOTE: tildes are deprecated. See ftpfs.c */
     {
@@ -1376,7 +1376,7 @@ smbfs_get_path (smbfs_connection ** sc, const vfs_path_t * vpath)
         {
             char *s;
 
-            s = mc_build_filename ((*sc)->home, remote_path + 3 - f, (char *) NULL);
+            s = mc_build_filename ((*sc)->home, remote_path + 3 - f, (char *) nullptr);
             g_free (remote_path);
             remote_path = s;
         }
@@ -1413,7 +1413,7 @@ smbfs_opendir (const vfs_path_t * vpath)
     DEBUG (3, ("smbfs_opendir(dirname:%s)\n", path_element->path));
 
     if (!(remote_dir = smbfs_get_path (&sc, vpath)))
-        return NULL;
+        return nullptr;
 
     /* FIXME: where freed? */
     smbfs_info = g_new (opendir_info, 1);
@@ -1486,7 +1486,7 @@ smbfs_fake_share_stat (const char *server_url, const char *path, struct stat *bu
         p = smbfs_get_path (&sc, vpath);
         vfs_path_free (vpath);
 
-        if (p != NULL)
+        if (p != nullptr)
         {
             memset (buf, 0, sizeof (*buf));
             /*      show this as dir        */
@@ -1739,7 +1739,7 @@ smbfs_stat (const vfs_path_t * vpath, struct stat *buf)
 
     if (!current_info)
     {
-        DEBUG (1, ("current_info = NULL: "));
+        DEBUG (1, ("current_info = nullptr: "));
         if (smbfs_loaddir_by_name (vpath) < 0)
             return -1;
     }
@@ -1855,9 +1855,9 @@ smbfs_lseek (void *data, off_t offset, int whence)
         break;
     case SEEK_END:
         if (!cli_qfileinfo (info->cli, info->fnum,
-                            NULL, &size, NULL, NULL, NULL,
-                            NULL, NULL) &&
-            !cli_getattrE (info->cli, info->fnum, NULL, &size, NULL, NULL, NULL))
+                            nullptr, &size, nullptr, nullptr, nullptr,
+                            nullptr, nullptr) &&
+            !cli_getattrE (info->cli, info->fnum, nullptr, &size, nullptr, nullptr, nullptr))
         {
             errno = EINVAL;
             return -1;
@@ -1905,7 +1905,7 @@ smbfs_mkdir (const vfs_path_t * vpath, mode_t mode)
 
     if (!cli_mkdir (sc->cli, cpath))
     {
-        my_errno = cli_error (sc->cli, NULL, &err, NULL);
+        my_errno = cli_error (sc->cli, nullptr, &err, nullptr);
         message (D_ERROR, MSG_ERROR, _("Error %s creating directory %s"),
                  cli_errstr (sc->cli), CNV_LANG (cpath));
         g_free (cpath);
@@ -1934,7 +1934,7 @@ smbfs_rmdir (const vfs_path_t * vpath)
 
     if (!cli_rmdir (sc->cli, cpath))
     {
-        my_errno = cli_error (sc->cli, NULL, &err, NULL);
+        my_errno = cli_error (sc->cli, nullptr, &err, nullptr);
         message (D_ERROR, MSG_ERROR, _("Error %s removing directory %s"),
                  cli_errstr (sc->cli), CNV_LANG (cpath));
         g_free (cpath);
@@ -1993,7 +1993,7 @@ smbfs_forget (const vfs_path_t * vpath)
         path++;                 /* probably came from server browsing */
 
     p = vfs_url_split (path, SMB_PORT, URL_FLAGS_NONE);
-    if (p != NULL)
+    if (p != nullptr)
     {
         size_t i;
 
@@ -2068,31 +2068,31 @@ smbfs_open_readwrite (smbfs_handle * remote_handle, char *rname, int flags, mode
         message (D_ERROR, MSG_ERROR, _("%s opening remote file %s"),
                  cli_errstr (remote_handle->cli), CNV_LANG (rname));
         DEBUG (1, ("smbfs_open(rname:%s) error:%s\n", rname, cli_errstr (remote_handle->cli)));
-        my_errno = cli_error (remote_handle->cli, NULL, &err, NULL);
-        return NULL;
+        my_errno = cli_error (remote_handle->cli, nullptr, &err, nullptr);
+        return nullptr;
     }
 
     if (flags & O_CREAT)
         return remote_handle;
 
     if (!cli_qfileinfo (remote_handle->cli, remote_handle->fnum,
-                        &remote_handle->attr, &size, NULL, NULL, NULL, NULL,
-                        NULL)
+                        &remote_handle->attr, &size, nullptr, nullptr, nullptr, nullptr,
+                        nullptr)
         && !cli_getattrE (remote_handle->cli, remote_handle->fnum,
-                          &remote_handle->attr, &size, NULL, NULL, NULL))
+                          &remote_handle->attr, &size, nullptr, nullptr, nullptr))
     {
         message (D_ERROR, MSG_ERROR, "getattrib: %s", cli_errstr (remote_handle->cli));
         DEBUG (1, ("smbfs_open(rname:%s) getattrib:%s\n", rname, cli_errstr (remote_handle->cli)));
-        my_errno = cli_error (remote_handle->cli, NULL, &err, NULL);
+        my_errno = cli_error (remote_handle->cli, nullptr, &err, nullptr);
         cli_close (remote_handle->cli, remote_handle->fnum);
-        return NULL;
+        return nullptr;
     }
 
     if ((flags == (O_WRONLY | O_APPEND))        /* file.c:copy_file_file() -> do_append */
         && smbfs_lseek (remote_handle, 0, SEEK_END) == -1)
     {
         cli_close (remote_handle->cli, remote_handle->fnum);
-        return NULL;
+        return nullptr;
     }
 
     return remote_handle;
@@ -2231,7 +2231,7 @@ vfs_smb_authinfo_new (const char *host, const char *share, const char *domain,
 
     auth = g_try_new (struct smb_authinfo, 1);
 
-    if (auth != NULL)
+    if (auth != nullptr)
     {
         auth->host = g_strdup (host);
         auth->share = g_strdup (share);

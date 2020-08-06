@@ -83,7 +83,7 @@ static struct panelize
     char *command;
     char *label;
     struct panelize *next;
-} *panelize = NULL;
+} *panelize = nullptr;
 
 /* --------------------------------------------------------------------------------------------- */
 /*** file scope functions ************************************************************************/
@@ -94,10 +94,10 @@ update_command (void)
 {
     if (l_panelize->pos != last_listitem)
     {
-        struct panelize *data = NULL;
+        struct panelize *data = nullptr;
 
         last_listitem = l_panelize->pos;
-        listbox_get_current (l_panelize, NULL, (void **) &data);
+        listbox_get_current (l_panelize, nullptr, (void **) &data);
         input_assign_text (pname, data->command);
         pname->point = 0;
         input_update (pname, TRUE);
@@ -112,7 +112,7 @@ panelize_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
     switch (msg)
     {
     case MSG_INIT:
-        group_default_callback (w, NULL, MSG_INIT, 0, NULL);
+        group_default_callback (w, nullptr, MSG_INIT, 0, nullptr);
         MC_FALLTHROUGH;
 
     case MSG_NOTIFY:           /* MSG_NOTIFY is fired by the listbox to tell us the item has changed. */
@@ -173,15 +173,15 @@ init_panelize (void)
 
     panelize_dlg =
         dlg_create (TRUE, 0, 0, 20, panelize_cols, WPOS_CENTER, FALSE, dialog_colors,
-                    panelize_callback, NULL, "[External panelize]", _("External panelize"));
+                    panelize_callback, nullptr, "[External panelize]", _("External panelize"));
     g = GROUP (panelize_dlg);
 
     /* add listbox to the dialogs */
     y = UY;
     group_add_widget (g, groupbox_new (y++, UX, 12, panelize_cols - UX * 2, ""));
 
-    l_panelize = listbox_new (y, UX + 1, 10, panelize_cols - UX * 2 - 2, FALSE, NULL);
-    for (current = panelize; current != NULL; current = current->next)
+    l_panelize = listbox_new (y, UX + 1, 10, panelize_cols - UX * 2 - 2, FALSE, nullptr);
+    for (current = panelize; current != nullptr; current = current->next)
         listbox_add_item (l_panelize, LISTBOX_APPEND_AT_END, 0, current->label, current, FALSE);
     listbox_select_entry (l_panelize, listbox_search_text (l_panelize, _("Other command")));
     group_add_widget (g, l_panelize);
@@ -203,7 +203,7 @@ init_panelize (void)
         WButton *b;
 
         b = button_new (y, x,
-                        panelize_but[i].ret_cmd, panelize_but[i].flags, panelize_but[i].text, NULL);
+                        panelize_but[i].ret_cmd, panelize_but[i].flags, panelize_but[i].text, nullptr);
         group_add_widget (g, b);
 
         x += button_get_len (b) + 1;
@@ -227,16 +227,16 @@ static void
 add2panelize (char *label, char *command)
 {
     struct panelize *current;
-    struct panelize *old = NULL;
+    struct panelize *old = nullptr;
 
     current = panelize;
-    while (current != NULL && strcmp (current->label, label) <= 0)
+    while (current != nullptr && strcmp (current->label, label) <= 0)
     {
         old = current;
         current = current->next;
     }
 
-    if (old == NULL)
+    if (old == nullptr)
     {
         panelize = g_new (struct panelize, 1);
         panelize->label = label;
@@ -265,7 +265,7 @@ add2panelize_cmd (void)
         label = input_dialog (_("Add to external panelize"),
                               _("Enter command label:"), MC_HISTORY_FM_PANELIZE_ADD, "",
                               INPUT_COMPLETE_NONE);
-        if (label == NULL || *label == '\0')
+        if (label == nullptr || *label == '\0')
             g_free (label);
         else
             add2panelize (label, g_strdup (pname->buffer));
@@ -285,10 +285,10 @@ remove_from_panelize (struct panelize *entry)
         {
             struct panelize *current = panelize;
 
-            while (current != NULL && current->next != entry)
+            while (current != nullptr && current->next != entry)
                 current = current->next;
 
-            if (current != NULL)
+            if (current != nullptr)
                 current->next = entry->next;
         }
 
@@ -308,7 +308,7 @@ do_external_panelize (char *command)
 
     open_error_pipe ();
     external = popen (command, "r");
-    if (external == NULL)
+    if (external == nullptr)
     {
         close_error_pipe (D_ERROR, _("Cannot invoke command."));
         return;
@@ -329,7 +329,7 @@ do_external_panelize (char *command)
         struct stat st;
 
         clearerr (external);
-        if (fgets (line, sizeof (line), external) == NULL)
+        if (fgets (line, sizeof (line), external) == nullptr)
         {
             if (ferror (external) != 0 && errno == EINTR)
                 continue;
@@ -363,8 +363,8 @@ do_external_panelize (char *command)
 
     if (pclose (external) < 0)
         message (D_NORMAL, _("External panelize"), _("Pipe close failed"));
-    close_error_pipe (D_NORMAL, NULL);
-    try_to_select (current_panel, NULL);
+    close_error_pipe (D_NORMAL, nullptr);
+    try_to_select (current_panel, nullptr);
     panel_re_sort (current_panel);
     rotate_dash (FALSE);
 }
@@ -379,7 +379,7 @@ do_panelize_cd (WPanel * panel)
     gboolean panelized_same;
 
     dir_list_clean (&panel->dir);
-    if (panelized_panel.root_vpath == NULL)
+    if (panelized_panel.root_vpath == nullptr)
         panelize_change_root (current_panel->cwd_vpath);
 
     if (panelized_panel.list.len < 1)
@@ -407,7 +407,7 @@ do_panelize_cd (WPanel * panel)
 
             tmp_vpath =
                 vfs_path_append_new (panelized_panel.root_vpath, panelized_panel.list.list[i].fname,
-                                     (char *) NULL);
+                                     (char *) nullptr);
             fname = vfs_path_as_str (tmp_vpath);
             list->list[i].fnamelen = strlen (fname);
             list->list[i].fname = g_strndup (fname, list->list[i].fnamelen);
@@ -425,7 +425,7 @@ do_panelize_cd (WPanel * panel)
     panel->is_panelized = TRUE;
     panelize_absolutize_if_needed (panel);
 
-    try_to_select (panel, NULL);
+    try_to_select (panel, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -555,7 +555,7 @@ external_panelize (void)
         {
             struct panelize *entry;
 
-            listbox_get_current (l_panelize, NULL, (void **) &entry);
+            listbox_get_current (l_panelize, nullptr, (void **) &entry);
             remove_from_panelize (entry);
             break;
         }
@@ -588,11 +588,11 @@ load_panelize (void)
 {
     char **keys;
 
-    keys = mc_config_get_keys (mc_global.main_config, panelize_section, NULL);
+    keys = mc_config_get_keys (mc_global.main_config, panelize_section, nullptr);
 
     add2panelize (g_strdup (_("Other command")), g_strdup (""));
 
-    if (*keys == NULL)
+    if (*keys == nullptr)
     {
         add2panelize (g_strdup (_("Modified git files")), g_strdup ("git ls-files --modified"));
         add2panelize (g_strdup (_("Find rejects after patching")),
@@ -610,7 +610,7 @@ load_panelize (void)
 
         conv = str_crt_conv_from ("UTF-8");
 
-        for (profile_keys = keys; *profile_keys != NULL; profile_keys++)
+        for (profile_keys = keys; *profile_keys != nullptr; profile_keys++)
         {
             GString *buffer;
 
@@ -643,7 +643,7 @@ save_panelize (void)
 
     mc_config_del_group (mc_global.main_config, panelize_section);
 
-    for (current = panelize; current != NULL; current = current->next)
+    for (current = panelize; current != nullptr; current = current->next)
         if (strcmp (current->label, _("Other command")) != 0)
             mc_config_set_string (mc_global.main_config,
                                   panelize_section, current->label, current->command);
@@ -656,7 +656,7 @@ done_panelize (void)
 {
     struct panelize *current, *next;
 
-    for (current = panelize; current != NULL; current = next)
+    for (current = panelize; current != nullptr; current = next)
     {
         next = current->next;
         g_free (current->label);

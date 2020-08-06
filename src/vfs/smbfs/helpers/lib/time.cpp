@@ -58,7 +58,7 @@ void
 GetTimeOfDay (struct timeval *tval)
 {
 #ifdef HAVE_GETTIMEOFDAY_TZ
-    gettimeofday (tval, NULL);
+    gettimeofday (tval, nullptr);
 #else
     gettimeofday (tval);
 #endif
@@ -109,7 +109,7 @@ init the time differences
 void
 TimeInit (void)
 {
-    serverzone = TimeZone (time (NULL));
+    serverzone = TimeZone (time (nullptr));
 
     if ((serverzone % 60) != 0)
     {
@@ -135,13 +135,13 @@ TimeZoneFaster (time_t t)
     {
         time_t start, end;
         int zone;
-    } *dst_table = NULL;
+    } *dst_table = nullptr;
     static int table_size = 0;
     int i;
     int zone = 0;
 
     if (t == 0)
-        t = time (NULL);
+        t = time (nullptr);
 
     /* Tunis has a 8 day DST region, we need to be careful ... */
 #define MAX_DST_WIDTH (365*24*60*60)
@@ -553,7 +553,7 @@ char *
 timestring (void)
 {
     static fstring TimeBuf;
-    time_t t = time (NULL);
+    time_t t = time (nullptr);
     struct tm *tm = LocalTime (&t);
 
     if (!tm)

@@ -68,7 +68,7 @@ mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
         "STALE_LINK",
         "DEVICE", "DEVICE_BLOCK", "DEVICE_CHAR",
         "SPECIAL", "SPECIAL_SOCKET", "SPECIAL_FIFO", "SPECIAL_DOOR",
-        NULL
+        nullptr
     };
     int i;
     gchar *param_type = mc_config_get_string (fhl->config, group_name, "type", "");
@@ -79,13 +79,13 @@ mc_fhl_parse_get_file_type_id (mc_fhl_t * fhl, const gchar * group_name)
         return FALSE;
     }
 
-    for (i = 0; types[i] != NULL; i++)
+    for (i = 0; types[i] != nullptr; i++)
     {
         if (strcmp (types[i], param_type) == 0)
             break;
     }
     g_free (param_type);
-    if (types[i] == NULL)
+    if (types[i] == nullptr)
         return FALSE;
 
     mc_filter = g_new0 (mc_fhl_filter_t, 1);
@@ -132,8 +132,8 @@ mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
     gchar **exts, **exts_orig;
     GString *buf;
 
-    exts_orig = mc_config_get_string_list (fhl->config, group_name, "extensions", NULL);
-    if (exts_orig == NULL || exts_orig[0] == NULL)
+    exts_orig = mc_config_get_string_list (fhl->config, group_name, "extensions", nullptr);
+    if (exts_orig == nullptr || exts_orig[0] == nullptr)
     {
         g_strfreev (exts_orig);
         return FALSE;
@@ -141,7 +141,7 @@ mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
 
     buf = g_string_sized_new (64);
 
-    for (exts = exts_orig; *exts != NULL; exts++)
+    for (exts = exts_orig; *exts != nullptr; exts++)
     {
         char *esc_ext;
 
@@ -176,14 +176,14 @@ mc_fhl_parse_get_extensions (mc_fhl_t * fhl, const gchar * group_name)
 gboolean
 mc_fhl_read_ini_file (mc_fhl_t * fhl, const gchar * filename)
 {
-    if (fhl == NULL || filename == NULL || !exist_file (filename))
+    if (fhl == nullptr || filename == nullptr || !exist_file (filename))
         return FALSE;
 
-    if (fhl->config != NULL)
+    if (fhl->config != nullptr)
         return mc_config_read_file (fhl->config, filename, TRUE, FALSE);
 
     fhl->config = mc_config_init (filename, TRUE);
-    return (fhl->config != NULL);
+    return (fhl->config != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -202,14 +202,14 @@ mc_fhl_init_from_standard_files (mc_fhl_t * fhl)
         return TRUE;
 
     /* ${sysconfdir}/mc/filehighlight.ini  */
-    name = g_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) NULL);
+    name = g_build_filename (mc_global.sysconfig_dir, MC_FHL_INI_FILE, (char *) nullptr);
     ok = mc_fhl_read_ini_file (fhl, name);
     g_free (name);
     if (ok)
         return TRUE;
 
     /* ${datadir}/mc/filehighlight.ini  */
-    name = g_build_filename (mc_global.share_data_dir, MC_FHL_INI_FILE, (char *) NULL);
+    name = g_build_filename (mc_global.share_data_dir, MC_FHL_INI_FILE, (char *) nullptr);
     ok = mc_fhl_read_ini_file (fhl, name);
     g_free (name);
     return ok;
@@ -226,10 +226,10 @@ mc_fhl_parse_ini_file (mc_fhl_t * fhl)
     mc_fhl_array_free (fhl);
     fhl->filters = g_ptr_array_new ();
 
-    orig_group_names = mc_config_get_groups (fhl->config, NULL);
-    ok = (*orig_group_names != NULL);
+    orig_group_names = mc_config_get_groups (fhl->config, nullptr);
+    ok = (*orig_group_names != nullptr);
 
-    for (group_names = orig_group_names; *group_names != NULL; group_names++)
+    for (group_names = orig_group_names; *group_names != nullptr; group_names++)
     {
         if (mc_config_has_param (fhl->config, *group_names, "type"))
         {

@@ -139,7 +139,7 @@ mcview_get_ptr_file (WView * view, off_t byte_index)
     mcview_file_load_data (view, byte_index);
     if (mcview_already_loaded (view->ds_file_offset, byte_index, view->ds_file_datalen))
         return (char *) (view->ds_file_data + (byte_index - view->ds_file_offset));
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -149,7 +149,7 @@ mcview_get_ptr_file (WView * view, off_t byte_index)
 gboolean
 mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
 {
-    gchar *str = NULL;
+    gchar *str = nullptr;
     int res;
     gchar utf8buf[UTF8_CHAR_LEN + 1];
 
@@ -172,7 +172,7 @@ mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
 
     *ch = 0;
 
-    if (str == NULL)
+    if (str == nullptr)
         return FALSE;
 
     res = g_utf8_get_char_validated (str, -1);
@@ -205,7 +205,7 @@ mcview_get_utf (WView * view, off_t byte_index, int *ch, int *ch_len)
     }
     else
     {
-        gchar *next_ch = NULL;
+        gchar *next_ch = nullptr;
 
         *ch = res;
         /* Calculate UTF-8 char length */
@@ -225,7 +225,7 @@ mcview_get_ptr_string (WView * view, off_t byte_index)
 
     if (byte_index >= 0 && byte_index < (off_t) view->ds_string_len)
         return (char *) (view->ds_string_data + byte_index);
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -235,14 +235,14 @@ mcview_get_byte_string (WView * view, off_t byte_index, int *retval)
 {
     char *p;
 
-    if (retval != NULL)
+    if (retval != nullptr)
         *retval = -1;
 
     p = mcview_get_ptr_string (view, byte_index);
-    if (p == NULL)
+    if (p == nullptr)
         return FALSE;
 
-    if (retval != NULL)
+    if (retval != nullptr)
         *retval = (unsigned char) (*p);
     return TRUE;
 }
@@ -257,7 +257,7 @@ mcview_get_byte_none (WView * view, off_t byte_index, int *retval)
 
     g_assert (view->datasource == DS_NONE);
 
-    if (retval != NULL)
+    if (retval != nullptr)
         *retval = -1;
     return FALSE;
 }
@@ -335,7 +335,7 @@ mcview_close_datasource (WView * view)
     case DS_NONE:
         break;
     case DS_STDIO_PIPE:
-        if (view->ds_stdio_pipe != NULL)
+        if (view->ds_stdio_pipe != nullptr)
         {
             mcview_growbuf_done (view);
             mcview_display (view);
@@ -380,12 +380,12 @@ gboolean
 mcview_load_command_output (WView * view, const char *command)
 {
     mc_pipe_t *p;
-    GError *error = NULL;
+    GError *error = nullptr;
 
     mcview_close_datasource (view);
 
     p = mc_popen (command, &error);
-    if (p == NULL)
+    if (p == nullptr)
     {
         mcview_display (view);
         mcview_show_error (view, error->message);
@@ -395,7 +395,7 @@ mcview_load_command_output (WView * view, const char *command)
 
     /* Check if filter produced any output */
     mcview_set_datasource_stdio_pipe (view, p);
-    if (!mcview_get_byte (view, 0, NULL))
+    if (!mcview_get_byte (view, 0, nullptr))
     {
         mcview_close_datasource (view);
         mcview_display (view);

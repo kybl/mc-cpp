@@ -70,7 +70,7 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
     char *word_label;
     unsigned int i;
     int res;
-    char *curr = NULL;
+    char *curr = nullptr;
     WDialog *sug_dlg;
     WGroup *g;
     WListbox *sug_list;
@@ -111,7 +111,7 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
     sug_dlg_w = MAX (sug_dlg_w, word_label_len) + 1;
 
     sug_dlg = dlg_create (TRUE, ypos, xpos, sug_dlg_h, sug_dlg_w, WPOS_KEEP_DEFAULT, TRUE,
-                          dialog_colors, NULL, NULL, "[ASpell]", _("Check word"));
+                          dialog_colors, nullptr, nullptr, "[ASpell]", _("Check word"));
     g = GROUP (sug_dlg);
 
     group_add_widget (g, label_new (1, 2, lang_label));
@@ -119,10 +119,10 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
 
     group_add_widget (g, groupbox_new (4, 2, sug_dlg_h - 5, 25, _("Suggest")));
 
-    sug_list = listbox_new (5, 2, sug_dlg_h - 7, 24, FALSE, NULL);
+    sug_list = listbox_new (5, 2, sug_dlg_h - 7, 24, FALSE, nullptr);
     for (i = 0; i < suggest->len; i++)
         listbox_add_item (sug_list, LISTBOX_APPEND_AT_END, 0, g_array_index (suggest, char *, i),
-                          NULL, FALSE);
+                          nullptr, FALSE);
     group_add_widget (g, sug_list);
 
     group_add_widget (g, add_btn);
@@ -133,10 +133,10 @@ spell_dialog_spell_suggest_show (WEdit * edit, const char *word, char **new_word
     res = dlg_run (sug_dlg);
     if (res == B_ENTER)
     {
-        char *tmp = NULL;
-        listbox_get_current (sug_list, &curr, NULL);
+        char *tmp = nullptr;
+        listbox_get_current (sug_list, &curr, nullptr);
 
-        if (curr != NULL)
+        if (curr != nullptr)
             tmp = g_strdup (curr);
         *new_word = tmp;
     }
@@ -162,7 +162,7 @@ spell_dialog_lang_list_show (GArray * languages)
 
     int lang_dlg_h = 12;        /* dialog height */
     int lang_dlg_w = 30;        /* dialog width */
-    char *selected_lang = NULL;
+    char *selected_lang = nullptr;
     unsigned int i;
     int res;
     Listbox *lang_list;
@@ -172,7 +172,7 @@ spell_dialog_lang_list_show (GArray * languages)
                                                 _("Select language"), "[ASpell]");
 
     for (i = 0; i < languages->len; i++)
-        LISTBOX_APPEND_TEXT (lang_list, 0, g_array_index (languages, char *, i), NULL, FALSE);
+        LISTBOX_APPEND_TEXT (lang_list, 0, g_array_index (languages, char *, i), nullptr, FALSE);
 
     res = run_listbox (lang_list);
     if (res >= 0)

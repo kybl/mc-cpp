@@ -70,7 +70,7 @@ groupbox_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
             tty_setcolor (disabled ? DISABLED_COLOR : colors[DLG_COLOR_NORMAL]);
             tty_draw_box (w->y, w->x, w->lines, w->cols, TRUE);
 
-            if (g->title != NULL)
+            if (g->title != nullptr)
             {
                 tty_setcolor (disabled ? DISABLED_COLOR : colors[DLG_COLOR_TITLE]);
                 widget_gotoyx (w, 0, 1);
@@ -100,9 +100,9 @@ groupbox_new (int y, int x, int height, int width, const char *title)
 
     g = g_new (WGroupbox, 1);
     w = WIDGET (g);
-    widget_init (w, y, x, height, width, groupbox_callback, NULL);
+    widget_init (w, y, x, height, width, groupbox_callback, nullptr);
 
-    g->title = NULL;
+    g->title = nullptr;
     groupbox_set_title (g, title);
 
     return g;
@@ -116,12 +116,12 @@ groupbox_set_title (WGroupbox * g, const char *title)
     MC_PTR_FREE (g->title);
 
     /* Strip existing spaces, add one space before and after the title */
-    if (title != NULL && *title != '\0')
+    if (title != nullptr && *title != '\0')
     {
         char *t;
 
         t = g_strstrip (g_strdup (title));
-        g->title = g_strconcat (" ", t, " ", (char *) NULL);
+        g->title = g_strconcat (" ", t, " ", (char *) nullptr);
         g_free (t);
     }
 

@@ -172,7 +172,7 @@ Byte offset   Type     name                description
 -------------+-------+-------------------+--------------
 0             FDATE   vol_fdateCreation
 2             FTIME   vol_ftimeCreation
-4             UCHAR   vol_cch             length of volume name (excluding NULL)
+4             UCHAR   vol_cch             length of volume name (excluding nullptr)
 5             UCHAR   vol_szVolLabel[12]  volume name
 } FSINFO;
 *************************************************************/

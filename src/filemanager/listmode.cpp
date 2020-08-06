@@ -111,16 +111,16 @@ static char *
 select_new_item (void)
 {
     char **possible_items;
-    char *ret = NULL;
+    char *ret = nullptr;
     int i;
     Listbox *mylistbox;
 
-    possible_items = panel_get_user_possible_fields (NULL);
+    possible_items = panel_get_user_possible_fields (nullptr);
 
     mylistbox = create_listbox_window (20, 12, "Add listing format item", listmode_section);
     for (i = 0; possible_items[i]; i++)
     {
-        listbox_add_item (mylistbox->list, LISTBOX_APPEND_AT_END, 0, possible_items[i], NULL,
+        listbox_add_item (mylistbox->list, LISTBOX_APPEND_AT_END, 0, possible_items[i], nullptr,
                           FALSE);
     }
 
@@ -156,7 +156,7 @@ badd_cback (int action)
     char *s = select_new_item ();
     if (s)
     {
-        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, NULL, FALSE);
+        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, FALSE);
         g_free (s);
     }
     return 0;
@@ -187,10 +187,10 @@ init_listmode (char *oldlistformat)
     };
 
     static struct listmode_button listmode_but[] = {
-        {B_CANCEL, NORMAL_BUTTON, BY, BX + 53, "&Cancel", NULL},
+        {B_CANCEL, NORMAL_BUTTON, BY, BX + 53, "&Cancel", nullptr},
         {B_ADD, NORMAL_BUTTON, BY, BX + 22, "&Add item", badd_cback},
         {B_REMOVE, NORMAL_BUTTON, BY, BX + 10, "&Remove", bremove_cback},
-        {B_ENTER, DEFPUSH_BUTTON, BY, BX, "&OK", NULL},
+        {B_ENTER, DEFPUSH_BUTTON, BY, BX, "&OK", nullptr},
         {B_PLUS, NARROW_BUTTON, UY + 13, UX + 37, "&+", bplus_cback},
         {B_MINUS, NARROW_BUTTON, UY + 13, UX + 34, "&-", bminus_cback},
     };
@@ -198,7 +198,7 @@ init_listmode (char *oldlistformat)
     do_refresh ();
 
     listmode_dlg =
-        dlg_create (TRUE, 0, 0, 22, 74, WPOS_CENTER, FALSE, dialog_colors, NULL, NULL,
+        dlg_create (TRUE, 0, 0, 22, 74, WPOS_CENTER, FALSE, dialog_colors, nullptr, nullptr,
                     listmode_section, "Listing format edit");
 
     add_widget (listmode_dlg, groupbox_new (UY, UX, 4, 63, "General options"));
@@ -227,7 +227,7 @@ init_listmode (char *oldlistformat)
     radio_justify->sel = 1;
 
     /* get new listbox */
-    l_listmode = listbox_new (UY + 5, UX + 1, 9, 16, FALSE, NULL);
+    l_listmode = listbox_new (UY + 5, UX + 1, 9, 16, FALSE, nullptr);
 
     if (strncmp (oldlistformat, "full ", 5) == 0)
     {
@@ -251,8 +251,8 @@ init_listmode (char *oldlistformat)
 
     while (s)
     {
-        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, NULL, FALSE);
-        s = strtok (NULL, ",");
+        listbox_add_item (l_listmode, LISTBOX_APPEND_AT_END, 0, s, nullptr, FALSE);
+        s = strtok (nullptr, ",");
     }
 
     /* add listbox to the dialogs */
@@ -296,14 +296,14 @@ collect_new_format (void)
         strcpy (newformat, "half ");
     if (radio_columns->sel)
         strcat (newformat, "2 ");
-    last = NULL;
+    last = nullptr;
     for (i = 0;; i++)
     {
         listbox_select_entry (l_listmode, i);
         listbox_get_current (l_listmode, &text, &extra);
         if (text == last)
             break;
-        if (last != NULL)
+        if (last != nullptr)
             strcat (newformat, ",");
         strcat (newformat, text);
         last = text;
@@ -315,11 +315,11 @@ collect_new_format (void)
 /*** public functions ****************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
 
-/** Return new format or NULL if the user cancelled the dialog */
+/** Return new format or nullptr if the user cancelled the dialog */
 char *
 listmode_edit (char *oldlistformat)
 {
-    char *newformat = NULL;
+    char *newformat = nullptr;
     char *s;
     WDialog *listmode_dlg;
 

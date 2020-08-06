@@ -70,7 +70,7 @@ sftpfs_reopen (vfs_file_handler_t * fh, GError ** mcerror)
     int flags;
     mode_t mode;
 
-    g_return_if_fail (mcerror == NULL || *mcerror == NULL);
+    g_return_if_fail (mcerror == nullptr || *mcerror == nullptr);
 
     flags = file->flags;
     mode = file->mode;
@@ -136,7 +136,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
     mc_return_val_if_error (mcerror, FALSE);
 
     name = vfs_s_fullpath (sftpfs_class, fh->ino);
-    if (name == NULL)
+    if (name == nullptr)
         return FALSE;
 
     if ((flags & O_CREAT) != 0 || (flags & O_WRONLY) != 0)
@@ -167,7 +167,7 @@ sftpfs_open_file (vfs_file_handler_t * fh, int flags, mode_t mode, GError ** mce
         file->handle =
             libssh2_sftp_open_ex (super->sftp_session, fixfname, fixfname_len, sftp_open_flags,
                                   sftp_open_mode, LIBSSH2_SFTP_OPENFILE);
-        if (file->handle != NULL)
+        if (file->handle != nullptr)
             break;
 
         libssh_errno = libssh2_session_last_errno (super->session);
@@ -230,7 +230,7 @@ sftpfs_fstat (void *data, struct stat *buf, GError ** mcerror)
 
     mc_return_val_if_error (mcerror, -1);
 
-    if (sftpfs_fh->handle == NULL)
+    if (sftpfs_fh->handle == nullptr)
         return -1;
 
     do
@@ -273,7 +273,7 @@ sftpfs_read_file (vfs_file_handler_t * fh, char *buffer, size_t count, GError **
 
     mc_return_val_if_error (mcerror, -1);
 
-    if (fh == NULL)
+    if (fh == nullptr)
     {
         mc_propagate_error (mcerror, 0, "%s",
                             _("sftp: No file handler data present for reading file"));

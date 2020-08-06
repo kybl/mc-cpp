@@ -204,7 +204,7 @@ edit_status_fullscreen (WEdit * edit, int color)
     status_string (edit, status, status_size);
     status_len = (int) str_term_width1 (status);
 
-    if (edit->filename_vpath != NULL)
+    if (edit->filename_vpath != nullptr)
     {
         fname = vfs_path_get_last_path_str (edit->filename_vpath);
 
@@ -262,7 +262,7 @@ edit_status_window (WEdit * edit)
     {
         const char *fname = N_("NoName");
 
-        if (edit->filename_vpath != NULL)
+        if (edit->filename_vpath != nullptr)
         {
             fname = vfs_path_get_last_path_str (edit->filename_vpath);
 

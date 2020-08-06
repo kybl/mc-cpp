@@ -213,10 +213,10 @@ static gchar *
 str_ascii_conv_gerror_message (GError * mcerror, const char *def_msg)
 {
     /* the same as str_utf8_conv_gerror_message() */
-    if (mcerror != NULL)
+    if (mcerror != nullptr)
         return g_strdup (mcerror->message);
 
-    return g_strdup (def_msg != NULL ? def_msg : "");
+    return g_strdup (def_msg != nullptr ? def_msg : "");
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -580,7 +580,7 @@ str_ascii_search_first (const char *text, const char *search, gboolean case_sen)
     fold_search = case_sen ? (char *) search : g_ascii_strdown (search, -1);
 
     match = g_strstr_len (fold_text, -1, fold_search);
-    if (match != NULL)
+    if (match != nullptr)
     {
         size_t offset;
 
@@ -610,7 +610,7 @@ str_ascii_search_last (const char *text, const char *search, gboolean case_sen)
     fold_search = case_sen ? (char *) search : g_ascii_strdown (search, -1);
 
     match = g_strrstr_len (fold_text, -1, fold_search);
-    if (match != NULL)
+    if (match != nullptr)
     {
         size_t offset;
 

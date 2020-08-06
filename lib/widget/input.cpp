@@ -54,7 +54,7 @@
 
 gboolean quote = FALSE;
 
-const global_keymap_t *input_map = NULL;
+const global_keymap_t *input_map = nullptr;
 
 /* Color styles for input widgets */
 input_colors_t input_colors;
@@ -70,8 +70,8 @@ input_colors_t input_colors;
 #endif
 
 #define should_show_history_button(in) \
-    (in->history.list != NULL && WIDGET (in)->cols > HISTORY_BUTTON_WIDTH * 2 + 1 \
-         && WIDGET (in)->owner != NULL)
+    (in->history.list != nullptr && WIDGET (in)->cols > HISTORY_BUTTON_WIDTH * 2 + 1 \
+         && WIDGET (in)->owner != nullptr)
 
 /*** file scope type declarations ****************************************************************/
 
@@ -79,7 +79,7 @@ input_colors_t input_colors;
 
 /* Input widgets have a global kill ring */
 /* Pointer to killed data */
-static char *kill_buffer = NULL;
+static char *kill_buffer = nullptr;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -89,7 +89,7 @@ get_history_length (const GList * history)
 {
     size_t len = 0;
 
-    for (; history != NULL; history = (const GList *) g_list_previous (history))
+    for (; history != nullptr; history = (const GList *) g_list_previous (history))
         len++;
 
     return len;
@@ -103,9 +103,9 @@ draw_history_button (WInput * in)
     char c;
     gboolean disabled;
 
-    if (g_list_next (in->history.current) == NULL)
+    if (g_list_next (in->history.current) == nullptr)
         c = '^';
-    else if (g_list_previous (in->history.current) == NULL)
+    else if (g_list_previous (in->history.current) == nullptr)
         c = 'v';
     else
         c = '|';
@@ -181,7 +181,7 @@ do_show_hist (WInput * in)
      * Apply new history and current postition to avoid use-after-free. */
     in->history.list = hd.list;
     in->history.current = in->history.list;
-    if (hd.text != NULL)
+    if (hd.text != nullptr)
     {
         input_assign_text (in, hd.text);
         g_free (hd.text);
@@ -206,27 +206,27 @@ input_history_strip_password (char *url)
     char *at, *delim, *colon;
 
     at = strrchr (url, '@');
-    if (at == NULL)
+    if (at == nullptr)
         return g_strdup (url);
 
     /* TODO: handle ':' and '@' in password */
 
     delim = strstr (url, VFS_PATH_URL_DELIMITER);
-    if (delim != NULL)
+    if (delim != nullptr)
         colon = strchr (delim + strlen (VFS_PATH_URL_DELIMITER), ':');
     else
         colon = strchr (url, ':');
 
     /* if 'colon' before 'at', 'colon' delimits user and password: user:password@host */
     /* if 'colon' after 'at', 'colon' delimits host and port: user@host:port */
-    if (colon != NULL && colon > at)
-        colon = NULL;
+    if (colon != nullptr && colon > at)
+        colon = nullptr;
 
-    if (colon == NULL)
+    if (colon == nullptr)
         return g_strdup (url);
     *colon = '\0';
 
-    return g_strconcat (url, at, (char *) NULL);
+    return g_strconcat (url, at, (char *) nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -237,7 +237,7 @@ push_history (WInput * in, const char *text)
     char *t;
     gboolean empty;
 
-    if (text == NULL)
+    if (text == nullptr)
         return;
 
     t = g_strstrip (g_strdup (text));
@@ -245,7 +245,7 @@ push_history (WInput * in, const char *text)
     g_free (t);
     t = g_strdup (empty ? "" : text);
 
-    if (!empty && in->history.name != NULL && in->strip_password)
+    if (!empty && in->history.name != nullptr && in->strip_password)
     {
         /*
            We got string user:pass@host without any VFS prefixes
@@ -259,7 +259,7 @@ push_history (WInput * in, const char *text)
         t = url_with_stripped_password;
     }
 
-    if (in->history.list == NULL || in->history.list->data == NULL
+    if (in->history.list == nullptr || in->history.list->data == nullptr
         || strcmp (static_cast<const char *> (in->history.list->data), t) != 0 || in->history.changed)
     {
         in->history.list = list_append_unique (in->history.list, t);
@@ -328,7 +328,7 @@ insert_char (WInput * in, int c_code)
 
         new_length = in->current_max_size + WIDGET (in)->cols + in->charpoint;
         narea = g_try_renew (char, in->buffer, new_length);
-        if (narea != NULL)
+        if (narea != nullptr)
         {
             in->buffer = narea;
             in->current_max_size = new_length;
@@ -495,9 +495,9 @@ copy_region (WInput * in, int x_first, int x_last)
     if (last == first)
     {
         /* Copy selected files to clipboard */
-        mc_event_raise (MCEVENT_GROUP_FILEMANAGER, "panel_save_current_file_to_clip_file", NULL);
+        mc_event_raise (MCEVENT_GROUP_FILEMANAGER, "panel_save_current_file_to_clip_file", nullptr);
         /* try use external clipboard utility */
-        mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", NULL);
+        mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", nullptr);
         return;
     }
 
@@ -510,7 +510,7 @@ copy_region (WInput * in, int x_first, int x_last)
 
     mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_text_to_file", kill_buffer);
     /* try use external clipboard utility */
-    mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", NULL);
+    mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_to_ext_clip", nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -551,7 +551,7 @@ back_kill_word (WInput * in)
 static void
 yank (WInput * in)
 {
-    if (kill_buffer != NULL)
+    if (kill_buffer != nullptr)
     {
         char *p;
 
@@ -593,11 +593,11 @@ clear_line (WInput * in)
 static void
 ins_from_clip (WInput * in)
 {
-    char *p = NULL;
+    char *p = nullptr;
     ev_clipboard_text_from_file_t event_data;
 
     /* try use external clipboard utility */
-    mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_from_ext_clip", NULL);
+    mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_file_from_ext_clip", nullptr);
 
     event_data.text = &p;
     mc_event_raise (MCEVENT_GROUP_CORE, "clipboard_text_from_file", &event_data);
@@ -619,14 +619,14 @@ hist_prev (WInput * in)
 {
     GList *prev;
 
-    if (in->history.list == NULL)
+    if (in->history.list == nullptr)
         return;
 
     if (in->need_push)
         push_history (in, in->buffer);
 
     prev = g_list_previous (in->history.current);
-    if (prev != NULL)
+    if (prev != nullptr)
     {
         input_assign_text (in, (char *) prev->data);
         in->history.current = prev;
@@ -649,11 +649,11 @@ hist_next (WInput * in)
         return;
     }
 
-    if (in->history.list == NULL)
+    if (in->history.list == nullptr)
         return;
 
     next = g_list_next (in->history.current);
-    if (next == NULL)
+    if (next == nullptr)
     {
         input_assign_text (in, "");
         in->history.current = in->history.list;
@@ -850,7 +850,7 @@ input_load_history (const gchar * event_group_name, const gchar * event_name,
     {
         const char *def_text = "";
 
-        if (in->history.list != NULL && in->history.list->data != NULL)
+        if (in->history.list != nullptr && in->history.list->data != nullptr)
             def_text = (const char *) in->history.list->data;
 
         input_assign_text (in, def_text);
@@ -889,7 +889,7 @@ input_save_history (const gchar * event_group_name, const gchar * event_name,
 static void
 input_destroy (WInput * in)
 {
-    if (in == NULL)
+    if (in == nullptr)
     {
         fprintf (stderr, "Internal error: null Input *\n");
         exit (EXIT_FAILURE);
@@ -898,7 +898,7 @@ input_destroy (WInput * in)
     input_complete_free (in);
 
     /* clean history */
-    if (in->history.list != NULL)
+    if (in->history.list != nullptr)
     {
         /* history is already saved before this moment */
         in->history.list = g_list_first (in->history.list);
@@ -1010,26 +1010,26 @@ input_new (int y, int x, const int *colors, int width, const char *def_text,
     in->buffer = g_new0 (char, in->current_max_size);
 
     /* init completions before input_assign_text() call */
-    in->completions = NULL;
+    in->completions = nullptr;
     in->completion_flags = completion_flags;
 
     in->init_from_history = (def_text == INPUT_LAST_TEXT);
 
-    if (in->init_from_history || def_text == NULL)
+    if (in->init_from_history || def_text == nullptr)
         def_text = "";
 
     input_assign_text (in, def_text);
 
     /* prepare to history setup */
-    in->history.list = NULL;
-    in->history.current = NULL;
+    in->history.list = nullptr;
+    in->history.current = nullptr;
     in->history.changed = FALSE;
-    in->history.name = NULL;
-    if ((histname != NULL) && (*histname != '\0'))
+    in->history.name = nullptr;
+    if ((histname != nullptr) && (*histname != '\0'))
         in->history.name = g_strdup (histname);
     /* history will be loaded later */
 
-    in->label = NULL;
+    in->label = nullptr;
 
     return in;
 }
@@ -1047,10 +1047,10 @@ input_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
     {
     case MSG_INIT:
         /* subscribe to "history_load" event */
-        mc_event_add (h->event_group, MCEVENT_HISTORY_LOAD, input_load_history, w, NULL);
+        mc_event_add (h->event_group, MCEVENT_HISTORY_LOAD, input_load_history, w, nullptr);
         /* subscribe to "history_save" event */
-        mc_event_add (h->event_group, MCEVENT_HISTORY_SAVE, input_save_history, w, NULL);
-        if (in->label != NULL)
+        mc_event_add (h->event_group, MCEVENT_HISTORY_SAVE, input_save_history, w, nullptr);
+        if (in->label != nullptr)
             widget_set_state (WIDGET (in->label), WST_DISABLED, widget_get_state (w, WST_DISABLED));
         return MSG_HANDLED;
 
@@ -1088,7 +1088,7 @@ input_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
 
     case MSG_ENABLE:
     case MSG_DISABLE:
-        if (in->label != NULL)
+        if (in->label != nullptr)
             widget_set_state (WIDGET (in->label), WST_DISABLED, msg == MSG_DISABLE);
         return MSG_HANDLED;
 
@@ -1169,7 +1169,7 @@ input_assign_text (WInput * in, const char *text)
     Widget *w = WIDGET (in);
     size_t text_len, buffer_len;
 
-    if (text == NULL)
+    if (text == nullptr)
         text = "";
 
     input_complete_free (in);
@@ -1192,7 +1192,7 @@ input_assign_text (WInput * in, const char *text)
 gboolean
 input_is_empty (const WInput * in)
 {
-    return (in == NULL || in->buffer == NULL || in->buffer[0] == '\0');
+    return (in == nullptr || in->buffer == nullptr || in->buffer[0] == '\0');
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1241,7 +1241,7 @@ input_update (WInput * in, gboolean clear_first)
         return;
 
     /* don't draw widget not put into dialog */
-    if (w->owner == NULL || !widget_get_state (WIDGET (w->owner), WST_ACTIVE))
+    if (w->owner == nullptr || !widget_get_state (WIDGET (w->owner), WST_ACTIVE))
         return;
 
     if (should_show_history_button (in))

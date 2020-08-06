@@ -72,14 +72,14 @@ int num_history_items_recorded = 60;
 GList *
 mc_config_history_get (const char *name)
 {
-    GList *hist = NULL;
+    GList *hist = nullptr;
     char *profile;
     mc_config_t *cfg;
 
     if (num_history_items_recorded == 0)        /* this is how to disable */
-        return NULL;
-    if (name == NULL || *name == '\0')
-        return NULL;
+        return nullptr;
+    if (name == nullptr || *name == '\0')
+        return nullptr;
 
     profile = mc_config_get_full_path (MC_HISTORY_FILE);
     cfg = mc_config_init (profile, TRUE);
@@ -101,14 +101,14 @@ GList *
 mc_config_history_load (mc_config_t * cfg, const char *name)
 {
     size_t i;
-    GList *hist = NULL;
+    GList *hist = nullptr;
     char **keys;
     size_t keys_num = 0;
     GIConv conv = INVALID_CONV;
     GString *buffer;
 
-    if (name == NULL || *name == '\0')
-        return NULL;
+    if (name == nullptr || *name == '\0')
+        return nullptr;
 
     /* get number of keys */
     keys = mc_config_get_keys (cfg, name, &keys_num);
@@ -129,7 +129,7 @@ mc_config_history_load (mc_config_t * cfg, const char *name)
         g_snprintf (key, sizeof (key), "%lu", (unsigned long) i);
         this_entry = mc_config_get_string_raw (cfg, name, key, "");
 
-        if (this_entry == NULL)
+        if (this_entry == nullptr)
             continue;
 
         if (conv == INVALID_CONV)
@@ -167,17 +167,17 @@ mc_config_history_save (mc_config_t * cfg, const char *name, GList * h)
     GString *buffer;
     int i;
 
-    if (name == NULL || *name == '\0' || h == NULL)
+    if (name == nullptr || *name == '\0' || h == nullptr)
         return;
 
     /* go to end of list */
     h = g_list_last (h);
 
     /* go back 60 places */
-    for (i = 0; (i < num_history_items_recorded - 1) && (h->prev != NULL); i++)
+    for (i = 0; (i < num_history_items_recorded - 1) && (h->prev != nullptr); i++)
         h = g_list_previous (h);
 
-    if (name != NULL)
+    if (name != nullptr)
         mc_config_del_group (cfg, name);
 
     /* create charset conversion handler to convert strings
@@ -188,13 +188,13 @@ mc_config_history_save (mc_config_t * cfg, const char *name, GList * h)
     buffer = g_string_sized_new (64);
 
     /* dump history into profile */
-    for (i = 0; h != NULL; h = g_list_next (h))
+    for (i = 0; h != nullptr; h = g_list_next (h))
     {
         char key[BUF_TINY];
         char *text = (char *) h->data;
 
         /* We shouldn't have null entries, but let's be sure */
-        if (text == NULL)
+        if (text == nullptr)
             continue;
 
         g_snprintf (key, sizeof (key), "%d", i++);

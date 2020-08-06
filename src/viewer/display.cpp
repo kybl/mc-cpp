@@ -160,8 +160,8 @@ mcview_display_status (WView * view)
     tty_draw_hline (WIDGET (view)->y + top, WIDGET (view)->x + left, ' ', width);
 
     file_label =
-        view->filename_vpath != NULL ?
-        vfs_path_get_last_path_str (view->filename_vpath) : view->command != NULL ?
+        view->filename_vpath != nullptr ?
+        vfs_path_get_last_path_str (view->filename_vpath) : view->command != nullptr ?
         view->command : "";
 
     if (width > 40)

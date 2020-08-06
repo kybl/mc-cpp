@@ -60,13 +60,13 @@
 static vfs_path_t *
 get_absolute_name (const vfs_path_t * vpath)
 {
-    if (vpath == NULL)
-        return NULL;
+    if (vpath == nullptr)
+        return nullptr;
 
     if (IS_PATH_SEP (*vfs_path_get_by_index (vpath, 0)->path))
         return vfs_path_clone (vpath);
 
-    return vfs_path_append_vpath_new (vfs_get_raw_current_dir (), vpath, NULL);
+    return vfs_path_append_vpath_new (vfs_get_raw_current_dir (), vpath, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -92,7 +92,7 @@ my_mkdir_rec (const vfs_path_t * vpath, mode_t mode)
         return (-1);
     }
 
-    q = vfs_path_append_new (vpath, "..", (char *) NULL);
+    q = vfs_path_append_new (vpath, "..", (char *) nullptr);
     result = my_mkdir_rec (q, mode);
     vfs_path_free (q);
 

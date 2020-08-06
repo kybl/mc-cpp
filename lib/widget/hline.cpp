@@ -116,7 +116,7 @@ hline_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *d
             tty_print_alt_char (ACS_RTEE, FALSE);
         }
 
-        if (l->text != NULL)
+        if (l->text != nullptr)
         {
             int text_width;
 
@@ -148,8 +148,8 @@ hline_new (int y, int x, int width)
 
     l = g_new (WHLine, 1);
     w = WIDGET (l);
-    widget_init (w, y, x, lines, width < 0 ? 1 : width, hline_callback, NULL);
-    l->text = NULL;
+    widget_init (w, y, x, lines, width < 0 ? 1 : width, hline_callback, nullptr);
+    l->text = nullptr;
     l->auto_adjust_cols = (width < 0);
     l->transparent = FALSE;
 
@@ -163,8 +163,8 @@ hline_set_text (WHLine * l, const char *text)
 {
     g_free (l->text);
 
-    if (text == NULL || *text == '\0')
-        l->text = NULL;
+    if (text == nullptr || *text == '\0')
+        l->text = nullptr;
     else
         l->text = g_strdup (text);
 

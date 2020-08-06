@@ -52,15 +52,15 @@ mc_event_raise (const gchar * event_group_name, const gchar * event_name, gpoint
     GPtrArray *callbacks;
     guint array_index;
 
-    if (mc_event_grouplist == NULL || event_group_name == NULL || event_name == NULL)
+    if (mc_event_grouplist == nullptr || event_group_name == nullptr || event_name == nullptr)
         return FALSE;
 
-    event_group = mc_event_get_event_group_by_name (event_group_name, FALSE, NULL);
-    if (event_group == NULL)
+    event_group = mc_event_get_event_group_by_name (event_group_name, FALSE, nullptr);
+    if (event_group == nullptr)
         return FALSE;
 
-    callbacks = mc_event_get_event_by_name (event_group, event_name, FALSE, NULL);
-    if (callbacks == NULL)
+    callbacks = mc_event_get_event_by_name (event_group, event_name, FALSE, nullptr);
+    if (callbacks == nullptr)
         return FALSE;
 
     for (array_index = callbacks->len; array_index > 0; array_index--)

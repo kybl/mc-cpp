@@ -87,7 +87,7 @@ str_utf8_insert_replace_char (GString * buffer)
 static gboolean
 str_utf8_is_valid_string (const char *text)
 {
-    return g_utf8_validate (text, -1, NULL);
+    return g_utf8_validate (text, -1, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -284,7 +284,7 @@ str_utf8_toupper (const char *text, char **out, size_t * remain)
         return FALSE;
 
     uni = g_unichar_toupper (uni);
-    left = g_unichar_to_utf8 (uni, NULL);
+    left = g_unichar_to_utf8 (uni, nullptr);
     if (left >= *remain)
         return FALSE;
 
@@ -307,7 +307,7 @@ str_utf8_tolower (const char *text, char **out, size_t * remain)
         return FALSE;
 
     uni = g_unichar_tolower (uni);
-    left = g_unichar_to_utf8 (uni, NULL);
+    left = g_unichar_to_utf8 (uni, nullptr);
     if (left >= *remain)
         return FALSE;
 
@@ -411,10 +411,10 @@ str_utf8_questmark_sustb (char **string, size_t * left, GString * buffer)
 static gchar *
 str_utf8_conv_gerror_message (GError * mcerror, const char *def_msg)
 {
-    if (mcerror != NULL)
+    if (mcerror != nullptr)
         return g_strdup (mcerror->message);
 
-    return g_strdup (def_msg != NULL ? def_msg : "");
+    return g_strdup (def_msg != nullptr ? def_msg : "");
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -545,7 +545,7 @@ utf8_tool_copy_chars_to_end (struct utf8_tool *tool)
 
         uni = g_utf8_get_char (tool->checked);
         tool->compose = tool->compose || str_unichar_iscombiningmark (uni);
-        left = g_unichar_to_utf8 (uni, NULL);
+        left = g_unichar_to_utf8 (uni, nullptr);
         if (tool->remain <= left)
             return FALSE;
         left = g_unichar_to_utf8 (uni, tool->actual);
@@ -584,7 +584,7 @@ utf8_tool_copy_chars_to (struct utf8_tool *tool, int to_ident)
                 return TRUE;
         }
 
-        left = g_unichar_to_utf8 (uni, NULL);
+        left = g_unichar_to_utf8 (uni, nullptr);
         if (tool->remain <= left)
             return FALSE;
         left = g_unichar_to_utf8 (uni, tool->actual);
@@ -960,8 +960,8 @@ str_utf8_create_search_needle (const char *needle, gboolean case_sen)
 {
     char *fold, *result;
 
-    if (needle == NULL)
-        return NULL;
+    if (needle == nullptr)
+        return nullptr;
 
     if (case_sen)
         return g_utf8_normalize (needle, -1, G_NORMALIZE_ALL);
@@ -989,7 +989,7 @@ str_utf8_search_first (const char *text, const char *search, gboolean case_sen)
     char *fold_text;
     char *deco_text;
     const char *match;
-    const char *result = NULL;
+    const char *result = nullptr;
     const char *m;
 
     fold_text = case_sen ? (char *) text : g_utf8_casefold (text, -1);
@@ -999,7 +999,7 @@ str_utf8_search_first (const char *text, const char *search, gboolean case_sen)
     do
     {
         match = g_strstr_len (match, -1, search);
-        if (match != NULL)
+        if (match != nullptr)
         {
             if ((!str_utf8_iscombiningmark (match) || (match == deco_text)) &&
                 !str_utf8_iscombiningmark (match + strlen (search)))
@@ -1016,7 +1016,7 @@ str_utf8_search_first (const char *text, const char *search, gboolean case_sen)
                 str_utf8_cnext_char (&match);
         }
     }
-    while (match != NULL && result == NULL);
+    while (match != nullptr && result == nullptr);
 
     g_free (deco_text);
     if (!case_sen)
@@ -1033,7 +1033,7 @@ str_utf8_search_last (const char *text, const char *search, gboolean case_sen)
     char *fold_text;
     char *deco_text;
     char *match;
-    const char *result = NULL;
+    const char *result = nullptr;
     const char *m;
 
     fold_text = case_sen ? (char *) text : g_utf8_casefold (text, -1);
@@ -1042,7 +1042,7 @@ str_utf8_search_last (const char *text, const char *search, gboolean case_sen)
     do
     {
         match = g_strrstr_len (deco_text, -1, search);
-        if (match != NULL)
+        if (match != nullptr)
         {
             if ((!str_utf8_iscombiningmark (match) || (match == deco_text)) &&
                 !str_utf8_iscombiningmark (match + strlen (search)))
@@ -1059,7 +1059,7 @@ str_utf8_search_last (const char *text, const char *search, gboolean case_sen)
                 match[0] = '\0';
         }
     }
-    while (match != NULL && result == NULL);
+    while (match != nullptr && result == nullptr);
 
     g_free (deco_text);
     if (!case_sen)

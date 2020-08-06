@@ -46,8 +46,8 @@
 
 /*** global variables ****************************************************************************/
 
-char *user_recent_timeformat = NULL;    /* time format string for recent dates */
-char *user_old_timeformat = NULL;       /* time format string for older dates */
+char *user_recent_timeformat = nullptr;    /* time format string for recent dates */
+char *user_old_timeformat = nullptr;       /* time format string for older dates */
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -81,10 +81,10 @@ i18n_checktimelength (void)
     if (i18n_timelength_cache <= MAX_I18NTIMELENGTH)
         return i18n_timelength_cache;
 
-    testtime = time (NULL);
+    testtime = time (nullptr);
     lt = localtime (&testtime);
 
-    if (lt == NULL)
+    if (lt == nullptr)
     {
         /* huh, localtime() doesnt seem to work ... falling back to "(invalid)" */
         length = str_term_width1 (_(INVALID_TIME_TEXT));
@@ -128,7 +128,7 @@ const char *
 file_date (time_t when)
 {
     static char timebuf[MB_LEN_MAX * MAX_I18NTIMELENGTH + 1];
-    time_t current_time = time (NULL);
+    time_t current_time = time (nullptr);
     const char *fmt;
 
     if (current_time > when + 6L * 30L * 24L * 60L * 60L        /* Old. */

@@ -22,10 +22,10 @@
 
 #define MAX_SAVED_BOOKMARKS 10
 
-#define MC_PTR_FREE(ptr) do { g_free (ptr); (ptr) = NULL; } while (0)
+#define MC_PTR_FREE(ptr) do { g_free (ptr); (ptr) = nullptr; } while (0)
 
-#define mc_return_if_error(mcerror) do { if (mcerror != NULL && *mcerror != NULL) return; } while (0)
-#define mc_return_val_if_error(mcerror, mcvalue) do { if (mcerror != NULL && *mcerror != NULL) return mcvalue; } while (0)
+#define mc_return_if_error(mcerror) do { if (mcerror != nullptr && *mcerror != nullptr) return; } while (0)
+#define mc_return_val_if_error(mcerror, mcvalue) do { if (mcerror != nullptr && *mcerror != nullptr) return mcvalue; } while (0)
 
 #define whitespace(c) ((c) == ' ' || (c) == '\t')
 #define whiteness(c) (whitespace (c) || (c) == '\n')

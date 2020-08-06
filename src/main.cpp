@@ -94,7 +94,7 @@
 static void
 check_codeset (void)
 {
-    const char *current_system_codepage = NULL;
+    const char *current_system_codepage = nullptr;
 
     current_system_codepage = str_detect_termencoding ();
 
@@ -132,7 +132,7 @@ OS_Setup (void)
     /* This is the directory, where MC was installed, on Unix this is DATADIR */
     /* and can be overriden by the MC_DATADIR environment variable */
     datadir_env = g_getenv ("MC_DATADIR");
-    if (datadir_env != NULL)
+    if (datadir_env != nullptr)
         mc_global.sysconfig_dir = g_strdup (datadir_env);
     else
         mc_global.sysconfig_dir = g_strdup (SYSCONFDIR);
@@ -200,7 +200,7 @@ init_sigchld (void)
     sigchld_action.sa_flags = SA_RESTART;
 #endif /* !SA_RESTART */
 
-    if (sigaction (SIGCHLD, &sigchld_action, NULL) == -1)
+    if (sigaction (SIGCHLD, &sigchld_action, nullptr) == -1)
     {
 #ifdef ENABLE_SUBSHELL
         /*
@@ -226,10 +226,10 @@ check_sid (void)
     const char *sid_str;
 
     sid_str = getenv ("MC_SID");
-    if (sid_str == NULL)
+    if (sid_str == nullptr)
         return TRUE;
 
-    old_sid = (pid_t) strtol (sid_str, NULL, 0);
+    old_sid = (pid_t) strtol (sid_str, nullptr, 0);
     if (old_sid == 0)
         return TRUE;
 
@@ -248,9 +248,9 @@ check_sid (void)
 int
 main (int argc, char *argv[])
 {
-    GError *mcerror = NULL;
+    GError *mcerror = nullptr;
     gboolean config_migrated = FALSE;
-    char *config_migrate_msg = NULL;
+    char *config_migrate_msg = nullptr;
     int exit_code = EXIT_FAILURE;
 
     mc_global.run_from_parent_mc = !check_sid ();
@@ -265,7 +265,7 @@ main (int argc, char *argv[])
     (void) textdomain (PACKAGE);
 
     /* do this before args parsing */
-    str_init_strings (NULL);
+    str_init_strings (nullptr);
 
     mc_setup_run_mode (argv);   /* are we mc? editor? viewer? etc... */
 
@@ -288,7 +288,7 @@ main (int argc, char *argv[])
     {
         mc_propagate_error (&mcerror, 0, "%s: %s", _("Home directory path is not absolute"),
                             mc_config_get_home_dir ());
-        mc_event_deinit (NULL);
+        mc_event_deinit (nullptr);
         goto startup_exit_falure;
     }
 
@@ -303,9 +303,9 @@ main (int argc, char *argv[])
 
     mc_config_init_config_paths (&mcerror);
     config_migrated = mc_config_migrate_from_old_place (&mcerror, &config_migrate_msg);
-    if (mcerror != NULL)
+    if (mcerror != nullptr)
     {
-        mc_event_deinit (NULL);
+        mc_event_deinit (nullptr);
         goto startup_exit_falure;
     }
 
@@ -327,7 +327,7 @@ main (int argc, char *argv[])
         vfs_shut ();
         done_setup ();
         g_free (saved_other_dir);
-        mc_event_deinit (NULL);
+        mc_event_deinit (nullptr);
         goto startup_exit_falure;
     }
 
@@ -396,13 +396,13 @@ main (int argc, char *argv[])
 
     tty_init_colors (mc_global.tty.disable_colors, mc_args__force_colors);
 
-    mc_skin_init (NULL, &mcerror);
+    mc_skin_init (nullptr, &mcerror);
     dlg_set_default_colors ();
     input_set_default_colors ();
     if (mc_global.mc_run_mode == MC_RUN_FULL)
         command_set_default_colors ();
 
-    mc_error_message (&mcerror, NULL);
+    mc_error_message (&mcerror, nullptr);
 
 #ifdef ENABLE_SUBSHELL
     /* Done here to ensure that the subshell doesn't  */
@@ -450,7 +450,7 @@ main (int argc, char *argv[])
            separate for the normal and alternate screens */
         enable_bracketed_paste ();
 
-        /* subshell_prompt is NULL here */
+        /* subshell_prompt is nullptr here */
         mc_prompt = (geteuid () == 0) ? "# " : "$ ";
 
         if (config_migrated)
@@ -497,8 +497,8 @@ main (int argc, char *argv[])
     if (mc_global.tty.console_flag != '\0')
         handle_console (CONSOLE_DONE);
 
-    if (mc_global.mc_run_mode == MC_RUN_FULL && mc_args__last_wd_file != NULL
-        && last_wd_string != NULL && !print_last_revert)
+    if (mc_global.mc_run_mode == MC_RUN_FULL && mc_args__last_wd_file != nullptr
+        && last_wd_string != nullptr && !print_last_revert)
     {
         int last_wd_fd;
 
@@ -521,7 +521,7 @@ main (int argc, char *argv[])
     done_key ();
 
 #ifdef USE_INTERNAL_EDIT
-    if (macros_list != NULL)
+    if (macros_list != nullptr)
     {
         guint i;
 
@@ -530,7 +530,7 @@ main (int argc, char *argv[])
             macros_t *macros;
 
             macros = &g_array_index (macros_list, struct macros_t, i);
-            if (macros != NULL && macros->macro != NULL)
+            if (macros != nullptr && macros->macro != nullptr)
                 (void) g_array_free (macros->macro, TRUE);
         }
         (void) g_array_free (macros_list, TRUE);
@@ -550,7 +550,7 @@ main (int argc, char *argv[])
     mc_config_deinit_config_paths ();
 
     (void) mc_event_deinit (&mcerror);
-    if (mcerror != NULL)
+    if (mcerror != nullptr)
     {
         fprintf (stderr, _("\nFailed while close:\n%s\n"), mcerror->message);
         g_error_free (mcerror);

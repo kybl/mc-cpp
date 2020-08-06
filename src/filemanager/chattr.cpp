@@ -225,12 +225,12 @@ static struct
 } chattr_but[BUTTONS] =
 {
     /* *INDENT-OFF* */
-    /* 0 */ { B_SETALL, NORMAL_BUTTON, 0, N_("Set &all"),      NULL },
-    /* 1 */ { B_MARKED, NORMAL_BUTTON, 0, N_("&Marked all"),   NULL },
-    /* 2 */ { B_SETMRK, NORMAL_BUTTON, 0, N_("S&et marked"),   NULL },
-    /* 3 */ { B_CLRMRK, NORMAL_BUTTON, 0, N_("C&lear marked"), NULL },
-    /* 4 */ { B_ENTER, DEFPUSH_BUTTON, 0, N_("&Set"),          NULL },
-    /* 5 */ { B_CANCEL, NORMAL_BUTTON, 0, N_("&Cancel"),       NULL }
+    /* 0 */ { B_SETALL, NORMAL_BUTTON, 0, N_("Set &all"),      nullptr },
+    /* 1 */ { B_MARKED, NORMAL_BUTTON, 0, N_("&Marked all"),   nullptr },
+    /* 2 */ { B_SETMRK, NORMAL_BUTTON, 0, N_("S&et marked"),   nullptr },
+    /* 3 */ { B_CLRMRK, NORMAL_BUTTON, 0, N_("C&lear marked"), nullptr },
+    /* 4 */ { B_ENTER, DEFPUSH_BUTTON, 0, N_("&Set"),          nullptr },
+    /* 5 */ { B_CANCEL, NORMAL_BUTTON, 0, N_("&Cancel"),       nullptr }
     /* *INDENT-ON* */
 };
 
@@ -367,7 +367,7 @@ fileattrtext_new (int y, int x, const char *filename, unsigned long attr)
     cols = MAX (width, (int) check_attr_num);
 
     fat = g_new (WFileAttrText, 1);
-    widget_init (WIDGET (fat), y, x, 2, cols, fileattrtext_callback, NULL);
+    widget_init (WIDGET (fat), y, x, 2, cols, fileattrtext_callback, nullptr);
 
     fat->filename = g_strdup (filename);
     fat->filename_width = width;
@@ -456,7 +456,7 @@ chattrboxes_draw (WChattrBoxes * cb)
     tty_fill_region (w->y, w->x - 1, w->lines, w->cols + 1, ' ');
 
     /* redraw checkboxes */
-    group_default_callback (w, NULL, MSG_DRAW, 0, NULL);
+    group_default_callback (w, nullptr, MSG_DRAW, 0, nullptr);
 
     /* draw scrollbar */
     tty_setcolor (colors[DLG_COLOR_NORMAL]);
@@ -464,7 +464,7 @@ chattrboxes_draw (WChattrBoxes * cb)
         chattrboxes_draw_scrollbar (cb);
 
     /* mark selected checkboxes */
-    for (i = cb->top, l = GROUP (cb)->widgets; l != NULL; i++, l = g_list_next (l))
+    for (i = cb->top, l = GROUP (cb)->widgets; l != nullptr; i++, l = g_list_next (l))
         chattr_draw_select (WIDGET (l->data), check_attr[i].selected);
 }
 
@@ -485,7 +485,7 @@ chattrboxes_rename (WChattrBoxes * cb)
     if (active)
         widget_set_state (w, WST_SUSPENDED, TRUE);
 
-    for (i = cb->top, l = GROUP (cb)->widgets; l != NULL; i++, l = g_list_next (l))
+    for (i = cb->top, l = GROUP (cb)->widgets; l != nullptr; i++, l = g_list_next (l))
     {
         WCheck *c = CHECK (l->data);
         int m;
@@ -511,7 +511,7 @@ checkboxes_save_state (const WChattrBoxes * cb)
     int i;
     GList *l;
 
-    for (i = cb->top, l = GROUP (cb)->widgets; l != NULL; i++, l = g_list_next (l))
+    for (i = cb->top, l = GROUP (cb)->widgets; l != nullptr; i++, l = g_list_next (l))
     {
         int m;
 
@@ -815,7 +815,7 @@ chattrboxes_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, v
 
             ret = chattrboxes_key (cb, parm);
             if (ret != MSG_HANDLED)
-                ret = group_default_callback (w, NULL, MSG_KEY, parm, NULL);
+                ret = group_default_callback (w, nullptr, MSG_KEY, parm, nullptr);
 
             return ret;
         }
@@ -979,13 +979,13 @@ chattr_dlg_create (const char *fname, unsigned long attr)
 
     ch_dlg =
         dlg_create (TRUE, 0, 0, lines, cols + wx * 2, WPOS_CENTER, FALSE, dialog_colors,
-                    dlg_default_callback, NULL, "[Chattr]", _("Chattr command"));
+                    dlg_default_callback, nullptr, "[Chattr]", _("Chattr command"));
     dg = GROUP (ch_dlg);
     dw = WIDGET (ch_dlg);
 
     y = 2;
     file_attr = fileattrtext_new (y, wx, fname, attr);
-    group_add_widget_autopos (dg, file_attr, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, NULL);
+    group_add_widget_autopos (dg, file_attr, WPOS_KEEP_TOP | WPOS_CENTER_HORZ, nullptr);
     y += WIDGET (file_attr)->lines;
     group_add_widget (dg, hline_new (y++, -1, -1));
 
@@ -998,7 +998,7 @@ chattr_dlg_create (const char *fname, unsigned long attr)
 
     cb = chattrboxes_new (y++, wx, checkboxes_lines, cols);
     cbg = GROUP (cb);
-    group_add_widget_autopos (dg, cb, WPOS_KEEP_TOP | WPOS_KEEP_HORZ, NULL);
+    group_add_widget_autopos (dg, cb, WPOS_KEEP_TOP | WPOS_KEEP_HORZ, nullptr);
 
     /* create checkboxes */
     for (i = 0; i < (size_t) check_attr_mod_num && i < (size_t) checkboxes_lines; i++)
@@ -1008,7 +1008,7 @@ chattr_dlg_create (const char *fname, unsigned long attr)
 
         m = check_attr_mod[i];
 
-        check = check_new (i, 0, check_attr[m].state, NULL);
+        check = check_new (i, 0, check_attr[m].state, nullptr);
         group_add_widget (cbg, check);
     }
 
@@ -1024,12 +1024,12 @@ chattr_dlg_create (const char *fname, unsigned long attr)
 
         chattr_but[i].button = WIDGET (button_new (y, dw->cols / 2 + 1 - chattr_but[i].width,
                                                    chattr_but[i].ret_cmd, chattr_but[i].flags,
-                                                   chattr_but[i].text, NULL));
+                                                   chattr_but[i].text, nullptr));
         group_add_widget (dg, chattr_but[i].button);
 
         i++;
         chattr_but[i].button = WIDGET (button_new (y++, dw->cols / 2 + 2, chattr_but[i].ret_cmd,
-                                                   chattr_but[i].flags, chattr_but[i].text, NULL));
+                                                   chattr_but[i].flags, chattr_but[i].text, nullptr));
         group_add_widget (dg, chattr_but[i].button);
 
         /* two buttons in a row */

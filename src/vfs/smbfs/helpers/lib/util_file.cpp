@@ -126,21 +126,21 @@ file_unlock (int fd, int *plock_depth)
 void *
 startfilepwent (char *pfile, char *s_readbuf, int bufsize, int *file_lock_depth, BOOL update)
 {
-    FILE *fp = NULL;
+    FILE *fp = nullptr;
 
     if (!*pfile)
     {
         DEBUG (0, ("startfilepwent: No file set\n"));
-        return (NULL);
+        return (nullptr);
     }
     DEBUG (10, ("startfilepwent: opening file %s\n", pfile));
 
     fp = sys_fopen (pfile, update ? "r+b" : "rb");
 
-    if (fp == NULL)
+    if (fp == nullptr)
     {
         DEBUG (0, ("startfilepwent: unable to open file %s\n", pfile));
-        return NULL;
+        return nullptr;
     }
 
     /* Set a buffer to do more efficient reads */
@@ -150,7 +150,7 @@ startfilepwent (char *pfile, char *s_readbuf, int bufsize, int *file_lock_depth,
     {
         DEBUG (0, ("startfilepwent: unable to lock file %s\n", pfile));
         fclose (fp);
-        return NULL;
+        return nullptr;
     }
 
     /* Make sure it is only rw by the owner */
@@ -208,7 +208,7 @@ getfileline (void *vp, char *linebuf, int linebuf_size)
     unsigned char *p;
     size_t linebuf_len;
 
-    if (fp == NULL)
+    if (fp == nullptr)
     {
         DEBUG (0, ("getfileline: Bad file pointer.\n"));
         return -1;
@@ -266,7 +266,7 @@ getfileline (void *vp, char *linebuf, int linebuf_size)
         }
 
         p = (unsigned char *) strchr (linebuf, ':');
-        if (p == NULL)
+        if (p == nullptr)
         {
             DEBUG (0, ("getfileline: malformed line entry (no :)\n"));
             continue;
@@ -280,7 +280,7 @@ getfileline (void *vp, char *linebuf, int linebuf_size)
 /****************************************************************************
 read a line from a file with possible \ continuation chars. 
 Blanks at the start or end of a line are stripped.
-The string will be allocated if s2 is NULL
+The string will be allocated if s2 is nullptr
 ****************************************************************************/
 char *
 fgets_slash (char *s2, int maxlen, FILE * f)
@@ -291,7 +291,7 @@ fgets_slash (char *s2, int maxlen, FILE * f)
     BOOL start_of_line = True;
 
     if (feof (f))
-        return (NULL);
+        return (nullptr);
 
     if (!s2)
     {
@@ -300,7 +300,7 @@ fgets_slash (char *s2, int maxlen, FILE * f)
     }
 
     if (!s || maxlen < 2)
-        return (NULL);
+        return (nullptr);
 
     *s = 0;
 
@@ -326,7 +326,7 @@ fgets_slash (char *s2, int maxlen, FILE * f)
         case EOF:
             if (len <= 0 && !s2)
                 free (s);
-            return (len > 0 ? s : NULL);
+            return (len > 0 ? s : nullptr);
         case ' ':
             if (start_of_line)
                 break;
@@ -340,7 +340,7 @@ fgets_slash (char *s2, int maxlen, FILE * f)
             maxlen *= 2;
             s = (char *) Realloc (s, maxlen);
             if (!s)
-                return (NULL);
+                return (nullptr);
         }
     }
     return (s);

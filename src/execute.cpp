@@ -163,7 +163,7 @@ do_suspend_cmd (void)
         kill (getpid (), SIGTSTP);
 
         /* Restore previous SIGTSTP action */
-        sigaction (SIGTSTP, &sigtstp_action, NULL);
+        sigaction (SIGTSTP, &sigtstp_action, nullptr);
     }
 #endif /* SIGTSTP */
 
@@ -182,16 +182,16 @@ execute_prepare_with_vfs_arg (const vfs_path_t * filename_vpath, vfs_path_t ** l
     struct stat st;
 
     /* Simplest case, this file is local */
-    if ((filename_vpath == NULL && vfs_file_is_local (vfs_get_raw_current_dir ()))
+    if ((filename_vpath == nullptr && vfs_file_is_local (vfs_get_raw_current_dir ()))
         || vfs_file_is_local (filename_vpath))
         return TRUE;
 
     /* FIXME: Creation of new files on VFS is not supported */
-    if (filename_vpath == NULL)
+    if (filename_vpath == nullptr)
         return FALSE;
 
     *localcopy_vpath = mc_getlocalcopy (filename_vpath);
-    if (*localcopy_vpath == NULL)
+    if (*localcopy_vpath == nullptr)
     {
         message (D_ERROR, MSG_ERROR, _("Cannot fetch a local copy of %s"),
                  vfs_path_as_str (filename_vpath));
@@ -209,7 +209,7 @@ static void
 execute_cleanup_with_vfs_arg (const vfs_path_t * filename_vpath, vfs_path_t ** localcopy_vpath,
                               time_t * mtime)
 {
-    if (*localcopy_vpath != NULL)
+    if (*localcopy_vpath != nullptr)
     {
         struct stat st;
 
@@ -221,7 +221,7 @@ execute_cleanup_with_vfs_arg (const vfs_path_t * filename_vpath, vfs_path_t ** l
         mc_stat (*localcopy_vpath, &st);
         mc_ungetlocalcopy (filename_vpath, *localcopy_vpath, *mtime != st.st_mtime);
         vfs_path_free (*localcopy_vpath);
-        *localcopy_vpath = NULL;
+        *localcopy_vpath = nullptr;
     }
 }
 
@@ -234,14 +234,14 @@ execute_get_opts_from_cfg (const char *command, const char *default_str)
 
     str_from_config =
         mc_config_get_string_raw (mc_global.main_config, CONFIG_EXT_EDITOR_VIEWER_SECTION, command,
-                                  NULL);
+                                  nullptr);
 
-    if (str_from_config == NULL)
+    if (str_from_config == nullptr)
     {
         mc_config_t *cfg;
 
         cfg = mc_config_init (global_profile_name, TRUE);
-        if (cfg == NULL)
+        if (cfg == nullptr)
             return g_strdup (default_str);
 
         str_from_config =
@@ -264,7 +264,7 @@ execute_get_external_cmd_opts_from_config (const char *command, const vfs_path_t
     char *str_from_config, *return_str;
     char *parameter;
 
-    if (filename_vpath == NULL)
+    if (filename_vpath == nullptr)
         return g_strdup ("");
 
     parameter = g_shell_quote (vfs_path_get_last_path_str (filename_vpath));
@@ -293,10 +293,10 @@ void
 do_executev (const char *shell, int flags, char *const argv[])
 {
 #ifdef ENABLE_SUBSHELL
-    vfs_path_t *new_dir_vpath = NULL;
+    vfs_path_t *new_dir_vpath = nullptr;
 #endif /* ENABLE_SUBSHELL */
 
-    vfs_path_t *old_vfs_dir_vpath = NULL;
+    vfs_path_t *old_vfs_dir_vpath = nullptr;
 
     if (!vfs_current_is_local ())
         old_vfs_dir_vpath = vfs_path_clone (vfs_get_raw_current_dir ());
@@ -307,7 +307,7 @@ do_executev (const char *shell, int flags, char *const argv[])
     if (mc_global.tty.console_flag != '\0')
         handle_console (CONSOLE_RESTORE);
 
-    if (!mc_global.tty.use_subshell && *argv != NULL && (flags & EXECUTE_INTERNAL) == 0)
+    if (!mc_global.tty.use_subshell && *argv != nullptr && (flags & EXECUTE_INTERNAL) == 0)
     {
         printf ("%s%s\n", mc_prompt, *argv);
         fflush (stdout);
@@ -318,7 +318,7 @@ do_executev (const char *shell, int flags, char *const argv[])
         do_update_prompt ();
 
         /* We don't care if it died, higher level takes care of this */
-        invoke_subshell (*argv, VISIBLY, old_vfs_dir_vpath != NULL ? NULL : &new_dir_vpath);
+        invoke_subshell (*argv, VISIBLY, old_vfs_dir_vpath != nullptr ? nullptr : &new_dir_vpath);
     }
     else
 #endif /* ENABLE_SUBSHELL */
@@ -353,7 +353,7 @@ do_executev (const char *shell, int flags, char *const argv[])
     edition_post_exec ();
 
 #ifdef ENABLE_SUBSHELL
-    if (new_dir_vpath != NULL)
+    if (new_dir_vpath != nullptr)
     {
         do_possible_cd (new_dir_vpath);
         vfs_path_free (new_dir_vpath);
@@ -361,7 +361,7 @@ do_executev (const char *shell, int flags, char *const argv[])
 
 #endif /* ENABLE_SUBSHELL */
 
-    if (old_vfs_dir_vpath != NULL)
+    if (old_vfs_dir_vpath != nullptr)
     {
         mc_chdir (old_vfs_dir_vpath);
         vfs_path_free (old_vfs_dir_vpath);
@@ -386,7 +386,7 @@ do_execute (const char *shell, const char *command, int flags)
 
     args_array = g_ptr_array_new ();
     g_ptr_array_add (args_array, (char *) command);
-    g_ptr_array_add (args_array, NULL);
+    g_ptr_array_add (args_array, nullptr);
 
     do_executev (shell, flags, (char *const *) args_array->pdata);
 
@@ -420,11 +420,11 @@ post_exec (void)
 void
 shell_execute (const char *command, int flags)
 {
-    char *cmd = NULL;
+    char *cmd = nullptr;
 
     if (flags & EXECUTE_HIDE)
     {
-        cmd = g_strconcat (" ", command, (char *) NULL);
+        cmd = g_strconcat (" ", command, (char *) nullptr);
         flags ^= EXECUTE_HIDE;
     }
 
@@ -451,7 +451,7 @@ toggle_subshell (void)
     static gboolean message_flag = TRUE;
 
 #ifdef ENABLE_SUBSHELL
-    vfs_path_t *new_dir_vpath = NULL;
+    vfs_path_t *new_dir_vpath = nullptr;
 #endif /* ENABLE_SUBSHELL */
 
     SIG_ATOMIC_VOLATILE_T was_sigwinch = 0;
@@ -492,8 +492,8 @@ toggle_subshell (void)
     {
         vfs_path_t **new_dir_p;
 
-        new_dir_p = vfs_current_is_local ()? &new_dir_vpath : NULL;
-        invoke_subshell (NULL, VISIBLY, new_dir_p);
+        new_dir_p = vfs_current_is_local ()? &new_dir_vpath : nullptr;
+        invoke_subshell (nullptr, VISIBLY, new_dir_p);
     }
     else
 #endif /* ENABLE_SUBSHELL */
@@ -503,7 +503,7 @@ toggle_subshell (void)
             fputs (_("Type 'exit' to return to the Midnight Commander"), stderr);
             fputs ("\n\r\n\r", stderr);
 
-            my_system (EXECUTE_INTERNAL, mc_global.shell->path, NULL);
+            my_system (EXECUTE_INTERNAL, mc_global.shell->path, nullptr);
         }
         else
             get_key_code (0);
@@ -552,10 +552,10 @@ toggle_subshell (void)
         if (mc_global.mc_run_mode == MC_RUN_FULL)
         {
             do_load_prompt ();
-            if (new_dir_vpath != NULL)
+            if (new_dir_vpath != nullptr)
                 do_possible_cd (new_dir_vpath);
         }
-        else if (new_dir_vpath != NULL && mc_chdir (new_dir_vpath) != -1)
+        else if (new_dir_vpath != nullptr && mc_chdir (new_dir_vpath) != -1)
             vfs_setup_cwd ();
     }
 
@@ -606,14 +606,14 @@ execute_suspend (const gchar * event_group_name, const gchar * event_name,
 void
 execute_with_vfs_arg (const char *command, const vfs_path_t * filename_vpath)
 {
-    vfs_path_t *localcopy_vpath = NULL;
+    vfs_path_t *localcopy_vpath = nullptr;
     const vfs_path_t *do_execute_vpath;
     time_t mtime;
 
     if (!execute_prepare_with_vfs_arg (filename_vpath, &localcopy_vpath, &mtime))
         return;
 
-    do_execute_vpath = (localcopy_vpath == NULL) ? filename_vpath : localcopy_vpath;
+    do_execute_vpath = (localcopy_vpath == nullptr) ? filename_vpath : localcopy_vpath;
 
     do_execute (command, vfs_path_get_last_path_str (do_execute_vpath), EXECUTE_INTERNAL);
 
@@ -634,7 +634,7 @@ void
 execute_external_editor_or_viewer (const char *command, const vfs_path_t * filename_vpath,
                                    long start_line)
 {
-    vfs_path_t *localcopy_vpath = NULL;
+    vfs_path_t *localcopy_vpath = nullptr;
     const vfs_path_t *do_execute_vpath;
     char *extern_cmd_options;
     time_t mtime = 0;
@@ -642,23 +642,23 @@ execute_external_editor_or_viewer (const char *command, const vfs_path_t * filen
     if (!execute_prepare_with_vfs_arg (filename_vpath, &localcopy_vpath, &mtime))
         return;
 
-    do_execute_vpath = (localcopy_vpath == NULL) ? filename_vpath : localcopy_vpath;
+    do_execute_vpath = (localcopy_vpath == nullptr) ? filename_vpath : localcopy_vpath;
 
     extern_cmd_options =
         execute_get_external_cmd_opts_from_config (command, do_execute_vpath, start_line);
 
-    if (extern_cmd_options != NULL)
+    if (extern_cmd_options != nullptr)
     {
         char **argv_cmd_options;
         int argv_count;
 
-        if (g_shell_parse_argv (extern_cmd_options, &argv_count, &argv_cmd_options, NULL))
+        if (g_shell_parse_argv (extern_cmd_options, &argv_count, &argv_cmd_options, nullptr))
         {
             do_executev (command, EXECUTE_INTERNAL, argv_cmd_options);
             g_strfreev (argv_cmd_options);
         }
         else
-            do_executev (command, EXECUTE_INTERNAL, NULL);
+            do_executev (command, EXECUTE_INTERNAL, nullptr);
 
         g_free (extern_cmd_options);
     }

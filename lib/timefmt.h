@@ -22,7 +22,7 @@
     {                                                           \
         struct tm *whentm;                                      \
         whentm = localtime(&when);                              \
-        if (whentm == NULL)                                     \
+        if (whentm == nullptr)                                     \
         {                                                       \
             strncpy(buffer, INVALID_TIME_TEXT, bufsize);        \
             buffer[bufsize-1] = 0;                              \

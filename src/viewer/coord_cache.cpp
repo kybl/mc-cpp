@@ -78,7 +78,7 @@ typedef gboolean (*cmp_func_t) (const coord_cache_entry_t * a, const coord_cache
 static void
 mcview_ccache_add_entry (coord_cache_t * cache, size_t pos, const coord_cache_entry_t * entry)
 {
-    if ((cache == NULL) || (entry == NULL))
+    if ((cache == nullptr) || (entry == nullptr))
         return;
 
     pos = MIN (pos, cache->size);
@@ -189,7 +189,7 @@ coord_cache_new (void)
 void
 coord_cache_free (coord_cache_t * cache)
 {
-    if (cache != NULL)
+    if (cache != nullptr)
     {
         size_t i;
 
@@ -213,14 +213,14 @@ mcview_ccache_dump (WView * view)
     guint i;
     const coord_cache_t *cache = view->coord_cache;
 
-    g_assert (cache != NULL);
+    g_assert (cache != nullptr);
 
     filesize = mcview_get_filesize (view);
 
     f = fopen ("mcview-ccache.out", "w");
-    if (f == NULL)
+    if (f == nullptr)
         return;
-    (void) setvbuf (f, NULL, _IONBF, 0);
+    (void) setvbuf (f, nullptr, _IONBF, 0);
 
     /* cache entries */
     for (i = 0; i < cache->size; i++)
@@ -294,7 +294,7 @@ mcview_ccache_lookup (WView * view, coord_cache_entry_t * coord, enum ccache_typ
         NROFF_CONTINUATION
     } nroff_state;
 
-    if (view->coord_cache == NULL)
+    if (view->coord_cache == nullptr)
         view->coord_cache = coord_cache_new ();
 
     cache = view->coord_cache;

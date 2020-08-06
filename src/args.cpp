@@ -57,21 +57,21 @@ gboolean mc_args__force_colors = FALSE;
 /* Don't load keymap from file and use default one */
 gboolean mc_args__nokeymap = FALSE;
 
-char *mc_args__last_wd_file = NULL;
+char *mc_args__last_wd_file = nullptr;
 
 /* when enabled NETCODE, use folowing file as logfile */
-char *mc_args__netfs_logfile = NULL;
+char *mc_args__netfs_logfile = nullptr;
 
 /* keymap file */
-char *mc_args__keymap_file = NULL;
+char *mc_args__keymap_file = nullptr;
 
 /* Debug level */
 #ifdef ENABLE_VFS_SMB
 int mc_args__debug_level = 0;
 #endif
 
-void *mc_run_param0 = NULL;
-char *mc_run_param1 = NULL;
+void *mc_run_param0 = nullptr;
+char *mc_run_param1 = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -108,7 +108,7 @@ static const GOptionEntry argument_main_table[] = {
      "version", 'V', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_args__show_version,
      N_("Displays the current version"),
-     NULL
+     nullptr
     },
 
     /* options for wrappers */
@@ -116,7 +116,7 @@ static const GOptionEntry argument_main_table[] = {
      "datadir", 'f', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_args__show_datadirs,
      N_("Print data directory"),
-     NULL
+     nullptr
     },
 
     /* show extended information about used data directories */
@@ -124,7 +124,7 @@ static const GOptionEntry argument_main_table[] = {
      "datadir-info", 'F', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_args__show_datadirs_extended,
      N_("Print extended info about used data directories"),
-     NULL
+     nullptr
     },
 
 #ifdef ENABLE_CONFIGURE_ARGS
@@ -133,7 +133,7 @@ static const GOptionEntry argument_main_table[] = {
      "configure-options", '\0', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_args__show_configure_opts,
      N_("Print configure options"),
-     NULL
+     nullptr
     },
 #endif
 
@@ -149,14 +149,14 @@ static const GOptionEntry argument_main_table[] = {
      "subshell", 'U', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_global.tty.use_subshell,
      N_("Enables subshell support (default)"),
-     NULL
+     nullptr
     },
 
     {
      "nosubshell", 'u', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
      &mc_args__nouse_subshell,
      N_("Disables subshell support"),
-     NULL
+     nullptr
     },
 #endif
 
@@ -194,7 +194,7 @@ static const GOptionEntry argument_main_table[] = {
      N_("<file> ...") },
 
     {
-     NULL, '\0', 0, static_cast<GOptionArg> (0), NULL, NULL, NULL /* Complete struct initialization */
+     nullptr, '\0', 0, static_cast<GOptionArg> (0), nullptr, nullptr, nullptr /* Complete struct initialization */
     }
     /* *INDENT-ON* */
 };
@@ -208,28 +208,28 @@ static const GOptionEntry argument_terminal_table[] = {
      "xterm", 'x', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_args__force_xterm,
      N_("Forces xterm features"),
-     NULL
+     nullptr
     },
 
     {
      "no-x11", 'X', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_global.tty.disable_x11,
      N_("Disable X11 support"),
-     NULL
+     nullptr
     },
 
     {
      "oldmouse", 'g', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_global.tty.old_mouse,
      N_("Tries to use an old highlight mouse tracking"),
-     NULL
+     nullptr
     },
 
     {
      "nomouse", 'd', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_args__nomouse,
      N_("Disable mouse support in text version"),
-     NULL
+     nullptr
     },
 
 #ifdef HAVE_SLANG
@@ -237,7 +237,7 @@ static const GOptionEntry argument_terminal_table[] = {
      "termcap", 't', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &SLtt_Try_Termcap,
      N_("Tries to use termcap instead of terminfo"),
-     NULL
+     nullptr
     },
 #endif
 
@@ -245,14 +245,14 @@ static const GOptionEntry argument_terminal_table[] = {
      "slow", 's', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_global.tty.slow_terminal,
      N_("To run on slow terminals"),
-     NULL
+     nullptr
     },
 
     {
      "stickchars", 'a', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_global.tty.ugly_line_drawing,
      N_("Use stickchars to draw"),
-     NULL
+     nullptr
     },
 
 #ifdef HAVE_SLANG
@@ -260,7 +260,7 @@ static const GOptionEntry argument_terminal_table[] = {
      "resetsoft", 'k', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &reset_hp_softkeys,
      N_("Resets soft keys on HP terminals"),
-     NULL
+     nullptr
     },
 #endif
 
@@ -275,11 +275,11 @@ static const GOptionEntry argument_terminal_table[] = {
      "nokeymap", '\0', ARGS_TERM_OPTIONS, G_OPTION_ARG_NONE,
      &mc_args__nokeymap,
      N_("Don't load definitions of key bindings from file, use defaults"),
-     NULL
+     nullptr
     },
 
     {
-     NULL, '\0', 0, static_cast<GOptionArg> (0), NULL, NULL, NULL /* Complete struct initialization */
+     nullptr, '\0', 0, static_cast<GOptionArg> (0), nullptr, nullptr, nullptr /* Complete struct initialization */
     }
     /* *INDENT-ON* */
 };
@@ -296,14 +296,14 @@ static const GOptionEntry argument_color_table[] = {
      "nocolor", 'b', ARGS_COLOR_OPTIONS, G_OPTION_ARG_NONE,
      &mc_global.tty.disable_colors,
      N_("Requests to run in black and white"),
-     NULL
+     nullptr
     },
 
     {
      "color", 'c', ARGS_COLOR_OPTIONS, G_OPTION_ARG_NONE,
      &mc_args__force_colors,
      N_("Request to run in color mode"),
-     NULL
+     nullptr
     },
 
     {
@@ -321,17 +321,17 @@ static const GOptionEntry argument_color_table[] = {
     },
 
     {
-     NULL, '\0', 0, static_cast<GOptionArg> (0), NULL, NULL, NULL /* Complete struct initialization */
+     nullptr, '\0', 0, static_cast<GOptionArg> (0), nullptr, nullptr, nullptr /* Complete struct initialization */
     }
     /* *INDENT-ON* */
 };
 
 #undef ARGS_COLOR_OPTIONS
 
-static gchar *mc_args__loc__colors_string = NULL;
-static gchar *mc_args__loc__footer_string = NULL;
-static gchar *mc_args__loc__header_string = NULL;
-static gchar *mc_args__loc__usage_string = NULL;
+static gchar *mc_args__loc__colors_string = nullptr;
+static gchar *mc_args__loc__footer_string = nullptr;
+static gchar *mc_args__loc__header_string = nullptr;
+static gchar *mc_args__loc__usage_string = nullptr;
 
 /*** file scope functions ************************************************************************/
 
@@ -383,7 +383,7 @@ mc_args_new_color_group (void)
 /* *INDENT-ON* */
 
     return g_option_group_new ("color", mc_args__loc__colors_string,
-                               _("Color options"), NULL, NULL);
+                               _("Color options"), nullptr, nullptr);
 
 }
 
@@ -537,7 +537,7 @@ mcedit_arg_new (const char *file_name, long line_number)
 static GList *
 parse_mcedit_arguments (int argc, char **argv)
 {
-    GList *flist = NULL;
+    GList *flist = nullptr;
     int i;
     long first_line_number = -1;
 
@@ -615,8 +615,8 @@ parse_mcedit_arguments (int argc, char **argv)
         flist = g_list_prepend (flist, arg);
     }
 
-    if (flist == NULL)
-        flist = g_list_prepend (flist, mcedit_arg_new (NULL, 0));
+    if (flist == nullptr)
+        flist = g_list_prepend (flist, mcedit_arg_new (nullptr, 0));
     else if (first_line_number != -1)
     {
         /* overwrite line number for first file */
@@ -680,14 +680,14 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
 
     mc_args_add_extended_info_to_help ();
 
-    main_group = g_option_group_new ("main", _("Main options"), _("Main options"), NULL, NULL);
+    main_group = g_option_group_new ("main", _("Main options"), _("Main options"), nullptr, nullptr);
 
     g_option_group_add_entries (main_group, argument_main_table);
     g_option_context_set_main_group (context, main_group);
     g_option_group_set_translation_domain (main_group, translation_domain);
 
     terminal_group = g_option_group_new ("terminal", _("Terminal options"),
-                                         _("Terminal options"), NULL, NULL);
+                                         _("Terminal options"), nullptr, nullptr);
 
     g_option_group_add_entries (terminal_group, argument_terminal_table);
     g_option_context_add_group (context, terminal_group);
@@ -701,13 +701,13 @@ mc_args_parse (int *argc, char ***argv, const char *translation_domain, GError *
 
     if (!g_option_context_parse (context, argc, argv, mcerror))
     {
-        if (*mcerror == NULL)
+        if (*mcerror == nullptr)
             mc_propagate_error (mcerror, 0, "%s\n", _("Arguments parse error!"));
         else
         {
             gchar *help_str;
 
-            help_str = g_option_context_get_help (context, TRUE, NULL);
+            help_str = g_option_context_get_help (context, TRUE, nullptr);
 
             if (str_isutf8 (_system_codepage))
                 mc_replace_error (mcerror, (*mcerror)->code, "%s\n\n%s\n", (*mcerror)->message,
@@ -795,7 +795,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         smbfs_set_debug (mc_args__debug_level);
 #endif /* ENABLE_VFS_SMB */
 
-    if (mc_args__netfs_logfile != NULL)
+    if (mc_args__netfs_logfile != nullptr)
     {
         vfs_path_t *vpath;
 #ifdef ENABLE_VFS_FTP
@@ -811,7 +811,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         (void) vpath;
     }
 
-    tmp = (argc > 0) ? argv[1] : NULL;
+    tmp = (argc > 0) ? argv[1] : nullptr;
 
     switch (mc_global.mc_run_mode)
     {
@@ -820,7 +820,7 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
         break;
 
     case MC_RUN_VIEWER:
-        if (tmp == NULL)
+        if (tmp == nullptr)
         {
             mc_propagate_error (mcerror, 0, "%s\n", _("No arguments given to the viewer."));
             return FALSE;
@@ -844,11 +844,11 @@ mc_setup_by_args (int argc, char **argv, GError ** mcerror)
     default:
         /* set the current dir and the other dir for filemanager,
            or two files for diff viewer */
-        if (tmp != NULL)
+        if (tmp != nullptr)
         {
             mc_run_param0 = g_strdup (tmp);
-            tmp = (argc > 1) ? argv[2] : NULL;
-            if (tmp != NULL)
+            tmp = (argc > 1) ? argv[2] : nullptr;
+            if (tmp != nullptr)
                 mc_run_param1 = g_strdup (tmp);
         }
         break;

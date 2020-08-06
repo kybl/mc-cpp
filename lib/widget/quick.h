@@ -46,9 +46,9 @@
     .id = id_,                                                                  \
     .u = {                                                                      \
         .input = {                                                              \
-            .label_text = NULL,                                                 \
+            .label_text = nullptr,                                                 \
             .label_location = input_label_none,                                 \
-            .label = NULL,                                                      \
+            .label = nullptr,                                                      \
             .text = txt,                                                        \
             .completion_flags = completion_flags_,                              \
             .is_passwd = is_passwd_,                                            \
@@ -69,7 +69,7 @@
         .input = {                                                              \
             .label_text = label_,                                               \
             .label_location = label_loc,                                        \
-            .label = NULL,                                                      \
+            .label = nullptr,                                                      \
             .text = txt,                                                        \
             .completion_flags = completion_flags_,                              \
             .is_passwd = is_passwd_,                                            \
@@ -89,7 +89,7 @@
     .u = {                                                                      \
         .label = {                                                              \
             .text = txt,                                                        \
-            .input = NULL                                                       \
+            .input = nullptr                                                       \
         }                                                                       \
     }                                                                           \
 }
@@ -114,7 +114,7 @@
     .widget_type = quick_start_groupbox,                                        \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .groupbox = {                                                           \
             .title = t                                                          \
@@ -127,12 +127,12 @@
     .widget_type = quick_stop_groupbox,                                         \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .input = {                                                              \
-            .text = NULL,                                                       \
-            .histname = NULL,                                                   \
-            .result = NULL                                                      \
+            .text = nullptr,                                                       \
+            .histname = nullptr,                                                   \
+            .result = nullptr                                                      \
         }                                                                       \
     }                                                                           \
 }
@@ -142,7 +142,7 @@
     .widget_type = quick_separator,                                             \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .separator = {                                                          \
             .space = TRUE,                                                      \
@@ -156,12 +156,12 @@
     .widget_type = quick_start_columns,                                         \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .input = {                                                              \
-            .text = NULL,                                                       \
-            .histname = NULL,                                                   \
-            .result = NULL                                                      \
+            .text = nullptr,                                                       \
+            .histname = nullptr,                                                   \
+            .result = nullptr                                                      \
         }                                                                       \
     }                                                                           \
 }
@@ -171,12 +171,12 @@
     .widget_type = quick_next_column,                                           \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .input = {                                                              \
-            .text = NULL,                                                       \
-            .histname = NULL,                                                   \
-            .result = NULL                                                      \
+            .text = nullptr,                                                       \
+            .histname = nullptr,                                                   \
+            .result = nullptr                                                      \
         }                                                                       \
     }                                                                           \
 }
@@ -186,12 +186,12 @@
     .widget_type = quick_stop_columns,                                          \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .input = {                                                              \
-            .text = NULL,                                                       \
-            .histname = NULL,                                                   \
-            .result = NULL                                                      \
+            .text = nullptr,                                                       \
+            .histname = nullptr,                                                   \
+            .result = nullptr                                                      \
         }                                                                       \
     }                                                                           \
 }
@@ -201,7 +201,7 @@
     .widget_type = quick_buttons,                                               \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .separator = {                                                          \
             .space = space_,                                                    \
@@ -212,20 +212,20 @@
 
 #define QUICK_BUTTONS_OK_CANCEL                                                 \
     QUICK_START_BUTTONS (TRUE, TRUE),                                           \
-        QUICK_BUTTON (N_("&OK"), B_ENTER, NULL, NULL),                          \
-        QUICK_BUTTON (N_("&Cancel"), B_CANCEL, NULL, NULL)
+        QUICK_BUTTON (N_("&OK"), B_ENTER, nullptr, nullptr),                          \
+        QUICK_BUTTON (N_("&Cancel"), B_CANCEL, nullptr, nullptr)
 
 #define QUICK_END                                                               \
 {                                                                               \
     .widget_type = quick_end,                                                   \
     .options = WOP_DEFAULT,                                                     \
     .pos_flags = WPOS_KEEP_DEFAULT,                                             \
-    .id = NULL,                                                                 \
+    .id = nullptr,                                                                 \
     .u = {                                                                      \
         .input = {                                                              \
-            .text = NULL,                                                       \
-            .histname = NULL,                                                   \
-            .result = NULL                                                      \
+            .text = nullptr,                                                       \
+            .histname = nullptr,                                                   \
+            .result = nullptr                                                      \
         }                                                                       \
     }                                                                           \
 }

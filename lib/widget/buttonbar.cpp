@@ -148,10 +148,10 @@ buttonbar_call (WButtonBar * bb, int i)
     Widget *w = WIDGET (bb);
     Widget *target;
 
-    if ((bb != NULL) && (bb->labels[i].command != CK_IgnoreKey))
+    if ((bb != nullptr) && (bb->labels[i].command != CK_IgnoreKey))
     {
-        target = (bb->labels[i].receiver != NULL) ? bb->labels[i].receiver : WIDGET (w->owner);
-        ret = send_message (target, w, MSG_ACTION, bb->labels[i].command, NULL);
+        target = (bb->labels[i].receiver != nullptr) ? bb->labels[i].receiver : WIDGET (w->owner);
+        ret = send_message (target, w, MSG_ACTION, bb->labels[i].command, nullptr);
     }
     return ret;
 }
@@ -194,7 +194,7 @@ buttonbar_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, voi
                 tty_printf ("%2d", i + 1);
 
                 tty_setcolor (BUTTONBAR_BUTTON_COLOR);
-                text = (bb->labels[i].text != NULL) ? bb->labels[i].text : "";
+                text = (bb->labels[i].text != nullptr) ? bb->labels[i].text : "";
                 tty_print_string (str_fit_to_term (text, width - 2, J_LEFT_FIT));
             }
         }
@@ -260,14 +260,14 @@ void
 buttonbar_set_label (WButtonBar * bb, int idx, const char *text, const global_keymap_t * keymap,
                      Widget * receiver)
 {
-    if ((bb != NULL) && (idx >= 1) && (idx <= BUTTONBAR_LABELS_NUM))
+    if ((bb != nullptr) && (idx >= 1) && (idx <= BUTTONBAR_LABELS_NUM))
     {
         long command = CK_IgnoreKey;
 
-        if (keymap != NULL)
+        if (keymap != nullptr)
             command = keybind_lookup_keymap_command (keymap, KEY_F (idx));
 
-        if ((text == NULL) || (text[0] == '\0'))
+        if ((text == nullptr) || (text[0] == '\0'))
             set_label_text (bb, idx, "");
         else
             set_label_text (bb, idx, text);

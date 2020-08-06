@@ -399,7 +399,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
     mcview_state_machine_t state_after_nroff;
     int c2, c3;
 
-    if (color != NULL)
+    if (color != nullptr)
         *color = VIEW_NORMAL_COLOR;
 
     if (!view->mode_flags.nroff)
@@ -426,7 +426,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
     if (*c == '_' && c3 == '_')
     {
         *state = state_after_nroff;
-        if (color != NULL)
+        if (color != nullptr)
             *color =
                 state->nroff_underscore_is_underlined ? VIEW_UNDERLINED_COLOR : VIEW_BOLD_COLOR;
     }
@@ -434,7 +434,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
     {
         *state = state_after_nroff;
         state->nroff_underscore_is_underlined = FALSE;
-        if (color != NULL)
+        if (color != nullptr)
             *color = VIEW_BOLD_COLOR;
     }
     else if (*c == '_')
@@ -442,7 +442,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
         *c = c3;
         *state = state_after_nroff;
         state->nroff_underscore_is_underlined = TRUE;
-        if (color != NULL)
+        if (color != nullptr)
             *color = VIEW_UNDERLINED_COLOR;
     }
 
@@ -473,7 +473,7 @@ mcview_get_next_maybe_nroff_char (WView * view, mcview_state_machine_t * state, 
  * @param cs store the characters here
  * @param clen the room available in cs (that is, at most clen-1 combining marks are allowed), must
  *   be at least 2
- * @param color if non-NULL, store the color here, taken from the first codepoint's color
+ * @param color if non-nullptr, store the color here, taken from the first codepoint's color
  * @return the number of entries placed in cs, or 0 on EOF
  */
 static int
@@ -491,7 +491,7 @@ mcview_next_combining_char_sequence (WView * view, mcview_state_machine_t * stat
         int cnext;
 
         mcview_state_machine_t state_after_crlf = *state;
-        if (mcview_get_next_maybe_nroff_char (view, &state_after_crlf, &cnext, NULL)
+        if (mcview_get_next_maybe_nroff_char (view, &state_after_crlf, &cnext, nullptr)
             && cnext == '\n')
             *state = state_after_crlf;
         cs[0] = '\n';
@@ -531,7 +531,7 @@ mcview_next_combining_char_sequence (WView * view, mcview_state_machine_t * stat
         mcview_state_machine_t state_after_combining;
 
         state_after_combining = *state;
-        if (!mcview_get_next_maybe_nroff_char (view, &state_after_combining, &cs[i], NULL))
+        if (!mcview_get_next_maybe_nroff_char (view, &state_after_combining, &cs[i], nullptr))
             return i;
         if (!mcview_ismark (view, cs[i]) || !mcview_isprint (view, cs[i]))
             return i;
@@ -589,10 +589,10 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
     char str[(1 + MAX_COMBINING_CHARS) * UTF8_CHAR_LEN + 1];
     int i, j;
 
-    if (paragraph_ended != NULL)
+    if (paragraph_ended != nullptr)
         *paragraph_ended = TRUE;
 
-    if (!view->mode_flags.wrap && (row < 0 || row >= (int) height) && linewidth == NULL)
+    if (!view->mode_flags.wrap && (row < 0 || row >= (int) height) && linewidth == nullptr)
     {
         /* Optimization: Fast forward to the end of the line, rather than carefully
          * parsing and then not actually displaying it. */
@@ -617,7 +617,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         n = mcview_next_combining_char_sequence (view, state, cs, 1 + MAX_COMBINING_CHARS, &color);
         if (n == 0)
         {
-            if (linewidth != NULL)
+            if (linewidth != nullptr)
                 *linewidth = col;
             return (col > 0) ? 1 : 0;
         }
@@ -629,7 +629,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         {
             /* New line: reset all formatting state for the next paragraph. */
             mcview_state_machine_init (state, state->offset);
-            if (linewidth != NULL)
+            if (linewidth != nullptr)
                 *linewidth = col;
             return 1;
         }
@@ -665,9 +665,9 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
             && col > 0)
         {
             *state = state_saved;
-            if (paragraph_ended != NULL)
+            if (paragraph_ended != nullptr)
                 *paragraph_ended = FALSE;
-            if (linewidth != NULL)
+            if (linewidth != nullptr)
                 *linewidth = col;
             return 1;
         }
@@ -731,7 +731,7 @@ mcview_display_line (WView * view, mcview_state_machine_t * state, int row,
         state->unwrapped_column += charwidth;
 
         if (!view->mode_flags.wrap && (off_t) col >= dpy_text_column + (off_t) width
-            && linewidth == NULL)
+            && linewidth == nullptr)
         {
             /* Optimization: Fast forward to the end of the line, rather than carefully
              * parsing and then not actually displaying it. */
@@ -780,7 +780,7 @@ mcview_display_paragraph (WView * view, mcview_state_machine_t * state, int row)
     {
         gboolean paragraph_ended;
 
-        lines += mcview_display_line (view, state, row, &paragraph_ended, NULL);
+        lines += mcview_display_line (view, state, row, &paragraph_ended, nullptr);
         if (paragraph_ended)
             return lines;
 
@@ -825,7 +825,7 @@ mcview_wrap_fixup (WView * view)
         gboolean paragraph_ended;
 
         state_prev = view->dpy_state_top;
-        if (mcview_display_line (view, &view->dpy_state_top, -1, &paragraph_ended, NULL) == 0)
+        if (mcview_display_line (view, &view->dpy_state_top, -1, &paragraph_ended, nullptr) == 0)
             break;
         if (paragraph_ended)
         {
@@ -903,7 +903,7 @@ mcview_display_text (WView * view)
     view->dpy_state_bottom = state;
 
     tty_setcolor (VIEW_NORMAL_COLOR);
-    if (mcview_show_eof != NULL && mcview_show_eof[0] != '\0')
+    if (mcview_show_eof != nullptr && mcview_show_eof[0] != '\0')
         while (row < (int) height)
         {
             widget_gotoyx (view, top + row, left);
@@ -935,7 +935,7 @@ mcview_ascii_move_down (WView * view, off_t lines)
         /* See if there's still data below the bottom line, by imaginarily displaying one
          * more line. This takes care of reading more data into growbuf, if required.
          * If the end position didn't advance, we're at EOF and hence bail out. */
-        if (mcview_display_line (view, &view->dpy_state_bottom, -1, &paragraph_ended, NULL) == 0)
+        if (mcview_display_line (view, &view->dpy_state_bottom, -1, &paragraph_ended, nullptr) == 0)
             break;
 
         /* Okay, there's enough data. Move by 1 row at the top, too. No need to check for
@@ -948,7 +948,7 @@ mcview_ascii_move_down (WView * view, off_t lines)
         }
         else
         {
-            mcview_display_line (view, &view->dpy_state_top, -1, &paragraph_ended, NULL);
+            mcview_display_line (view, &view->dpy_state_top, -1, &paragraph_ended, nullptr);
             if (!paragraph_ended)
                 view->dpy_paragraph_skip_lines++;
             else
@@ -1018,7 +1018,7 @@ mcview_ascii_move_up (WView * view, off_t lines)
         mcview_state_machine_init (&view->dpy_state_top, view->dpy_start);
         view->dpy_paragraph_skip_lines -= lines;
         for (i = 0; i < view->dpy_paragraph_skip_lines; i++)
-            mcview_display_line (view, &view->dpy_state_top, -1, NULL, NULL);
+            mcview_display_line (view, &view->dpy_state_top, -1, nullptr, nullptr);
     }
 }
 
@@ -1043,7 +1043,7 @@ mcview_ascii_moveto_eol (WView * view)
 
         /* Get the width of the topmost paragraph. */
         mcview_state_machine_init (&state, view->dpy_start);
-        mcview_display_line (view, &state, -1, NULL, &linewidth);
+        mcview_display_line (view, &state, -1, nullptr, &linewidth);
         view->dpy_text_column = mcview_offset_doz (linewidth, (off_t) view->data_area.width);
     }
 }

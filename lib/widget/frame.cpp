@@ -83,7 +83,7 @@ frame_draw (const WFrame * f)
     tty_fill_region (w->y, w->x, w->lines, w->cols, ' ');
     tty_draw_box (w->y + d, w->x + d, w->lines - 2 * d, w->cols - 2 * d, f->single);
 
-    if (f->title != NULL)
+    if (f->title != nullptr)
     {
         /* TODO: truncate long title */
         tty_setcolor (colors[FRAME_COLOR_TITLE]);
@@ -104,12 +104,12 @@ frame_new (int y, int x, int lines, int cols, const char *title, gboolean single
 
     f = g_new (WFrame, 1);
     w = WIDGET (f);
-    widget_init (w, y, x, lines, cols, frame_callback, NULL);
+    widget_init (w, y, x, lines, cols, frame_callback, nullptr);
 
     f->single = single;
     f->compact = compact;
 
-    f->title = NULL;
+    f->title = nullptr;
     frame_set_title (f, title);
 
     return f;
@@ -149,7 +149,7 @@ frame_set_title (WFrame * f, const char *title)
     MC_PTR_FREE (f->title);
 
     /* Strip existing spaces, add one space before and after the title */
-    if (title != NULL && *title != '\0')
+    if (title != nullptr && *title != '\0')
     {
         char *t;
 

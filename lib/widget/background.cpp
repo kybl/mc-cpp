@@ -116,7 +116,7 @@ background_new (int y, int x, int lines, int cols, int color, unsigned char patt
 
     b = g_new (WBackground, 1);
     w = WIDGET (b);
-    widget_init (w, y, x, lines, cols, callback != NULL ? callback : background_callback, NULL);
+    widget_init (w, y, x, lines, cols, callback != nullptr ? callback : background_callback, nullptr);
     w->get_colors = background_get_colors;
 
     b->color = color;

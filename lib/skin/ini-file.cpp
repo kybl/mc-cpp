@@ -52,15 +52,15 @@ mc_skin_get_list_from_dir (const gchar * base_dir, GPtrArray * list)
     gchar *name;
     GDir *dir;
 
-    name = g_build_filename (base_dir, MC_SKINS_DIR, (char *) NULL);
-    dir = g_dir_open (name, 0, NULL);
+    name = g_build_filename (base_dir, MC_SKINS_DIR, (char *) nullptr);
+    dir = g_dir_open (name, 0, nullptr);
     g_free (name);
 
-    if (dir != NULL)
+    if (dir != nullptr)
     {
         const gchar *cname;
 
-        while ((cname = g_dir_read_name (dir)) != NULL)
+        while ((cname = g_dir_read_name (dir)) != nullptr)
         {
             gchar *sname;
             size_t slen;
@@ -101,24 +101,24 @@ mc_skin_ini_file_load_search_in_dir (mc_skin_t * mc_skin, const gchar * base_dir
 {
     char *file_name, *file_name2;
 
-    file_name = g_build_filename (base_dir, MC_SKINS_DIR, mc_skin->name, (char *) NULL);
+    file_name = g_build_filename (base_dir, MC_SKINS_DIR, mc_skin->name, (char *) nullptr);
     if (exist_file (file_name))
     {
         mc_skin->config = mc_config_init (file_name, TRUE);
         g_free (file_name);
-        return (mc_skin->config != NULL);
+        return (mc_skin->config != nullptr);
     }
     g_free (file_name);
 
     file_name2 = g_strdup_printf ("%s.ini", mc_skin->name);
-    file_name = g_build_filename (base_dir, MC_SKINS_DIR, file_name2, (char *) NULL);
+    file_name = g_build_filename (base_dir, MC_SKINS_DIR, file_name2, (char *) nullptr);
     g_free (file_name2);
 
     if (exist_file (file_name))
     {
         mc_skin->config = mc_config_init (file_name, TRUE);
         g_free (file_name);
-        return (mc_skin->config != NULL);
+        return (mc_skin->config != nullptr);
     }
     g_free (file_name);
     return FALSE;
@@ -150,7 +150,7 @@ mc_skin_ini_file_load (mc_skin_t * mc_skin)
     char *file_name;
 
     file_name = g_path_get_basename (mc_skin->name);
-    if (file_name == NULL)
+    if (file_name == nullptr)
         return FALSE;
 
     if (strcmp (file_name, mc_skin->name) != 0)
@@ -159,7 +159,7 @@ mc_skin_ini_file_load (mc_skin_t * mc_skin)
         if (!g_path_is_absolute (mc_skin->name))
             return FALSE;
         mc_skin->config = mc_config_init (mc_skin->name, TRUE);
-        return (mc_skin->config != NULL);
+        return (mc_skin->config != nullptr);
     }
     g_free (file_name);
 
@@ -197,7 +197,7 @@ mc_skin_ini_file_parse (mc_skin_t * mc_skin)
 void
 mc_skin_set_hardcoded_skin (mc_skin_t * mc_skin)
 {
-    mc_skin->config = mc_config_init (NULL, TRUE);
+    mc_skin->config = mc_config_init (nullptr, TRUE);
 
     mc_config_set_string (mc_skin->config, "skin", "description", "hardcoded skin");
 

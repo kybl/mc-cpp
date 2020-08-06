@@ -88,7 +88,7 @@ static char *
 lock_build_name (void)
 {
     char host[BUF_SIZE];
-    const char *user = NULL;
+    const char *user = nullptr;
     struct passwd *pw;
 
     pw = getpwuid (getuid ());
@@ -123,7 +123,7 @@ lock_build_symlink_name (const vfs_path_t * fname_vpath)
 
     str_filename = g_path_get_basename (elpath);
     str_dirname = g_path_get_dirname (elpath);
-    symlink_name = g_strconcat (str_dirname, PATH_SEP_STR ".#", str_filename, (char *) NULL);
+    symlink_name = g_strconcat (str_dirname, PATH_SEP_STR ".#", str_filename, (char *) nullptr);
     g_free (str_dirname);
     g_free (str_filename);
 
@@ -183,7 +183,7 @@ lock_get_info (const char *lockfname)
 
     cnt = readlink (lockfname, buf, BUF_SIZE - 1);
     if (cnt == -1 || *buf == '\0')
-        return NULL;
+        return nullptr;
     buf[cnt] = '\0';
     return buf;
 }
@@ -199,14 +199,14 @@ lock_get_info (const char *lockfname)
 int
 lock_file (const vfs_path_t * fname_vpath)
 {
-    char *lockfname = NULL, *newlock, *msg;
+    char *lockfname = nullptr, *newlock, *msg;
     struct stat statbuf;
     lock_s *lockinfo;
     gboolean is_local;
     gboolean symlink_ok = FALSE;
     const char *elpath;
 
-    if (fname_vpath == NULL)
+    if (fname_vpath == nullptr)
         return 0;
 
     elpath = vfs_path_get_by_index (fname_vpath, 0)->path;
@@ -222,7 +222,7 @@ lock_file (const vfs_path_t * fname_vpath)
         lockfname = lock_build_symlink_name (fname_vpath);
     }
 
-    if (!is_local || lockfname == NULL)
+    if (!is_local || lockfname == nullptr)
         return 0;
 
     if (lstat (lockfname, &statbuf) == 0)
@@ -230,7 +230,7 @@ lock_file (const vfs_path_t * fname_vpath)
         const char *lock;
 
         lock = lock_get_info (lockfname);
-        if (lock == NULL)
+        if (lock == nullptr)
             goto ret;
         lockinfo = lock_extract_info (lock);
 
@@ -282,7 +282,7 @@ unlock_file (const vfs_path_t * fname_vpath)
     struct stat statbuf;
     const char *elpath, *lock;
 
-    if (fname_vpath == NULL)
+    if (fname_vpath == nullptr)
         return 0;
 
     elpath = vfs_path_get_by_index (fname_vpath, 0)->path;
@@ -292,7 +292,7 @@ unlock_file (const vfs_path_t * fname_vpath)
 
     lockfname = lock_build_symlink_name (fname_vpath);
 
-    if (lockfname == NULL)
+    if (lockfname == nullptr)
         return 0;
 
     /* Check if lock exists */
@@ -300,7 +300,7 @@ unlock_file (const vfs_path_t * fname_vpath)
         goto ret;
 
     lock = lock_get_info (lockfname);
-    if (lock != NULL)
+    if (lock != nullptr)
     {
         /* Don't touch if lock is not ours */
         if (lock_extract_info (lock)->pid != getpid ())

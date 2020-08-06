@@ -207,9 +207,9 @@ load_client_codepage (int client_codepage)
 {
     pstring codepage_file_name;
     unsigned char buf[8];
-    FILE *fp = NULL;
+    FILE *fp = nullptr;
     SMB_OFF_T size;
-    codepage_p cp_p = NULL;
+    codepage_p cp_p = nullptr;
     SMB_STRUCT_STAT st;
 
     DEBUG (5, ("load_client_codepage: loading codepage %d.\n", client_codepage));
@@ -217,7 +217,7 @@ load_client_codepage (int client_codepage)
     if (strlen (CODEPAGEDIR) + 14 > sizeof (codepage_file_name))
     {
         DEBUG (0, ("load_client_codepage: filename too long to load\n"));
-        return NULL;
+        return nullptr;
     }
 
     pstrcpy (codepage_file_name, CODEPAGEDIR);
@@ -229,7 +229,7 @@ load_client_codepage (int client_codepage)
     if (sys_stat (codepage_file_name, &st) != 0)
     {
         DEBUG (0, ("load_client_codepage: filename %s does not exist.\n", codepage_file_name));
-        return NULL;
+        return nullptr;
     }
 
     /* Check if it is at least big enough to hold the required
@@ -243,7 +243,7 @@ load_client_codepage (int client_codepage)
     {
         DEBUG (0, ("load_client_codepage: file %s is an incorrect size for a \
 code page file (size=%d).\n", codepage_file_name, (int) size));
-        return NULL;
+        return nullptr;
     }
 
     /* Read the first 8 bytes of the codepage file - check
@@ -251,11 +251,11 @@ code page file (size=%d).\n", codepage_file_name, (int) size));
        is held in little endian format.
      */
 
-    if ((fp = sys_fopen (codepage_file_name, "r")) == NULL)
+    if ((fp = sys_fopen (codepage_file_name, "r")) == nullptr)
     {
         DEBUG (0, ("load_client_codepage: cannot open file %s. Error was %s\n",
                    codepage_file_name, unix_error_string (errno)));
-        return NULL;
+        return nullptr;
     }
 
     if (fread (buf, 1, CODEPAGE_HEADER_SIZE, fp) != CODEPAGE_HEADER_SIZE)
@@ -300,7 +300,7 @@ multiple of 4.\n", codepage_file_name));
     }
 
     /* Allocate space for the code page file and read it all in. */
-    if ((cp_p = (codepage_p) malloc (size + 4)) == NULL)
+    if ((cp_p = (codepage_p) malloc (size + 4)) == nullptr)
     {
         DEBUG (0, ("load_client_codepage: malloc fail.\n"));
         goto clean_and_exit;
@@ -323,11 +323,11 @@ multiple of 4.\n", codepage_file_name));
 
     /* pseudo destructor :-) */
 
-    if (fp != NULL)
+    if (fp != nullptr)
         fclose (fp);
     if (cp_p)
         free ((char *) cp_p);
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************************************
@@ -337,9 +337,9 @@ void
 codepage_initialise (int client_codepage)
 {
     int i;
-    static codepage_p cp = NULL;
+    static codepage_p cp = nullptr;
 
-    if (cp != NULL)
+    if (cp != nullptr)
     {
         DEBUG (6,
                ("codepage_initialise: called twice - ignoring second client code page = %d\n",
@@ -354,7 +354,7 @@ codepage_initialise (int client_codepage)
      */
     cp = load_client_codepage (client_codepage);
 
-    if (cp == NULL)
+    if (cp == nullptr)
     {
 #ifdef KANJI
         DEBUG (6, ("codepage_initialise: loading dynamic codepage file %s/codepage.%d \
@@ -392,7 +392,7 @@ add_char_string (const char *s)
     if (!extra_chars)
         return;
 
-    for (t = strtok (extra_chars, " \t\r\n"); t; t = strtok (NULL, " \t\r\n"))
+    for (t = strtok (extra_chars, " \t\r\n"); t; t = strtok (nullptr, " \t\r\n"))
     {
         char c1 = 0, c2 = 0;
         int i1 = 0, i2 = 0;

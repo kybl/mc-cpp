@@ -167,9 +167,9 @@ struct Widget
  */
 typedef struct hotkey_t
 {
-    char *start;                /* never NULL */
-    char *hotkey;               /* can be NULL */
-    char *end;                  /* can be NULL */
+    char *start;                /* never nullptr */
+    char *hotkey;               /* can be nullptr */
+    char *end;                  /* can be nullptr */
 } hotkey_t;
 
 /*** global variables defined in .c file *********************************************************/
@@ -231,7 +231,7 @@ send_message (void *w, void *sender, widget_msg_t msg, int parm, void *data)
     cb_ret_t ret = MSG_NOT_HANDLED;
 
 #if 1
-    if (w != NULL)              /* This must be always true, but... */
+    if (w != nullptr)              /* This must be always true, but... */
 #endif
         ret = WIDGET (w)->callback (WIDGET (w), WIDGET (sender), msg, parm, data);
 
@@ -362,7 +362,7 @@ widget_get_colors (const Widget * w)
 static inline gboolean
 widget_update_cursor (Widget * w)
 {
-    return (send_message (w, NULL, MSG_CURSOR, 0, NULL) == MSG_HANDLED);
+    return (send_message (w, nullptr, MSG_CURSOR, 0, nullptr) == MSG_HANDLED);
 }
 
 /* --------------------------------------------------------------------------------------------- */

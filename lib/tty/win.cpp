@@ -48,8 +48,8 @@
 
 /*** global variables ****************************************************************************/
 
-char *smcup = NULL;
-char *rmcup = NULL;
+char *smcup = nullptr;
+char *rmcup = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -152,7 +152,7 @@ look_for_rxvt_extensions (void)
     if (!been_called)
     {
         const char *e = getenv ("RXVT_EXT");
-        rxvt_extensions = ((e != NULL) && (strcmp (e, "1.0") == 0));
+        rxvt_extensions = ((e != nullptr) && (strcmp (e, "1.0") == 0));
         been_called = TRUE;
     }
 

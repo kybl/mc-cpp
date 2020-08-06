@@ -56,7 +56,7 @@
 
 /*** global variables ****************************************************************************/
 
-char *option_stop_format_chars = NULL;
+char *option_stop_format_chars = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -86,7 +86,7 @@ line_start (const edit_buffer_t * buf, long line)
         p = edit_buffer_get_forward_offset (buf, p, line - l, 0);
 
     p = edit_buffer_get_bol (buf, p);
-    while (strchr ("\t ", edit_buffer_get_byte (buf, p)) != NULL)
+    while (strchr ("\t ", edit_buffer_get_byte (buf, p)) != nullptr)
         p++;
     return p;
 }
@@ -112,7 +112,7 @@ bad_line_start (const edit_buffer_t * buf, off_t p)
                  && edit_buffer_get_byte (buf, p + 2) == '-');
     }
 
-    return (option_stop_format_chars != NULL && strchr (option_stop_format_chars, c) != NULL);
+    return (option_stop_format_chars != nullptr && strchr (option_stop_format_chars, c) != nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -178,7 +178,7 @@ get_paragraph (const edit_buffer_t * buf, off_t p, off_t q, gboolean indent)
     for (; p < q; p++)
     {
         if (indent && edit_buffer_get_byte (buf, p - 1) == '\n')
-            while (strchr ("\t ", edit_buffer_get_byte (buf, p)) != NULL)
+            while (strchr ("\t ", edit_buffer_get_byte (buf, p)) != nullptr)
                 p++;
 
         g_string_append_c (t, edit_buffer_get_byte (buf, p));
@@ -374,7 +374,7 @@ edit_indent_width (const WEdit * edit, off_t p)
     off_t q = p;
 
     /* move to the end of the leading whitespace of the line */
-    while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, q)) != NULL
+    while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, q)) != nullptr
            && q < edit->buffer.size - 1)
         q++;
     /* count the number of columns of indentation */
@@ -409,7 +409,7 @@ put_paragraph (WEdit * edit, unsigned char *t, off_t p, long indent, off_t size)
 
     cursor = edit->buffer.curs1;
     if (indent != 0)
-        while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != NULL)
+        while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != nullptr)
             p++;
     for (i = 0; i < size; i++, p++)
     {
@@ -417,7 +417,7 @@ put_paragraph (WEdit * edit, unsigned char *t, off_t p, long indent, off_t size)
         {
             if (t[i - 1] == '\n' && c == '\n')
             {
-                while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != NULL)
+                while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != nullptr)
                     p++;
             }
             else if (t[i - 1] == '\n')
@@ -434,7 +434,7 @@ put_paragraph (WEdit * edit, unsigned char *t, off_t p, long indent, off_t size)
             else if (c == '\n')
             {
                 edit_cursor_move (edit, p - edit->buffer.curs1);
-                while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != NULL)
+                while (strchr ("\t ", edit_buffer_get_byte (&edit->buffer, p)) != nullptr)
                 {
                     edit_delete (edit, TRUE);
                     if (cursor > edit->buffer.curs1)
@@ -501,20 +501,20 @@ format_paragraph (WEdit * edit, gboolean force)
         off_t i;
         char *stop_format_chars;
 
-        if (option_stop_format_chars != NULL
-            && strchr (option_stop_format_chars, t->str[0]) != NULL)
+        if (option_stop_format_chars != nullptr
+            && strchr (option_stop_format_chars, t->str[0]) != nullptr)
         {
             g_string_free (t, TRUE);
             return;
         }
 
-        if (option_stop_format_chars == NULL || *option_stop_format_chars == '\0')
+        if (option_stop_format_chars == nullptr || *option_stop_format_chars == '\0')
             stop_format_chars = g_strdup ("\t");
         else
-            stop_format_chars = g_strconcat (option_stop_format_chars, "\t", (char *) NULL);
+            stop_format_chars = g_strconcat (option_stop_format_chars, "\t", (char *) nullptr);
 
         for (i = 0; i < size - 1; i++)
-            if (t->str[i] == '\n' && strchr (stop_format_chars, t->str[i + 1]) != NULL)
+            if (t->str[i] == '\n' && strchr (stop_format_chars, t->str[i + 1]) != nullptr)
             {
                 g_free (stop_format_chars);
                 g_string_free (t, TRUE);

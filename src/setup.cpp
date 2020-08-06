@@ -186,19 +186,19 @@ gboolean use_internal_edit = TRUE;
 #ifdef HAVE_CHARSET
 /* Numbers of (file I/O) and (input/display) codepages. -1 if not selected */
 int default_source_codepage = -1;
-char *autodetect_codeset = NULL;
+char *autodetect_codeset = nullptr;
 gboolean is_autodetect_codeset_enabled = FALSE;
 #endif /* !HAVE_CHARSET */
 
 #ifdef HAVE_ASPELL
-char *spell_language = NULL;
+char *spell_language = nullptr;
 #endif
 
 /* Value of "other_dir" key in ini file */
-char *saved_other_dir = NULL;
+char *saved_other_dir = nullptr;
 
 /* If set, then print to the given file the last directory we were at */
-char *last_wd_string = NULL;
+char *last_wd_string = nullptr;
 
 /* Set when main loop should be terminated */
 int quit = 0;
@@ -226,8 +226,8 @@ GArray *macros_list;
 
 /*** file scope variables ************************************************************************/
 
-static char *profile_name = NULL;       /* ${XDG_CONFIG_HOME}/mc/ini */
-static char *panels_profile_name = NULL;        /* ${XDG_CACHE_HOME}/mc/panels.ini */
+static char *profile_name = nullptr;       /* ${XDG_CONFIG_HOME}/mc/ini */
+static char *panels_profile_name = nullptr;        /* ${XDG_CACHE_HOME}/mc/panels.ini */
 
 /* *INDENT-OFF* */
 static const struct
@@ -239,7 +239,7 @@ static const struct
     { "brief", list_brief },
     { "long",  list_long  },
     { "user",  list_user  },
-    { NULL, 0 }
+    { nullptr, 0 }
 };
 
 static const struct
@@ -251,7 +251,7 @@ static const struct
     { "quickview", view_quick },
     { "info",      view_info },
     { "tree",      view_tree },
-    { NULL,        view_listing }
+    { nullptr,        view_listing }
 };
 
 static const struct
@@ -262,7 +262,7 @@ static const struct
     { "output_lines", &output_lines },
     { "left_panel_size", &panels_layout.left_panel_size },
     { "top_panel_size", &panels_layout.top_panel_size },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static const struct
@@ -279,7 +279,7 @@ static const struct
     { "horizontal_split", &panels_layout.horizontal_split },
     { "vertical_equal", &panels_layout.vertical_equal },
     { "horizontal_equal", &panels_layout.horizontal_equal },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static const struct
@@ -364,7 +364,7 @@ static const struct
     { "mcview_remember_file_position", &mcview_remember_file_position },
     { "auto_fill_mkdir_name", &auto_fill_mkdir_name },
     { "copymove_persistent_attr", &copymove_persistent_attr },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static const struct
@@ -394,7 +394,7 @@ static const struct
     { "editor_word_wrap_line_length", &option_word_wrap_line_length },
     { "editor_option_save_mode", &option_save_mode },
 #endif /* USE_INTERNAL_EDIT */
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static const struct
@@ -409,7 +409,7 @@ static const struct
     { "editor_stop_format_chars", &option_stop_format_chars, "-+*\\,.;:&>" },
 #endif
     { "mcview_eof", &mcview_show_eof, "" },
-    {  NULL, NULL, NULL }
+    {  nullptr, nullptr, nullptr }
 };
 
 static const struct
@@ -434,7 +434,7 @@ static const struct
     { "filetype_mode", &panels_options.filetype_mode },
     { "permission_mode", &panels_options.permission_mode },
     { "torben_fj_mode", &panels_options.torben_fj_mode },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 /* *INDENT-ON* */
 
@@ -444,10 +444,10 @@ static const struct
 /**
  * Get name of config file.
  *
- * @param subdir If not NULL, config is also searched in specified subdir.
+ * @param subdir If not nullptr, config is also searched in specified subdir.
  * @param config_file_name If relative, file if searched in standard paths.
  *
- * @return newly allocated string with config name or NULL if file is not found.
+ * @return newly allocated string with config name or nullptr if file is not found.
  */
 
 static char *
@@ -459,14 +459,14 @@ load_setup_get_full_config_name (const char *subdir, const char *config_file_nam
     char *lc_basename, *ret;
     char *file_name;
 
-    if (config_file_name == NULL)
-        return NULL;
+    if (config_file_name == nullptr)
+        return nullptr;
 
     /* check for .keymap suffix */
     if (g_str_has_suffix (config_file_name, ".keymap"))
         file_name = g_strdup (config_file_name);
     else
-        file_name = g_strconcat (config_file_name, ".keymap", (char *) NULL);
+        file_name = g_strconcat (config_file_name, ".keymap", (char *) nullptr);
 
     canonicalize_pathname (file_name);
 
@@ -476,13 +476,13 @@ load_setup_get_full_config_name (const char *subdir, const char *config_file_nam
     lc_basename = g_path_get_basename (file_name);
     g_free (file_name);
 
-    if (lc_basename == NULL)
-        return NULL;
+    if (lc_basename == nullptr)
+        return nullptr;
 
-    if (subdir != NULL)
-        ret = g_build_filename (mc_config_get_path (), subdir, lc_basename, (char *) NULL);
+    if (subdir != nullptr)
+        ret = g_build_filename (mc_config_get_path (), subdir, lc_basename, (char *) nullptr);
     else
-        ret = g_build_filename (mc_config_get_path (), lc_basename, (char *) NULL);
+        ret = g_build_filename (mc_config_get_path (), lc_basename, (char *) nullptr);
 
     if (exist_file (ret))
     {
@@ -492,10 +492,10 @@ load_setup_get_full_config_name (const char *subdir, const char *config_file_nam
     }
     g_free (ret);
 
-    if (subdir != NULL)
-        ret = g_build_filename (mc_global.sysconfig_dir, subdir, lc_basename, (char *) NULL);
+    if (subdir != nullptr)
+        ret = g_build_filename (mc_global.sysconfig_dir, subdir, lc_basename, (char *) nullptr);
     else
-        ret = g_build_filename (mc_global.sysconfig_dir, lc_basename, (char *) NULL);
+        ret = g_build_filename (mc_global.sysconfig_dir, lc_basename, (char *) nullptr);
 
     if (exist_file (ret))
     {
@@ -505,10 +505,10 @@ load_setup_get_full_config_name (const char *subdir, const char *config_file_nam
     }
     g_free (ret);
 
-    if (subdir != NULL)
-        ret = g_build_filename (mc_global.share_data_dir, subdir, lc_basename, (char *) NULL);
+    if (subdir != nullptr)
+        ret = g_build_filename (mc_global.share_data_dir, subdir, lc_basename, (char *) nullptr);
     else
-        ret = g_build_filename (mc_global.share_data_dir, lc_basename, (char *) NULL);
+        ret = g_build_filename (mc_global.share_data_dir, lc_basename, (char *) nullptr);
 
     g_free (lc_basename);
 
@@ -519,7 +519,7 @@ load_setup_get_full_config_name (const char *subdir, const char *config_file_nam
     }
 
     g_free (ret);
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -531,7 +531,7 @@ setup__is_cfg_group_must_panel_config (const char *grp)
             !strcasecmp ("Temporal:New Right Panel", grp) ||
             !strcasecmp ("Temporal:New Left Panel", grp) ||
             !strcasecmp ("New Left Panel", grp) || !strcasecmp ("New Right Panel", grp))
-        ? grp : NULL;
+        ? grp : nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -546,42 +546,42 @@ setup__move_panels_config_into_separate_file (const char *profile)
         return;
 
     tmp_cfg = mc_config_init (profile, FALSE);
-    if (tmp_cfg == NULL)
+    if (tmp_cfg == nullptr)
         return;
 
-    groups = mc_config_get_groups (tmp_cfg, NULL);
-    if (*groups == NULL)
+    groups = mc_config_get_groups (tmp_cfg, nullptr);
+    if (*groups == nullptr)
     {
         g_strfreev (groups);
         mc_config_deinit (tmp_cfg);
         return;
     }
 
-    for (curr_grp = groups; *curr_grp != NULL; curr_grp++)
-        if (setup__is_cfg_group_must_panel_config (*curr_grp) == NULL)
+    for (curr_grp = groups; *curr_grp != nullptr; curr_grp++)
+        if (setup__is_cfg_group_must_panel_config (*curr_grp) == nullptr)
             mc_config_del_group (tmp_cfg, *curr_grp);
 
-    mc_config_save_to_file (tmp_cfg, panels_profile_name, NULL);
+    mc_config_save_to_file (tmp_cfg, panels_profile_name, nullptr);
     mc_config_deinit (tmp_cfg);
 
     tmp_cfg = mc_config_init (profile, FALSE);
-    if (tmp_cfg == NULL)
+    if (tmp_cfg == nullptr)
     {
         g_strfreev (groups);
         return;
     }
 
-    for (curr_grp = groups; *curr_grp != NULL; curr_grp++)
+    for (curr_grp = groups; *curr_grp != nullptr; curr_grp++)
     {
         const char *need_grp;
 
         need_grp = setup__is_cfg_group_must_panel_config (*curr_grp);
-        if (need_grp != NULL)
+        if (need_grp != nullptr)
             mc_config_del_group (tmp_cfg, need_grp);
     }
     g_strfreev (groups);
 
-    mc_config_save_file (tmp_cfg, NULL);
+    mc_config_save_file (tmp_cfg, nullptr);
     mc_config_deinit (tmp_cfg);
 }
 
@@ -599,7 +599,7 @@ load_setup_init_config_from_file (mc_config_t ** config, const char *fname, gboo
      */
     if (exist_file (fname))
     {
-        if (*config != NULL)
+        if (*config != nullptr)
             mc_config_read_file (*config, fname, read_only, TRUE);
         else
             *config = mc_config_init (fname, read_only);
@@ -615,19 +615,19 @@ load_config (void)
     const char *kt;
 
     /* Load boolean options */
-    for (i = 0; bool_options[i].opt_name != NULL; i++)
+    for (i = 0; bool_options[i].opt_name != nullptr; i++)
         *bool_options[i].opt_addr =
             mc_config_get_bool (mc_global.main_config, CONFIG_APP_SECTION, bool_options[i].opt_name,
                                 *bool_options[i].opt_addr);
 
     /* Load integer options */
-    for (i = 0; int_options[i].opt_name != NULL; i++)
+    for (i = 0; int_options[i].opt_name != nullptr; i++)
         *int_options[i].opt_addr =
             mc_config_get_int (mc_global.main_config, CONFIG_APP_SECTION, int_options[i].opt_name,
                                *int_options[i].opt_addr);
 
     /* Load string options */
-    for (i = 0; str_options[i].opt_name != NULL; i++)
+    for (i = 0; str_options[i].opt_name != nullptr; i++)
         *str_options[i].opt_addr =
             mc_config_get_string (mc_global.main_config, CONFIG_APP_SECTION,
                                   str_options[i].opt_name, str_options[i].opt_defval);
@@ -645,7 +645,7 @@ load_config (void)
         option_tab_spacing = DEFAULT_TAB_SPACING;
 
     kt = getenv ("KEYBOARD_KEY_TIMEOUT_US");
-    if (kt != NULL && kt[0] != '\0')
+    if (kt != nullptr && kt[0] != '\0')
         old_esc_mode_timeout = atoi (kt);
 }
 
@@ -661,7 +661,7 @@ setup__load_panel_state (const char *section)
     /* Load the display mode */
     buffer = mc_config_get_string (mc_global.panels_config, section, "display", "listing");
 
-    for (i = 0; panel_types[i].opt_name != NULL; i++)
+    for (i = 0; panel_types[i].opt_name != nullptr; i++)
         if (g_ascii_strcasecmp (panel_types[i].opt_name, buffer) == 0)
         {
             mode = panel_types[i].opt_type;
@@ -681,12 +681,12 @@ load_layout (void)
     size_t i;
 
     /* actual options override legacy ones */
-    for (i = 0; layout_int_options[i].opt_name != NULL; i++)
+    for (i = 0; layout_int_options[i].opt_name != nullptr; i++)
         *layout_int_options[i].opt_addr =
             mc_config_get_int (mc_global.main_config, CONFIG_LAYOUT_SECTION,
                                layout_int_options[i].opt_name, *layout_int_options[i].opt_addr);
 
-    for (i = 0; layout_bool_options[i].opt_name != NULL; i++)
+    for (i = 0; layout_bool_options[i].opt_name != nullptr; i++)
         *layout_bool_options[i].opt_addr =
             mc_config_get_bool (mc_global.main_config, CONFIG_LAYOUT_SECTION,
                                 layout_bool_options[i].opt_name, *layout_bool_options[i].opt_addr);
@@ -712,13 +712,13 @@ load_keys_from_section (const char *terminal, mc_config_t * cfg)
     char *valcopy, *value;
     long key_code;
 
-    if (terminal == NULL)
+    if (terminal == nullptr)
         return;
 
-    section_name = g_strconcat ("terminal:", terminal, (char *) NULL);
-    keys = mc_config_get_keys (cfg, section_name, NULL);
+    section_name = g_strconcat ("terminal:", terminal, (char *) nullptr);
+    keys = mc_config_get_keys (cfg, section_name, nullptr);
 
-    for (profile_keys = keys; *profile_keys != NULL; profile_keys++)
+    for (profile_keys = keys; *profile_keys != nullptr; profile_keys++)
     {
         /* copy=other causes all keys from [terminal:other] to be loaded. */
         if (g_ascii_strcasecmp (*profile_keys, "copy") == 0)
@@ -729,17 +729,17 @@ load_keys_from_section (const char *terminal, mc_config_t * cfg)
             continue;
         }
 
-        key_code = lookup_key (*profile_keys, NULL);
+        key_code = lookup_key (*profile_keys, nullptr);
         if (key_code != 0)
         {
             gchar **values;
 
-            values = mc_config_get_string_list (cfg, section_name, *profile_keys, NULL);
-            if (values != NULL)
+            values = mc_config_get_string_list (cfg, section_name, *profile_keys, nullptr);
+            if (values != nullptr)
             {
                 gchar **curr_values;
 
-                for (curr_values = values; *curr_values != NULL; curr_values++)
+                for (curr_values = values; *curr_values != nullptr; curr_values++)
                 {
                     valcopy = convert_controls (*curr_values);
                     define_sequence (key_code, valcopy, MCKEY_NOACTION);
@@ -769,17 +769,17 @@ load_keymap_from_section (const char *section_name, GArray * keymap, mc_config_t
 {
     gchar **profile_keys, **keys;
 
-    if (section_name == NULL)
+    if (section_name == nullptr)
         return;
 
-    keys = mc_config_get_keys (cfg, section_name, NULL);
+    keys = mc_config_get_keys (cfg, section_name, nullptr);
 
-    for (profile_keys = keys; *profile_keys != NULL; profile_keys++)
+    for (profile_keys = keys; *profile_keys != nullptr; profile_keys++)
     {
         gchar **values;
 
-        values = mc_config_get_string_list (cfg, section_name, *profile_keys, NULL);
-        if (values != NULL)
+        values = mc_config_get_string_list (cfg, section_name, *profile_keys, nullptr);
+        if (values != nullptr)
         {
             long action;
 
@@ -788,7 +788,7 @@ load_keymap_from_section (const char *section_name, GArray * keymap, mc_config_t
             {
                 gchar **curr_values;
 
-                for (curr_values = values; *curr_values != NULL; curr_values++)
+                for (curr_values = values; *curr_values != nullptr; curr_values++)
                     keybind_cmd_bind (keymap, *curr_values, action);
             }
 
@@ -819,19 +819,19 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     /* load and merge global keymaps */
 
     /* 1) /usr/share/mc (mc_global.share_data_dir) */
-    share_keymap = g_build_filename (mc_global.share_data_dir, GLOBAL_KEYMAP_FILE, (char *) NULL);
+    share_keymap = g_build_filename (mc_global.share_data_dir, GLOBAL_KEYMAP_FILE, (char *) nullptr);
     load_setup_init_config_from_file (&keymap_config, share_keymap, TRUE);
 
     /* 2) /etc/mc (mc_global.sysconfig_dir) */
     sysconfig_keymap =
-        g_build_filename (mc_global.sysconfig_dir, GLOBAL_KEYMAP_FILE, (char *) NULL);
+        g_build_filename (mc_global.sysconfig_dir, GLOBAL_KEYMAP_FILE, (char *) nullptr);
     load_setup_init_config_from_file (&keymap_config, sysconfig_keymap, TRUE);
 
     /* then load and merge one of user-defined keymap */
 
     /* 3) --keymap=<keymap> */
-    fname = load_setup_get_full_config_name (NULL, mc_args__keymap_file);
-    if (fname != NULL && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
+    fname = load_setup_get_full_config_name (nullptr, mc_args__keymap_file);
+    if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
         load_setup_init_config_from_file (&keymap_config, fname, TRUE);
         goto done;
@@ -839,8 +839,8 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     g_free (fname);
 
     /* 4) getenv("MC_KEYMAP") */
-    fname = load_setup_get_full_config_name (NULL, g_getenv ("MC_KEYMAP"));
-    if (fname != NULL && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
+    fname = load_setup_get_full_config_name (nullptr, g_getenv ("MC_KEYMAP"));
+    if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
         load_setup_init_config_from_file (&keymap_config, fname, TRUE);
         goto done;
@@ -849,11 +849,11 @@ load_setup_get_keymap_profile_config (gboolean load_from_file)
     MC_PTR_FREE (fname);
 
     /* 5) main config; [Midnight Commander] -> keymap */
-    fname2 = mc_config_get_string (mc_global.main_config, CONFIG_APP_SECTION, "keymap", NULL);
-    if (fname2 != NULL && *fname2 != '\0')
-        fname = load_setup_get_full_config_name (NULL, fname2);
+    fname2 = mc_config_get_string (mc_global.main_config, CONFIG_APP_SECTION, "keymap", nullptr);
+    if (fname2 != nullptr && *fname2 != '\0')
+        fname = load_setup_get_full_config_name (nullptr, fname2);
     g_free (fname2);
-    if (fname != NULL && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
+    if (fname != nullptr && strcmp (fname, sysconfig_keymap) != 0 && strcmp (fname, share_keymap) != 0)
     {
         load_setup_init_config_from_file (&keymap_config, fname, TRUE);
         goto done;
@@ -879,7 +879,7 @@ panel_save_type (const char *section, panel_view_mode_t type)
 {
     size_t i;
 
-    for (i = 0; panel_types[i].opt_name != NULL; i++)
+    for (i = 0; panel_types[i].opt_name != nullptr; i++)
         if (panel_types[i].opt_type == type)
         {
             mc_config_set_string (mc_global.panels_config, section, "display",
@@ -901,7 +901,7 @@ panels_load_options (void)
         size_t i;
         int qmode;
 
-        for (i = 0; panels_ini_options[i].opt_name != NULL; i++)
+        for (i = 0; panels_ini_options[i].opt_name != nullptr; i++)
             *panels_ini_options[i].opt_addr =
                 mc_config_get_bool (mc_global.main_config, CONFIG_PANELS_SECTION,
                                     panels_ini_options[i].opt_name,
@@ -932,7 +932,7 @@ panels_save_options (void)
 {
     size_t i;
 
-    for (i = 0; panels_ini_options[i].opt_name != NULL; i++)
+    for (i = 0; panels_ini_options[i].opt_name != nullptr; i++)
         mc_config_set_bool (mc_global.main_config, CONFIG_PANELS_SECTION,
                             panels_ini_options[i].opt_name, *panels_ini_options[i].opt_addr);
 
@@ -950,17 +950,17 @@ save_config (void)
     size_t i;
 
     /* Save boolean options */
-    for (i = 0; bool_options[i].opt_name != NULL; i++)
+    for (i = 0; bool_options[i].opt_name != nullptr; i++)
         mc_config_set_bool (mc_global.main_config, CONFIG_APP_SECTION, bool_options[i].opt_name,
                             *bool_options[i].opt_addr);
 
     /* Save integer options */
-    for (i = 0; int_options[i].opt_name != NULL; i++)
+    for (i = 0; int_options[i].opt_name != nullptr; i++)
         mc_config_set_int (mc_global.main_config, CONFIG_APP_SECTION, int_options[i].opt_name,
                            *int_options[i].opt_addr);
 
     /* Save string options */
-    for (i = 0; str_options[i].opt_name != NULL; i++)
+    for (i = 0; str_options[i].opt_name != nullptr; i++)
         mc_config_set_string (mc_global.main_config, CONFIG_APP_SECTION, str_options[i].opt_name,
                               *str_options[i].opt_addr);
 }
@@ -973,12 +973,12 @@ save_layout (void)
     size_t i;
 
     /* Save integer options */
-    for (i = 0; layout_int_options[i].opt_name != NULL; i++)
+    for (i = 0; layout_int_options[i].opt_name != nullptr; i++)
         mc_config_set_int (mc_global.main_config, CONFIG_LAYOUT_SECTION,
                            layout_int_options[i].opt_name, *layout_int_options[i].opt_addr);
 
     /* Save boolean options */
-    for (i = 0; layout_bool_options[i].opt_name != NULL; i++)
+    for (i = 0; layout_bool_options[i].opt_name != nullptr; i++)
         mc_config_set_bool (mc_global.main_config, CONFIG_LAYOUT_SECTION,
                             layout_bool_options[i].opt_name, *layout_bool_options[i].opt_addr);
 }
@@ -1011,17 +1011,17 @@ save_panel_types (void)
         g_free (dirs);
     }
 
-    if (current_panel != NULL)
+    if (current_panel != nullptr)
         mc_config_set_bool (mc_global.panels_config, "Dirs", "current_is_left",
                             get_current_index () == 0);
 
-    if (mc_global.panels_config->ini_path == NULL)
+    if (mc_global.panels_config->ini_path == nullptr)
         mc_global.panels_config->ini_path = g_strdup (panels_profile_name);
 
     mc_config_del_group (mc_global.panels_config, "Temporal:New Left Panel");
     mc_config_del_group (mc_global.panels_config, "Temporal:New Right Panel");
 
-    mc_config_save_file (mc_global.panels_config, NULL);
+    mc_config_save_file (mc_global.panels_config, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -1031,7 +1031,7 @@ save_panel_types (void)
 const char *
 setup_init (void)
 {
-    if (profile_name == NULL)
+    if (profile_name == nullptr)
     {
         char *profile;
 
@@ -1040,7 +1040,7 @@ setup_init (void)
         {
             char *inifile;
 
-            inifile = mc_build_filename (mc_global.sysconfig_dir, "mc.ini", (char *) NULL);
+            inifile = mc_build_filename (mc_global.sysconfig_dir, "mc.ini", (char *) nullptr);
             if (exist_file (inifile))
             {
                 g_free (profile);
@@ -1049,7 +1049,7 @@ setup_init (void)
             else
             {
                 g_free (inifile);
-                inifile = mc_build_filename (mc_global.share_data_dir, "mc.ini", (char *) NULL);
+                inifile = mc_build_filename (mc_global.share_data_dir, "mc.ini", (char *) nullptr);
                 if (!exist_file (inifile))
                     g_free (inifile);
                 else
@@ -1084,12 +1084,12 @@ load_setup (void)
     /* mc.lib is common for all users, but has priority lower than
        ${XDG_CONFIG_HOME}/mc/ini.  FIXME: it's only used for keys and treestore now */
     global_profile_name =
-        g_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_CONFIG_FILE, (char *) NULL);
+        g_build_filename (mc_global.sysconfig_dir, MC_GLOBAL_CONFIG_FILE, (char *) nullptr);
     if (!exist_file (global_profile_name))
     {
         g_free (global_profile_name);
         global_profile_name =
-            g_build_filename (mc_global.share_data_dir, MC_GLOBAL_CONFIG_FILE, (char *) NULL);
+            g_build_filename (mc_global.share_data_dir, MC_GLOBAL_CONFIG_FILE, (char *) nullptr);
     }
 
     panels_profile_name = mc_config_get_full_path (MC_PANELS_FILE);
@@ -1165,7 +1165,7 @@ load_setup (void)
 
     g_free (init_translation_table (mc_global.source_codepage, mc_global.display_codepage));
     cbuffer = get_codepage_id (mc_global.display_codepage);
-    if (cbuffer != NULL)
+    if (cbuffer != nullptr)
         mc_global.utf8_display = str_isutf8 (cbuffer);
 #endif /* HAVE_CHARSET */
 
@@ -1232,7 +1232,7 @@ save_setup (gboolean save_options, gboolean save_panel_options)
                               clipboard_paste_path);
 
         tmp_profile = mc_config_get_full_path (MC_CONFIG_FILE);
-        ret = mc_config_save_to_file (mc_global.main_config, tmp_profile, NULL);
+        ret = mc_config_save_to_file (mc_global.main_config, tmp_profile, nullptr);
         g_free (tmp_profile);
     }
 
@@ -1262,7 +1262,7 @@ done_setup (void)
     g_free (user_recent_timeformat);
     g_free (user_old_timeformat);
 
-    for (i = 0; str_options[i].opt_name != NULL; i++)
+    for (i = 0; str_options[i].opt_name != nullptr; i++)
         g_free (*str_options[i].opt_addr);
 
     done_hotlist ();
@@ -1285,11 +1285,11 @@ done_setup (void)
 void
 setup_save_config_show_error (const char *filename, GError ** mcerror)
 {
-    if (mcerror != NULL && *mcerror != NULL)
+    if (mcerror != nullptr && *mcerror != nullptr)
     {
         message (D_ERROR, MSG_ERROR, _("Cannot save file %s:\n%s"), filename, (*mcerror)->message);
         g_error_free (*mcerror);
-        *mcerror = NULL;
+        *mcerror = nullptr;
     }
 }
 
@@ -1306,7 +1306,7 @@ load_key_defs (void)
     mc_config_t *mc_global_config;
 
     mc_global_config = mc_config_init (global_profile_name, FALSE);
-    if (mc_global_config != NULL)
+    if (mc_global_config != nullptr)
     {
         load_keys_from_section ("general", mc_global_config);
         load_keys_from_section (getenv ("TERM"), mc_global_config);
@@ -1328,11 +1328,11 @@ load_anon_passwd (void)
     buffer =
         mc_config_get_string (mc_global.main_config, CONFIG_MISC_SECTION, "ftpfs_password", "");
 
-    if ((buffer != NULL) && (buffer[0] != '\0'))
+    if ((buffer != nullptr) && (buffer[0] != '\0'))
         return buffer;
 
     g_free (buffer);
-    return NULL;
+    return nullptr;
 }
 #endif /* ENABLE_VFS_FTP */
 
@@ -1349,7 +1349,7 @@ load_keymap_defs (gboolean load_from_file)
 
     mc_global_keymap = load_setup_get_keymap_profile_config (load_from_file);
 
-    if (mc_global_keymap != NULL)
+    if (mc_global_keymap != nullptr)
     {
 #define LOAD_KEYMAP(s,km) \
     km##_keymap = g_array_new (TRUE, FALSE, sizeof (global_keymap_t)); \
@@ -1417,7 +1417,7 @@ void
 free_keymap_defs (void)
 {
 #define FREE_KEYMAP(km) \
-    if (km##_keymap != NULL) \
+    if (km##_keymap != nullptr) \
         g_array_free (km##_keymap, TRUE)
 
     FREE_KEYMAP (main);
@@ -1465,20 +1465,20 @@ panel_load_setup (WPanel * panel, const char *section)
     /* Load sort order */
     buffer = mc_config_get_string (mc_global.panels_config, section, "sort_order", "name");
     panel->sort_field = panel_get_field_by_id (buffer);
-    if (panel->sort_field == NULL)
+    if (panel->sort_field == nullptr)
         panel->sort_field = panel_get_field_by_id ("name");
 
     g_free (buffer);
 
     /* Load the listing format */
-    buffer = mc_config_get_string (mc_global.panels_config, section, "list_format", NULL);
-    if (buffer == NULL)
+    buffer = mc_config_get_string (mc_global.panels_config, section, "list_format", nullptr);
+    if (buffer == nullptr)
     {
         /* fallback to old option */
         buffer = mc_config_get_string (mc_global.panels_config, section, "list_mode", "full");
     }
     panel->list_format = list_full;
-    for (i = 0; list_formats[i].key != NULL; i++)
+    for (i = 0; list_formats[i].key != nullptr; i++)
         if (g_ascii_strcasecmp (list_formats[i].key, buffer) == 0)
         {
             panel->list_format = static_cast<list_format_t> (list_formats[i].list_format);
@@ -1521,7 +1521,7 @@ panel_save_setup (WPanel * panel, const char *section)
 
     mc_config_set_string (mc_global.panels_config, section, "sort_order", panel->sort_field->id);
 
-    for (i = 0; list_formats[i].key != NULL; i++)
+    for (i = 0; list_formats[i].key != nullptr; i++)
         if (list_formats[i].list_format == (int) panel->list_format)
         {
             mc_config_set_string (mc_global.panels_config, section, "list_format",

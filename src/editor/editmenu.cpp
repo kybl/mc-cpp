@@ -68,7 +68,7 @@
 static GList *
 create_file_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&Open file..."), CK_EditFile));
     entries = g_list_prepend (entries, menu_entry_create (_("&New"), CK_EditNew));
@@ -95,7 +95,7 @@ create_file_menu (void)
 static GList *
 create_edit_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&Undo"), CK_Undo));
     entries = g_list_prepend (entries, menu_entry_create (_("&Redo"), CK_Redo));
@@ -127,7 +127,7 @@ create_edit_menu (void)
 static GList *
 create_search_replace_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&Search..."), CK_Search));
     entries = g_list_prepend (entries, menu_entry_create (_("Search &again"), CK_SearchContinue));
@@ -146,7 +146,7 @@ create_search_replace_menu (void)
 static GList *
 create_command_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&Go to line..."), CK_Goto));
     entries = g_list_prepend (entries, menu_entry_create (_("&Toggle line state"), CK_ShowNumbers));
@@ -201,7 +201,7 @@ create_command_menu (void)
 static GList *
 create_format_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries =
         g_list_prepend (entries, menu_entry_create (_("Insert &literal..."), CK_InsertLiteral));
@@ -226,7 +226,7 @@ create_format_menu (void)
 static GList *
 create_window_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&Move"), CK_WindowMove));
     entries = g_list_prepend (entries, menu_entry_create (_("&Resize"), CK_WindowResize));
@@ -245,7 +245,7 @@ create_window_menu (void)
 static GList *
 create_options_menu (void)
 {
-    GList *entries = NULL;
+    GList *entries = nullptr;
 
     entries = g_list_prepend (entries, menu_entry_create (_("&General..."), CK_Options));
     entries = g_list_prepend (entries, menu_entry_create (_("Save &mode..."), CK_OptionsSaveMode));

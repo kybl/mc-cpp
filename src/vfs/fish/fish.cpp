@@ -195,26 +195,26 @@ fish_default_stat (struct vfs_class *me)
 static char *
 fish_load_script_from_file (const char *hostname, const char *script_name, const char *def_content)
 {
-    char *scr_filename = NULL;
+    char *scr_filename = nullptr;
     char *scr_content;
     gsize scr_len = 0;
 
     /* 1st: scan user directory */
     scr_filename = g_build_path (PATH_SEP_STR, mc_config_get_data_path (), FISH_PREFIX, hostname,
-                                 script_name, (char *) NULL);
+                                 script_name, (char *) nullptr);
     /* silent about user dir */
-    g_file_get_contents (scr_filename, &scr_content, &scr_len, NULL);
+    g_file_get_contents (scr_filename, &scr_content, &scr_len, nullptr);
     g_free (scr_filename);
     /* 2nd: scan system dir */
-    if (scr_content == NULL)
+    if (scr_content == nullptr)
     {
         scr_filename =
-            g_build_path (PATH_SEP_STR, LIBEXECDIR, FISH_PREFIX, script_name, (char *) NULL);
-        g_file_get_contents (scr_filename, &scr_content, &scr_len, NULL);
+            g_build_path (PATH_SEP_STR, LIBEXECDIR, FISH_PREFIX, script_name, (char *) nullptr);
+        g_file_get_contents (scr_filename, &scr_content, &scr_len, nullptr);
         g_free (scr_filename);
     }
 
-    if (scr_content != NULL)
+    if (scr_content != nullptr)
         return scr_content;
 
     return g_strdup (def_content);
@@ -251,7 +251,7 @@ fish_get_reply (struct vfs_class *me, int sock, char *string_buf, int string_len
     {
         if (!vfs_s_get_line (me, sock, answer, sizeof (answer), '\n'))
         {
-            if (string_buf != NULL)
+            if (string_buf != nullptr)
                 *string_buf = '\0';
             return 4;
         }
@@ -260,7 +260,7 @@ fish_get_reply (struct vfs_class *me, int sock, char *string_buf, int string_len
             return fish_decode_reply (answer + 4, was_garbage ? 1 : 0);
 
         was_garbage = TRUE;
-        if (string_buf != NULL)
+        if (string_buf != nullptr)
             g_strlcpy (string_buf, answer, string_len);
     }
 }
@@ -277,7 +277,7 @@ fish_command (struct vfs_class *me, struct vfs_s_super *super, int wait_reply, c
     if (cmd_len == (size_t) (-1))
         cmd_len = strlen (cmd);
 
-    if (logfile != NULL)
+    if (logfile != nullptr)
     {
         size_t ret;
 
@@ -296,7 +296,7 @@ fish_command (struct vfs_class *me, struct vfs_s_super *super, int wait_reply, c
     if (wait_reply)
         return fish_get_reply (me, FISH_SUPER (super)->sockr,
                                (wait_reply & WANT_STRING) != 0 ? reply_str :
-                               NULL, sizeof (reply_str) - 1);
+                               nullptr, sizeof (reply_str) - 1);
     return COMPLETE;
 }
 
@@ -531,7 +531,7 @@ fish_open_archive_pipeopen (struct vfs_s_super *super)
      * option breaks it for some)
      */
 
-    if (super->path_element->user != NULL)
+    if (super->path_element->user != nullptr)
     {
         argv[i++] = "-l";
         argv[i++] = super->path_element->user;
@@ -544,7 +544,7 @@ fish_open_archive_pipeopen (struct vfs_s_super *super)
 
     argv[i++] = super->path_element->host;
     argv[i++] = "echo FISH:; /bin/sh";
-    argv[i++] = NULL;
+    argv[i++] = nullptr;
 
     fish_pipeopen (super, xsh, argv);
 }
@@ -562,7 +562,7 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
     if (vfs_s_get_line (me, fish_super->sockr, answer, sizeof (answer), ':') == 0)
         return FALSE;
 
-    if (strstr (answer, "assword") != NULL)
+    if (strstr (answer, "assword") != nullptr)
     {
         /* Currently, this does not work. ssh reads passwords from
            /dev/tty, not from stdin :-(. */
@@ -571,14 +571,14 @@ fish_open_archive_talk (struct vfs_class *me, struct vfs_s_super *super)
 
         return FALSE;
 #if 0
-        if (super->path_element->password == NULL)
+        if (super->path_element->password == nullptr)
         {
             char *p, *op;
 
             p = g_strdup_printf (_("fish: Password is required for %s"), super->path_element->user);
             op = vfs_get_password (p);
             g_free (p);
-            if (op == NULL)
+            if (op == nullptr)
                 return FALSE;
             super->path_element->password = op;
         }
@@ -649,7 +649,7 @@ fish_open_archive_int (struct vfs_class *me, struct vfs_s_super *super)
 #if 0
     super->name =
         g_strconcat ("sh://", super->path_element->user, "@", super->path_element->host,
-                     PATH_SEP_STR, (char *) NULL);
+                     PATH_SEP_STR, (char *) nullptr);
 #else
     super->name = g_strdup (PATH_SEP_STR);
 #endif
@@ -733,7 +733,7 @@ fish_archive_same (const vfs_path_element_t * vpath_element, struct vfs_s_super 
 
     path_element = vfs_path_element_clone (vpath_element);
 
-    if (path_element->user == NULL)
+    if (path_element->user == nullptr)
         path_element->user = vfs_get_local_username ();
 
     result = ((strcmp (path_element->host, super->path_element->host) == 0)
@@ -752,7 +752,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
 {
     struct vfs_s_super *super = dir->super;
     char buffer[BUF_8K] = "\0";
-    struct vfs_s_entry *ent = NULL;
+    struct vfs_s_entry *ent = nullptr;
     char *quoted_path;
     int reply_code;
 
@@ -760,7 +760,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
      * Simple FISH debug interface :]
      */
 #if 0
-    if (me->logfile == NULL)
+    if (me->logfile == nullptr)
         me->logfile = fopen ("/tmp/mc-FISH.sh", "w");
 #endif
 
@@ -773,7 +773,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
                            quoted_path);
     g_free (quoted_path);
 
-    ent = vfs_s_generate_entry (me, NULL, dir, 0);
+    ent = vfs_s_generate_entry (me, nullptr, dir, 0);
 
     while (TRUE)
     {
@@ -787,7 +787,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
             me->verrno = ECONNRESET;
             goto error;
         }
-        if (me->logfile != NULL)
+        if (me->logfile != nullptr)
         {
             fputs (buffer, me->logfile);
             fputs ("\n", me->logfile);
@@ -797,10 +797,10 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
             break;
         if (buffer[0] == '\0')
         {
-            if (ent->name != NULL)
+            if (ent->name != nullptr)
             {
                 vfs_s_insert_entry (me, dir, ent);
-                ent = vfs_s_generate_entry (me, NULL, dir, 0);
+                ent = vfs_s_generate_entry (me, nullptr, dir, 0);
             }
             continue;
         }
@@ -836,7 +836,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
                         ++filename;
 
                     linkname = strstr (filename, "\" -> \"");
-                    if (linkname == NULL)
+                    if (linkname == nullptr)
                     {
                         /* broken client, or smth goes wrong */
                         linkname = filename_bound;
@@ -883,7 +883,7 @@ fish_dir_load (struct vfs_class *me, struct vfs_s_inode *dir, char *remote_path)
                 break;
             }
         case 'S':
-            ST.st_size = (off_t) g_ascii_strtoll (buffer + 1, NULL, 10);
+            ST.st_size = (off_t) g_ascii_strtoll (buffer + 1, nullptr, 10);
             break;
         case 'P':
             {
@@ -1061,13 +1061,13 @@ fish_file_store (struct vfs_class *me, vfs_file_handler_t * fh, char *name, char
     }
     close (h);
 
-    if (fish_get_reply (me, fish_super->sockr, NULL, 0) != COMPLETE)
+    if (fish_get_reply (me, fish_super->sockr, nullptr, 0) != COMPLETE)
         ERRNOR (E_REMOTE, -1);
     return 0;
 
   error_return:
     close (h);
-    fish_get_reply (me, fish_super->sockr, NULL, 0);
+    fish_get_reply (me, fish_super->sockr, nullptr, 0);
     return -1;
 }
 
@@ -1082,7 +1082,7 @@ fish_linear_start (struct vfs_class *me, vfs_file_handler_t * fh, off_t offset)
     char *quoted_name;
 
     name = vfs_s_fullpath (me, fh->ino);
-    if (name == NULL)
+    if (name == nullptr)
         return 0;
     quoted_name = strutils_shell_escape (name);
     g_free (name);
@@ -1107,9 +1107,9 @@ fish_linear_start (struct vfs_class *me, vfs_file_handler_t * fh, off_t offset)
     fish->got = 0;
     errno = 0;
 #if SIZEOF_OFF_T == SIZEOF_LONG
-    fish->total = (off_t) strtol (reply_str, NULL, 10);
+    fish->total = (off_t) strtol (reply_str, nullptr, 10);
 #else
-    fish->total = (off_t) g_ascii_strtoll (reply_str, NULL, 10);
+    fish->total = (off_t) g_ascii_strtoll (reply_str, nullptr, 10);
 #endif
     if (errno != 0)
         ERRNOR (E_REMOTE, 0);
@@ -1141,7 +1141,7 @@ fish_linear_abort (struct vfs_class *me, vfs_file_handler_t * fh)
     }
     while (n != 0);
 
-    if (fish_get_reply (me, FISH_SUPER (super)->sockr, NULL, 0) != COMPLETE)
+    if (fish_get_reply (me, FISH_SUPER (super)->sockr, nullptr, 0) != COMPLETE)
         vfs_print_message ("%s", _("Error reported after abort."));
     else
         vfs_print_message ("%s", _("Aborted transfer would be successful."));
@@ -1170,7 +1170,7 @@ fish_linear_read (struct vfs_class *me, vfs_file_handler_t * fh, void *buf, size
         fish->got += n;
     else if (n < 0)
         fish_linear_abort (me, fh);
-    else if (fish_get_reply (me, FISH_SUPER (super)->sockr, NULL, 0) != COMPLETE)
+    else if (fish_get_reply (me, FISH_SUPER (super)->sockr, nullptr, 0) != COMPLETE)
         ERRNOR (E_REMOTE, -1);
     ERRNOR (errno, n);
 }
@@ -1234,11 +1234,11 @@ fish_rename (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
     path_element = vfs_path_get_by_index (vpath1, -1);
 
     crpath1 = vfs_s_get_path (vpath1, &super, 0);
-    if (crpath1 == NULL)
+    if (crpath1 == nullptr)
         return -1;
 
     crpath2 = vfs_s_get_path (vpath2, &super2, 0);
-    if (crpath2 == NULL)
+    if (crpath2 == nullptr)
         return -1;
 
     rpath1 = strutils_shell_escape (crpath1);
@@ -1268,11 +1268,11 @@ fish_link (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
     path_element = vfs_path_get_by_index (vpath1, -1);
 
     crpath1 = vfs_s_get_path (vpath1, &super, 0);
-    if (crpath1 == NULL)
+    if (crpath1 == nullptr)
         return -1;
 
     crpath2 = vfs_s_get_path (vpath2, &super2, 0);
-    if (crpath2 == NULL)
+    if (crpath2 == nullptr)
         return -1;
 
     rpath1 = strutils_shell_escape (crpath1);
@@ -1303,7 +1303,7 @@ fish_symlink (const vfs_path_t * vpath1, const vfs_path_t * vpath2)
     path_element = vfs_path_get_by_index (vpath2, -1);
 
     crpath = vfs_s_get_path (vpath2, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1369,7 +1369,7 @@ fish_chmod (const vfs_path_t * vpath, mode_t mode)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1399,11 +1399,11 @@ fish_chown (const vfs_path_t * vpath, uid_t owner, gid_t group)
     int ret;
 
     pw = getpwuid (owner);
-    if (pw == NULL)
+    if (pw == nullptr)
         return 0;
 
     gr = getgrgid (group);
-    if (gr == NULL)
+    if (gr == nullptr)
         return 0;
 
     sowner = pw->pw_name;
@@ -1412,7 +1412,7 @@ fish_chown (const vfs_path_t * vpath, uid_t owner, gid_t group)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1475,7 +1475,7 @@ fish_utime (const vfs_path_t * vpath, mc_timesbuf_t * times)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1523,7 +1523,7 @@ fish_unlink (const vfs_path_t * vpath)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1551,7 +1551,7 @@ fish_exists (const vfs_path_t * vpath)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1581,7 +1581,7 @@ fish_mkdir (const vfs_path_t * vpath, mode_t mode)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1616,7 +1616,7 @@ fish_rmdir (const vfs_path_t * vpath)
     path_element = vfs_path_get_by_index (vpath, -1);
 
     crpath = vfs_s_get_path (vpath, &super, 0);
-    if (crpath == NULL)
+    if (crpath == nullptr)
         return -1;
 
     rpath = strutils_shell_escape (crpath);
@@ -1659,7 +1659,7 @@ fish_fh_open (struct vfs_class *me, vfs_file_handler_t * fh, int flags, mode_t m
         if ((flags & O_APPEND) != 0)
             fish->append = TRUE;
 
-        if (fh->ino->localname == NULL)
+        if (fh->ino->localname == nullptr)
         {
             vfs_path_t *vpath;
             int tmp_handle;
@@ -1676,9 +1676,9 @@ fish_fh_open (struct vfs_class *me, vfs_file_handler_t * fh, int flags, mode_t m
         }
         return 0;
     }
-    if (fh->ino->localname == NULL && vfs_s_retrieve_file (me, fh->ino) == -1)
+    if (fh->ino->localname == nullptr && vfs_s_retrieve_file (me, fh->ino) == -1)
         goto fail;
-    if (fh->ino->localname == NULL)
+    if (fh->ino->localname == nullptr)
         vfs_die ("retrieve_file failed to fill in localname");
     return 0;
 
@@ -1693,7 +1693,7 @@ fish_fill_names (struct vfs_class *me, fill_names_f func)
 {
     GList *iter;
 
-    for (iter = VFS_SUBCLASS (me)->supers; iter != NULL; iter = g_list_next (iter))
+    for (iter = VFS_SUBCLASS (me)->supers; iter != nullptr; iter = g_list_next (iter))
     {
         const struct vfs_s_super *super = (const struct vfs_s_super *) iter->data;
 
@@ -1721,7 +1721,7 @@ fish_fill_names (struct vfs_class *me, fill_names_f func)
         name =
             g_strconcat (vfs_fish_ops->prefix, VFS_PATH_URL_DELIMITER,
                          super->path_element->user, "@", super->path_element->host, flags,
-                         PATH_SEP_STR, super->path_element->path, (char *) NULL);
+                         PATH_SEP_STR, super->path_element->path, (char *) nullptr);
         func (name);
         g_free (name);
     }

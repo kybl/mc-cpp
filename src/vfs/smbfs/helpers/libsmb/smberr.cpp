@@ -75,7 +75,7 @@ static err_code_struct const dos_msgs[] = {
     {"ERRnotconnected", 233, "No process on other end of pipe."},
     {"ERRmoredata", 234, "There is more data to be returned."},
     {"ERRinvgroup", 2455, "Invalid workgroup (try the -W option)"},
-    {NULL, -1, NULL}
+    {nullptr, -1, nullptr}
 };
 
 /* Server Error Messages */
@@ -117,7 +117,7 @@ static err_code_struct const server_msgs[] = {
     {"ERRreserved", 253, "reserved."},
     {"ERRreserved", 254, "reserved."},
     {"ERRnosupport", 0xFFFF, "Function not supported."},
-    {NULL, -1, NULL}
+    {nullptr, -1, nullptr}
 };
 
 /* Hard Error Messages */
@@ -141,7 +141,7 @@ static err_code_struct const hard_msgs[] = {
     {"ERRwrongdisk", 34, "The wrong disk was found in a drive."},
     {"ERRFCBUnavail", 35, "No FCBs are available to process request."},
     {"ERRsharebufexc", 36, "A sharing buffer has been exceeded."},
-    {NULL, -1, NULL}
+    {nullptr, -1, nullptr}
 };
 
 
@@ -151,16 +151,16 @@ struct
     const char *clazz;
     err_code_struct const *err_msgs;
 } const err_classes[] = {
-    {0, "SUCCESS", NULL},
+    {0, "SUCCESS", nullptr},
     {0x01, "ERRDOS", dos_msgs},
     {0x02, "ERRSRV", server_msgs},
     {0x03, "ERRHRD", hard_msgs},
-    {0x04, "ERRXOS", NULL},
-    {0xE1, "ERRRMX1", NULL},
-    {0xE2, "ERRRMX2", NULL},
-    {0xE3, "ERRRMX3", NULL},
-    {0xFF, "ERRCMD", NULL},
-    {-1, NULL, NULL}
+    {0x04, "ERRXOS", nullptr},
+    {0xE1, "ERRRMX1", nullptr},
+    {0xE2, "ERRRMX2", nullptr},
+    {0xE3, "ERRRMX3", nullptr},
+    {0xFF, "ERRCMD", nullptr},
+    {-1, nullptr, nullptr}
 };
 
 

@@ -92,11 +92,11 @@ typedef struct Link_Area
 
 /*** file scope variables ************************************************************************/
 
-static char *fdata = NULL;      /* Pointer to the loaded data file */
+static char *fdata = nullptr;      /* Pointer to the loaded data file */
 static int help_lines;          /* Lines in help viewer */
 static int history_ptr;         /* For the history queue */
 static const char *main_node;   /* The main node */
-static const char *last_shown = NULL;   /* Last byte shown in a screen */
+static const char *last_shown = nullptr;   /* Last byte shown in a screen */
 static gboolean end_of_node = FALSE;    /* Flag: the last character of the node shown? */
 static const char *currentpoint;
 static const char *selected_item;
@@ -110,7 +110,7 @@ static struct
     const char *link;           /* Pointer to the selected link */
 } history[HISTORY_SIZE];
 
-static GSList *link_area = NULL;
+static GSList *link_area = nullptr;
 static gboolean inside_link_area = FALSE;
 
 static cb_ret_t help_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data);
@@ -124,7 +124,7 @@ static cb_ret_t help_callback (Widget * w, Widget * sender, widget_msg_t msg, in
 static const char *
 search_string (const char *start, const char *text)
 {
-    const char *result = NULL;
+    const char *result = nullptr;
     char *local_text = g_strdup (text);
     char *d = local_text;
     const char *e = start;
@@ -159,7 +159,7 @@ search_string (const char *start, const char *text)
 /* --------------------------------------------------------------------------------------------- */
 /** Searches text in the buffer pointed by start.  Search ends
  * if the CHAR_NODE_END is found in the text.
- * @return NULL on failure
+ * @return nullptr on failure
  */
 
 static const char *
@@ -168,7 +168,7 @@ search_string_node (const char *start, const char *text)
     const char *d = text;
     const char *e = start;
 
-    if (start != NULL)
+    if (start != nullptr)
         for (; *e && *e != CHAR_NODE_END; e++)
         {
             if (*d == *e)
@@ -179,7 +179,7 @@ search_string_node (const char *start, const char *text)
                 return e + 1;
         }
 
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -196,7 +196,7 @@ search_char_node (const char *start, char the_char, int direction)
         if (*e == the_char)
             return e;
 
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -276,7 +276,7 @@ move_to_top (void)
     while (*currentpoint != ']')
         currentpoint++;
     currentpoint = currentpoint + 2;    /* Skip the newline following the start of the node */
-    selected_item = NULL;
+    selected_item = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -297,7 +297,7 @@ help_follow_link (const char *start, const char *lc_selected_item)
 {
     const char *p;
 
-    if (lc_selected_item == NULL)
+    if (lc_selected_item == nullptr)
         return start;
 
     for (p = lc_selected_item; *p && *p != CHAR_NODE_END && *p != CHAR_LINK_POINTER; p++)
@@ -313,7 +313,7 @@ help_follow_link (const char *start, const char *lc_selected_item)
         link_name[i - 1] = ']';
         link_name[i] = '\0';
         p = search_string (fdata, link_name);
-        if (p != NULL)
+        if (p != nullptr)
         {
             p += 1;             /* Skip the newline following the start of the node */
             return p;
@@ -331,15 +331,15 @@ select_next_link (const char *current_link)
 {
     const char *p;
 
-    if (current_link == NULL)
-        return NULL;
+    if (current_link == nullptr)
+        return nullptr;
 
     p = search_string_node (current_link, STRING_LINK_END);
-    if (p == NULL)
-        return NULL;
+    if (p == nullptr)
+        return nullptr;
     p = search_string_node (p, STRING_LINK_START);
-    if (p == NULL)
-        return NULL;
+    if (p == nullptr)
+        return nullptr;
     return p - 1;
 }
 
@@ -348,7 +348,7 @@ select_next_link (const char *current_link)
 static const char *
 select_prev_link (const char *current_link)
 {
-    return current_link == NULL ? NULL : search_char_node (current_link - 1, CHAR_LINK_START, -1);
+    return current_link == nullptr ? nullptr : search_char_node (current_link - 1, CHAR_LINK_START, -1);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -466,7 +466,7 @@ help_show (WDialog * h, const char *paint_start)
 
         clear_link_areas ();
         if ((int) (selected_item - paint_start) < 0)
-            selected_item = NULL;
+            selected_item = nullptr;
 
         p = paint_start;
         n = paint_start;
@@ -481,7 +481,7 @@ help_show (WDialog * h, const char *paint_start)
             switch (c)
             {
             case CHAR_LINK_START:
-                if (selected_item == NULL)
+                if (selected_item == nullptr)
                     selected_item = p;
                 if (p != selected_item)
                     tty_setcolor (HELP_LINK_COLOR);
@@ -582,8 +582,8 @@ help_show (WDialog * h, const char *paint_start)
         tty_setcolor (HELP_NORMAL_COLOR);
         if ((int) (selected_item - last_shown) >= 0)
         {
-            if ((link_area == NULL) || (link_area->data == NULL))
-                selected_item = NULL;
+            if ((link_area == nullptr) || (link_area->data == nullptr))
+                selected_item = nullptr;
             else
             {
                 selected_item = ((Link_Area *) link_area->data)->link_name;
@@ -613,10 +613,10 @@ help_help (WDialog * h)
     history[history_ptr].link = selected_item;
 
     p = search_string (fdata, "[How to use help]");
-    if (p != NULL)
+    if (p != nullptr)
     {
         currentpoint = p + 1;   /* Skip the newline following the start of the node */
-        selected_item = NULL;
+        selected_item = nullptr;
         widget_draw (WIDGET (h));
     }
 }
@@ -630,7 +630,7 @@ help_index (WDialog * h)
 
     new_item = search_string (fdata, "[Contents]");
 
-    if (new_item == NULL)
+    if (new_item == nullptr)
         message (D_ERROR, MSG_ERROR, _("Cannot find node %s in help file"), "[Contents]");
     else
     {
@@ -639,7 +639,7 @@ help_index (WDialog * h)
         history[history_ptr].link = selected_item;
 
         currentpoint = new_item + 1;    /* Skip the newline following the start of the node */
-        selected_item = NULL;
+        selected_item = nullptr;
         widget_draw (WIDGET (h));
     }
 }
@@ -666,7 +666,7 @@ help_next_link (gboolean move_down)
     const char *new_item;
 
     new_item = select_next_link (selected_item);
-    if (new_item != NULL)
+    if (new_item != nullptr)
     {
         selected_item = new_item;
         if ((int) (selected_item - last_shown) >= 0)
@@ -674,13 +674,13 @@ help_next_link (gboolean move_down)
             if (move_down)
                 move_forward (1);
             else
-                selected_item = NULL;
+                selected_item = nullptr;
         }
     }
     else if (move_down)
         move_forward (1);
     else
-        selected_item = NULL;
+        selected_item = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -692,14 +692,14 @@ help_prev_link (gboolean move_up)
 
     new_item = select_prev_link (selected_item);
     selected_item = new_item;
-    if ((selected_item == NULL) || (selected_item < currentpoint))
+    if ((selected_item == nullptr) || (selected_item < currentpoint))
     {
         if (move_up)
             move_backward (1);
-        else if ((link_area != NULL) && (link_area->data != NULL))
+        else if ((link_area != nullptr) && (link_area->data != nullptr))
             selected_item = ((Link_Area *) link_area->data)->link_name;
         else
-            selected_item = NULL;
+            selected_item = nullptr;
     }
 }
 
@@ -719,7 +719,7 @@ help_next_node (void)
             if ((*new_item == ']') && (*++new_item != '\0') && (*++new_item != '\0'))
             {
                 currentpoint = new_item;
-                selected_item = NULL;
+                selected_item = nullptr;
                 break;
             }
 }
@@ -740,7 +740,7 @@ help_prev_node (void)
     while (*new_item != ']')
         new_item++;
     currentpoint = new_item + 2;
-    selected_item = NULL;
+    selected_item = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -749,7 +749,7 @@ static void
 help_select_link (void)
 {
     /* follow link */
-    if (selected_item == NULL)
+    if (selected_item == nullptr)
     {
 #ifdef WE_WANT_TO_GO_BACKWARD_ON_KEY_RIGHT
         /* Is there any reason why the right key would take us
@@ -773,7 +773,7 @@ help_select_link (void)
         currentpoint = help_follow_link (currentpoint, selected_item);
     }
 
-    selected_item = NULL;
+    selected_item = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -866,7 +866,7 @@ help_bg_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void 
     switch (msg)
     {
     case MSG_DRAW:
-        frame_callback (w, NULL, MSG_DRAW, 0, NULL);
+        frame_callback (w, nullptr, MSG_DRAW, 0, nullptr);
         help_show (DIALOG (w->owner), currentpoint);
         return MSG_HANDLED;
 
@@ -886,7 +886,7 @@ help_resize (WDialog * h)
 
     help_lines = MIN (LINES - 4, MAX (2 * LINES / 3, 18));
     rect_init (&r, w->y, w->x, help_lines + 4, HELP_WINDOW_WIDTH + 4);
-    dlg_default_callback (w, NULL, MSG_RESIZE, 0, &r);
+    dlg_default_callback (w, nullptr, MSG_RESIZE, 0, &r);
     bb = find_buttonbar (h);
     widget_set_size (WIDGET (bb), LINES - 1, 0, 1, COLS);
 
@@ -957,7 +957,7 @@ translate_file (char *filedata)
             fdata = g_string_free (translated_data, FALSE);
         else
         {
-            fdata = NULL;
+            fdata = nullptr;
             g_string_free (translated_data, TRUE);
         }
         str_close_conv (conv);
@@ -972,7 +972,7 @@ md_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *data
     switch (msg)
     {
     case MSG_RESIZE:
-        widget_default_callback (w, NULL, MSG_RESIZE, 0, data);
+        widget_default_callback (w, nullptr, MSG_RESIZE, 0, data);
         w->lines = help_lines;
         return MSG_HANDLED;
 
@@ -1006,7 +1006,7 @@ help_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
     y = event->y - 1;
 
     /* Test whether the mouse click is inside one of the link areas */
-    for (current_area = link_area; current_area != NULL; current_area = g_slist_next (current_area))
+    for (current_area = link_area; current_area != nullptr; current_area = g_slist_next (current_area))
     {
         Link_Area *la = (Link_Area *) current_area->data;
 
@@ -1025,7 +1025,7 @@ help_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
     }
 
     /* Test whether a link area was found */
-    if (current_area != NULL)
+    if (current_area != nullptr)
     {
         Link_Area *la = (Link_Area *) current_area->data;
 
@@ -1034,7 +1034,7 @@ help_mouse_callback (Widget * w, mouse_msg_t msg, mouse_event_t * event)
         history[history_ptr].page = currentpoint;
         history[history_ptr].link = la->link_name;
         currentpoint = help_follow_link (currentpoint, la->link_name);
-        selected_item = NULL;
+        selected_item = nullptr;
     }
     else if (y < 0)
         move_backward (help_lines - 1);
@@ -1084,7 +1084,7 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
     WGroup *g;
     WButtonBar *help_bar;
     Widget *md;
-    char *hlpfile = NULL;
+    char *hlpfile = nullptr;
     char *filedata;
     ev_help_t *event_data = (ev_help_t *) data;
 
@@ -1092,39 +1092,39 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
     (void) event_name;
     (void) init_data;
 
-    if (event_data->filename != NULL)
-        g_file_get_contents (event_data->filename, &filedata, NULL, NULL);
+    if (event_data->filename != nullptr)
+        g_file_get_contents (event_data->filename, &filedata, nullptr, nullptr);
     else
-        filedata = load_mc_home_file (mc_global.share_data_dir, MC_HELP, &hlpfile, NULL);
+        filedata = load_mc_home_file (mc_global.share_data_dir, MC_HELP, &hlpfile, nullptr);
 
-    if (filedata == NULL)
+    if (filedata == nullptr)
         message (D_ERROR, MSG_ERROR, _("Cannot open file %s\n%s"),
                  event_data->filename ? event_data->filename : hlpfile, unix_error_string (errno));
 
     g_free (hlpfile);
 
-    if (filedata == NULL)
+    if (filedata == nullptr)
         return TRUE;
 
     translate_file (filedata);
 
     g_free (filedata);
 
-    if (fdata == NULL)
+    if (fdata == nullptr)
         return TRUE;
 
-    if ((event_data->node == NULL) || (*event_data->node == '\0'))
+    if ((event_data->node == nullptr) || (*event_data->node == '\0'))
         event_data->node = "[main]";
 
     main_node = search_string (fdata, event_data->node);
 
-    if (main_node == NULL)
+    if (main_node == nullptr)
     {
         message (D_ERROR, MSG_ERROR, _("Cannot find node %s in help file"), event_data->node);
 
         /* Fallback to [main], return if it also cannot be found */
         main_node = search_string (fdata, "[main]");
-        if (main_node == NULL)
+        if (main_node == nullptr)
         {
             interactive_display_finish ();
             return TRUE;
@@ -1135,7 +1135,7 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
 
     whelp =
         dlg_create (TRUE, 0, 0, help_lines + 4, HELP_WINDOW_WIDTH + 4, WPOS_CENTER | WPOS_TRYUP,
-                    FALSE, help_colors, help_callback, NULL, "[Help]", _("Help"));
+                    FALSE, help_colors, help_callback, nullptr, "[Help]", _("Help"));
     wh = WIDGET (whelp);
     g = GROUP (whelp);
     wh->keymap = help_map;
@@ -1162,16 +1162,16 @@ help_interactive_display (const gchar * event_group_name, const gchar * event_na
     group_add_widget (g, md);
     group_add_widget (g, help_bar);
 
-    buttonbar_set_label (help_bar, 1, Q_ ("ButtonBar|Help"), wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 2, Q_ ("ButtonBar|Index"), wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 3, Q_ ("ButtonBar|Prev"), wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 4, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 5, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 6, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 7, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 8, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 9, "", wh->keymap, NULL);
-    buttonbar_set_label (help_bar, 10, Q_ ("ButtonBar|Quit"), wh->keymap, NULL);
+    buttonbar_set_label (help_bar, 1, Q_ ("ButtonBar|Help"), wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 2, Q_ ("ButtonBar|Index"), wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 3, Q_ ("ButtonBar|Prev"), wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 4, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 5, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 6, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 7, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 8, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 9, "", wh->keymap, nullptr);
+    buttonbar_set_label (help_bar, 10, Q_ ("ButtonBar|Quit"), wh->keymap, nullptr);
 
     dlg_run (whelp);
     interactive_display_finish ();

@@ -65,7 +65,7 @@ rect_new (int y, int x, int lines, int cols)
 
     r = g_try_new (WRect, 1);
 
-    if (r != NULL)
+    if (r != nullptr)
         rect_init (r, y, x, lines, cols);
 
     return r;

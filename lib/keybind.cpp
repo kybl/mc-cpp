@@ -369,7 +369,7 @@ static name_keymap_t command_names[] = {
     {"MergeOther", CK_MergeOther},
 #endif /* USE_DIFF_VIEW */
 
-    {NULL, CK_IgnoreKey}
+    {nullptr, CK_IgnoreKey}
 };
 
 /* *INDENT-OFF* */
@@ -426,7 +426,7 @@ keymap_add (GArray * keymap, long key, long cmd, const char *caption)
 void
 keybind_cmd_bind (GArray * keymap, const char *keybind, long action)
 {
-    char *caption = NULL;
+    char *caption = nullptr;
     long key;
 
     key = lookup_key (keybind, &caption);
@@ -447,7 +447,7 @@ keybind_lookup_action (const char *name)
     res = static_cast<name_keymap_t *> (bsearch (&key, command_names, num_command_names,
                    sizeof (command_names[0]), name_keymap_comparator));
 
-    return (res != NULL) ? res->val : CK_IgnoreKey;
+    return (res != nullptr) ? res->val : CK_IgnoreKey;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -457,11 +457,11 @@ keybind_lookup_actionname (long action)
 {
     size_t i;
 
-    for (i = 0; command_names[i].name != NULL; i++)
+    for (i = 0; command_names[i].name != nullptr; i++)
         if (command_names[i].val == action)
             return command_names[i].name;
 
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -469,15 +469,15 @@ keybind_lookup_actionname (long action)
 const char *
 keybind_lookup_keymap_shortcut (const global_keymap_t * keymap, long action)
 {
-    if (keymap != NULL)
+    if (keymap != nullptr)
     {
         size_t i;
 
         for (i = 0; keymap[i].key != 0; i++)
             if (keymap[i].command == action)
-                return (keymap[i].caption[0] != '\0') ? keymap[i].caption : NULL;
+                return (keymap[i].caption[0] != '\0') ? keymap[i].caption : nullptr;
     }
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -485,7 +485,7 @@ keybind_lookup_keymap_shortcut (const global_keymap_t * keymap, long action)
 long
 keybind_lookup_keymap_command (const global_keymap_t * keymap, long key)
 {
-    if (keymap != NULL)
+    if (keymap != nullptr)
     {
         size_t i;
 

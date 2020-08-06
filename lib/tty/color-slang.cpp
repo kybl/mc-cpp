@@ -58,7 +58,7 @@ has_colors (gboolean disable, gboolean force)
 {
     mc_tty_color_disable = disable;
 
-    if (force || (getenv ("COLORTERM") != NULL))
+    if (force || (getenv ("COLORTERM") != nullptr))
         SLtt_Use_Ansi_Colors = 1;
 
     if (!mc_tty_color_disable)
@@ -113,7 +113,7 @@ mc_tty_color_pair_init_special (tty_color_pair_t * mc_color_pair,
     }
     else
     {
-        SLtt_set_mono (mc_color_pair->pair_index, NULL, mask);
+        SLtt_set_mono (mc_color_pair->pair_index, nullptr, mask);
     }
 }
 
@@ -243,7 +243,7 @@ tty_use_truecolors (GError ** error)
     /* Duplicate slang's check so that we can pop up an error message
        rather than silently use wrong colors. */
     colorterm = getenv ("COLORTERM");
-    if (colorterm == NULL
+    if (colorterm == nullptr
         || (strcmp (colorterm, "truecolor") != 0 && strcmp (colorterm, "24bit") != 0))
     {
         g_set_error (error, MC_ERROR, -1,

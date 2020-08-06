@@ -28,7 +28,7 @@
 
 extern int DEBUGLEVEL;
 
-static char *last_ptr = NULL;
+static char *last_ptr = nullptr;
 
 void
 set_first_token (char *ptr)
@@ -109,7 +109,7 @@ toktocliplist (int *ctok, char *sep)
 
     /* nothing left? */
     if (!*s)
-        return (NULL);
+        return (nullptr);
 
     do
     {
@@ -125,7 +125,7 @@ toktocliplist (int *ctok, char *sep)
     s = last_ptr;
 
     if (!(ret = iret = malloc (ictok * sizeof (char *))))
-        return NULL;
+        return nullptr;
 
     while (ictok--)
     {
@@ -801,8 +801,8 @@ safe_strcpy (char *dest, const char *src, size_t maxlength)
 
     if (!dest)
     {
-        DEBUG (0, ("ERROR: NULL dest in safe_strcpy\n"));
-        return NULL;
+        DEBUG (0, ("ERROR: nullptr dest in safe_strcpy\n"));
+        return nullptr;
     }
 
     if (!src)
@@ -836,8 +836,8 @@ safe_strcat (char *dest, const char *src, size_t maxlength)
 
     if (!dest)
     {
-        DEBUG (0, ("ERROR: NULL dest in safe_strcat\n"));
-        return NULL;
+        DEBUG (0, ("ERROR: nullptr dest in safe_strcat\n"));
+        return nullptr;
     }
 
     if (!src)
@@ -872,7 +872,7 @@ StrCpy (char *dest, const char *src)
     SMB_ASSERT (dest && src);
 
     if (!dest)
-        return (NULL);
+        return (nullptr);
     if (!src)
     {
         *dest = 0;
@@ -890,7 +890,7 @@ StrnCpy (char *dest, const char *src, size_t n)
 {
     char *d = dest;
     if (!dest)
-        return (NULL);
+        return (nullptr);
     if (!src)
     {
         *dest = 0;
@@ -913,10 +913,10 @@ strncpyn (char *dest, const char *src, size_t n, char c)
     size_t str_len;
 
     p = strchr (src, c);
-    if (p == NULL)
+    if (p == nullptr)
     {
         DEBUG (5, ("strncpyn: separator character (%c) not found\n", c));
-        return NULL;
+        return nullptr;
     }
 
     str_len = PTR_DIFF (p, src);
@@ -943,7 +943,7 @@ strhex_to_str (char *p, size_t len, const char *strhex)
     size_t num_chars = 0;
     unsigned char lonybble, hinybble;
     char *hexchars = "0123456789ABCDEF";
-    char *p1 = NULL, *p2 = NULL;
+    char *p1 = nullptr, *p2 = nullptr;
 
     for (i = 0; i < len && strhex[i] != 0; i++)
     {
@@ -972,8 +972,8 @@ strhex_to_str (char *p, size_t len, const char *strhex)
         p[num_chars] = (hinybble << 4) | lonybble;
         num_chars++;
 
-        p1 = NULL;
-        p2 = NULL;
+        p1 = nullptr;
+        p2 = nullptr;
     }
     return num_chars;
 }
@@ -1008,7 +1008,7 @@ in_list (char *s, char *list, BOOL casesensitive)
 #endif /*0 */
 
 /* this is used to prevent lots of mallocs of size 1 */
-static char *null_string = NULL;
+static char *null_string = nullptr;
 
 /****************************************************************************
 set a string value, allocing the space for the string
@@ -1026,7 +1026,7 @@ string_init (char **dest, const char *src)
     {
         if (!null_string)
         {
-            if ((null_string = (char *) malloc (1)) == NULL)
+            if ((null_string = (char *) malloc (1)) == nullptr)
             {
                 DEBUG (0, ("string_init: malloc fail for null_string.\n"));
                 return False;
@@ -1038,7 +1038,7 @@ string_init (char **dest, const char *src)
     else
     {
         (*dest) = (char *) malloc (l + 1);
-        if ((*dest) == NULL)
+        if ((*dest) == nullptr)
         {
             DEBUG (0, ("Out of memory in string_init\n"));
             return False;
@@ -1058,10 +1058,10 @@ string_free (char **s)
     if (!s || !(*s))
         return;
     if (*s == null_string)
-        *s = NULL;
+        *s = nullptr;
     if (*s)
         free (*s);
-    *s = NULL;
+    *s = nullptr;
 }
 
 /****************************************************************************
@@ -1163,17 +1163,17 @@ split_at_last_component (char *path, char *front, char sep, char *back)
 {
     char *p = strrchr (path, sep);
 
-    if (p != NULL)
+    if (p != nullptr)
     {
         *p = 0;
     }
-    if (front != NULL)
+    if (front != nullptr)
     {
         pstrcpy (front, path);
     }
-    if (p != NULL)
+    if (p != nullptr)
     {
-        if (back != NULL)
+        if (back != nullptr)
         {
             pstrcpy (back, p + 1);
         }
@@ -1181,7 +1181,7 @@ split_at_last_component (char *path, char *front, char sep, char *back)
     }
     else
     {
-        if (back != NULL)
+        if (back != nullptr)
         {
             back[0] = 0;
         }

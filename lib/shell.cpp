@@ -98,16 +98,16 @@ static char *
 mc_shell_get_name_env (void)
 {
     const char *shell_env;
-    char *shell_name = NULL;
+    char *shell_name = nullptr;
 
     shell_env = g_getenv ("SHELL");
-    if ((shell_env == NULL) || (shell_env[0] == '\0'))
+    if ((shell_env == nullptr) || (shell_env[0] == '\0'))
     {
         /* 2nd choice: user login shell */
         struct passwd *pwd;
 
         pwd = getpwuid (geteuid ());
-        if (pwd != NULL)
+        if (pwd != nullptr)
             shell_name = g_strdup (pwd->pw_shell);
     }
     else
@@ -122,13 +122,13 @@ mc_shell_get_name_env (void)
 static mc_shell_t *
 mc_shell_get_from_env (void)
 {
-    mc_shell_t *mc_shell = NULL;
+    mc_shell_t *mc_shell = nullptr;
 
     char *shell_name;
 
     shell_name = mc_shell_get_name_env ();
 
-    if (shell_name != NULL)
+    if (shell_name != nullptr)
     {
         mc_shell = g_new0 (mc_shell_t, 1);
         mc_shell->path = shell_name;
@@ -142,40 +142,40 @@ mc_shell_get_from_env (void)
 static void
 mc_shell_recognize_real_path (mc_shell_t * mc_shell)
 {
-    if (strstr (mc_shell->path, "/zsh") != NULL || strstr (mc_shell->real_path, "/zsh") != NULL
-        || getenv ("ZSH_VERSION") != NULL)
+    if (strstr (mc_shell->path, "/zsh") != nullptr || strstr (mc_shell->real_path, "/zsh") != nullptr
+        || getenv ("ZSH_VERSION") != nullptr)
     {
         /* Also detects ksh symlinked to zsh */
         mc_shell->type = SHELL_ZSH;
         mc_shell->name = "zsh";
     }
-    else if (strstr (mc_shell->path, "/tcsh") != NULL
-             || strstr (mc_shell->real_path, "/tcsh") != NULL)
+    else if (strstr (mc_shell->path, "/tcsh") != nullptr
+             || strstr (mc_shell->real_path, "/tcsh") != nullptr)
     {
         /* Also detects csh symlinked to tcsh */
         mc_shell->type = SHELL_TCSH;
         mc_shell->name = "tcsh";
     }
-    else if (strstr (mc_shell->path, "/csh") != NULL
-             || strstr (mc_shell->real_path, "/csh") != NULL)
+    else if (strstr (mc_shell->path, "/csh") != nullptr
+             || strstr (mc_shell->real_path, "/csh") != nullptr)
     {
         mc_shell->type = SHELL_TCSH;
         mc_shell->name = "csh";
     }
-    else if (strstr (mc_shell->path, "/fish") != NULL
-             || strstr (mc_shell->real_path, "/fish") != NULL)
+    else if (strstr (mc_shell->path, "/fish") != nullptr
+             || strstr (mc_shell->real_path, "/fish") != nullptr)
     {
         mc_shell->type = SHELL_FISH;
         mc_shell->name = "fish";
     }
-    else if (strstr (mc_shell->path, "/dash") != NULL
-             || strstr (mc_shell->real_path, "/dash") != NULL)
+    else if (strstr (mc_shell->path, "/dash") != nullptr
+             || strstr (mc_shell->real_path, "/dash") != nullptr)
     {
         /* Debian ash (also found if symlinked to by ash/sh) */
         mc_shell->type = SHELL_DASH;
         mc_shell->name = "dash";
     }
-    else if (strstr (mc_shell->real_path, "/busybox") != NULL)
+    else if (strstr (mc_shell->real_path, "/busybox") != nullptr)
     {
         /* If shell is symlinked to busybox, assume it is an ash, even though theoretically
          * it could also be a hush (a mini shell for non-MMU systems deactivated by default).
@@ -197,17 +197,17 @@ static void
 mc_shell_recognize_path (mc_shell_t * mc_shell)
 {
     /* If shell is not symlinked to busybox, it is safe to assume it is a real shell */
-    if (strstr (mc_shell->path, "/bash") != NULL || getenv ("BASH") != NULL)
+    if (strstr (mc_shell->path, "/bash") != nullptr || getenv ("BASH") != nullptr)
     {
         mc_shell->type = SHELL_BASH;
         mc_shell->name = "bash";
     }
-    else if (strstr (mc_shell->path, "/sh") != NULL || getenv ("SH") != NULL)
+    else if (strstr (mc_shell->path, "/sh") != nullptr || getenv ("SH") != nullptr)
     {
         mc_shell->type = SHELL_SH;
         mc_shell->name = "sh";
     }
-    else if (strstr (mc_shell->path, "/ash") != NULL || getenv ("ASH") != NULL)
+    else if (strstr (mc_shell->path, "/ash") != nullptr || getenv ("ASH") != nullptr)
     {
         mc_shell->type = SHELL_ASH_BUSYBOX;
         mc_shell->name = "ash";
@@ -227,7 +227,7 @@ mc_shell_init (void)
 
     mc_shell = mc_shell_get_from_env ();
 
-    if (mc_shell == NULL)
+    if (mc_shell == nullptr)
         mc_shell = mc_shell_get_installed_in_system ();
 
     mc_shell->real_path = mc_realpath (mc_shell->path, rp_shell);
@@ -235,7 +235,7 @@ mc_shell_init (void)
     /* Find out what type of shell we have. Also consider real paths (resolved symlinks)
      * because e.g. csh might point to tcsh, ash to dash or busybox, sh to anything. */
 
-    if (mc_shell->real_path != NULL)
+    if (mc_shell->real_path != nullptr)
         mc_shell_recognize_real_path (mc_shell);
 
     if (mc_shell->type == SHELL_NONE)
@@ -252,7 +252,7 @@ mc_shell_init (void)
 void
 mc_shell_deinit (void)
 {
-    if (mc_global.shell != NULL)
+    if (mc_global.shell != nullptr)
     {
         g_free (mc_global.shell->path);
         MC_PTR_FREE (mc_global.shell);

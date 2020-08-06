@@ -84,7 +84,7 @@ str_replace_all (const char *haystack, const char *needle, const char *replaceme
         const char *needle_in_str;
 
         needle_in_str = strstr (haystack, needle);
-        if (needle_in_str == NULL)
+        if (needle_in_str == nullptr)
         {
             if (*haystack != '\0')
                 g_ptr_array_add (str_splints, g_strdup (haystack));
@@ -109,7 +109,7 @@ str_replace_all (const char *haystack, const char *needle, const char *replaceme
     }
     return_str = str_ptr_array_join (str_splints);
 
-    g_ptr_array_foreach (str_splints, (GFunc) g_free, NULL);
+    g_ptr_array_foreach (str_splints, (GFunc) g_free, nullptr);
     g_ptr_array_free (str_splints, TRUE);
 
     return return_str;

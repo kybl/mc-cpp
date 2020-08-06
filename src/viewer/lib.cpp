@@ -83,8 +83,8 @@ mcview_toggle_magic_mode (WView * view)
     command = g_strdup (view->command);
     dir = view->dir;
     dir_idx = view->dir_idx;
-    view->dir = NULL;
-    view->dir_idx = NULL;
+    view->dir = nullptr;
+    view->dir_idx = nullptr;
     mcview_done (view);
     mcview_init (view);
     mcview_load (view, command, filename, 0, 0, 0);
@@ -153,10 +153,10 @@ mcview_init (WView * view)
 {
     size_t i;
 
-    view->filename_vpath = NULL;
-    view->workdir_vpath = NULL;
-    view->command = NULL;
-    view->search_nroff_seq = NULL;
+    view->filename_vpath = nullptr;
+    view->workdir_vpath = nullptr;
+    view->command = nullptr;
+    view->search_nroff_seq = nullptr;
 
     mcview_set_datasource_none (view);
 
@@ -165,7 +165,7 @@ mcview_init (WView * view)
 
     view->hexedit_lownibble = FALSE;
     view->locked = FALSE;
-    view->coord_cache = NULL;
+    view->coord_cache = nullptr;
 
     view->dpy_start = 0;
     view->dpy_paragraph_skip_lines = 0;
@@ -177,7 +177,7 @@ mcview_init (WView * view)
     view->hex_cursor = 0;
     view->cursor_col = 0;
     view->cursor_row = 0;
-    view->change_list = NULL;
+    view->change_list = nullptr;
 
     /* {status,ruler,data}_area are left uninitialized */
 
@@ -195,7 +195,7 @@ mcview_init (WView * view)
     view->update_steps = 0;
     view->update_activate = 0;
 
-    view->saved_bookmarks = NULL;
+    view->saved_bookmarks = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -204,12 +204,12 @@ void
 mcview_done (WView * view)
 {
     /* Save current file position */
-    if (mcview_remember_file_position && view->filename_vpath != NULL)
+    if (mcview_remember_file_position && view->filename_vpath != nullptr)
     {
         save_file_position (view->filename_vpath, -1, 0,
                             view->mode_flags.hex ? view->hex_cursor : view->dpy_start,
                             view->saved_bookmarks);
-        view->saved_bookmarks = NULL;
+        view->saved_bookmarks = nullptr;
     }
 
     /* Write back the global viewer mode */
@@ -218,16 +218,16 @@ mcview_done (WView * view)
     /* Free memory used by the viewer */
     /* view->widget needs no destructor */
     vfs_path_free (view->filename_vpath);
-    view->filename_vpath = NULL;
+    view->filename_vpath = nullptr;
     vfs_path_free (view->workdir_vpath);
-    view->workdir_vpath = NULL;
+    view->workdir_vpath = nullptr;
     MC_PTR_FREE (view->command);
 
     mcview_close_datasource (view);
     /* the growing buffer is freed with the datasource */
 
     coord_cache_free (view->coord_cache);
-    view->coord_cache = NULL;
+    view->coord_cache = nullptr;
 
     if (view->converter == INVALID_CONV)
         view->converter = str_cnv_from_term;
@@ -239,12 +239,12 @@ mcview_done (WView * view)
     }
 
     mc_search_free (view->search);
-    view->search = NULL;
+    view->search = nullptr;
     MC_PTR_FREE (view->last_search_string);
     mcview_nroff_seq_free (&view->search_nroff_seq);
     mcview_hexedit_free_change_list (view);
 
-    if (mc_global.mc_run_mode == MC_RUN_VIEWER && view->dir != NULL)
+    if (mc_global.mc_run_mode == MC_RUN_VIEWER && view->dir != nullptr)
     {
         /* mcviewer is the owner of file list */
         dir_list_free_list (view->dir);
@@ -252,7 +252,7 @@ mcview_done (WView * view)
         g_free (view->dir_idx);
     }
 
-    view->dir = NULL;
+    view->dir = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -261,13 +261,13 @@ mcview_done (WView * view)
 void
 mcview_set_codeset (WView * view)
 {
-    const char *cp_id = NULL;
+    const char *cp_id = nullptr;
 
     view->utf8 = TRUE;
     cp_id =
         get_codepage_id (mc_global.source_codepage >=
                          0 ? mc_global.source_codepage : mc_global.display_codepage);
-    if (cp_id != NULL)
+    if (cp_id != nullptr)
     {
         GIConv conv;
         conv = str_crt_conv_from (cp_id);
@@ -382,15 +382,15 @@ mcview_get_title (const WDialog * h, size_t len)
     char *ret_str;
 
     view = (const WView *) widget_find_by_type (CONST_WIDGET (h), mcview_callback);
-    modified = view->hexedit_mode && (view->change_list != NULL) ? "(*) " : "    ";
+    modified = view->hexedit_mode && (view->change_list != nullptr) ? "(*) " : "    ";
     view_filename = vfs_path_as_str (view->filename_vpath);
 
     len -= 4;
 
-    file_label = view_filename != NULL ? view_filename : view->command != NULL ? view->command : "";
+    file_label = view_filename != nullptr ? view_filename : view->command != nullptr ? view->command : "";
     file_label = str_term_trim (file_label, len - str_term_width1 (_("View: ")));
 
-    ret_str = g_strconcat (_("View: "), modified, file_label, (char *) NULL);
+    ret_str = g_strconcat (_("View: "), modified, file_label, (char *) nullptr);
     return ret_str;
 }
 

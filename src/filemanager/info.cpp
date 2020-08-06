@@ -137,7 +137,7 @@ info_show_info (WInfo * info)
 
     /* don't rely on vpath CWD when cd_symlinks enabled */
     p_rp_cwd = mc_realpath (vfs_path_as_str (current_panel->cwd_vpath), rp_cwd);
-    if (p_rp_cwd == NULL)
+    if (p_rp_cwd == nullptr)
         p_rp_cwd = vfs_path_as_str (current_panel->cwd_vpath);
 
     my_statfs (&myfs_stats, p_rp_cwd);
@@ -373,7 +373,7 @@ info_new (int y, int x, int lines, int cols)
 
     info = g_new (struct WInfo, 1);
     w = WIDGET (info);
-    widget_init (w, y, x, lines, cols, info_callback, NULL);
+    widget_init (w, y, x, lines, cols, info_callback, nullptr);
 
     return info;
 }

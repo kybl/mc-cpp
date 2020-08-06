@@ -105,13 +105,13 @@ static int
 sftpfs_cb_open_connection (struct vfs_s_super *super,
                            const vfs_path_t * vpath, const vfs_path_element_t * vpath_element)
 {
-    GError *mcerror = NULL;
+    GError *mcerror = nullptr;
     sftpfs_super_t *sftpfs_super = SFTP_SUPER (super);
     int ret_value;
 
     (void) vpath;
 
-    if (vpath_element->host == NULL || *vpath_element->host == '\0')
+    if (vpath_element->host == nullptr || *vpath_element->host == '\0')
     {
         vfs_print_message ("%s", _("sftp: Invalid host name."));
         vpath_element->clazz->verrno = EPERM;
@@ -133,7 +133,7 @@ sftpfs_cb_open_connection (struct vfs_s_super *super,
                          vfs_s_default_stat (vpath_element->clazz, S_IFDIR | 0755));
 
     ret_value = sftpfs_open_connection (super, &mcerror);
-    mc_error_message (&mcerror, NULL);
+    mc_error_message (&mcerror, nullptr);
     return ret_value;
 }
 
@@ -148,14 +148,14 @@ sftpfs_cb_open_connection (struct vfs_s_super *super,
 static void
 sftpfs_cb_close_connection (struct vfs_class *me, struct vfs_s_super *super)
 {
-    GError *mcerror = NULL;
+    GError *mcerror = nullptr;
 
     (void) me;
     sftpfs_close_connection (super, "Normal Shutdown", &mcerror);
 
     vfs_path_element_free (SFTP_SUPER (super)->original_connection_info);
 
-    mc_error_message (&mcerror, NULL);
+    mc_error_message (&mcerror, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */

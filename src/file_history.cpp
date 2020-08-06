@@ -62,19 +62,19 @@ file_history_list_read (void)
     char *fn;
     FILE *f;
     char buf[MC_MAXPATHLEN + 100];
-    GList *file_list = NULL;
+    GList *file_list = nullptr;
 
     /* open file with positions */
     fn = mc_config_get_full_path (MC_FILEPOS_FILE);
-    if (fn == NULL)
-        return NULL;
+    if (fn == nullptr)
+        return nullptr;
 
     f = fopen (fn, "r");
     g_free (fn);
-    if (f == NULL)
-        return NULL;
+    if (f == nullptr)
+        return nullptr;
 
-    while (fgets (buf, sizeof (buf), f) != NULL)
+    while (fgets (buf, sizeof (buf), f) != nullptr)
     {
         char *s;
         file_history_data_t *fhd;
@@ -104,24 +104,24 @@ file_history_list_write (const GList * file_list)
     gboolean write_error = FALSE;
 
     fn = mc_config_get_full_path (MC_FILEPOS_FILE);
-    if (fn == NULL)
+    if (fn == nullptr)
         return;
 
     mc_util_make_backup_if_possible (fn, TMP_SUFFIX);
 
     f = fopen (fn, "w");
-    if (f != NULL)
+    if (f != nullptr)
     {
         GString *s;
 
         s = g_string_sized_new (128);
 
-        for (; file_list != NULL && !write_error; file_list = g_list_next (file_list))
+        for (; file_list != nullptr && !write_error; file_list = g_list_next (file_list))
         {
             file_history_data_t *fhd = (file_history_data_t *) file_list->data;
 
             g_string_append (s, fhd->file_name);
-            if (fhd->file_pos != NULL)
+            if (fhd->file_pos != nullptr)
             {
                 g_string_append_c (s, ' ');
                 g_string_append (s, fhd->file_pos);
@@ -157,7 +157,7 @@ file_history_create_item (history_descriptor_t * hd, void *data)
 
     listbox_add_item (hd->listbox, LISTBOX_APPEND_AT_END, 0, fhd->file_name, fhd->file_pos, TRUE);
     /* fhd->file_pos is not copied, NULLize it to prevent double free */
-    fhd->file_pos = NULL;
+    fhd->file_pos = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -171,9 +171,9 @@ file_history_release_item (history_descriptor_t * hd, WLEntry * le)
 
     fhd = g_new (file_history_data_t, 1);
     fhd->file_name = le->text;
-    le->text = NULL;
+    le->text = nullptr;
     fhd->file_pos = (char *) le->data;
-    le->data = NULL;
+    le->data = nullptr;
 
     return fhd;
 }
@@ -210,8 +210,8 @@ show_file_history (const Widget * w, int *action)
     history_descriptor_t hd;
 
     file_list = file_history_list_read ();
-    if (file_list == NULL)
-        return NULL;
+    if (file_list == nullptr)
+        return nullptr;
 
     len = g_list_length (file_list);
 

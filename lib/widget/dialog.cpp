@@ -57,10 +57,10 @@ dlg_colors_t listbox_colors;
 
 /* Primitive way to check if the the current dialog is our dialog */
 /* This is needed by async routines like load_prompt */
-GList *top_dlg = NULL;
+GList *top_dlg = nullptr;
 
 /* A hook list for idle events */
-hook_t *idle_hook = NULL;
+hook_t *idle_hook = nullptr;
 
 /* If set then dialogs just clean the screen when refreshing, else */
 /* they do a complete refresh, refreshing all the parts of the program */
@@ -69,7 +69,7 @@ gboolean fast_refresh = FALSE;
 /* left click outside of dialog closes it */
 gboolean mouse_close_dialog = FALSE;
 
-const global_keymap_t *dialog_map = NULL;
+const global_keymap_t *dialog_map = nullptr;
 
 /*** file scope macro definitions ****************************************************************/
 
@@ -102,7 +102,7 @@ dlg_read_history (WDialog * h)
 
     profile = mc_config_get_full_path (MC_HISTORY_FILE);
     event_data.cfg = mc_config_init (profile, TRUE);
-    event_data.receiver = NULL;
+    event_data.receiver = nullptr;
 
     /* create all histories in dialog */
     mc_event_raise (h->event_group, MCEVENT_HISTORY_LOAD, &event_data);
@@ -134,7 +134,7 @@ dlg_execute_cmd (WDialog * h, long command)
     WGroup *g = GROUP (h);
     cb_ret_t ret = MSG_HANDLED;
 
-    if (send_message (h, NULL, MSG_ACTION, command, NULL) == MSG_HANDLED)
+    if (send_message (h, nullptr, MSG_ACTION, command, nullptr) == MSG_HANDLED)
         return MSG_HANDLED;
 
     switch (command)
@@ -159,13 +159,13 @@ dlg_execute_cmd (WDialog * h, long command)
 
     case CK_Help:
         {
-            ev_help_t event_data = { NULL, h->help_ctx };
+            ev_help_t event_data = { nullptr, h->help_ctx };
             mc_event_raise (MCEVENT_GROUP_CORE, "help", &event_data);
         }
         break;
 
     case CK_Suspend:
-        mc_event_raise (MCEVENT_GROUP_CORE, "suspend", NULL);
+        mc_event_raise (MCEVENT_GROUP_CORE, "suspend", nullptr);
         refresh_cmd ();
         break;
     case CK_Refresh:
@@ -221,10 +221,10 @@ dlg_key_event (WDialog * h, int d_key)
     WGroup *g = GROUP (h);
     cb_ret_t handled;
 
-    if (g->widgets == NULL)
+    if (g->widgets == nullptr)
         return;
 
-    if (g->current == NULL)
+    if (g->current == nullptr)
         g->current = g->widgets;
 
     /* TAB used to cycle */
@@ -243,16 +243,16 @@ dlg_key_event (WDialog * h, int d_key)
     }
 
     /* first can dlalog handle the key itself */
-    handled = send_message (h, NULL, MSG_KEY, d_key, NULL);
+    handled = send_message (h, nullptr, MSG_KEY, d_key, nullptr);
 
     if (handled == MSG_NOT_HANDLED)
-        handled = group_default_callback (w, NULL, MSG_KEY, d_key, NULL);
+        handled = group_default_callback (w, nullptr, MSG_KEY, d_key, nullptr);
 
     if (handled == MSG_NOT_HANDLED)
         handled = dlg_handle_key (h, d_key);
 
     (void) handled;
-    send_message (h, NULL, MSG_POST_KEY, d_key, NULL);
+    send_message (h, nullptr, MSG_POST_KEY, d_key, nullptr);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -260,7 +260,7 @@ dlg_key_event (WDialog * h, int d_key)
 static int
 dlg_handle_mouse_event (Widget * w, Gpm_Event * event)
 {
-    if (w->mouse_callback != NULL)
+    if (w->mouse_callback != nullptr)
     {
         int mou;
 
@@ -285,7 +285,7 @@ frontend_dlg_run (WDialog * h)
     /* close opened editors, viewers, etc */
     if (!widget_get_state (wh, WST_MODAL) && mc_global.midnight_shutdown)
     {
-        send_message (h, NULL, MSG_VALIDATE, 0, NULL);
+        send_message (h, nullptr, MSG_VALIDATE, 0, nullptr);
         return;
     }
 
@@ -302,7 +302,7 @@ frontend_dlg_run (WDialog * h)
                 execute_hooks (idle_hook);
 
             while (widget_get_state (wh, WST_IDLE) && is_idle ())
-                send_message (wh, NULL, MSG_IDLE, 0, NULL);
+                send_message (wh, nullptr, MSG_IDLE, 0, nullptr);
 
             /* Allow terminating the dialog from the idle handler */
             if (!widget_get_state (wh, WST_ACTIVE))
@@ -318,7 +318,7 @@ frontend_dlg_run (WDialog * h)
         dlg_process_event (h, d_key, &event);
 
         if (widget_get_state (wh, WST_CLOSED))
-            send_message (h, NULL, MSG_VALIDATE, 0, NULL);
+            send_message (h, nullptr, MSG_VALIDATE, 0, nullptr);
     }
 }
 
@@ -379,8 +379,8 @@ dlg_create (gboolean modal, int y1, int x1, int lines, int cols, widget_pos_flag
     w = WIDGET (new_d);
     g = GROUP (new_d);
     widget_adjust_position (pos_flags, &y1, &x1, &lines, &cols);
-    group_init (g, y1, x1, lines, cols, callback != NULL ? callback : dlg_default_callback,
-                mouse_callback != NULL ? mouse_callback : dlg_default_mouse_callback);
+    group_init (g, y1, x1, lines, cols, callback != nullptr ? callback : dlg_default_callback,
+                mouse_callback != nullptr ? mouse_callback : dlg_default_mouse_callback);
 
     w->pos_flags = pos_flags;
     w->options |= WOP_SELECTABLE | WOP_TOP_SELECT;
@@ -398,7 +398,7 @@ dlg_create (gboolean modal, int y1, int x1, int lines, int cols, widget_pos_flag
     new_d->colors = colors;
     new_d->help_ctx = help_ctx;
     new_d->compact = compact;
-    new_d->data = NULL;
+    new_d->data = nullptr;
 
     if (modal)
     {
@@ -448,23 +448,23 @@ do_refresh (void)
 
     if (fast_refresh)
     {
-        if (d != NULL)
+        if (d != nullptr)
             widget_draw (WIDGET (d->data));
     }
     else
     {
         /* Search first fullscreen dialog */
-        for (; d != NULL; d = g_list_next (d))
+        for (; d != nullptr; d = g_list_next (d))
             if ((WIDGET (d->data)->pos_flags & WPOS_FULLSCREEN) != 0)
                 break;
 
         /* when small dialog (i.e. error message) is created first,
            there is no fullscreen dialog in the stack */
-        if (d == NULL)
+        if (d == nullptr)
             d = g_list_last (top_dlg);
 
         /* back to top dialog */
-        for (; d != NULL; d = g_list_previous (d))
+        for (; d != nullptr; d = g_list_previous (d))
             widget_draw (WIDGET (d->data));
     }
 }
@@ -486,7 +486,7 @@ dlg_init (WDialog * h)
     WGroup *g = GROUP (h);
     Widget *wh = WIDGET (h);
 
-    if (top_dlg != NULL && widget_get_state (WIDGET (top_dlg->data), WST_MODAL))
+    if (top_dlg != nullptr && widget_get_state (WIDGET (top_dlg->data), WST_MODAL))
         widget_set_state (wh, WST_MODAL, TRUE);
 
     /* add dialog to the stack */
@@ -498,13 +498,13 @@ dlg_init (WDialog * h)
         if (!widget_get_state (wh, WST_MODAL))
             dialog_switch_add (h);
 
-        send_message (h, NULL, MSG_INIT, 0, NULL);
-        group_default_callback (wh, NULL, MSG_INIT, 0, NULL);
+        send_message (h, nullptr, MSG_INIT, 0, nullptr);
+        group_default_callback (wh, nullptr, MSG_INIT, 0, nullptr);
         dlg_read_history (h);
     }
 
     /* Select the first widget that takes focus */
-    while (g->current != NULL && !widget_get_options (WIDGET (g->current->data), WOP_SELECTABLE)
+    while (g->current != nullptr && !widget_get_options (WIDGET (g->current->data), WOP_SELECTABLE)
            && !widget_get_state (WIDGET (g->current->data), WST_DISABLED))
         group_set_current_widget_next (g);
 
@@ -551,8 +551,8 @@ dlg_run_done (WDialog * h)
 
     if (widget_get_state (WIDGET (h), WST_CLOSED))
     {
-        send_message (h, GROUP (h)->current == NULL ? NULL : WIDGET (GROUP (h)->current->data),
-                      MSG_END, 0, NULL);
+        send_message (h, GROUP (h)->current == nullptr ? nullptr : WIDGET (GROUP (h)->current->data),
+                      MSG_END, 0, nullptr);
         if (!widget_get_state (WIDGET (h), WST_MODAL))
             dialog_switch_remove (h);
     }
@@ -582,7 +582,7 @@ dlg_destroy (WDialog * h)
 {
     /* if some widgets have history, save all history at one moment here */
     dlg_save_history (h);
-    group_default_callback (WIDGET (h), NULL, MSG_DESTROY, 0, NULL);
+    group_default_callback (WIDGET (h), nullptr, MSG_DESTROY, 0, nullptr);
     mc_event_group_del (h->event_group);
     g_free (h->event_group);
     g_free (h);
@@ -615,12 +615,12 @@ dlg_save_history (WDialog * h)
         ev_history_load_save_t event_data;
 
         event_data.cfg = mc_config_init (profile, FALSE);
-        event_data.receiver = NULL;
+        event_data.receiver = nullptr;
 
         /* get all histories in dialog */
         mc_event_raise (h->event_group, MCEVENT_HISTORY_SAVE, &event_data);
 
-        mc_config_save_file (event_data.cfg, NULL);
+        mc_config_save_file (event_data.cfg, nullptr);
         mc_config_deinit (event_data.cfg);
     }
 
@@ -634,10 +634,10 @@ dlg_get_title (const WDialog * h, size_t len)
 {
     char *t;
 
-    if (h == NULL)
+    if (h == nullptr)
         abort ();
 
-    if (h->get_title != NULL)
+    if (h->get_title != nullptr)
         t = h->get_title (h, len);
     else
         t = g_strdup ("");

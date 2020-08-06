@@ -50,7 +50,7 @@
 
 /*** file scope variables ************************************************************************/
 
-static GHashTable *mc_tty_color_color_pair_attrs = NULL;
+static GHashTable *mc_tty_color_color_pair_attrs = nullptr;
 
 /*** file scope functions ************************************************************************/
 /* --------------------------------------------------------------------------------------------- */
@@ -69,11 +69,11 @@ mc_tty_color_save_attr (int color_pair, int color_attr)
     int *attr, *key;
 
     attr = g_try_new0 (int, 1);
-    if (attr == NULL)
+    if (attr == nullptr)
         return;
 
     key = g_try_new (int, 1);
-    if (key == NULL)
+    if (key == nullptr)
     {
         g_free (attr);
         return;
@@ -90,11 +90,11 @@ mc_tty_color_save_attr (int color_pair, int color_attr)
 static int
 color_get_attr (int color_pair)
 {
-    int *fnd = NULL;
+    int *fnd = nullptr;
 
-    if (mc_tty_color_color_pair_attrs != NULL)
+    if (mc_tty_color_color_pair_attrs != nullptr)
         fnd = (int *) g_hash_table_lookup (mc_tty_color_color_pair_attrs, (gpointer) & color_pair);
-    return (fnd != NULL) ? *fnd : 0;
+    return (fnd != nullptr) ? *fnd : 0;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -136,7 +136,7 @@ void
 tty_color_deinit_lib (void)
 {
     g_hash_table_destroy (mc_tty_color_color_pair_attrs);
-    mc_tty_color_color_pair_attrs = NULL;
+    mc_tty_color_color_pair_attrs = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -181,7 +181,7 @@ tty_color_try_alloc_pair_lib (tty_color_pair_t * mc_color_pair)
         attr = mc_color_pair->attr;
 
         /* In legacy color mode, change bright colors into bold */
-        if (!tty_use_256colors () && !tty_use_truecolors (NULL))
+        if (!tty_use_256colors () && !tty_use_truecolors (nullptr))
         {
             if (ifg >= 8 && ifg < 16)
             {

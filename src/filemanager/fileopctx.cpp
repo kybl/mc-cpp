@@ -98,7 +98,7 @@ file_op_context_new (FileOperation op)
 void
 file_op_context_destroy (file_op_context_t * ctx)
 {
-    if (ctx != NULL)
+    if (ctx != nullptr)
     {
         file_op_context_destroy_ui (ctx);
         mc_search_free (ctx->search_handle);

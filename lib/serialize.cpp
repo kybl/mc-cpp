@@ -59,7 +59,7 @@ prepend_error_message (GError ** error, const char *format, ...)
     char *split_str;
     va_list ap;
 
-    if ((error == NULL) || (*error == NULL))
+    if ((error == nullptr) || (*error == nullptr))
         return;
 
     va_start (ap, format);
@@ -83,7 +83,7 @@ go_to_end_of_serialized_string (const char *non_serialized_data,
 
     calculated_offset = (semi_ptr - non_serialized_data) + 1 + strlen (already_serialized_part);
     if (calculated_offset >= strlen (non_serialized_data))
-        return NULL;
+        return nullptr;
 
     non_serialized_data += calculated_offset;
     *offset += calculated_offset;
@@ -108,10 +108,10 @@ go_to_end_of_serialized_string (const char *non_serialized_data,
 char *
 mc_serialize_str (const char prefix, const char *data, GError ** error)
 {
-    if (data == NULL)
+    if (data == nullptr)
     {
-        g_set_error (error, MC_ERROR, 0, "mc_serialize_str(): Input data is NULL.");
-        return NULL;
+        g_set_error (error, MC_ERROR, 0, "mc_serialize_str(): Input data is nullptr.");
+        return nullptr;
     }
     return g_strdup_printf ("%c%zu" SRLZ_DELIM_S "%s", prefix, strlen (data), data);
 }
@@ -133,16 +133,16 @@ mc_deserialize_str (const char prefix, const char *data, GError ** error)
 {
     size_t data_len;
 
-    if ((data == NULL) || (*data == '\0'))
+    if ((data == nullptr) || (*data == '\0'))
     {
-        g_set_error (error, MC_ERROR, 0, FUNC_NAME ": Input data is NULL or empty.");
-        return NULL;
+        g_set_error (error, MC_ERROR, 0, FUNC_NAME ": Input data is nullptr or empty.");
+        return nullptr;
     }
 
     if (*data != prefix)
     {
         g_set_error (error, MC_ERROR, 0, FUNC_NAME ": String prefix doesn't equal to '%c'", prefix);
-        return NULL;
+        return nullptr;
     }
 
     {
@@ -151,17 +151,17 @@ mc_deserialize_str (const char prefix, const char *data, GError ** error)
         size_t semi_offset;
 
         semi_ptr = strchr (data + 1, SRLZ_DELIM_C);
-        if (semi_ptr == NULL)
+        if (semi_ptr == nullptr)
         {
             g_set_error (error, MC_ERROR, 0,
                          FUNC_NAME ": Length delimiter '%c' doesn't exists", SRLZ_DELIM_C);
-            return NULL;
+            return nullptr;
         }
         semi_offset = semi_ptr - (data + 1);
         if (semi_offset >= BUF_TINY)
         {
             g_set_error (error, MC_ERROR, 0, FUNC_NAME ": Too big string length");
-            return NULL;
+            return nullptr;
         }
         strncpy (buffer, data + 1, semi_offset);
         buffer[semi_offset] = '\0';
@@ -175,7 +175,7 @@ mc_deserialize_str (const char prefix, const char *data, GError ** error)
                      FUNC_NAME
                      ": Specified data length (%zu) is greater than actual data length (%zu)",
                      data_len, strlen (data));
-        return NULL;
+        return nullptr;
     }
     return g_strndup (data, data_len);
 }
@@ -199,36 +199,36 @@ mc_serialize_config (mc_config_t * data, GError ** error)
     GString *buffer;
 
     buffer = g_string_new ("");
-    groups = mc_config_get_groups (data, NULL);
+    groups = mc_config_get_groups (data, nullptr);
 
-    for (group_iterator = groups; *group_iterator != NULL; group_iterator++)
+    for (group_iterator = groups; *group_iterator != nullptr; group_iterator++)
     {
         char *serialized_str;
         gchar **params, **param_iterator;
 
         serialized_str = mc_serialize_str ('g', *group_iterator, error);
-        if (serialized_str == NULL)
+        if (serialized_str == nullptr)
         {
             g_string_free (buffer, TRUE);
             g_strfreev (groups);
-            return NULL;
+            return nullptr;
         }
         g_string_append (buffer, serialized_str);
         g_free (serialized_str);
 
-        params = mc_config_get_keys (data, *group_iterator, NULL);
+        params = mc_config_get_keys (data, *group_iterator, nullptr);
 
-        for (param_iterator = params; *param_iterator != NULL; param_iterator++)
+        for (param_iterator = params; *param_iterator != nullptr; param_iterator++)
         {
             char *value;
 
             serialized_str = mc_serialize_str ('p', *param_iterator, error);
-            if (serialized_str == NULL)
+            if (serialized_str == nullptr)
             {
                 g_string_free (buffer, TRUE);
                 g_strfreev (params);
                 g_strfreev (groups);
-                return NULL;
+                return nullptr;
             }
             g_string_append (buffer, serialized_str);
             g_free (serialized_str);
@@ -237,12 +237,12 @@ mc_serialize_config (mc_config_t * data, GError ** error)
             serialized_str = mc_serialize_str ('v', value, error);
             g_free (value);
 
-            if (serialized_str == NULL)
+            if (serialized_str == nullptr)
             {
                 g_string_free (buffer, TRUE);
                 g_strfreev (params);
                 g_strfreev (groups);
-                return NULL;
+                return nullptr;
             }
 
             g_string_append (buffer, serialized_str);
@@ -268,13 +268,13 @@ mc_serialize_config (mc_config_t * data, GError ** error)
 #define prepend_error_and_exit() { \
     prepend_error_message (error, FUNC_NAME " at %zu", current_position + 1); \
                 mc_config_deinit (ret_data); \
-                return NULL; \
+                return nullptr; \
 }
 
 mc_config_t *
 mc_deserialize_config (const char *data, GError ** error)
 {
-    char *current_group = NULL, *current_param = NULL, *current_value = NULL;
+    char *current_group = nullptr, *current_param = nullptr, *current_value = nullptr;
     size_t current_position = 0;
     mc_config_t *ret_data;
     enum automat_status
@@ -284,11 +284,11 @@ mc_deserialize_config (const char *data, GError ** error)
         WAIT_VALUE
     } current_status = WAIT_GROUP;
 
-    ret_data = mc_config_init (NULL, FALSE);
+    ret_data = mc_config_init (nullptr, FALSE);
 
-    while (data != NULL)
+    while (data != nullptr)
     {
-        if ((current_status == WAIT_GROUP) && (*data == 'p') && (current_group != NULL))
+        if ((current_status == WAIT_GROUP) && (*data == 'p') && (current_group != nullptr))
             current_status = WAIT_PARAM;
 
         switch (current_status)
@@ -297,7 +297,7 @@ mc_deserialize_config (const char *data, GError ** error)
             g_free (current_group);
 
             current_group = mc_deserialize_str ('g', data, error);
-            if (current_group == NULL)
+            if (current_group == nullptr)
                 prepend_error_and_exit ();
 
             data = go_to_end_of_serialized_string (data, current_group, &current_position);
@@ -307,7 +307,7 @@ mc_deserialize_config (const char *data, GError ** error)
             g_free (current_param);
 
             current_param = mc_deserialize_str ('p', data, error);
-            if (current_param == NULL)
+            if (current_param == nullptr)
             {
                 g_free (current_group);
                 prepend_error_and_exit ();
@@ -318,7 +318,7 @@ mc_deserialize_config (const char *data, GError ** error)
             break;
         case WAIT_VALUE:
             current_value = mc_deserialize_str ('v', data, error);
-            if (current_value == NULL)
+            if (current_value == nullptr)
             {
                 g_free (current_group);
                 g_free (current_param);

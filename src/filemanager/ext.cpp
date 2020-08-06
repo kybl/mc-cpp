@@ -86,11 +86,11 @@ typedef char *(*quote_func_t) (const char *name, gboolean quote_percent);
  * With this we avoid loading/parsing the file each time we
  * need it
  */
-static char *data = NULL;
-static vfs_path_t *localfilecopy_vpath = NULL;
+static char *data = nullptr;
+static vfs_path_t *localfilecopy_vpath = nullptr;
 static char buffer[BUF_1K];
 
-static char *pbuffer = NULL;
+static char *pbuffer = nullptr;
 static time_t localmtime = 0;
 static quote_func_t quote_func = name_quote;
 static gboolean run_view = FALSE;
@@ -105,7 +105,7 @@ static gboolean do_local_copy = FALSE;
 static void
 exec_cleanup_script (vfs_path_t * script_vpath)
 {
-    if (script_vpath != NULL)
+    if (script_vpath != nullptr)
     {
         (void) mc_unlink (script_vpath);
         vfs_path_free (script_vpath);
@@ -117,7 +117,7 @@ exec_cleanup_script (vfs_path_t * script_vpath)
 static void
 exec_cleanup_file_name (const vfs_path_t * filename_vpath, gboolean has_changed)
 {
-    if (localfilecopy_vpath == NULL)
+    if (localfilecopy_vpath == nullptr)
         return;
 
     if (has_changed)
@@ -129,7 +129,7 @@ exec_cleanup_file_name (const vfs_path_t * filename_vpath, gboolean has_changed)
     }
     mc_ungetlocalcopy (filename_vpath, localfilecopy_vpath, has_changed);
     vfs_path_free (localfilecopy_vpath);
-    localfilecopy_vpath = NULL;
+    localfilecopy_vpath = nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -140,12 +140,12 @@ exec_get_file_name (const vfs_path_t * filename_vpath)
     if (!do_local_copy)
         return quote_func (vfs_path_get_last_path_str (filename_vpath), FALSE);
 
-    if (localfilecopy_vpath == NULL)
+    if (localfilecopy_vpath == nullptr)
     {
         struct stat mystat;
         localfilecopy_vpath = mc_getlocalcopy (filename_vpath);
-        if (localfilecopy_vpath == NULL)
-            return NULL;
+        if (localfilecopy_vpath == nullptr)
+            return nullptr;
 
         mc_stat (localfilecopy_vpath, &mystat);
         localmtime = mystat.st_mtime;
@@ -161,8 +161,8 @@ exec_expand_format (char symbol, gboolean is_result_quoted)
 {
     char *text;
 
-    text = expand_format (NULL, symbol, TRUE);
-    if (is_result_quoted && text != NULL)
+    text = expand_format (nullptr, symbol, TRUE);
+    if (is_result_quoted && text != nullptr)
     {
         char *quoted_text;
 
@@ -193,23 +193,23 @@ exec_get_export_variables (const vfs_path_t * filename_vpath)
         {'d', "MC_EXT_CURRENTDIR", FALSE},
         {'s', "MC_EXT_SELECTED", TRUE},
         {'t', "MC_EXT_ONLYTAGGED", TRUE},
-        {'\0', NULL, FALSE}
+        {'\0', nullptr, FALSE}
     };
     /* *INDENT-ON* */
 
     text = exec_get_file_name (filename_vpath);
-    if (text == NULL)
-        return NULL;
+    if (text == nullptr)
+        return nullptr;
 
     export_vars_string = g_string_new ("MC_EXT_FILENAME=");
     g_string_append_printf (export_vars_string, "%s\nexport MC_EXT_FILENAME\n", text);
     g_free (text);
 
-    for (i = 0; export_variables[i].name != NULL; i++)
+    for (i = 0; export_variables[i].name != nullptr; i++)
     {
         text =
             exec_expand_format (export_variables[i].symbol, export_variables[i].is_result_quoted);
-        if (text != NULL)
+        if (text != nullptr)
         {
             g_string_append_printf (export_vars_string,
                                     "%s=%s\nexport %s\n", export_variables[i].name, text,
@@ -244,12 +244,12 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                 parameter =
                     input_dialog (_("Parameter"), lc_prompt, MC_HISTORY_EXT_PARAMETER, "",
                                   INPUT_COMPLETE_NONE);
-                if (parameter == NULL)
+                if (parameter == nullptr)
                 {
                     /* User canceled */
                     g_string_free (shell_string, TRUE);
                     exec_cleanup_file_name (filename_vpath, FALSE);
-                    return NULL;
+                    return nullptr;
                 }
                 g_string_append (shell_string, parameter);
                 written_nonspace = TRUE;
@@ -296,7 +296,7 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                     else
                     {
                         i = check_format_var (lc_data, &v);
-                        if (i > 0 && v != NULL)
+                        if (i > 0 && v != nullptr)
                         {
                             g_string_append (shell_string, v);
                             g_free (v);
@@ -307,14 +307,14 @@ exec_make_shell_string (const char *lc_data, const vfs_path_t * filename_vpath)
                             char *text;
 
                             if (*lc_data != 'f')
-                                text = expand_format (NULL, *lc_data, !is_cd);
+                                text = expand_format (nullptr, *lc_data, !is_cd);
                             else
                             {
                                 text = exec_get_file_name (filename_vpath);
-                                if (text == NULL)
+                                if (text == nullptr)
                                 {
                                     g_string_free (shell_string, TRUE);
-                                    return NULL;
+                                    return nullptr;
                                 }
                             }
 
@@ -372,7 +372,7 @@ exec_extension_view (void *target, char *cmd, const vfs_path_t * filename_vpath,
     if (def_flags.nroff != mcview_global_flags.nroff)
         changed_flags.nroff = TRUE;
 
-    if (target == NULL)
+    if (target == nullptr)
         mcview_viewer (cmd, filename_vpath, start_line, 0, 0);
     else
         mcview_load ((WView *) target, cmd, vfs_path_as_str (filename_vpath), start_line, 0, 0);
@@ -415,14 +415,14 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
                 int start_line)
 {
     char *shell_string, *export_variables;
-    vfs_path_t *script_vpath = NULL;
+    vfs_path_t *script_vpath = nullptr;
     int cmd_file_fd;
     FILE *cmd_file;
-    char *cmd = NULL;
+    char *cmd = nullptr;
 
-    g_return_val_if_fail (lc_data != NULL, NULL);
+    g_return_val_if_fail (lc_data != nullptr, nullptr);
 
-    pbuffer = NULL;
+    pbuffer = nullptr;
     localmtime = 0;
     quote_func = name_quote;
     run_view = FALSE;
@@ -434,7 +434,7 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
 
     shell_string = exec_make_shell_string (lc_data, filename_vpath);
 
-    if (shell_string == NULL)
+    if (shell_string == nullptr)
         goto ret;
 
     if (is_cd)
@@ -463,7 +463,7 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
     fputs ("#! /bin/sh\n\n", cmd_file);
 
     export_variables = exec_get_export_variables (filename_vpath);
-    if (export_variables != NULL)
+    if (export_variables != nullptr)
     {
         fprintf (cmd_file, "%s\n", export_variables);
         g_free (export_variables);
@@ -485,21 +485,21 @@ exec_extension (void *target, const vfs_path_t * filename_vpath, const char *lc_
     if ((run_view && !written_nonspace) || is_cd)
     {
         exec_cleanup_script (script_vpath);
-        script_vpath = NULL;
+        script_vpath = nullptr;
     }
     else
     {
         /* Set executable flag on the command file ... */
         mc_chmod (script_vpath, S_IRWXU);
         /* ... but don't rely on it - run /bin/sh explicitly */
-        cmd = g_strconcat ("/bin/sh ", vfs_path_as_str (script_vpath), (char *) NULL);
+        cmd = g_strconcat ("/bin/sh ", vfs_path_as_str (script_vpath), (char *) nullptr);
     }
 
     if (run_view)
     {
         /* If we've written whitespace only, then just load filename into view */
         if (!written_nonspace)
-            exec_extension_view (target, NULL, filename_vpath, start_line);
+            exec_extension_view (target, nullptr, filename_vpath, start_line);
         else
             exec_extension_view (target, cmd, filename_vpath, start_line);
     }
@@ -542,20 +542,20 @@ get_popen_information (const char *cmd_file, const char *args, char *buf, int bu
     char *command;
     FILE *f;
 
-    command = g_strconcat (cmd_file, args, " 2>/dev/null", (char *) NULL);
+    command = g_strconcat (cmd_file, args, " 2>/dev/null", (char *) nullptr);
     f = popen (command, "r");
     g_free (command);
 
-    if (f != NULL)
+    if (f != nullptr)
     {
 #ifdef __QNXNTO__
-        if (setvbuf (f, NULL, _IOFBF, 0) != 0)
+        if (setvbuf (f, nullptr, _IOFBF, 0) != 0)
         {
             (void) pclose (f);
             return -1;
         }
 #endif
-        read_bytes = (fgets (buf, buflen, f) != NULL);
+        read_bytes = (fgets (buf, buflen, f) != nullptr);
         if (!read_bytes)
             buf[0] = '\0';      /* Paranoid termination */
         pclose (f);
@@ -605,7 +605,7 @@ get_file_encoding_local (const vfs_path_t * filename_vpath, char *buf, int bufle
 
     tmp = name_quote (vfs_path_get_last_path_str (filename_vpath), FALSE);
     lang = name_quote (autodetect_codeset, FALSE);
-    args = g_strconcat (" -L", lang, " -i ", tmp, (char *) NULL);
+    args = g_strconcat (" -L", lang, " -i ", tmp, (char *) nullptr);
 
     ret = get_popen_information ("enca", args, buf, buflen);
 
@@ -655,7 +655,7 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
         *have_type = TRUE;
 
         localfile_vpath = mc_getlocalcopy (filename_vpath);
-        if (localfile_vpath == NULL)
+        if (localfile_vpath == nullptr)
         {
             mc_propagate_error (mcerror, 0, _("Cannot fetch a local copy of %s"),
                                 vfs_path_as_str (filename_vpath));
@@ -674,7 +674,7 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
             int cp_id;
 
             pp = strchr (encoding_id, '\n');
-            if (pp != NULL)
+            if (pp != nullptr)
                 *pp = '\0';
 
             cp_id = get_codepage_index (encoding_id);
@@ -695,7 +695,7 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
             size_t real_len;
 
             pp = strchr (content_string, '\n');
-            if (pp != NULL)
+            if (pp != nullptr)
                 *pp = '\0';
 
             real_len = strlen (realname);
@@ -732,11 +732,11 @@ regex_check_type (const vfs_path_t * filename_vpath, const char *ptr, gboolean c
         mc_search_t *search;
 
         search = mc_search_new (ptr, DEFAULT_CHARSET);
-        if (search != NULL)
+        if (search != nullptr)
         {
             search->search_type = MC_SEARCH_T_REGEX;
             search->is_case_sensitive = !case_insense;
-            found = mc_search_run (search, content_string + content_shift, 0, -1, NULL);
+            found = mc_search_run (search, content_string + content_shift, 0, -1, nullptr);
             mc_search_free (search);
         }
         else
@@ -785,15 +785,15 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
     int ret = 0;
     struct stat mystat;
     int view_at_line_number = 0;
-    char *include_target = NULL;
+    char *include_target = nullptr;
     size_t include_target_len = 0;
     gboolean have_type = FALSE; /* Flag used by regex_check_type() */
 
-    if (filename_vpath == NULL)
+    if (filename_vpath == nullptr)
         return 0;
 
-    if (script_vpath != NULL)
-        *script_vpath = NULL;
+    if (script_vpath != nullptr)
+        *script_vpath = nullptr;
 
     /* Check for the special View:%d parameter */
     if (strncmp (action, "View:", 5) == 0)
@@ -802,7 +802,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
         action = "View";
     }
 
-    if (data == NULL)
+    if (data == nullptr)
     {
         char *extension_file;
         gboolean mc_user_ext = TRUE;
@@ -813,25 +813,25 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
         {
             g_free (extension_file);
           check_stock_mc_ext:
-            extension_file = mc_build_filename (mc_global.sysconfig_dir, MC_LIB_EXT, (char *) NULL);
+            extension_file = mc_build_filename (mc_global.sysconfig_dir, MC_LIB_EXT, (char *) nullptr);
             if (!exist_file (extension_file))
             {
                 g_free (extension_file);
                 extension_file =
-                    mc_build_filename (mc_global.share_data_dir, MC_LIB_EXT, (char *) NULL);
+                    mc_build_filename (mc_global.share_data_dir, MC_LIB_EXT, (char *) nullptr);
             }
             mc_user_ext = FALSE;
         }
 
-        g_file_get_contents (extension_file, &data, NULL, NULL);
+        g_file_get_contents (extension_file, &data, nullptr, nullptr);
         g_free (extension_file);
-        if (data == NULL)
+        if (data == nullptr)
             return 0;
 
-        if (strstr (data, "default/") == NULL)
+        if (strstr (data, "default/") == nullptr)
         {
-            if (strstr (data, "regex/") == NULL && strstr (data, "shell/") == NULL &&
-                strstr (data, "type/") == NULL)
+            if (strstr (data, "regex/") == nullptr && strstr (data, "shell/") == nullptr &&
+                strstr (data, "type/") == nullptr)
             {
                 MC_PTR_FREE (data);
 
@@ -898,11 +898,11 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
 
             found = FALSE;
             q = strchr (p, '\n');
-            if (q == NULL)
+            if (q == nullptr)
                 q = strchr (p, '\0');
             c = *q;
             *q = '\0';
-            if (include_target != NULL)
+            if (include_target != nullptr)
             {
                 if ((strncmp (p, "include/", 8) == 0)
                     && (strncmp (p + 8, include_target, include_target_len) == 0))
@@ -918,11 +918,11 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                     p += 2;
 
                 search = mc_search_new (p, DEFAULT_CHARSET);
-                if (search != NULL)
+                if (search != nullptr)
                 {
                     search->search_type = MC_SEARCH_T_REGEX;
                     search->is_case_sensitive = !case_insense;
-                    found = mc_search_run (search, filename, 0, file_len, NULL);
+                    found = mc_search_run (search, filename, 0, file_len, nullptr);
                     mc_search_free (search);
                 }
             }
@@ -958,7 +958,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
             }
             else if (strncmp (p, "type/", 5) == 0)
             {
-                GError *mcerror = NULL;
+                GError *mcerror = nullptr;
 
                 p += 5;
 
@@ -967,7 +967,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                     p += 2;
 
                 found = regex_check_type (filename_vpath, p, case_insense, &have_type, &mcerror);
-                if (mc_error_message (&mcerror, NULL))
+                if (mc_error_message (&mcerror, nullptr))
                     error_flag = TRUE;  /* leave it if file cannot be opened */
             }
             else if (strncmp (p, "default/", 8) == 0)
@@ -979,12 +979,12 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
         {                       /* List of actions */
             p = q;
             q = strchr (p, '\n');
-            if (q == NULL)
+            if (q == nullptr)
                 q = strchr (p, '\0');
             if (found && !error_flag)
             {
                 r = strchr (p, '=');
-                if (r != NULL)
+                if (r != nullptr)
                 {
                     c = *r;
                     *r = '\0';
@@ -995,7 +995,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
                         include_target = p + 8;
                         t = strchr (include_target, '\n');
 
-                        if (t != NULL)
+                        if (t != nullptr)
                             include_target_len = (size_t) (t - include_target);
                         else
                             include_target_len = strlen (include_target);
@@ -1027,7 +1027,7 @@ regex_command_for (void *target, const vfs_path_t * filename_vpath, const char *
 
                             sv = exec_extension (target, filename_vpath, r + 1,
                                                  view_at_line_number);
-                            if (script_vpath != NULL)
+                            if (script_vpath != nullptr)
                                 *script_vpath = sv;
                             else
                                 exec_cleanup_script (sv);

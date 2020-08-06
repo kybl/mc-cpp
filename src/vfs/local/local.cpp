@@ -92,7 +92,7 @@ local_opendir (const vfs_path_t * vpath)
 
     path_element = vfs_path_get_by_index (vpath, -1);
     dir = opendir (path_element->path);
-    if (dir == NULL)
+    if (dir == nullptr)
         return 0;
 
     local_info = (DIR **) g_new (DIR *, 1);
@@ -228,7 +228,7 @@ local_write (void *data, const char *buf, size_t nbyte)
     int fd;
     int n;
 
-    if (data == NULL)
+    if (data == nullptr)
         return (-1);
 
     fd = *(int *) data;
@@ -358,7 +358,7 @@ local_read (void *data, char *buffer, size_t count)
     int n;
     int fd;
 
-    if (data == NULL)
+    if (data == nullptr)
         return (-1);
 
     fd = *(int *) data;
@@ -386,7 +386,7 @@ local_close (void *data)
 {
     int fd;
 
-    if (data == NULL)
+    if (data == nullptr)
         return (-1);
 
     fd = *(int *) data;
@@ -441,7 +441,7 @@ vfs_init_localfs (void)
     /* NULLize vfs_s_subclass members */
     memset (&local_subclass, 0, sizeof (local_subclass));
 
-    vfs_init_class (vfs_local_ops, "localfs", VFSF_LOCAL, NULL);
+    vfs_init_class (vfs_local_ops, "localfs", VFSF_LOCAL, nullptr);
     vfs_local_ops->which = local_which;
     vfs_local_ops->open = local_open;
     vfs_local_ops->close = local_close;

@@ -86,11 +86,11 @@
 static void
 mcview_remove_ext_script (WView * view)
 {
-    if (view->ext_script != NULL)
+    if (view->ext_script != nullptr)
     {
         mc_unlink (view->ext_script);
         vfs_path_free (view->ext_script);
-        view->ext_script = NULL;
+        view->ext_script = nullptr;
     }
 }
 
@@ -133,7 +133,7 @@ mcview_search (WView * view, gboolean start_search)
 static void
 mcview_continue_search_cmd (WView * view)
 {
-    if (view->last_search_string != NULL)
+    if (view->last_search_string != nullptr)
         mcview_search (view, FALSE);
     else
     {
@@ -141,7 +141,7 @@ mcview_continue_search_cmd (WView * view)
         GList *history;
 
         history = mc_config_history_get (MC_HISTORY_SHARED_SEARCH);
-        if (history != NULL && history->data != NULL)
+        if (history != nullptr && history->data != nullptr)
         {
             view->last_search_string = (gchar *) g_strdup (static_cast<const gchar *> (history->data));
             history = g_list_first (history);
@@ -150,11 +150,11 @@ mcview_continue_search_cmd (WView * view)
 #ifdef HAVE_CHARSET
             view->search = mc_search_new (view->last_search_string, cp_source);
 #else
-            view->search = mc_search_new (view->last_search_string, NULL);
+            view->search = mc_search_new (view->last_search_string, nullptr);
 #endif
             view->search_nroff_seq = mcview_nroff_seq_new (view);
 
-            if (view->search == NULL)
+            if (view->search == nullptr)
             {
                 /* if not... then ask for an expression */
                 MC_PTR_FREE (view->last_search_string);
@@ -225,7 +225,7 @@ mcview_handle_editkey (WView * view, int key)
 
     /* Has there been a change at this position? */
     node = view->change_list;
-    while ((node != NULL) && (node->offset != view->hex_cursor))
+    while ((node != nullptr) && (node->offset != view->hex_cursor))
         node = node->next;
 
     if (!view->hexview_in_text)
@@ -242,7 +242,7 @@ mcview_handle_editkey (WView * view, int key)
         else
             return MSG_NOT_HANDLED;
 
-        if (node != NULL)
+        if (node != nullptr)
             byte_val = node->value;
         else
             mcview_get_byte (view, view->hex_cursor, &byte_val);
@@ -261,12 +261,12 @@ mcview_handle_editkey (WView * view, int key)
             return MSG_NOT_HANDLED;
     }
 
-    if ((view->filename_vpath != NULL)
+    if ((view->filename_vpath != nullptr)
         && (*(vfs_path_get_last_path_str (view->filename_vpath)) != '\0')
-        && (view->change_list == NULL))
+        && (view->change_list == nullptr))
         view->locked = lock_file (view->filename_vpath);
 
-    if (node == NULL)
+    if (node == nullptr)
     {
         node = g_new (struct hexedit_change_node, 1);
         node->offset = view->hex_cursor;
@@ -293,7 +293,7 @@ mcview_load_next_prev_init (WView * view)
         view->dir = &current_panel->dir;
         view->dir_idx = &current_panel->selected;
     }
-    else if (view->dir == NULL)
+    else if (view->dir == nullptr)
     {
         /* Run from command line */
         /* Run 1st time. Load/get directory */
@@ -307,7 +307,7 @@ mcview_load_next_prev_init (WView * view)
         view->dir_idx = g_new (int, 1);
 
         if (dir_list_load
-            (view->dir, view->workdir_vpath, (GCompareFunc) sort_name, &sort_op, NULL))
+            (view->dir, view->workdir_vpath, (GCompareFunc) sort_name, &sort_op, nullptr))
         {
             const char *fname;
             size_t fname_len;
@@ -364,7 +364,7 @@ mcview_load_next_prev (WView * view, int direction)
     dir_list *dir;
     int *dir_idx;
     vfs_path_t *vfile;
-    vfs_path_t *ext_script = NULL;
+    vfs_path_t *ext_script = nullptr;
 
     mcview_load_next_prev_init (view);
     mcview_scan_for_file (view, direction);
@@ -372,14 +372,14 @@ mcview_load_next_prev (WView * view, int direction)
     /* reinit view */
     dir = view->dir;
     dir_idx = view->dir_idx;
-    view->dir = NULL;
-    view->dir_idx = NULL;
-    vfile = vfs_path_append_new (view->workdir_vpath, dir->list[*dir_idx].fname, (char *) NULL);
+    view->dir = nullptr;
+    view->dir_idx = nullptr;
+    vfile = vfs_path_append_new (view->workdir_vpath, dir->list[*dir_idx].fname, (char *) nullptr);
     mcview_done (view);
     mcview_remove_ext_script (view);
     mcview_init (view);
     if (regex_command_for (view, vfile, "View", &ext_script) == 0)
-        mcview_load (view, NULL, vfs_path_as_str (vfile), 0, 0, 0);
+        mcview_load (view, nullptr, vfs_path_as_str (vfile), 0, 0, 0);
     vfs_path_free (vfile);
     view->dir = dir;
     view->dir_idx = dir_idx;
@@ -399,12 +399,12 @@ mcview_load_file_from_history (WView * view)
 
     filename = show_file_history (CONST_WIDGET (view), &action);
 
-    if (filename != NULL && (action == CK_View || action == CK_Enter))
+    if (filename != nullptr && (action == CK_View || action == CK_Enter))
     {
         mcview_done (view);
         mcview_init (view);
 
-        mcview_load (view, NULL, filename, 0, 0, 0);
+        mcview_load (view, nullptr, filename, 0, 0, 0);
 
         view->dpy_bbar_dirty = FALSE;   /* FIXME */
         view->dirty++;
@@ -424,7 +424,7 @@ mcview_execute_cmd (WView * view, long command)
     {
     case CK_Help:
         {
-            ev_help_t event_data = { NULL, "[Internal File Viewer]" };
+            ev_help_t event_data = { nullptr, "[Internal File Viewer]" };
             mc_event_raise (MCEVENT_GROUP_CORE, "help", &event_data);
         }
         break;
@@ -650,7 +650,7 @@ mcview_ok_to_quit (WView * view)
 {
     int r;
 
-    if (view->change_list == NULL)
+    if (view->change_list == nullptr)
         return TRUE;
 
     if (!mc_global.midnight_shutdown)
@@ -730,7 +730,7 @@ mcview_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void *
         return MSG_HANDLED;
 
     case MSG_RESIZE:
-        widget_default_callback (w, NULL, MSG_RESIZE, 0, data);
+        widget_default_callback (w, nullptr, MSG_RESIZE, 0, data);
         mcview_resize (view);
         return MSG_HANDLED;
 
@@ -786,8 +786,8 @@ mcview_dialog_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm,
         /* Handle shortcuts. */
 
         /* Note: the buttonbar sends messages directly to the the WView, not to
-         * here, which is why we can pass NULL in the following call. */
-        return mcview_execute_cmd (NULL, parm);
+         * here, which is why we can pass nullptr in the following call. */
+        return mcview_execute_cmd (nullptr, parm);
 
     case MSG_VALIDATE:
         view = (WView *) widget_find_by_type (w, mcview_callback);

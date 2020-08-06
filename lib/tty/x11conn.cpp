@@ -130,17 +130,17 @@ x11_available (void)
     if (lost_connection)
         return FALSE;
 
-    if (x11_module != NULL)
+    if (x11_module != nullptr)
         return TRUE;
 
-    x11_module_fname = g_module_build_path (NULL, "X11");
+    x11_module_fname = g_module_build_path (nullptr, "X11");
     x11_module = g_module_open (x11_module_fname, G_MODULE_BIND_LAZY);
-    if (x11_module == NULL)
+    if (x11_module == nullptr)
         x11_module = g_module_open ("libX11.so.6", G_MODULE_BIND_LAZY);
 
     g_free (x11_module_fname);
 
-    if (x11_module == NULL)
+    if (x11_module == nullptr)
         return FALSE;
 
     if (!g_module_symbol (x11_module, "XOpenDisplay", (void **) &func_XOpenDisplay))
@@ -164,7 +164,7 @@ x11_available (void)
     func_XSetErrorHandler = 0;
     func_XSetIOErrorHandler = 0;
     g_module_close (x11_module);
-    x11_module = NULL;
+    x11_module = nullptr;
     return FALSE;
 #else
     install_error_handlers ();
@@ -195,7 +195,7 @@ mc_XOpenDisplay (const char *displayname)
             return retval;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /* --------------------------------------------------------------------------------------------- */

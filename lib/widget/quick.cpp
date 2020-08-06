@@ -46,7 +46,7 @@
 /*** file scope macro definitions ****************************************************************/
 
 #ifdef ENABLE_NLS
-#define I18N(x) (x = x != NULL && *x != '\0' ? _(x) : x)
+#define I18N(x) (x = x != nullptr && *x != '\0' ? _(x) : x)
 #else
 #define I18N(x) (x = x)
 #endif
@@ -180,9 +180,9 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
     GArray *widgets;
     size_t i;
     quick_widget_t *quick_widget;
-    WGroupbox *g = NULL;
+    WGroupbox *g = nullptr;
     WDialog *dd;
-    GList *input_labels = NULL; /* Widgets not directly requested by the user. */
+    GList *input_labels = nullptr; /* Widgets not directly requested by the user. */
     int return_val;
 
     len = str_term_width1 (I18N (quick_dlg->title)) + 6;
@@ -196,7 +196,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
 
     for (quick_widget = quick_dlg->widgets; quick_widget->widget_type != quick_end; quick_widget++)
     {
-        quick_widget_item_t item = { NULL, quick_widget };
+        quick_widget_item_t item = { nullptr, quick_widget };
         int width = 0;
 
         switch (quick_widget->widget_type)
@@ -208,7 +208,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                          I18N (quick_widget->u.checkbox.text)));
             g_array_append_val (widgets, item);
             width = item.widget->cols;
-            if (g != NULL)
+            if (g != nullptr)
                 width += 2;
             if (two_columns)
                 width2 = MAX (width2, width);
@@ -225,7 +225,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                                               quick_widget->u.button.callback));
             g_array_append_val (widgets, item);
             width = item.widget->cols;
-            if (g != NULL)
+            if (g != nullptr)
                 width += 2;
             if (two_columns)
                 width2 = MAX (width2, width);
@@ -234,7 +234,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             break;
 
         case quick_input:
-            *quick_widget->u.input.result = NULL;
+            *quick_widget->u.input.result = nullptr;
             y++;
             if (quick_widget->u.input.label_location != input_label_none)
             {
@@ -247,7 +247,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 g_array_append_val (widgets, item);
                 width = item.widget->cols;
             }
-            if (g != NULL)
+            if (g != nullptr)
                 width += 2;
             if (two_columns)
                 width2 = MAX (width2, width);
@@ -260,7 +260,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             g_array_append_val (widgets, item);
             y += item.widget->lines - 1;
             width = item.widget->cols;
-            if (g != NULL)
+            if (g != nullptr)
                 width += 2;
             if (two_columns)
                 width2 = MAX (width2, width);
@@ -271,13 +271,13 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
         case quick_radio:
             {
                 WRadio *r;
-                char **items = NULL;
+                char **items = nullptr;
 
                 /* create the copy of radio_items to avoid mwmory leak */
                 items = g_new (char *, quick_widget->u.radio.count + 1);
                 for (i = 0; i < (size_t) quick_widget->u.radio.count; i++)
                     items[i] = g_strdup (_(quick_widget->u.radio.items[i]));
-                items[i] = NULL;
+                items[i] = nullptr;
 
                 r = radio_new (++y, x, quick_widget->u.radio.count, (const char **) items);
                 r->pos = r->sel = *quick_widget->u.radio.value;
@@ -286,7 +286,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 g_array_append_val (widgets, item);
                 y += item.widget->lines - 1;
                 width = item.widget->cols;
-                if (g != NULL)
+                if (g != nullptr)
                     width += 2;
                 if (two_columns)
                     width2 = MAX (width2, width);
@@ -305,13 +305,13 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             break;
 
         case quick_stop_groupbox:
-            if (g != NULL)
+            if (g != nullptr)
             {
                 Widget *w = WIDGET (g);
 
                 y++;
                 w->lines = y + 1 - w->y;
-                g = NULL;
+                g = nullptr;
 
                 g_array_append_val (widgets, item);
             }
@@ -416,7 +416,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
 
     /* add widgets into the dialog */
     x2 = x1 + width2 + 1;
-    g = NULL;
+    g = nullptr;
     two_columns = FALSE;
     x = (WIDGET (dd)->cols - blen) / 2;
 
@@ -435,7 +435,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             {
                 quick_widget_t *input = item->quick_widget->u.label.input;
 
-                if (input != NULL && input->u.input.label_location == input_label_right)
+                if (input != nullptr && input->u.input.label_location == input_label_right)
                 {
                     /* location of this label will be adjusted later */
                     break;
@@ -446,7 +446,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
         case quick_radio:
             if (item->widget->x != x1)
                 item->widget->x = x2;
-            if (g != NULL)
+            if (g != nullptr)
                 item->widget->x += 2;
             break;
 
@@ -455,7 +455,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             {
                 if (item->widget->x != x1)
                     item->widget->x = x2;
-                if (g != NULL)
+                if (g != nullptr)
                     item->widget->x += 2;
             }
             else
@@ -470,7 +470,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 Widget *label = WIDGET (INPUT (item->widget)->label);
                 int width = column_width;
 
-                if (g != NULL)
+                if (g != nullptr)
                     width -= 4;
 
                 switch (item->quick_widget->u.input.label_location)
@@ -484,7 +484,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 case input_label_right:
                     if (item->widget->x != x1)
                         item->widget->x = x2;
-                    if (g != NULL)
+                    if (g != nullptr)
                         item->widget->x += 2;
                     item->widget->cols = width - label->cols - 1;
                     label->x = item->widget->x + item->widget->cols + 1;
@@ -493,7 +493,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
                 default:
                     if (item->widget->x != x1)
                         item->widget->x = x2;
-                    if (g != NULL)
+                    if (g != nullptr)
                         item->widget->x += 2;
                     item->widget->cols = width;
                     break;
@@ -513,13 +513,13 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             break;
 
         case quick_stop_groupbox:
-            g = NULL;
+            g = nullptr;
             break;
 
         case quick_separator:
-            if (item->widget != NULL)
+            if (item->widget != nullptr)
             {
-                if (g != NULL)
+                if (g != nullptr)
                 {
                     Widget *wg = WIDGET (g);
 
@@ -557,7 +557,7 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             break;
         }
 
-        if (item->widget != NULL)
+        if (item->widget != nullptr)
         {
             unsigned long id;
 
@@ -565,14 +565,14 @@ quick_dialog_skip (quick_dialog_t * quick_dlg, int nskip)
             item->widget->options |= item->quick_widget->options;       /* FIXME: cannot reset flags, setup only */
             item->widget->state |= item->quick_widget->state;   /* FIXME: cannot reset flags, setup only */
             id = group_add_widget_autopos (GROUP (dd), item->widget, item->quick_widget->pos_flags,
-                                           NULL);
-            if (item->quick_widget->id != NULL)
+                                           nullptr);
+            if (item->quick_widget->id != nullptr)
                 *item->quick_widget->id = id;
         }
     }
 
     /* skip frame widget */
-    if (dd->bg != NULL)
+    if (dd->bg != nullptr)
         nskip++;
 
     while (nskip-- != 0)

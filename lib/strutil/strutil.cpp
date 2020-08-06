@@ -50,7 +50,7 @@ GIConv str_cnv_not_convert = INVALID_CONV;
 static const char *const str_utf8_encodings[] = {
     "utf-8",
     "utf8",
-    NULL
+    nullptr
 };
 
 /* standard 8bit encodings, no wide or multibytes characters */
@@ -76,12 +76,12 @@ static const char *const str_8bit_encodings[] = {
     "iso-8859",
     "iso8859",
     "koi8",
-    NULL
+    nullptr
 };
 
 /* terminal encoding */
-static char *codeset = NULL;
-static char *term_encoding = NULL;
+static char *codeset = nullptr;
+static char *term_encoding = nullptr;
 /* function for encoding specific operations */
 static struct str_class used_class;
 
@@ -111,7 +111,7 @@ _str_convert (GIConv coder, const char *string, int size, GString * buffer)
     if (coder == INVALID_CONV)
         return ESTR_FAILURE;
 
-    if (string == NULL || buffer == NULL)
+    if (string == nullptr || buffer == nullptr)
         return ESTR_FAILURE;
 
     /*
@@ -130,21 +130,21 @@ _str_convert (GIConv coder, const char *string, int size, GString * buffer)
     }
 
     left = size;
-    g_iconv (coder, NULL, NULL, NULL, NULL);
+    g_iconv (coder, nullptr, nullptr, nullptr, nullptr);
 
     while (left != 0)
     {
         gchar *tmp_buff;
-        GError *mcerror = NULL;
+        GError *mcerror = nullptr;
 
         tmp_buff = g_convert_with_iconv ((const gchar *) string,
                                          left, coder, &bytes_read, &bytes_written, &mcerror);
-        if (mcerror != NULL)
+        if (mcerror != nullptr)
         {
             int code = mcerror->code;
 
             g_error_free (mcerror);
-            mcerror = NULL;
+            mcerror = nullptr;
 
             switch (code)
             {
@@ -157,12 +157,12 @@ _str_convert (GIConv coder, const char *string, int size, GString * buffer)
 
             case G_CONVERT_ERROR_ILLEGAL_SEQUENCE:
                 /* Invalid byte sequence in conversion input. */
-                if ((tmp_buff == NULL) && (bytes_read != 0))
+                if ((tmp_buff == nullptr) && (bytes_read != 0))
                     /* recode valid byte sequence */
                     tmp_buff = g_convert_with_iconv ((const gchar *) string,
-                                                     bytes_read, coder, NULL, NULL, NULL);
+                                                     bytes_read, coder, nullptr, nullptr, nullptr);
 
-                if (tmp_buff != NULL)
+                if (tmp_buff != nullptr)
                 {
                     g_string_append (buffer, tmp_buff);
                     g_free (tmp_buff);
@@ -199,7 +199,7 @@ _str_convert (GIConv coder, const char *string, int size, GString * buffer)
                 return ESTR_FAILURE;
             }
         }
-        else if (tmp_buff == NULL)
+        else if (tmp_buff == nullptr)
         {
             g_string_append (buffer, string);
             return ESTR_PROBLEM;
@@ -229,11 +229,11 @@ str_test_encoding_class (const char *encoding, const char *const *table)
 {
     int result = 0;
 
-    if (encoding != NULL)
+    if (encoding != nullptr)
     {
         int t;
 
-        for (t = 0; table[t] != NULL; t++)
+        for (t = 0; table[t] != nullptr; t++)
             if (g_ascii_strncasecmp (encoding, table[t], strlen (table[t])) == 0)
                 result++;
     }
@@ -314,7 +314,7 @@ str_vfs_convert_from (GIConv coder, const char *string, GString * buffer)
     estr_t result = ESTR_SUCCESS;
 
     if (coder == str_cnv_not_convert)
-        g_string_append (buffer, string != NULL ? string : "");
+        g_string_append (buffer, string != nullptr ? string : "");
     else
         result = _str_convert (coder, string, -1, buffer);
 
@@ -357,7 +357,7 @@ str_translate_char (GIConv conv, const char *keys, size_t ch_size, char *output,
     size_t left;
     size_t cnv;
 
-    g_iconv (conv, NULL, NULL, NULL, NULL);
+    g_iconv (conv, nullptr, nullptr, nullptr, nullptr);
 
     left = (ch_size == (size_t) (-1)) ? strlen (keys) : ch_size;
 
@@ -374,7 +374,7 @@ str_translate_char (GIConv conv, const char *keys, size_t ch_size, char *output,
 const char *
 str_detect_termencoding (void)
 {
-    if (term_encoding == NULL)
+    if (term_encoding == nullptr)
     {
         /* On Linux, nl_langinfo (CODESET) returns upper case UTF-8 whether the LANG is set
            to utf-8 or UTF-8.
@@ -399,12 +399,12 @@ str_isutf8 (const char *codeset_name)
 void
 str_init_strings (const char *termenc)
 {
-    codeset = termenc != NULL ? g_ascii_strup (termenc, -1) : g_strdup (str_detect_termencoding ());
+    codeset = termenc != nullptr ? g_ascii_strup (termenc, -1) : g_strdup (str_detect_termencoding ());
 
     str_cnv_not_convert = g_iconv_open (codeset, codeset);
     if (str_cnv_not_convert == INVALID_CONV)
     {
-        if (termenc != NULL)
+        if (termenc != nullptr)
         {
             g_free (codeset);
             codeset = g_strdup (str_detect_termencoding ());
@@ -432,7 +432,7 @@ str_uninit_strings (void)
 {
     if (str_cnv_not_convert != INVALID_CONV)
         g_iconv_close (str_cnv_not_convert);
-    /* NULL-ize pointers to avoid double free in unit tests */
+    /* nullptr-ize pointers to avoid double free in unit tests */
     MC_PTR_FREE (term_encoding);
     MC_PTR_FREE (codeset);
 }
@@ -938,7 +938,7 @@ str_msg_term_size (const char *text, int *lines, int *columns)
         int width;
 
         q = strchr (p, '\n');
-        if (q != NULL)
+        if (q != nullptr)
         {
             c = q[0];
             q[0] = '\0';
@@ -948,7 +948,7 @@ str_msg_term_size (const char *text, int *lines, int *columns)
         if (width > *columns)
             *columns = width;
 
-        if (q == NULL)
+        if (q == nullptr)
             break;
 
         q[0] = c;
@@ -972,8 +972,8 @@ strrstr_skip_count (const char *haystack, const char *needle, size_t skip_count)
     do
     {
         semi = g_strrstr_len (haystack, len, needle);
-        if (semi == NULL)
-            return NULL;
+        if (semi == nullptr)
+            return nullptr;
         len = semi - haystack - 1;
     }
     while (skip_count-- != 0);

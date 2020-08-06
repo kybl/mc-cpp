@@ -64,7 +64,7 @@ int sigwinch_pipe[2];
 void
 tty_create_winch_pipe (void)
 {
-    GError *mcerror = NULL;
+    GError *mcerror = nullptr;
 
     if (!g_unix_open_pipe (sigwinch_pipe, FD_CLOEXEC, &mcerror))
     {

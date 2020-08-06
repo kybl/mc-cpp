@@ -73,17 +73,17 @@ exec_edit_syntax_dialog (const GPtrArray * names, const char *current_syntax)
     Listbox *syntaxlist;
 
     syntaxlist = create_listbox_window (LIST_LINES, MAX_ENTRY_LEN,
-                                        _("Choose syntax highlighting"), NULL);
-    LISTBOX_APPEND_TEXT (syntaxlist, 'A', _("< Auto >"), NULL, FALSE);
-    LISTBOX_APPEND_TEXT (syntaxlist, 'R', _("< Reload Current Syntax >"), NULL, FALSE);
+                                        _("Choose syntax highlighting"), nullptr);
+    LISTBOX_APPEND_TEXT (syntaxlist, 'A', _("< Auto >"), nullptr, FALSE);
+    LISTBOX_APPEND_TEXT (syntaxlist, 'R', _("< Reload Current Syntax >"), nullptr, FALSE);
 
     for (i = 0; i < names->len; i++)
     {
         const char *name;
 
         name = static_cast<const char *> (g_ptr_array_index (names, i));
-        LISTBOX_APPEND_TEXT (syntaxlist, 0, name, NULL, FALSE);
-        if (current_syntax != NULL && strcmp (name, current_syntax) == 0)
+        LISTBOX_APPEND_TEXT (syntaxlist, 0, name, nullptr, FALSE);
+        if (current_syntax != nullptr && strcmp (name, current_syntax) == 0)
             listbox_select_entry (syntaxlist->list, i + N_DFLT_ENTRIES);
     }
 
@@ -105,7 +105,7 @@ edit_syntax_dialog (WEdit * edit)
     /* We fill the list of syntax files every time the editor is invoked.
        Instead we could save the list to a file and update it once the syntax
        file gets updated (either by testing or by explicit user command). */
-    edit_load_syntax (NULL, names, NULL);
+    edit_load_syntax (nullptr, names, nullptr);
     g_ptr_array_sort (names, pstrcmp);
 
     syntax = exec_edit_syntax_dialog (names, edit->syntax_type);
@@ -134,14 +134,14 @@ edit_syntax_dialog (WEdit * edit)
 
         /* Load or unload syntax rules if the option has changed */
         if (force_reload || (option_auto_syntax && !old_auto_syntax) || old_auto_syntax ||
-            (current_syntax != NULL && edit->syntax_type != NULL &&
+            (current_syntax != nullptr && edit->syntax_type != nullptr &&
              strcmp (current_syntax, edit->syntax_type) != 0))
-            edit_load_syntax (edit, NULL, edit->syntax_type);
+            edit_load_syntax (edit, nullptr, edit->syntax_type);
 
         g_free (current_syntax);
     }
 
-    g_ptr_array_foreach (names, (GFunc) g_free, NULL);
+    g_ptr_array_foreach (names, (GFunc) g_free, nullptr);
     g_ptr_array_free (names, TRUE);
 }
 

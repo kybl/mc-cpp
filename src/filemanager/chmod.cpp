@@ -73,18 +73,18 @@ static struct
 } check_perm[BUTTONS_PERM] =
 {
     /* *INDENT-OFF* */
-    { S_ISUID, N_("set &user ID on execution"),  FALSE, NULL },
-    { S_ISGID, N_("set &group ID on execution"), FALSE, NULL },
-    { S_ISVTX, N_("stick&y bit"),                FALSE, NULL },
-    { S_IRUSR, N_("&read by owner"),             FALSE, NULL },
-    { S_IWUSR, N_("&write by owner"),            FALSE, NULL },
-    { S_IXUSR, N_("e&xecute/search by owner"),   FALSE, NULL },
-    { S_IRGRP, N_("rea&d by group"),             FALSE, NULL },
-    { S_IWGRP, N_("write by grou&p"),            FALSE, NULL },
-    { S_IXGRP, N_("execu&te/search by group"),   FALSE, NULL },
-    { S_IROTH, N_("read &by others"),            FALSE, NULL },
-    { S_IWOTH, N_("wr&ite by others"),           FALSE, NULL },
-    { S_IXOTH, N_("execute/searc&h by others"),  FALSE, NULL }
+    { S_ISUID, N_("set &user ID on execution"),  FALSE, nullptr },
+    { S_ISGID, N_("set &group ID on execution"), FALSE, nullptr },
+    { S_ISVTX, N_("stick&y bit"),                FALSE, nullptr },
+    { S_IRUSR, N_("&read by owner"),             FALSE, nullptr },
+    { S_IWUSR, N_("&write by owner"),            FALSE, nullptr },
+    { S_IXUSR, N_("e&xecute/search by owner"),   FALSE, nullptr },
+    { S_IRGRP, N_("rea&d by group"),             FALSE, nullptr },
+    { S_IWGRP, N_("write by grou&p"),            FALSE, nullptr },
+    { S_IXGRP, N_("execu&te/search by group"),   FALSE, nullptr },
+    { S_IROTH, N_("read &by others"),            FALSE, nullptr },
+    { S_IWOTH, N_("wr&ite by others"),           FALSE, nullptr },
+    { S_IXOTH, N_("execute/searc&h by others"),  FALSE, nullptr }
     /* *INDENT-ON* */
 };
 
@@ -232,7 +232,7 @@ chmod_bg_callback (Widget * w, Widget * sender, widget_msg_t msg, int parm, void
     switch (msg)
     {
     case MSG_DRAW:
-        frame_callback (w, NULL, MSG_DRAW, 0, NULL);
+        frame_callback (w, nullptr, MSG_DRAW, 0, nullptr);
         chmod_refresh (CONST_DIALOG (w->owner));
         return MSG_HANDLED;
 
@@ -334,7 +334,7 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
 
     ch_dlg =
         dlg_create (TRUE, 0, 0, lines, cols, WPOS_CENTER, FALSE, dialog_colors,
-                    chmod_callback, NULL, "[Chmod]", _("Chmod command"));
+                    chmod_callback, nullptr, "[Chmod]", _("Chmod command"));
     g = GROUP (ch_dlg);
 
     /* draw background */
@@ -376,11 +376,11 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
             y = lines - chmod_but[i].y;
             group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 - chmod_but[i].len,
                                              chmod_but[i].ret_cmd, chmod_but[i].flags,
-                                             chmod_but[i].text, NULL));
+                                             chmod_but[i].text, nullptr));
             i++;
             group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 + 1,
                                              chmod_but[i].ret_cmd, chmod_but[i].flags,
-                                             chmod_but[i].text, NULL));
+                                             chmod_but[i].text, nullptr));
         }
     }
 
@@ -389,10 +389,10 @@ chmod_dlg_create (const char *fname, const struct stat *sf_stat)
     group_add_widget (g, hline_new (y - 1, -1, -1));
     group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 - chmod_but[i].len,
                                      chmod_but[i].ret_cmd, chmod_but[i].flags, chmod_but[i].text,
-                                     NULL));
+                                     nullptr));
     i++;
     group_add_widget (g, button_new (y, WIDGET (ch_dlg)->cols / 2 + 1, chmod_but[i].ret_cmd,
-                                     chmod_but[i].flags, chmod_but[i].text, NULL));
+                                     chmod_but[i].flags, chmod_but[i].text, nullptr));
 
     /* select first checkbox */
     widget_select (WIDGET (check_perm[0].check));
