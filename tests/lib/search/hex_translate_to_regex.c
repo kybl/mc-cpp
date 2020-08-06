@@ -24,7 +24,7 @@
 
 #include "tests/mctest.h"
 
-#include "hex.c"                /* for testing static functions */
+#include "hex.cpp"                /* for testing static functions */
 
 /* --------------------------------------------------------------------------------------------- */
 

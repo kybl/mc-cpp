@@ -27,7 +27,7 @@
 #include "lib/widget.h"
 #include "lib/strutil.h"
 #include "lib/vfs/vfs.h"
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 #include "src/execute.h"
 

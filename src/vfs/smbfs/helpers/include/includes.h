@@ -127,7 +127,7 @@
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
-#include <varargs.h>
+//#include <varargs.h>
 #endif
 
 #include <netinet/in.h>
@@ -299,6 +299,8 @@
 #define int32 long
 #elif (SIZEOF_SHORT == 4)
 #define int32 short
+#else
+#define int32 int32_t
 #endif
 #endif
 
@@ -314,6 +316,8 @@
 #define uint32 unsigned long
 #elif (SIZEOF_SHORT == 4)
 #define uint32 unsigned short
+#else
+#define uint32 uint32_t
 #endif
 #endif
 
@@ -541,7 +545,7 @@
 #endif
 
 #ifndef HAVE_INITGROUPS
-int initgroups (char *name, gid_t id);
+int initgroups (const char *name, gid_t id);
 #endif
 
 #ifndef HAVE_RENAME

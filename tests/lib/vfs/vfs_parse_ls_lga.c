@@ -33,7 +33,7 @@
 #include "lib/vfs/xdirentry.h"
 #include "lib/strutil.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 
 struct vfs_s_subclass test_subclass1;

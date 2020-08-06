@@ -41,15 +41,12 @@
 /*** enums ***************************************************************************************/
 
 /* Pathname canonicalization */
-typedef enum
-{
-    CANON_PATH_JOINSLASHES = 1L << 0,   /* Multiple '/'s are collapsed to a single '/'. */
-    CANON_PATH_REMSLASHDOTS = 1L << 1,  /* Leading './'s, '/'s and trailing '/.'s are removed. */
-    CANON_PATH_REMDOUBLEDOTS = 1L << 3, /* Non-leading '../'s and trailing '..'s are handled by removing */
-    CANON_PATH_GUARDUNC = 1L << 4,      /* Detect and preserve UNC paths: //server/... */
-    CANON_PATH_ALL = CANON_PATH_JOINSLASHES
-        | CANON_PATH_REMSLASHDOTS | CANON_PATH_REMDOUBLEDOTS | CANON_PATH_GUARDUNC
-} CANON_PATH_FLAGS;
+typedef int CANON_PATH_FLAGS;
+#define CANON_PATH_JOINSLASHES (1L << 0)   /* Multiple '/'s are collapsed to a single '/'. */
+#define CANON_PATH_REMSLASHDOTS (1L << 1)  /* Leading './'s, '/'s and trailing '/.'s are removed. */
+#define CANON_PATH_REMDOUBLEDOTS (1L << 3) /* Non-leading '../'s and trailing '..'s are handled by removing */
+#define CANON_PATH_GUARDUNC (1L << 4)      /* Detect and preserve UNC paths: //server/... */
+#define CANON_PATH_ALL (CANON_PATH_JOINSLASHES | CANON_PATH_REMSLASHDOTS | CANON_PATH_REMDOUBLEDOTS | CANON_PATH_GUARDUNC)
 
 enum compression_type
 {

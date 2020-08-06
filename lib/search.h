@@ -11,13 +11,42 @@
 #include <pcre.h>
 #endif
 
+/*** enums ***************************************************************************************/
+
+typedef enum
+{
+  MC_SEARCH_E_OK = 0,
+  MC_SEARCH_E_INPUT,
+  MC_SEARCH_E_REGEX_COMPILE,
+  MC_SEARCH_E_REGEX,
+  MC_SEARCH_E_REGEX_REPLACE,
+  MC_SEARCH_E_NOTFOUND,
+  MC_SEARCH_E_ABORT
+} mc_search_error_t;
+
+typedef enum
+{
+  MC_SEARCH_T_INVALID = -1,
+  MC_SEARCH_T_NORMAL,
+  MC_SEARCH_T_REGEX,
+  MC_SEARCH_T_HEX,
+  MC_SEARCH_T_GLOB
+} mc_search_type_t;
+
+enum mc_search_cbret_t
+{
+  MC_SEARCH_CB_OK = 0,
+  MC_SEARCH_CB_INVALID = -1,
+  MC_SEARCH_CB_ABORT = -2,
+  MC_SEARCH_CB_SKIP = -3,
+  MC_SEARCH_CB_NOTFOUND = -4
+};
+
 /*** typedefs(not structures) and defined constants **********************************************/
 
-typedef enum mc_search_cbret_t mc_search_cbret_t;
-
-typedef mc_search_cbret_t (*mc_search_fn) (const void *user_data, gsize char_offset,
+typedef enum mc_search_cbret_t (*mc_search_fn) (const void *user_data, gsize char_offset,
                                            int *current_char);
-typedef mc_search_cbret_t (*mc_update_fn) (const void *user_data, gsize char_offset);
+typedef enum mc_search_cbret_t (*mc_update_fn) (const void *user_data, gsize char_offset);
 
 #define MC_SEARCH__NUM_REPLACE_ARGS 64
 
@@ -26,37 +55,6 @@ typedef mc_search_cbret_t (*mc_update_fn) (const void *user_data, gsize char_off
 #else
 #define mc_search_matchinfo_t pcre_extra
 #endif
-
-/*** enums ***************************************************************************************/
-
-typedef enum
-{
-    MC_SEARCH_E_OK = 0,
-    MC_SEARCH_E_INPUT,
-    MC_SEARCH_E_REGEX_COMPILE,
-    MC_SEARCH_E_REGEX,
-    MC_SEARCH_E_REGEX_REPLACE,
-    MC_SEARCH_E_NOTFOUND,
-    MC_SEARCH_E_ABORT
-} mc_search_error_t;
-
-typedef enum
-{
-    MC_SEARCH_T_INVALID = -1,
-    MC_SEARCH_T_NORMAL,
-    MC_SEARCH_T_REGEX,
-    MC_SEARCH_T_HEX,
-    MC_SEARCH_T_GLOB
-} mc_search_type_t;
-
-enum mc_search_cbret_t
-{
-    MC_SEARCH_CB_OK = 0,
-    MC_SEARCH_CB_INVALID = -1,
-    MC_SEARCH_CB_ABORT = -2,
-    MC_SEARCH_CB_SKIP = -3,
-    MC_SEARCH_CB_NOTFOUND = -4
-};
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 
@@ -159,7 +157,7 @@ char *mc_search_prepare_replace_str2 (mc_search_t * lc_mc_search, const char *re
 
 gboolean mc_search_is_fixed_search_str (mc_search_t *);
 
-gchar **mc_search_get_types_strings_array (size_t * num);
+gchar **mc_search_get_types_strings_array (int * num);
 
 gboolean mc_search (const gchar * pattern, const gchar * pattern_charset, const gchar * str,
                     mc_search_type_t type);

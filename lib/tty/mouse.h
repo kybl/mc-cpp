@@ -42,22 +42,21 @@
 #ifndef HAVE_LIBGPM
 /* Xterm mouse support supports only GPM_DOWN and GPM_UP */
 /* If you use others make sure your code also works without them */
-enum Gpm_Etype
-{
-    GPM_MOVE = 1,
-    GPM_DRAG = 2,               /* exactly one in four is active at a time */
-    GPM_DOWN = 4,
-    GPM_UP = 8,
+typedef int Gpm_Etype;
+
+#define GPM_MOVE 1
+#define GPM_DRAG 2               /* exactly one in four is active at a time */
+#define GPM_DOWN 4
+#define GPM_UP 8
 
 
-    GPM_SINGLE = 16,            /* at most one in three is set */
-    GPM_DOUBLE = 32,
-    GPM_TRIPLE = 64,
+#define GPM_SINGLE 16            /* at most one in three is set */
+#define GPM_DOUBLE 32
+#define GPM_TRIPLE 64
 
-    GPM_MFLAG = 128,            /* motion during click? */
-    GPM_HARD = 256              /* if set in the defaultMask, force an already
+#define GPM_MFLAG 128            /* motion during click? */
+#define GPM_HARD 256              /* if set in the defaultMask, force an already
                                    used event to pass over to another handler */
-};
 #endif /* !HAVE_LIBGPM */
 
 /* Constants returned from the mouse callback */
@@ -85,7 +84,7 @@ typedef enum
 typedef struct Gpm_Event
 {
     int buttons, x, y;
-    enum Gpm_Etype type;
+    Gpm_Etype type;
 } Gpm_Event;
 #endif /* !HAVE_LIBGPM */
 

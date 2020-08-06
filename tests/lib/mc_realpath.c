@@ -29,7 +29,7 @@
 
 #include "lib/strutil.h"
 #include "lib/vfs/vfs.h"        /* VFS_ENCODING_PREFIX, vfs_init(), vfs_shut() */
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 #include "lib/util.h"           /* mc_realpath() */
 

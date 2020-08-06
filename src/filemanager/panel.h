@@ -42,20 +42,16 @@ typedef enum
     frame_half                  /* half screen frame */
 } panel_display_t;
 
-typedef enum
-{
-    UP_OPTIMIZE = 0,
-    UP_RELOAD = 1,
-    UP_ONLY_CURRENT = 2
-} panel_update_flags_t;
+typedef int panel_update_flags_t;
+#define UP_OPTIMIZE 0
+#define UP_RELOAD 1
+#define UP_ONLY_CURRENT 2
 
 /* selection flags */
-typedef enum
-{
-    SELECT_FILES_ONLY = 1 << 0,
-    SELECT_MATCH_CASE = 1 << 1,
-    SELECT_SHELL_PATTERNS = 1 << 2
-} panel_select_flags_t;
+typedef int panel_select_flags_t;
+#define SELECT_FILES_ONLY (1 << 0)
+#define SELECT_MATCH_CASE (1 << 1)
+#define SELECT_SHELL_PATTERNS (1 << 2)
 
 /* run mode and params */
 

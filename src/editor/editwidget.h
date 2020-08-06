@@ -21,11 +21,9 @@
     enum for store the search conditions check results.
     (if search condition have BOL(^) or EOL ($) regexp checial characters).
 */
-typedef enum
-{
-    AT_START_LINE = (1 << 0),
-    AT_END_LINE = (1 << 1)
-} edit_search_line_t;
+typedef int edit_search_line_t;
+#define AT_START_LINE (1 << 0)
+#define AT_END_LINE (1 << 1)
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 

@@ -35,7 +35,7 @@
 #endif
 #include "lib/strutil.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 #ifdef HAVE_CHARSET
 #include "src/selcodepage.h"
 #endif
@@ -229,12 +229,12 @@ static const struct test_autocomplete_ds
         1,
         "KOI8-R",
         0,
-        "эъйцукен",
+        "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫",
 
         8,
         2,
         145,
-        "эъйцукен"
+        "О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫"
     },
 };
 /* *INDENT-ON* */
@@ -316,7 +316,7 @@ static const struct test_autocomplete_single_ds
         0,
 
         154,
-        "фыва"
+        "О©╫О©╫О©╫О©╫"
     },
 };
 /* *INDENT-ON* */

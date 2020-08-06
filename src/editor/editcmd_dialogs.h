@@ -25,7 +25,7 @@ gboolean editcmd_dialog_search_show (WEdit * edit);
 
 int editcmd_dialog_raw_key_query (const char *heading, const char *query, gboolean cancel);
 
-char *editcmd_dialog_completion_show (const WEdit * edit, int max_len, GString ** compl,
+char *editcmd_dialog_completion_show (const WEdit * edit, int max_len, GString ** compl_,
                                       int num_compl);
 
 void editcmd_dialog_select_definition_show (WEdit *, char *, int, int, struct etags_hash_struct *,

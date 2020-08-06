@@ -7,16 +7,14 @@
 
 /*** enums ***************************************************************************************/
 
-typedef enum
-{
-    VPF_NONE = 0,
-    VPF_NO_CANON = 1 << 0,
-    VPF_USE_DEPRECATED_PARSER = 1 << 1,
-    VPF_RECODE = 1 << 2,
-    VPF_STRIP_HOME = 1 << 3,
-    VPF_STRIP_PASSWORD = 1 << 4,
-    VPF_HIDE_CHARSET = 1 << 5
-} vfs_path_flag_t;
+typedef int vfs_path_flag_t;
+#define VPF_NONE 0
+#define VPF_NO_CANON (1 << 0)
+#define VPF_USE_DEPRECATED_PARSER (1 << 1)
+#define VPF_RECODE (1 << 2)
+#define VPF_STRIP_HOME (1 << 3)
+#define VPF_STRIP_PASSWORD (1 << 4)
+#define VPF_HIDE_CHARSET (1 << 5)
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 
@@ -38,7 +36,7 @@ typedef struct
     gboolean ipv6;
     int port;
     char *path;
-    struct vfs_class *class;
+    struct vfs_class *clazz;
 #ifdef HAVE_CHARSET
     char *encoding;
 #endif
@@ -102,7 +100,7 @@ vfs_path_t *vfs_path_to_absolute (const vfs_path_t * vpath);
 static inline gboolean
 vfs_path_element_valid (const vfs_path_element_t * element)
 {
-    return (element != NULL && element->class != NULL);
+    return (element != NULL && element->clazz != NULL);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -126,7 +124,7 @@ vfs_path_get_last_path_vfs (const vfs_path_t * vpath)
     if (vpath == NULL)
         return NULL;
     element = vfs_path_get_by_index (vpath, -1);
-    return (element != NULL) ? element->class : NULL;
+    return (element != NULL) ? element->clazz : NULL;
 }
 
 /* --------------------------------------------------------------------------------------------- */

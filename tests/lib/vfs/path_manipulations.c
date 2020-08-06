@@ -34,7 +34,7 @@
 #include "lib/vfs/xdirentry.h"
 #include "lib/vfs/path.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 
 static struct vfs_class vfs_test_ops1, vfs_test_ops2, vfs_test_ops3;

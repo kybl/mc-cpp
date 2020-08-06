@@ -1,3 +1,18 @@
+C++ fork of the Midnight Commander
+
+Also, it uses CMake instead of Makefile (to easier debug in IDEs)
+Compile it with
+cd mc-cpp
+mkdir build
+cd build
+cmake ..
+make
+
+
+Original README continues:
+
+
+
 Contents
 --------
 

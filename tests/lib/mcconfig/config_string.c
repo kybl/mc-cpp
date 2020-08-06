@@ -31,7 +31,7 @@
 #include "lib/strutil.h"
 #include "lib/strescape.h"
 #include "lib/vfs/vfs.h"
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 static mc_config_t *mc_config;
 static char *ini_filename;
@@ -131,7 +131,7 @@ static const struct test_create_ini_file_ds
         "test-group1",
         "test-param2",
         "not-exists",
-        " \tkoi8-r: Тестовое значение ",
+        " \tkoi8-r: О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ ",
         " \tkoi8-r: \320\242\320\265\321\201\321\202\320\276\320\262\320\276\320\265 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 "
     },
     { /* 3. */
@@ -175,11 +175,11 @@ START_PARAMETRIZED_TEST (test_create_ini_file_paths, test_create_ini_file_ds)
     char *actual_value, *actual_raw_value;
 
     mc_config_set_string (mc_config, "test-group1", "test-param1", " some value ");
-    mc_config_set_string (mc_config, "test-group1", "test-param2", " \tkoi8-r: Тестовое значение ");
+    mc_config_set_string (mc_config, "test-group1", "test-param2", " \tkoi8-r: О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ ");
     mc_config_set_string (mc_config, "test-group1", "test-param3", " \tsome value2\n\nf\b\005fff ");
     mc_config_set_string_raw (mc_config, "test-group2", "test-param1", " some value ");
     mc_config_set_string_raw (mc_config, "test-group2", "test-param2",
-                              " koi8-r: Тестовое значение");
+                              " koi8-r: О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫");
     mc_config_set_string_raw (mc_config, "test-group2", "test-param3",
                               " \tsome value2\n\nf\b\005fff ");
 

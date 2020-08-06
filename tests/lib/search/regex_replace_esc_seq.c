@@ -27,7 +27,7 @@
 
 #include "tests/mctest.h"
 
-#include "regex.c"              /* for testing static functions */
+#include "regex.cpp"              /* for testing static functions */
 
 /* --------------------------------------------------------------------------------------------- */
 #define test_helper_check_valid_data( a, b, c, d, e, f ) \

@@ -28,7 +28,7 @@
 
 #include "tests/mctest.h"
 
-#include "glob.c"               /* for testing static functions */
+#include "glob.cpp"               /* for testing static functions */
 
 /* --------------------------------------------------------------------------------------------- */
 

@@ -58,56 +58,49 @@ typedef enum
    MSG_HOTKEY:  MSG_HANDLED if they actually used the key, MSG_NOT_HANDLED if not.
  */
 
-typedef enum
-{
-    MSG_NOT_HANDLED = 0,
-    MSG_HANDLED = 1
-} cb_ret_t;
+typedef int cb_ret_t;
+#define MSG_NOT_HANDLED 0
+#define MSG_HANDLED 1
 
 /* Widget options */
-typedef enum
-{
-    WOP_DEFAULT = (0 << 0),
-    WOP_WANT_HOTKEY = (1 << 0),
-    WOP_WANT_CURSOR = (1 << 1),
-    WOP_WANT_TAB = (1 << 2),    /* Should the tab key be sent to the dialog? */
-    WOP_IS_INPUT = (1 << 3),
-    WOP_SELECTABLE = (1 << 4),
-    WOP_TOP_SELECT = (1 << 5)
-} widget_options_t;
+typedef  int widget_options_t;
+#define WOP_DEFAULT (0 << 0)
+#define WOP_WANT_HOTKEY (1 << 0)
+#define WOP_WANT_CURSOR (1 << 1)
+#define WOP_WANT_TAB (1 << 2)    /* Should the tab key be sent to the dialog? */
+#define WOP_IS_INPUT (1 << 3)
+#define WOP_SELECTABLE (1 << 4)
+#define WOP_TOP_SELECT (1 << 5)
 
 /* Widget state */
-typedef enum
-{
-    WST_DEFAULT = (0 << 0),
-    WST_DISABLED = (1 << 0),    /* Widget cannot be selected */
-    WST_IDLE = (1 << 1),
-    WST_MODAL = (1 << 2),       /* Widget (dialog) is modal */
-    WST_FOCUSED = (1 << 3),
+typedef int widget_state_t;
+#define WST_DEFAULT (0 << 0)
+#define WST_DISABLED (1 << 0)    /* Widget cannot be selected */
+#define WST_IDLE (1 << 1)
+#define WST_MODAL (1 << 2)       /* Widget (dialog) is modal */
+#define WST_FOCUSED (1 << 3)
 
-    WST_CONSTRUCT = (1 << 15),  /* Widget has been constructed but not run yet */
-    WST_ACTIVE = (1 << 16),     /* Dialog is visible and active */
-    WST_SUSPENDED = (1 << 17),  /* Dialog is suspended */
-    WST_CLOSED = (1 << 18)      /* Dialog is closed */
-} widget_state_t;
+#define WST_CONSTRUCT (1 << 15)  /* Widget has been constructed but not run yet */
+#define WST_ACTIVE (1 << 16)     /* Dialog is visible and active */
+#define WST_SUSPENDED (1 << 17)  /* Dialog is suspended */
+#define WST_CLOSED (1 << 18)      /* Dialog is closed */
 
 /* Flags for widget repositioning on dialog resize */
-typedef enum
-{
-    WPOS_FULLSCREEN = (1 << 0), /* widget occupies the whole screen */
-    WPOS_CENTER_HORZ = (1 << 1),        /* center widget in horizontal */
-    WPOS_CENTER_VERT = (1 << 2),        /* center widget in vertical */
-    WPOS_CENTER = WPOS_CENTER_HORZ | WPOS_CENTER_VERT,  /* center widget */
-    WPOS_TRYUP = (1 << 3),      /* try to move two lines up the widget */
-    WPOS_KEEP_LEFT = (1 << 4),  /* keep widget distance to left border of dialog */
-    WPOS_KEEP_RIGHT = (1 << 5), /* keep widget distance to right border of dialog */
-    WPOS_KEEP_TOP = (1 << 6),   /* keep widget distance to top border of dialog */
-    WPOS_KEEP_BOTTOM = (1 << 7),        /* keep widget distance to bottom border of dialog */
-    WPOS_KEEP_HORZ = WPOS_KEEP_LEFT | WPOS_KEEP_RIGHT,
-    WPOS_KEEP_VERT = WPOS_KEEP_TOP | WPOS_KEEP_BOTTOM,
-    WPOS_KEEP_ALL = WPOS_KEEP_HORZ | WPOS_KEEP_VERT,
-    WPOS_KEEP_DEFAULT = WPOS_KEEP_LEFT | WPOS_KEEP_TOP
-} widget_pos_flags_t;
+typedef int widget_pos_flags_t;
+#define WPOS_FULLSCREEN (1 << 0) /* widget occupies the whole screen */
+#define WPOS_CENTER_HORZ (1 << 1)        /* center widget in horizontal */
+#define WPOS_CENTER_VERT (1 << 2)        /* center widget in vertical */
+#define WPOS_CENTER (WPOS_CENTER_HORZ | WPOS_CENTER_VERT)  /* center widget */
+#define WPOS_TRYUP (1 << 3)      /* try to move two lines up the widget */
+#define WPOS_KEEP_LEFT (1 << 4)  /* keep widget distance to left border of dialog */
+#define WPOS_KEEP_RIGHT (1 << 5) /* keep widget distance to right border of dialog */
+#define WPOS_KEEP_TOP (1 << 6)   /* keep widget distance to top border of dialog */
+#define WPOS_KEEP_BOTTOM (1 << 7)        /* keep widget distance to bottom border of dialog */
+#define WPOS_KEEP_HORZ (WPOS_KEEP_LEFT | WPOS_KEEP_RIGHT)
+#define WPOS_KEEP_VERT (WPOS_KEEP_TOP | WPOS_KEEP_BOTTOM)
+#define WPOS_KEEP_ALL (WPOS_KEEP_HORZ | WPOS_KEEP_VERT)
+#define WPOS_KEEP_DEFAULT (WPOS_KEEP_LEFT | WPOS_KEEP_TOP)
+
 /* NOTES:
  * If WPOS_FULLSCREEN is set then all other position flags are ignored.
  * If WPOS_CENTER_HORZ flag is used, other horizontal flags (WPOS_KEEP_LEFT, WPOS_KEEP_RIGHT,
@@ -212,7 +205,7 @@ cb_ret_t widget_draw (Widget * w);
 void widget_erase (Widget * w);
 gboolean widget_is_active (const void *w);
 gboolean widget_overlapped (const Widget * a, const Widget * b);
-void widget_replace (Widget * old, Widget * new);
+void widget_replace (Widget * old_w, Widget * new_w);
 void widget_select (Widget * w);
 void widget_set_bottom (Widget * w);
 

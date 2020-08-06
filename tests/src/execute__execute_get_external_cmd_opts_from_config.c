@@ -30,7 +30,7 @@
 #include "lib/mcconfig.h"
 #include "lib/strutil.h"
 #include "lib/vfs/vfs.h"
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 char *execute_get_external_cmd_opts_from_config (const char *command,
                                                  const vfs_path_t * filename_vpath, int start_line);

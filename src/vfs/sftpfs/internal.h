@@ -25,13 +25,11 @@
 
 /*** enums ***************************************************************************************/
 
-typedef enum
-{
-    NONE = 0,
-    PUBKEY = (1 << 0),
-    PASSWORD = (1 << 1),
-    AGENT = (1 << 2)
-} sftpfs_auth_type_t;
+typedef int sftpfs_auth_type_t;
+#define SFTPS_AUTH_NONE  0
+#define SFTPS_AUTH_PUBKEY (1 << 0)
+#define SFTPS_AUTH_PASSWORD (1 << 1)
+#define SFTPS_AUTH_AGENT (1 << 2)
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 
@@ -91,7 +89,7 @@ void sftpfs_close_connection (struct vfs_s_super *super, const char *shutdown_me
 vfs_file_handler_t *sftpfs_fh_new (struct vfs_s_inode *ino, gboolean changed);
 
 void *sftpfs_opendir (const vfs_path_t * vpath, GError ** mcerror);
-void *sftpfs_readdir (void *data, GError ** mcerror);
+void *sftpfs_readdir (void *sftpfs_dir, GError ** mcerror);
 int sftpfs_closedir (void *data, GError ** mcerror);
 int sftpfs_mkdir (const vfs_path_t * vpath, mode_t mode, GError ** mcerror);
 int sftpfs_rmdir (const vfs_path_t * vpath, GError ** mcerror);

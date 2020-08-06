@@ -43,8 +43,8 @@
 /*** typedefs(not structures) and defined constants **********************************************/
 
 #define IS_FIT(x) ((x) & 0x0010)
-#define MAKE_FIT(x) ((x) | 0x0010)
-#define HIDE_FIT(x) ((x) & 0x000f)
+#define MAKE_FIT(x) static_cast<align_crt_t> ((x) | 0x0010)
+#define HIDE_FIT(x) static_cast<align_crt_t> (((x) & 0x000f))
 
 #define INVALID_CONV ((GIConv) (-1))
 
@@ -86,17 +86,16 @@ typedef enum
 
 /* string-to-integer parsing results
  */
-typedef enum
-{
-    LONGINT_OK = 0,
+typedef int strtol_error_t;
+
+#define LONGINT_OK 0
 
     /* These two values can be ORed together, to indicate that both errors occurred. */
-    LONGINT_OVERFLOW = 1,
-    LONGINT_INVALID_SUFFIX_CHAR = 2,
+#define LONGINT_OVERFLOW 1
+#define LONGINT_INVALID_SUFFIX_CHAR 2
 
-    LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW = (LONGINT_INVALID_SUFFIX_CHAR | LONGINT_OVERFLOW),
-    LONGINT_INVALID = 4
-} strtol_error_t;
+#define LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW (LONGINT_INVALID_SUFFIX_CHAR | LONGINT_OVERFLOW)
+#define LONGINT_INVALID 4
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 

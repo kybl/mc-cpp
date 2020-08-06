@@ -30,7 +30,7 @@
 #include "lib/vfs/xdirentry.h"
 #include "lib/vfs/path.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 /* --------------------------------------------------------------------------------------------- */
 

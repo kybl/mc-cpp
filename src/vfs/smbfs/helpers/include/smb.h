@@ -865,7 +865,7 @@ struct parm_struct
 {
     const char *label;
     parm_type type;
-    parm_class class;
+    parm_class clazz;
     void *ptr;
       BOOL (*special) (const char *, char **);
     const struct enum_list *enum_list;

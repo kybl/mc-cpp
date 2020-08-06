@@ -33,7 +33,7 @@
 #include "lib/fileloc.h"
 
 #include "lib/mcconfig.h"
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 #define HOME_DIR "/home/testuser"
 

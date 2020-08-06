@@ -109,16 +109,13 @@ typedef struct utimbuf mc_timesbuf_t;
 
 /*** enums ***************************************************************************************/
 
-typedef enum
-{
-    VFSF_UNKNOWN = 0,
-    VFSF_LOCAL = 1 << 0,        /* Class is local (not virtual) filesystem */
-    VFSF_NOLINKS = 1 << 1,      /* Hard links not supported */
-
-    VFSF_REMOTE = 1 << 2,
-    VFSF_READONLY = 1 << 3,
-    VFSF_USETMP = 1 << 4
-} vfs_flags_t;
+typedef int vfs_flags_t;
+#define VFSF_UNKNOWN 0
+#define VFSF_LOCAL (1 << 0)        /* Class is local (not virtual) filesystem */
+#define VFSF_NOLINKS (1 << 1)      /* Hard links not supported */
+#define VFSF_REMOTE (1 << 2)
+#define VFSF_READONLY (1 << 3)
+#define VFSF_USETMP (1 << 4)
 
 /* Operations for mc_ctl - on open file */
 enum

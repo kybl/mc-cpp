@@ -28,9 +28,9 @@
 #include "tests/mctest.h"
 
 #include "lib/strutil.h"
-#include "lib/vfs/direntry.c"   /* for testing static methods  */
+#include "lib/vfs/direntry.cpp"   /* for testing static methods  */
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
 #define ARCH_NAME "/path/to/some/file.ext"
 #define ETALON_PATH "path/to/test1_file.ext"

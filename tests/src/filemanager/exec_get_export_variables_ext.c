@@ -27,11 +27,11 @@
 
 #include "tests/mctest.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
-#include "src/filemanager/midnight.c"
+#include "src/filemanager/midnight.cpp"
 
-#include "src/filemanager/ext.c"
+#include "src/filemanager/ext.cpp"
 
 /* --------------------------------------------------------------------------------------------- */
 /* mocked functions */

@@ -27,9 +27,9 @@
 
 #include "tests/mctest.h"
 
-#include "src/vfs/local/local.c"
+#include "src/vfs/local/local.cpp"
 
-#include "src/filemanager/command.c"
+#include "src/filemanager/command.cpp"
 
 
 /* --------------------------------------------------------------------------------------------- */

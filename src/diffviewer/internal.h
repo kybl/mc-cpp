@@ -23,12 +23,10 @@ typedef enum
     DATA_SRC_ORG = 2
 } DSRC;
 
-typedef enum
-{
-    DIFF_LEFT = 0,
-    DIFF_RIGHT = 1,
-    DIFF_COUNT = 2
-} diff_place_t;
+typedef int diff_place_t;
+#define DIFF_LEFT 0
+#define DIFF_RIGHT 1
+#define DIFF_COUNT 2
 
 typedef enum
 {

@@ -27,17 +27,15 @@ typedef enum
 } input_colors_enum_t;
 
 /* completion flags */
-typedef enum
-{
-    INPUT_COMPLETE_NONE = 0,
-    INPUT_COMPLETE_FILENAMES = 1 << 0,
-    INPUT_COMPLETE_HOSTNAMES = 1 << 1,
-    INPUT_COMPLETE_COMMANDS = 1 << 2,
-    INPUT_COMPLETE_VARIABLES = 1 << 3,
-    INPUT_COMPLETE_USERNAMES = 1 << 4,
-    INPUT_COMPLETE_CD = 1 << 5,
-    INPUT_COMPLETE_SHELL_ESC = 1 << 6,
-} input_complete_t;
+typedef int input_complete_t;
+#define INPUT_COMPLETE_NONE 0
+#define INPUT_COMPLETE_FILENAMES (1 << 0)
+#define INPUT_COMPLETE_HOSTNAMES (1 << 1)
+#define INPUT_COMPLETE_COMMANDS (1 << 2)
+#define INPUT_COMPLETE_VARIABLES (1 << 3)
+#define INPUT_COMPLETE_USERNAMES (1 << 4)
+#define INPUT_COMPLETE_CD (1 << 5)
+#define INPUT_COMPLETE_SHELL_ESC (1 << 6)
 
 /*** structures declarations (and typedefs of structures)*****************************************/
 

@@ -63,7 +63,10 @@
 #include <unix.h>
 #endif
 
+extern "C" {
 #include <glib.h>
+}
+
 #include "glibcompat.h"
 
 /* For SMB VFS only */

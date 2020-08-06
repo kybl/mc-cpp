@@ -38,7 +38,7 @@
 #include "src/subshell/subshell.h"
 #endif /* ENABLE_SUBSHELL */
 
-#include "src/filemanager/command.c"
+#include "src/filemanager/command.cpp"
 
 /* --------------------------------------------------------------------------------------------- */
 
